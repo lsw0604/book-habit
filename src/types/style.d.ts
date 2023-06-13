@@ -32,6 +32,34 @@ declare module 'styled-components' {
   }
 }
 
+export type IconType =
+  | 'Mail'
+  | 'X'
+  | 'Male'
+  | 'Female'
+  | 'Error'
+  | 'Success'
+  | 'Warning'
+  | 'Info'
+  | 'OpenEye'
+  | 'ClosedEye'
+  | 'Person'
+  | 'WarningCircle'
+  | 'Sunny'
+  | 'Beach'
+  | 'CloudyParty'
+  | 'Map'
+  | 'Support'
+  | 'UpArrow'
+  | 'DownArrow'
+  | 'Hamburger'
+  | 'RightArrow'
+  | 'LeftArrow'
+  | 'Plus'
+  | 'Pencil'
+  | 'TrashCan'
+  | 'Upload';
+
 export type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type ColorType =
