@@ -1,7 +1,14 @@
-const arr = [1, 2, 3, 4, 5];
+import Icon from './components/common/Icon';
+import GlobalStyle from './style/globalStyle';
+import { ReactComponent as IconBeach } from './assets/icons/iconBeach.svg';
 
 const App = () => {
-  return <h1>hi</h1>;
+  return (
+    <>
+      <GlobalStyle />
+      <Icon icon={<IconBeach />} width={100} height={100} />
+    </>
+  );
 };
 
 export default App;
