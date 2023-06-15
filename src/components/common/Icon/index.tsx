@@ -1,19 +1,19 @@
 import { useDynamicIcon } from '@hooks/useDynamicIcon';
 import { useColor } from '@hooks/useColor';
 import styled from 'styled-components';
-import { ColorNumType, ColorType, IconType } from 'types/style';
+import { ColorNumType, ColorType, IconType, SizeType } from 'types/style';
+import { size as Icon } from './size';
 
 interface ContainerProps {
-  width: number;
-  height: number;
+  size: SizeType;
   color: ColorType;
   colorNum: ColorNumType;
 }
 
 const Container = styled.div<ContainerProps>`
   margin: 0;
-  width: ${(props) => props.width}px;
-  height: ${(props) => props.height}px;
+  width: ${(props) => Icon[props.size].width}px;
+  height: ${(props) => Icon[props.size].height}px;
   #svg {
     fill: ${(props) => useColor(props.color, props.colorNum)};
   }
@@ -21,17 +21,16 @@ const Container = styled.div<ContainerProps>`
 
 interface IProps {
   icon: IconType;
-  width: number;
-  height: number;
+  size: SizeType;
   color: ColorType;
   colorNum: ColorNumType;
 }
 
-const Index: React.FC<IProps> = ({ icon, width, height, colorNum, color }) => {
+const Index: React.FC<IProps> = ({ icon, colorNum, color, size }) => {
   const { loading, svg: SvgComponent } = useDynamicIcon(icon);
 
   return (
-    <Container width={width} height={height} color={color} colorNum={colorNum}>
+    <Container size={size} color={color} colorNum={colorNum}>
       {!loading && SvgComponent && <SvgComponent id="svg" />}
     </Container>
   );

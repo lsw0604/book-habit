@@ -85,6 +85,12 @@ export type ColorNumType =
   | '800'
   | '900';
 
+export type ToggleIconTupleType<
+  IconType,
+  K extends number,
+  T extends IconType[] = []
+> = T['length'] extends K ? T : IconTuple<IconType, K, [...T, IconType]>;
+
 export type ColorModeType = 'fill' | 'isFill';
 
 export type ColorStateType = Record<ColorType, Record<ColorNumType, string>>;
