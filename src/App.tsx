@@ -1,4 +1,4 @@
-import Icon from './components/common/Icon';
+import Icon from './components/common/Icon/';
 import GlobalStyle from './style/globalStyle';
 
 const App = () => {

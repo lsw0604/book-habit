@@ -1,5 +1,5 @@
-import { useDynamicIcon } from '../../hooks/useDynamicIcon';
-import { useColor } from '../../hooks/useColor';
+import { useDynamicIcon } from '@hooks/useDynamicIcon';
+import { useColor } from '@hooks/useColor';
 import styled from 'styled-components';
 import { ColorNumType, ColorType, IconType } from 'types/style';
 
@@ -27,7 +27,7 @@ interface IProps {
   colorNum: ColorNumType;
 }
 
-const Icon: React.FC<IProps> = ({ icon, width, height, colorNum, color }) => {
+const Index: React.FC<IProps> = ({ icon, width, height, colorNum, color }) => {
   const { loading, svg: SvgComponent } = useDynamicIcon(icon);
 
   return (
@@ -37,4 +37,4 @@ const Icon: React.FC<IProps> = ({ icon, width, height, colorNum, color }) => {
   );
 };
 
-export default Icon;
+export default Index;

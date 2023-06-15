@@ -9,7 +9,8 @@
     "declarationDir": "types",
     "baseUrl": "./src",
     "paths": {
-      "@style/*": ["./style/*"]
+      "@style/*": ["./style/*"],
+      "@hooks/*": ["./hooks/*"]
     },
 
     /* Bundler mode */
@@ -28,9 +29,9 @@
   },
   "include": [
     "./custom.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/types/**/*.d.ts"
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/types/**/*.d.ts"
   ],
   "exclude": ["node_modules/"],
   "references": [{ "path": "./tsconfig.node.json" }]
