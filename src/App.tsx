@@ -1,31 +1,46 @@
 import { ThemeProvider } from 'styled-components';
-import Toggle from './components/common/Toggle';
 import GlobalStyle from './style/globalStyle';
 import { useDarkMode } from '@hooks/useDarkMode';
-import { useState } from 'react';
+import Button from './components/common/Button/index';
 
 const App = () => {
-  const [value, onChangeTheme, toggle] = useDarkMode();
-
-  const [vl, setVl] = useState<boolean>(true);
-
-  const onChange = () => {
-    setVl((prev) => !prev);
-  };
-  console.log(value);
+  const [value, onChangeTheme] = useDarkMode();
 
   return (
     <div>
       <ThemeProvider theme={value}>
         <GlobalStyle />
-        <Toggle
-          style={{ position: 'fixed', right: '5px', bottom: '5px' }}
-          id="toggle"
-          ToggleSwitch={toggle}
-          icon={['Sunny', 'CloudyParty']}
-          size="md"
+        <br />
+        <Button onClick={onChangeTheme} icon="Female" color="cyan">
+          Female
+        </Button>
+        <br />
+        <Button
+          icon="Female"
+          colorMode="isFill"
+          size="lg"
           onClick={onChangeTheme}
-        />
+        >
+          Female
+        </Button>
+        <br />
+        <Button
+          onClick={onChangeTheme}
+          icon="Female"
+          colorMode="fill"
+          size="md"
+        >
+          Female
+        </Button>
+        <br />
+        <Button icon="Female" colorMode="fill" size="sm">
+          Female
+        </Button>
+        <br />
+        <Button icon="Female" colorMode="fill" size="xs">
+          Female
+        </Button>
+        <br />
       </ThemeProvider>
     </div>
   );

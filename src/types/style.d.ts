@@ -91,6 +91,11 @@ export type ToggleIconTupleType<
   T extends IconType[] = []
 > = T['length'] extends K ? T : IconTuple<IconType, K, [...T, IconType]>;
 
+export type NormalButtonSizeType = Record<
+  SizeType,
+  Record<'height' | 'lineHeight' | 'fontSize'>
+>;
+
 export type ColorModeType = 'fill' | 'isFill';
 
 export type ColorStateType = Record<ColorType, Record<ColorNumType, string>>;

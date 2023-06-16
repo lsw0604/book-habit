@@ -6,24 +6,30 @@ import { size as Icon } from './size';
 
 interface ContainerProps {
   size: SizeType;
-  color: ColorType;
-  colorNum: ColorNumType;
+  color?: ColorType;
+  colorNum?: ColorNumType;
 }
 
 const Container = styled.div<ContainerProps>`
   margin: 0;
   width: ${(props) => Icon[props.size].width}px;
   height: ${(props) => Icon[props.size].height}px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   #svg {
-    fill: ${(props) => useColor(props.color, props.colorNum)};
+    fill: ${(props) =>
+      props.color && props.colorNum
+        ? useColor(props.color, props.colorNum)
+        : ({ theme }) => theme.mode.typo_main};
   }
 `;
 
 interface IProps {
   icon: IconType;
   size: SizeType;
-  color: ColorType;
-  colorNum: ColorNumType;
+  color?: ColorType;
+  colorNum?: ColorNumType;
 }
 
 const Index: React.FC<IProps> = ({ icon, colorNum, color, size }) => {

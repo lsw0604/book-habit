@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { dark, light, shadow } from '@style/theme';
 import { DefaultTheme } from 'styled-components';
 
 export const useDarkMode = (): [
   value: DefaultTheme,
-  onChangeTheme: () => void,
-  toggle: boolean
+  onChangeTheme: () => void
 ] => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [toggle, setToggle] = useState(true);
   const value =
     theme === 'light'
       ? { mode: light, shadow, toggle: true }
@@ -18,15 +16,20 @@ export const useDarkMode = (): [
     if (theme === 'light') {
       console.log('light', window.localStorage.getItem('theme'));
       window.localStorage.setItem('theme', 'dark');
-      setToggle(false);
       setTheme('dark');
     } else {
       console.log('dark', window.localStorage.getItem('theme'));
       window.localStorage.setItem('theme', 'light');
-      setToggle(true);
       setTheme('light');
     }
   };
+
+  useEffect(() => {
+    const localTheme = window.localStorage.getItem('theme');
+    if (!localTheme) {
+      window.localStorage.setItem('theme', 'light');
+    }
+  }, []);
 
   useEffect(() => {
     const localTheme = window.localStorage.getItem('theme');
@@ -37,5 +40,5 @@ export const useDarkMode = (): [
     }
   }, []);
 
-  return [value, onChangeTheme, toggle];
+  return [value, onChangeTheme];
 };

@@ -1,13 +1,13 @@
-import { memo, ButtonHTMLAttributes } from 'react';
+import { memo, InputHTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { size } from './size';
 import { IconType, SizeType, ToggleIconTupleType } from 'types/style';
 import Icon from '../Icon';
 
-interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   icon: ToggleIconTupleType<IconType, 2>;
   size: SizeType;
-  ToggleSwitch?: boolean;
 }
 
 interface ContainerProps {
@@ -15,7 +15,7 @@ interface ContainerProps {
 }
 
 interface CircleProps {
-  ToggleSwitch?: boolean;
+  checked?: boolean;
 }
 
 const getToggleButtonSize = (ctx: SizeType) => css`
@@ -24,7 +24,7 @@ const getToggleButtonSize = (ctx: SizeType) => css`
   border-radius: ${size[ctx]['border-radius']}px;
 `;
 
-const Container = styled.button<ContainerProps>`
+const Container = styled.label<ContainerProps>`
   margin: 0;
   padding: 0;
   cursor: pointer;
@@ -33,11 +33,17 @@ const Container = styled.button<ContainerProps>`
   display: flex;
   ${(props) => getToggleButtonSize(props.size)};
   box-shadow: ${({ theme }) => theme.shadow.xl};
-  border: 0px solid ${({ theme }) => theme.mode.bg_main};
+  border: none;
   background-color: ${({ theme }) => theme.mode.bg_toggle};
 `;
 
-const CircleButton = styled.div<CircleProps>`
+const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+`;
+
+const CircleButton = styled(motion.div)<CircleProps>`
   padding: 2px;
   position: relative;
   align-items: center;
@@ -46,15 +52,28 @@ const CircleButton = styled.div<CircleProps>`
   width: 45%;
   border-radius: 100%;
   background-color: ${({ theme }) => theme.mode.bg_main};
-  right: ${(props) => (props.ToggleSwitch ? '-1.6px' : '-33.6px')};
-  transition: right 0.3s linear;
 `;
 
-const Toggle: React.FC<IProps> = ({ ToggleSwitch, size, icon, ...props }) => {
+const Toggle: React.FC<IProps> = ({ icon, size, ...props }) => {
+  const { checked } = props;
+  const x = useMotionValue(checked ? 1 : 0);
+  const scale = useTransform(x, [0, 1], [0, 1]);
+
+  const handleCheckboxChange = () => {
+    x.set(checked ? 0 : 1);
+  };
+
   return (
-    <Container size={size} {...props}>
-      <CircleButton ToggleSwitch={ToggleSwitch}>
-        {ToggleSwitch ? (
+    <Container size={size}>
+      <HiddenCheckbox {...props} onChange={handleCheckboxChange} />
+      <CircleButton
+        style={{ scale }}
+        initial={false}
+        animate={{ scale }}
+        transition={{ duration: 0.3, ease: 'linear' }}
+        checked={checked}
+      >
+        {checked ? (
           <Icon icon={icon[0]} size={size} color="yellow" colorNum="400" />
         ) : (
           <Icon icon={icon[1]} size={size} color="yellow" colorNum="400" />
