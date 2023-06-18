@@ -11,33 +11,23 @@ const App = () => {
       <ThemeProvider theme={value}>
         <GlobalStyle />
         <br />
-        <Button onClick={onChangeTheme} icon="Female" color="cyan">
+        <Button size="xl" onClick={onChangeTheme} icon="Female">
           Female
         </Button>
         <br />
-        <Button
-          icon="Female"
-          colorMode="isFill"
-          size="lg"
-          onClick={onChangeTheme}
-        >
+        <Button icon="Female" size="lg" onClick={onChangeTheme}>
           Female
         </Button>
         <br />
-        <Button
-          onClick={onChangeTheme}
-          icon="Female"
-          colorMode="fill"
-          size="md"
-        >
+        <Button onClick={onChangeTheme} icon="Female" size="md">
           Female
         </Button>
         <br />
-        <Button icon="Female" colorMode="fill" size="sm">
+        <Button icon="Female" size="sm" color="red">
           Female
         </Button>
         <br />
-        <Button icon="Female" colorMode="fill" size="xs">
+        <Button icon="Female" size="xs">
           Female
         </Button>
         <br />

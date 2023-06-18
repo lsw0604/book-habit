@@ -93,8 +93,10 @@ export type ToggleIconTupleType<
 
 export type NormalButtonSizeType = Record<
   SizeType,
-  Record<'height' | 'lineHeight' | 'fontSize'>
+  Record<'height' | 'lineHeight' | 'fontSize', number>
 >;
+
+export type IconButtonSizeType = Record<SizeType, Record<'width', number>>;
 
 export type ColorModeType = 'fill' | 'isFill';
 

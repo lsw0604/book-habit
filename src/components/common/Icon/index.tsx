@@ -8,19 +8,21 @@ interface ContainerProps {
   size: SizeType;
   color?: ColorType;
   colorNum?: ColorNumType;
+  marginRight?: number;
 }
 
 const Container = styled.div<ContainerProps>`
   margin: 0;
-  width: ${(props) => Icon[props.size].width}px;
-  height: ${(props) => Icon[props.size].height}px;
+  width: ${({ size }) => Icon[size].width}px;
+  height: ${({ size }) => Icon[size].height}px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: ${({ marginRight }) => marginRight}px;
   #svg {
-    fill: ${(props) =>
-      props.color && props.colorNum
-        ? useColor(props.color, props.colorNum)
+    fill: ${({ color, colorNum }) =>
+      color && colorNum
+        ? useColor(color, colorNum)
         : ({ theme }) => theme.mode.typo_main};
   }
 `;
@@ -30,9 +32,16 @@ interface IProps {
   size: SizeType;
   color?: ColorType;
   colorNum?: ColorNumType;
+  marginRight?: number;
 }
 
-const Index: React.FC<IProps> = ({ icon, colorNum, color, size }) => {
+const Index: React.FC<IProps> = ({
+  icon,
+  colorNum,
+  color,
+  size,
+  marginRight,
+}) => {
   const { loading, svg: SvgComponent } = useDynamicIcon(icon);
 
   return (

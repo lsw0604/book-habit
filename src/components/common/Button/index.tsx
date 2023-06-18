@@ -1,37 +1,30 @@
 import { memo } from 'react';
 import styled, { css } from 'styled-components';
 import Icon from '../Icon';
-import {
-  ColorModeType,
-  ColorNumType,
-  ColorType,
-  IconType,
-  SizeType,
-} from 'types/style';
+import { ColorNumType, ColorType, IconType, SizeType } from 'types/style';
 import { useColor } from '@hooks/useColor';
 import { useButtonMode } from '@hooks/useButtonMode';
+
+const { getSizeNormalButton } = useButtonMode();
 
 interface IContainerProps {
   icon: boolean;
   size: SizeType;
   color?: ColorType;
   colorNum?: ColorNumType;
-  colorMode?: ColorModeType;
 }
 
 interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   icon?: IconType;
-  size?: SizeType;
+  size: SizeType;
   color?: ColorType;
   colorNum?: ColorNumType;
-  colorMode?: ColorModeType;
 }
-const { getSizeNormalButton } = useButtonMode();
 
 const Container = styled.button<IContainerProps>`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   width: 100%;
   padding: ${({ icon }) => (icon ? '0 20px' : '0px 15px')};
@@ -49,10 +42,9 @@ const Container = styled.button<IContainerProps>`
 `;
 
 const Index: React.FC<IProps> = ({
-  size = 'md',
+  size,
   color,
-  colorMode = 'fill',
-  colorNum = '500',
+  colorNum,
   children,
   icon,
   ...props
@@ -63,11 +55,16 @@ const Index: React.FC<IProps> = ({
       size={size}
       color={color}
       colorNum={colorNum}
-      colorMode={colorMode}
       {...props}
     >
       {icon && (
-        <Icon size={size} color={color} colorNum={colorNum} icon={icon} />
+        <Icon
+          size={size}
+          color={color}
+          colorNum={colorNum}
+          icon={icon}
+          marginRight={10}
+        />
       )}
       {children}
     </Container>
