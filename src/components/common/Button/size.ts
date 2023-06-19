@@ -1,4 +1,4 @@
-import { NormalButtonSizeType } from 'types/style';
+import { IconButtonSizeType, NormalButtonSizeType } from 'types/style';
 
 export const size: NormalButtonSizeType = {
   xs: {
@@ -28,10 +28,25 @@ export const size: NormalButtonSizeType = {
   },
 };
 
-export const icon: NormalButtonSizeType = {
-  xs: {},
-  sm: {},
-  md: {},
-  lg: {},
-  xl: {},
+export const icon: IconButtonSizeType = {
+  xs: {
+    width: 30,
+    height: 30,
+  },
+  sm: {
+    width: 38,
+    height: 38,
+  },
+  md: {
+    width: 46,
+    height: 46,
+  },
+  lg: {
+    width: 54,
+    height: 54,
+  },
+  xl: {
+    width: 66,
+    height: 66,
+  },
 };

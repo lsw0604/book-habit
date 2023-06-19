@@ -2,6 +2,7 @@ import { ThemeProvider } from 'styled-components';
 import GlobalStyle from './style/globalStyle';
 import { useDarkMode } from '@hooks/useDarkMode';
 import Button from './components/common/Button/index';
+import IconButton from 'components/common/Button/Icon';
 
 const App = () => {
   const [value, onChangeTheme] = useDarkMode();
@@ -31,6 +32,19 @@ const App = () => {
           Female
         </Button>
         <br />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <IconButton size="xs" icon="Beach" />
+          <IconButton size="sm" icon="Beach" />
+          <IconButton size="md" icon="Beach" />
+          <IconButton size="lg" icon="Beach" />
+          <IconButton size="xl" icon="Beach" />
+        </div>
       </ThemeProvider>
     </div>
   );

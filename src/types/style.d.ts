@@ -96,7 +96,10 @@ export type NormalButtonSizeType = Record<
   Record<'height' | 'lineHeight' | 'fontSize', number>
 >;
 
-export type IconButtonSizeType = Record<SizeType, Record<'width', number>>;
+export type IconButtonSizeType = Record<
+  SizeType,
+  Record<'width' | 'height', number>
+>;
 
 export type ColorModeType = 'fill' | 'isFill';
 

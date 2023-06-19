@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Icon from '../Icon';
 import { ColorNumType, ColorType, IconType, SizeType } from 'types/style';
 import { useColor } from '@hooks/useColor';
@@ -41,6 +41,10 @@ const Container = styled.button<IContainerProps>`
   background-color: ${({ theme }) => theme.mode.bg_main};
 `;
 
+const Span = styled.span`
+  margin-left: 10px;
+`;
+
 const Index: React.FC<IProps> = ({
   size,
   color,
@@ -66,7 +70,7 @@ const Index: React.FC<IProps> = ({
           marginRight={10}
         />
       )}
-      {children}
+      <Span>{children}</Span>
     </Container>
   );
 };
