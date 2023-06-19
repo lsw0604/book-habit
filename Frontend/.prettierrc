@@ -1,0 +1,8 @@
+{
+  "singleQuote": true,
+  "tabWidth": 2,
+  "semi": true,
+  "useTabs": false,
+  "printWidth": 80,
+  "cursorOffset": -1
+}
