@@ -10,14 +10,15 @@ const LocalStrategyOption = {
 
 const LocalVerify: LocalVerify = async (email, password, done) => {
   const connection = await pool.getConnection();
-
   try {
     await connection.beginTransaction();
 
-    const sql = `SELECT * FROM users WHERE email = ?`;
+    const sql = `SELECT id, email, name, gender, birthday, password FROM users WHERE email = ?`;
     const value = [email];
 
-    const [rows] = await connection.query<IUserAllInfo[]>(sql, value);
+    const [rows] = await connection.query<
+      Omit<IUserAllInfo[], 'provider' | 'refresh_token' | 'created_at'>
+    >(sql, value);
 
     if (rows[0] === undefined)
       return done(null, false, { message: '존재하지 않는 사용자 입니다.' });
