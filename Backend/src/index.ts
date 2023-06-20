@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors, { CorsOptions } from 'cors';
 import session, { SessionOptions } from 'express-session';
-import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import registerRouter from './routes/RegisterRouter';
@@ -16,7 +15,7 @@ const corsOptions: CorsOptions = {
 const sessionOptions: SessionOptions = {
   resave: false,
   saveUninitialized: false,
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET as string,
   cookie: {
     httpOnly: true,
     secure: false,
@@ -25,7 +24,7 @@ const sessionOptions: SessionOptions = {
 
 const app = express();
 
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT);
 app.use(cors(corsOptions));
 app.use(session(sessionOptions));
 
@@ -34,12 +33,9 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/register', registerRouter);
 
-app.listen(
-  app.get('port', () => {
-    console.log(`${app.get('port')}port waiting`);
-  })
-);
+app.listen(app.get('port'), () => {
+  console.log(`Server Started on ${app.get('port')} PORT`);
+});

@@ -1,33 +1,27 @@
 import { pool } from '../DB';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { IUserEmailInfo } from 'types';
-
-interface IRegisterRequestBody {
-  email: string;
-  name: string;
-  gender: string;
-  birthday: Date;
-  password: string;
-}
+import { IUserEmailInfo, IRequestBodyRegister } from 'types';
 
 export default async function (req: Request, res: Response) {
   const { email, name, gender, birthday, password } =
-    req.body as IRegisterRequestBody;
+    req.body as IRequestBodyRegister;
 
   try {
     const connection = await pool.getConnection();
     try {
       await connection.beginTransaction();
 
-      const sqlUsersFromEmail = `SELECT email FROM users WHERE = ?`;
+      const sqlUsersFromEmail = `SELECT email FROM users WHERE email = ?`;
       const sqlUsersFromEmailValue = [email];
       const [rows] = await connection.query<IUserEmailInfo[]>(
         sqlUsersFromEmail,
         sqlUsersFromEmailValue
       );
 
-      if (rows[0] === undefined) {
+      console.log();
+
+      if (rows[0] !== undefined) {
         return res
           .status(403)
           .json({ message: '해당 아이디가 이미 존재 합니다.' });
@@ -51,16 +45,25 @@ export default async function (req: Request, res: Response) {
       });
 
       connection.release();
-    } catch (error) {
+    } catch (error: any) {
       await connection.rollback();
       connection.release();
+
       res.status(400).json({
         message: '회원가입에 실패 하셨습니다.',
+        code: error?.code,
+        errno: error?.errno,
+        sql: error?.sql,
+        sqlMessage: error?.sqlMessage,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error);
     res.status(500).json({
-      message: 'DB에 연결 실패 하셨습니다.',
+      code: error?.code,
+      errno: error?.errno,
+      message: error?.sqlMessage,
+      sql: error?.sql,
     });
   }
 }

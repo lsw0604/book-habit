@@ -16,3 +16,11 @@ export interface IUserEmailInfo extends RowDataPacket {
   id?: number;
   email: string;
 }
+
+export interface IRequestBodyRegister {
+  email: string;
+  name: string;
+  gender: string;
+  birthday: Date;
+  password: string;
+}
