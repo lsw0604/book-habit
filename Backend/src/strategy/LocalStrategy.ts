@@ -3,12 +3,12 @@ import { VerifyFunction as LocalVerify } from 'passport-local';
 import bcrypt from 'bcrypt';
 import { IUserAllInfo } from '../types/index';
 
-const LocalStrategyOption = {
+const localOptions = {
   usernameField: 'email',
   passwordField: 'password',
 };
 
-const LocalVerify: LocalVerify = async (email, password, done) => {
+const localVerify: LocalVerify = async (email, password, done) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -36,4 +36,4 @@ const LocalVerify: LocalVerify = async (email, password, done) => {
   }
 };
 
-export { LocalVerify, LocalStrategyOption };
+export { localOptions, localVerify };

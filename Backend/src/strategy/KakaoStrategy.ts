@@ -1,17 +1,21 @@
 import { VerifyFunction as KakaoVerify, StrategyOption } from 'passport-kakao';
 
-const { KAKAO_CALLBACK, KAKAO_CLIENT, KAKAO_SECRET } = process.env;
-
-const KakaoStrategyOption: StrategyOption = {
-  callbackURL: KAKAO_CALLBACK as string,
-  // clientID: KAKAO_CLIENT as string,
-  clientID: '030604c1c847c06c4d12f9c9be7dd139',
-  clientSecret: KAKAO_SECRET as string,
+const kakaoOptions: StrategyOption = {
+  callbackURL: process.env.KAKAO_CALLBACK as string,
+  clientID: process.env.KAKAO_CLIENT as string,
+  clientSecret: process.env.KAKAO_SECRET as string,
 };
 
-const KakaoVerify: KakaoVerify = async (_, __, profile, done) => {
-  console.log(_, __, profile);
-  return done(null, profile);
+// const kakaoOptions: StrategyOption = {
+//   callbackURL: 'http://localhost:3001/api/auth/kakao/callback',
+//   clientID: process.env.KAKAO_CLIENT as string,
+//   clientSecret: process.env.KAKAO_SECRET as string,
+// };
+
+const kakaoVerify: KakaoVerify = async (_, __, profile, done) => {
+  console.log('sss');
+  console.log(profile);
+  done(null, profile._json);
 };
 
-export { KakaoStrategyOption, KakaoVerify };
+export { kakaoVerify, kakaoOptions };

@@ -1,18 +1,20 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import cors, { CorsOptions } from 'cors';
 import session, { SessionOptions } from 'express-session';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as KakaoStrategy } from 'passport-kakao';
-import { LocalStrategyOption, LocalVerify } from './strategy/LocalStrategy';
-import { KakaoStrategyOption, KakaoVerify } from './strategy/KakaoStrategy';
+import { localOptions, localVerify } from './strategy/LocalStrategy';
+import { kakaoOptions, kakaoVerify } from './strategy/KakaoStrategy';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import registerRouter from './routes/RegisterRouter';
 import loginRouter from './routes/LoginRouter';
 
-dotenv.config();
+/**
+ * ? options
+ */
 
 const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_URL,
@@ -33,20 +35,23 @@ const app = express();
 app.set('port', process.env.PORT);
 app.use(cors(corsOptions));
 app.use(session(sessionOptions));
-app.use(passport.initialize());
-app.use(passport.session());
 
 /**
- * TODO: Passport
+ * ? Passport
  */
-passport.use('local', new LocalStrategy(LocalStrategyOption, LocalVerify));
-passport.use('kakao', new KakaoStrategy(KakaoStrategyOption, KakaoVerify));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use('local', new LocalStrategy(localOptions, localVerify));
+passport.use('kakao', new KakaoStrategy(kakaoOptions, kakaoVerify));
 
 passport.serializeUser((user, done) => {
+  console.log('serialize', user);
   done(null, user);
 });
 
 passport.deserializeUser((id, done) => {
+  console.log('deserialize', id);
   done(null, id as any);
 });
 
