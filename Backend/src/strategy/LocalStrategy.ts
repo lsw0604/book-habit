@@ -1,7 +1,7 @@
-import { pool } from '../DB';
+import { connectionPool } from '../DB';
 import { VerifyFunction as LocalVerify } from 'passport-local';
 import bcrypt from 'bcrypt';
-import { IUserAllInfo } from '../types/index';
+import { IUserAllInfo } from '../types';
 
 const localOptions = {
   usernameField: 'email',
@@ -9,7 +9,7 @@ const localOptions = {
 };
 
 const localVerify: LocalVerify = async (email, password, done) => {
-  const connection = await pool.getConnection();
+  const connection = await connectionPool.getConnection();
   try {
     await connection.beginTransaction();
 

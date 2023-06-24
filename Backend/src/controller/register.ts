@@ -1,4 +1,4 @@
-import { pool } from '../DB';
+import { connectionPool } from '../DB';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { IUserEmailInfo, IRequestBodyRegister } from 'types';
@@ -8,7 +8,7 @@ export default async function (req: Request, res: Response) {
     req.body as IRequestBodyRegister;
 
   try {
-    const connection = await pool.getConnection();
+    const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
 

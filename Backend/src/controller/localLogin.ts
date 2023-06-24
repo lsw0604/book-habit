@@ -1,27 +1,25 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { IUserAllInfo } from '../types';
-import { pool } from '../DB';
+import { connectionPool } from '../DB';
+import tokenGenerator from '../utils/token';
 
 export default async function (req: Request, res: Response) {
   const { id, name, birthday, email, gender } = req.user as Pick<
     IUserAllInfo,
     'id' | 'name' | 'gender' | 'birthday' | 'email'
   >;
-
-  const access_jwt = jwt.sign(
-    { id, name, email, gender, birthday },
-    process.env.ACCESS as string,
-    { expiresIn: '20s', issuer: 'lsw0604' }
-  );
-
-  const refresh_jwt = jwt.sign({ id }, process.env.REFRESH as string, {
-    expiresIn: '1d',
-    issuer: 'lsw0604',
-  });
+  const { access_jwt, refresh_jwt, verifyAccessToken, verifyRefreshToken } =
+    tokenGenerator({
+      id,
+      name,
+      email,
+      gender,
+      birthday,
+    });
 
   try {
-    const connection = await pool.getConnection();
+    const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
       const LocalLoginSQL = `UPDATE users SET refresh_token = ? WHERE id = ?`;

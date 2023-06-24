@@ -1,5 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
+import { dbConfig } from './DB';
 import cors, { CorsOptions } from 'cors';
 import session, { SessionOptions } from 'express-session';
 import passport from 'passport';
@@ -31,6 +32,7 @@ const sessionOptions: SessionOptions = {
 };
 
 const app = express();
+dbConfig();
 
 app.set('port', process.env.PORT);
 app.use(cors(corsOptions));
