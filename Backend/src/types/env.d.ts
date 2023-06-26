@@ -1,8 +1,28 @@
 declare namespace NodeJS {
   interface Process {
-    env: Env;
+    env: ProcessEnv;
   }
-  interface Env {
-    [key: string]: string;
+  interface ProcessEnv {
+    HOST: string;
+    DB_USER: string;
+    PASSWORD: string;
+    DATABASE: string;
+
+    PORT: string;
+
+    CLIENT_URL: string;
+
+    SESSION_SECRET: string;
+
+    ACCESS: string;
+    REFRESH: string;
+
+    KAKAO_CLIENT: string;
+    KAKAO_SECRET: string;
+    KAKAO_CALLBACK: string;
+
+    GOOGLE_CLIENT: string;
+    GOOGLE_SECRET: string;
+    GOOGLE_CALLBACK: string;
   }
 }

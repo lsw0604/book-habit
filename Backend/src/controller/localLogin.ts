@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 import { IUserAllInfo } from '../types';
 import { connectionPool } from '../DB';
 import tokenGenerator from '../utils/token';
@@ -9,14 +8,13 @@ export default async function (req: Request, res: Response) {
     IUserAllInfo,
     'id' | 'name' | 'gender' | 'birthday' | 'email'
   >;
-  const { access_jwt, refresh_jwt, verifyAccessToken, verifyRefreshToken } =
-    tokenGenerator({
-      id,
-      name,
-      email,
-      gender,
-      birthday,
-    });
+  const { access_jwt, refresh_jwt } = tokenGenerator({
+    id,
+    name,
+    email,
+    gender,
+    birthday,
+  });
 
   try {
     const connection = await connectionPool.getConnection();

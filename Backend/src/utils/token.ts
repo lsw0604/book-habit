@@ -1,7 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const { ACCESS, REFRESH } = process.env;
-
 type TokenGeneratorType = {
   id?: number;
   gender: 'male' | 'female';
@@ -19,34 +17,22 @@ export default function tokenGenerator({
 }: TokenGeneratorType): {
   access_jwt: string;
   refresh_jwt: string;
-  verifyAccessToken: (access: string) => string | JwtPayload;
-  verifyRefreshToken: (refresh: string) => string | JwtPayload;
 } {
   const access_jwt = jwt.sign(
     { id, gender: gender, email, birthday, name },
-    ACCESS,
+    process.env.ACCESS as string,
     { expiresIn: '1h' }
   );
   const refresh_jwt = jwt.sign(
     {
       id,
     },
-    REFRESH,
+    process.env.REFRESH as string,
     { expiresIn: '1d' }
   );
-
-  function verifyAccessToken(accessToken: string) {
-    return jwt.verify(accessToken, ACCESS);
-  }
-
-  function verifyRefreshToken(refreshToken: string) {
-    return jwt.verify(refreshToken, REFRESH);
-  }
 
   return {
     access_jwt,
     refresh_jwt,
-    verifyAccessToken,
-    verifyRefreshToken,
   };
 }
