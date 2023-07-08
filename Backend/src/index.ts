@@ -21,6 +21,7 @@ const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_URL,
   credentials: true,
 };
+
 const sessionOptions: SessionOptions = {
   resave: false,
   saveUninitialized: false,

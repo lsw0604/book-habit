@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { connectionPool } from '../DB/index';
 
 interface KakaoRequest {
   provider: 'kakao';
@@ -39,5 +40,4 @@ export default async function (
   const { provider, id, username } = req;
 
   console.log('login', req);
-  next();
 }

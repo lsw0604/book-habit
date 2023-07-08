@@ -20,9 +20,12 @@ export default async function (req: Request, res: Response) {
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
+
       const LocalLoginSQL = `UPDATE users SET refresh_token = ? WHERE id = ?`;
       const LocalLoginValue = [refresh_jwt, id];
+
       await connection.query(LocalLoginSQL, LocalLoginValue);
+
       await connection.commit();
       connection.release();
 
@@ -39,6 +42,7 @@ export default async function (req: Request, res: Response) {
         maxAge: 1000 * 60 * 60 * 24,
         path: '/',
       });
+
       res.status(200).json({
         type: 'success',
         message: '로그인 성공했습니다.',
