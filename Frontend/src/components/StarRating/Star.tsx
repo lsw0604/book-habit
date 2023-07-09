@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, Variants } from 'framer-motion';
 import styled from 'styled-components';
 import Icon from '../common/Icon/index';
 
@@ -9,7 +9,7 @@ interface IProps {
   isClicked: boolean;
 }
 
-const starVariants = {
+const starVariants: Variants = {
   initial: {
     scale: 0,
   },
@@ -71,20 +71,15 @@ export default function Star({ i, isHoveringWrapper, isClicked }: IProps) {
   }, [isClicked, isHovering]);
 
   useEffect(() => {
-    if (isHoveringWrapper) {
-      backgroundControls.start({ background: '#ffd700' });
-    } else {
-      backgroundControls.start({ background: '#aaaaaa' });
-    }
+    backgroundControls.start({
+      background: isHoveringWrapper ? '#ffd700' : '#aaa',
+    });
   }, [isHoveringWrapper]);
 
   return (
     <>
-      <Background
-        initial={{ background: '#aaaaaa' }}
-        animate={backgroundControls}
-      />
-      {i !== 0 ? (
+      <Background animate={backgroundControls} />
+      {i !== 0 && (
         <IconStar
           onMouseOver={() => setIsHovering(true)}
           onMouseOut={() => setIsHovering(false)}
@@ -95,7 +90,7 @@ export default function Star({ i, isHoveringWrapper, isClicked }: IProps) {
         >
           <Icon icon="Star" size="xl" />
         </IconStar>
-      ) : null}
+      )}
     </>
   );
 }

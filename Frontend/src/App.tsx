@@ -58,6 +58,8 @@ const App = () => {
           setIsClicked={setNumber}
           setIsHovering={setHover}
         />
+        {number}
+        {hover}
       </ThemeProvider>
     </div>
   );

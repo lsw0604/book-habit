@@ -71,7 +71,7 @@ export default function StarRating({
   };
 
   return (
-    <Rating>
+    <Rating onMouseLeave={() => setIsHovering(0)}>
       <Container>
         {[1, 2, 3, 4, 5].map((i) => (
           <Wrapper
