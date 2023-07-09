@@ -1,88 +1,65 @@
-import { memo, InputHTMLAttributes } from 'react';
-import styled, { css } from 'styled-components';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { size } from './size';
-import { IconType, SizeType, ToggleIconTupleType } from 'types/style';
-import Icon from '../Icon';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import styled from 'styled-components';
 
-interface IProps extends InputHTMLAttributes<HTMLInputElement> {
-  icon: ToggleIconTupleType<IconType, 2>;
-  size: SizeType;
-}
-
-interface ContainerProps {
-  size: SizeType;
-}
-
-interface CircleProps {
-  checked?: boolean;
-}
-
-const getToggleButtonSize = (ctx: SizeType) => css`
-  height: ${size[ctx].height}px;
-  width: ${size[ctx].width}px;
-  border-radius: ${size[ctx]['border-radius']}px;
-`;
-
-const Container = styled.label<ContainerProps>`
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  align-items: center;
-  z-index: 999;
+const Container = styled.div<{ on: boolean }>`
+  height: 40px;
+  width: 100px;
+  background-image: ${({ on }) =>
+    on
+      ? `radial-gradient(circle farthest-corner at 10% 20%,rgba(253, 203, 50, 1) 0%,rgba(244, 56, 98, 1) 100.2%)`
+      : `linear-gradient(109.8deg, rgba(62,5,116,1) -5.2%, rgba(41,14,151,1) -5.2%, rgba(216,68,148,1) 103.3%) `};
+  border-radius: 25px;
   display: flex;
-  ${(props) => getToggleButtonSize(props.size)};
-  box-shadow: ${({ theme }) => theme.shadow.xl};
-  border: none;
-  background-color: ${({ theme }) => theme.mode.bg_toggle};
-`;
-
-const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-`;
-
-const CircleButton = styled(motion.div)<CircleProps>`
-  padding: 2px;
-  position: relative;
   align-items: center;
-  justify-content: center;
-  height: 90%;
-  width: 45%;
-  border-radius: 100%;
-  background-color: ${({ theme }) => theme.mode.bg_main};
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: all 0.3s;
+  justify-content: ${({ on }) => (on ? 'flex-end' : 'flex-start')};
 `;
 
-const Toggle: React.FC<IProps> = ({ icon, size, ...props }) => {
-  const { checked } = props;
-  const x = useMotionValue(checked ? 1 : 0);
-  const scale = useTransform(x, [0, 1], [0, 1]);
+const Handle = styled(motion.div)<{ on: boolean }>`
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  background-color: #fff;
+  overflow: hidden;
+`;
 
-  const handleCheckboxChange = () => {
-    x.set(checked ? 0 : 1);
+const Icon = styled(motion.i)<{ on: boolean }>`
+  color: ${({ on }) => (on ? '#f88748' : '#501a96')};
+`;
+
+interface IProps {}
+
+const Switch: React.FC<IProps> = () => {
+  const [isOn, setIsOn] = useState<boolean>(false);
+
+  const onClick = () => {
+    setIsOn((prev) => !prev);
   };
 
   return (
-    <Container size={size}>
-      <HiddenCheckbox {...props} onChange={handleCheckboxChange} />
-      <CircleButton
-        style={{ scale }}
-        initial={false}
-        animate={{ scale }}
-        transition={{ duration: 0.3, ease: 'linear' }}
-        checked={checked}
-      >
-        {checked ? (
-          <Icon icon={icon[0]} size={size} color="yellow" colorNum="400" />
-        ) : (
-          <Icon icon={icon[1]} size={size} color="yellow" colorNum="400" />
-        )}
-      </CircleButton>
+    <Container on={isOn} onClick={onClick}>
+      <Handle layout on={isOn}>
+        <AnimatePresence initial={false}>
+          <Icon
+            on={isOn}
+            className={`icon far fa-${isOn ? 'moon' : 'sun'}`}
+            key={isOn ? 'moon' : 'sun'}
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 30, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        </AnimatePresence>
+      </Handle>
     </Container>
   );
 };
 
-const Index = memo(Toggle);
-
-export default Index;
+export default Switch;

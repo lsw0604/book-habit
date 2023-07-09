@@ -3,6 +3,8 @@ import GlobalStyle from './style/globalStyle';
 import { useDarkMode } from '@hooks/useDarkMode';
 import Button from './components/common/Button/index';
 import IconButton from 'components/common/Button/Icon';
+import Switch from 'components/common/Toggle';
+import { useState } from 'react';
 
 const App = () => {
   const [value, onChangeTheme] = useDarkMode();
@@ -45,6 +47,15 @@ const App = () => {
           <IconButton size="lg" icon="Beach" />
           <IconButton size="xl" icon="Beach" />
         </div>
+        <Switch />
+        <input
+          type="checkbox"
+          value={value}
+          onChange={() => {
+            setOnValue('sss');
+            console.log(onValue);
+          }}
+        />
       </ThemeProvider>
     </div>
   );

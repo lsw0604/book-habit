@@ -35,13 +35,7 @@ interface IProps {
   marginRight?: number;
 }
 
-const Index: React.FC<IProps> = ({
-  icon,
-  colorNum,
-  color,
-  size,
-  marginRight,
-}) => {
+const Index: React.FC<IProps> = ({ icon, colorNum, color, size }) => {
   const { loading, svg: SvgComponent } = useDynamicIcon(icon);
 
   return (
