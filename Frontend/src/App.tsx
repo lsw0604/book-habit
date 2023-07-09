@@ -4,10 +4,13 @@ import { useDarkMode } from '@hooks/useDarkMode';
 import Button from './components/common/Button/index';
 import IconButton from 'components/common/Button/Icon';
 import Switch from 'components/common/Toggle';
+import StarRating from 'components/StarRating/Rating';
 import { useState } from 'react';
 
 const App = () => {
   const [value, onChangeTheme] = useDarkMode();
+  const [number, setNumber] = useState(0);
+  const [hover, setHover] = useState(0);
 
   return (
     <div>
@@ -48,13 +51,12 @@ const App = () => {
           <IconButton size="xl" icon="Beach" />
         </div>
         <Switch />
-        <input
-          type="checkbox"
-          value={value}
-          onChange={() => {
-            setOnValue('sss');
-            console.log(onValue);
-          }}
+
+        <StarRating
+          isClicked={number}
+          isHovering={hover}
+          setIsClicked={setNumber}
+          setIsHovering={setHover}
         />
       </ThemeProvider>
     </div>

@@ -38,6 +38,9 @@ export default async function (
   next: NextFunction
 ) {
   const { provider, id, username } = req;
+  try {
+    connectionPool.beginTransaction();
+  } catch (error) {}
 
   console.log('login', req);
 }

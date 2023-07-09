@@ -33,6 +33,7 @@ declare module 'styled-components' {
 }
 
 export type IconType =
+  | 'Star'
   | 'Mail'
   | 'X'
   | 'Male'

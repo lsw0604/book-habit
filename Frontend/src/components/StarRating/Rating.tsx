@@ -1,0 +1,92 @@
+import { SetStateAction } from 'react';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+import Star from './Star';
+
+interface IProps {
+  isClicked: number;
+  isHovering: number;
+  setIsClicked: (value: SetStateAction<number>) => void;
+  setIsHovering: (value: SetStateAction<number>) => void;
+}
+
+const Rating = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center center;
+  border: solid 2px black;
+`;
+
+const Container = styled.div`
+  display: flex;
+  font-size: 3rem;
+  svg {
+    fill: gold !important;
+  }
+`;
+
+const Wrapper = styled(motion.div)`
+  position: relative;
+  width: 3.4rem;
+  margin: 0 1rem;
+  display: grid;
+  place-items: center center;
+
+  @media (max-width: 480px) {
+    width: 2.6rem;
+    margin: 0 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 2.6rem;
+    margin: 0 0.5rem;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    width: 3rem;
+    margin: 0 0.75rem;
+  }
+
+  @media (min-width: 1025px) {
+    width: 3.4rem;
+    margin: 0 1rem;
+  }
+`;
+
+export default function StarRating({
+  isClicked,
+  isHovering,
+  setIsClicked,
+  setIsHovering,
+}: IProps) {
+  const isClickedHandler = (i: number) => {
+    if (i === isClicked) {
+      setIsClicked((prev) => prev - 1);
+      setIsHovering((prev) => prev - 1);
+    } else {
+      setIsClicked(i);
+    }
+  };
+
+  return (
+    <Rating>
+      <Container>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Wrapper
+            key={i}
+            onMouseOver={() => setIsHovering(i)}
+            onClick={() => isClickedHandler(i)}
+          >
+            <Star
+              i={i}
+              isHoveringWrapper={isHovering >= i}
+              isClicked={isClicked >= i}
+            />
+          </Wrapper>
+        ))}
+      </Container>
+    </Rating>
+  );
+}
