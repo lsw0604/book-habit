@@ -16,7 +16,7 @@ const Rating = styled.div`
   height: 100%;
   display: grid;
   place-items: center center;
-  border: solid 2px black;
+  background-color: ${({ theme }) => theme.mode.bg_main};
 `;
 
 const Container = styled.div`
@@ -29,30 +29,10 @@ const Container = styled.div`
 
 const Wrapper = styled(motion.div)`
   position: relative;
-  width: 3.4rem;
-  margin: 0 1rem;
+  width: 2.6rem;
+  margin: 0.5rem;
   display: grid;
   place-items: center center;
-
-  @media (max-width: 480px) {
-    width: 2.6rem;
-    margin: 0 0.5rem;
-  }
-
-  @media (max-width: 768px) {
-    width: 2.6rem;
-    margin: 0 0.5rem;
-  }
-
-  @media (min-width: 769px) and (max-width: 1024px) {
-    width: 3rem;
-    margin: 0 0.75rem;
-  }
-
-  @media (min-width: 1025px) {
-    width: 3.4rem;
-    margin: 0 1rem;
-  }
 `;
 
 export default function StarRating({

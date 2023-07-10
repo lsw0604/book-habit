@@ -59,7 +59,10 @@ export type IconType =
   | 'Plus'
   | 'Pencil'
   | 'TrashCan'
-  | 'Upload';
+  | 'Upload'
+  | 'Image'
+  | 'Search'
+  | 'Home';
 
 export type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
