@@ -1,34 +1,16 @@
 declare module 'styled-components' {
   export interface DefaultTheme {
     mode: {
-      /** background */
-      bg_main: string;
-      bg_sub: string;
-      bg_toggle: string;
-      bg_header: string;
-      /** border */
-      border_main: string;
-      border_sub: string;
-      /** Typography */
+      main: string;
+      sub: string;
       typo_main: string;
       typo_sub: string;
-      typo_black: string;
-      typo_info: string;
-      typo_success: string;
-      typo_failure: string;
-      typo_warning: string;
-      typo_disabled: string;
-      /** validation */
-      validate_main: string;
-      validate_sub: string;
-      /** blue */
-      blue_main: string;
-      blue_sub: string;
     };
     shadow: Record<
       'sm' | 'n' | 'md' | 'lg' | 'xl' | 'xxl' | 'inner' | 'none',
       string
     >;
+    // color: Record<ColorType, string>;
   }
 }
 

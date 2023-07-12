@@ -1,80 +1,37 @@
-import { memo } from 'react';
 import styled from 'styled-components';
-import Icon from '../Icon';
-import { ColorNumType, ColorType, IconType, SizeType } from 'types/style';
-import { useColor } from '@hooks/useColor';
-import { useButtonMode } from '@hooks/useButtonMode';
 
-const { getSizeNormalButton } = useButtonMode();
-
-interface IContainerProps {
-  icon: boolean;
-  size: SizeType;
-  color?: ColorType;
-  colorNum?: ColorNumType;
-}
-
-interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  icon?: IconType;
-  size: SizeType;
-  color?: ColorType;
-  colorNum?: ColorNumType;
-}
-
-const Container = styled.button<IContainerProps>`
+const Container = styled.button<{ icon?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  padding: ${({ icon }) => (icon ? '0 20px' : '0px 15px')};
+  border-radius: 1rem;
   border: 0;
-  border-radius: 5px;
+  font-family: 'SUIT';
   font-weight: 700;
   outline: none;
   cursor: pointer;
-  color: ${(props) =>
-    props.color && props.colorNum
-      ? useColor(props.color, props.colorNum)
-      : ({ theme }) => theme.mode.typo_main};
-  ${({ size }) => getSizeNormalButton(size)};
-  background-color: ${({ theme }) => theme.mode.bg_main};
+  width: 100%;
+  height: 100%;
+  padding: ${(props) => (props.icon ? '0 4rem' : '0 2rem')};
 `;
 
-const Span = styled.span`
-  margin-left: 10px;
+const Icon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+  }
 `;
 
-const Index: React.FC<IProps> = ({
-  size,
-  color,
-  colorNum,
-  children,
-  icon,
-  ...props
-}) => {
+interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  icon?: boolean;
+}
+
+export default function Index({ icon, children, ...props }: IProps) {
   return (
-    <Container
-      icon={!!icon}
-      size={size}
-      color={color}
-      colorNum={colorNum}
-      {...props}
-    >
-      {icon && (
-        <Icon
-          size={size}
-          color={color}
-          colorNum={colorNum}
-          icon={icon}
-          marginRight={10}
-        />
-      )}
-      <Span>{children}</Span>
+    <Container {...props} icon={icon}>
+      <Icon>{children}</Icon>
     </Container>
   );
-};
-
-const Button = memo(Index);
-
-export default Button;
+}
