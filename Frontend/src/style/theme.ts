@@ -43,12 +43,6 @@ export const lime = {
   third: customize.lime['300'],
 };
 
-export const red = {
-  main: customize.red['500'],
-  sub: customize.red['400'],
-  third: customize.red['300'],
-};
-
 export const rose = {
   main: customize.rose['500'],
   sub: customize.rose['400'],

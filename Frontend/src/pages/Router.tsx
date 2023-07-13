@@ -4,10 +4,10 @@ import Header from '../components/header/Header';
 import DesktopLayout from './layout/DesktopLayout';
 import Home from './Home';
 
-export default function Router() {
+export default function Router({ onToggle }: { onToggle: () => void }) {
   return (
     <BrowserRouter>
-      <Header></Header>
+      <Header onToggle={onToggle} />
       <DesktopLayout>
         <Routes>
           <Route path="/" Component={Home} />

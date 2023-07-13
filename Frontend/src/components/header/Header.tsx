@@ -1,7 +1,12 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+
 import Button from '../../components/common/Button';
-import useDarkMode from '@hooks/useTheme';
+import { IconBeach } from '@style/icons';
+
+interface IProps {
+  onToggle: () => void;
+}
 
 const Container = styled.nav`
   position: fixed;
@@ -18,27 +23,25 @@ const Container = styled.nav`
   }
 `;
 
-const Logo = styled.div``;
-
-const AuthGroup = styled.div`
-  display: flex;
+const Logo = styled.div`
+  cursor: pointer;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function index() {
-  const navigate = useNavigate();
-  const { toggleTheme } = useDarkMode();
+const AuthGroup = styled.div``;
 
-  const onHomeHandler = () => {
-    navigate('/');
-  };
+export default function Index({ onToggle }: IProps) {
+  const navigate = useNavigate();
 
   return (
     <header>
       <Container>
-        <Logo onClick={onHomeHandler}>Logo</Logo>
+        <Logo onClick={() => navigate('/')}>Logo</Logo>
         <AuthGroup>
-          <Button onClick={toggleTheme}>ss</Button>
-          <Button>s</Button>
+          <Button onClick={onToggle} icon={<IconBeach />}>
+            ss
+          </Button>
+          <Button icon={<IconBeach />}>ss</Button>
         </AuthGroup>
       </Container>
     </header>

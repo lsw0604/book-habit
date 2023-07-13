@@ -16,7 +16,7 @@ const Rating = styled.div`
   height: 100%;
   display: grid;
   place-items: center center;
-  background-color: ${({ theme }) => theme.mode.bg_main};
+  background-color: ${({ theme }) => theme.mode.main};
 `;
 
 const Container = styled.div`

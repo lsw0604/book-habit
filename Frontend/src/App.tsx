@@ -1,17 +1,13 @@
 import { ThemeProvider } from 'styled-components';
+import { useEffect } from 'react';
 
 import GlobalStyle from './style/globalStyle';
-import useDarkMode from '@hooks/useTheme';
+import useTheme from '@hooks/useTheme';
 import Router from 'pages/Router';
-import Header from 'components/header/Header';
-import Home from 'pages/Home';
-import Welcome from 'pages/Welcome';
-
 import { dark, light, shadow } from './style/theme';
 
 const App = () => {
-  const { theme } = useDarkMode();
-
+  const { theme, toggleTheme } = useTheme();
   const mode =
     theme === 'light' ? { mode: light, shadow } : { mode: dark, shadow };
 
@@ -19,7 +15,7 @@ const App = () => {
     <>
       <ThemeProvider theme={mode}>
         <GlobalStyle />
-        <Router />
+        <Router onToggle={toggleTheme} />
       </ThemeProvider>
     </>
   );
