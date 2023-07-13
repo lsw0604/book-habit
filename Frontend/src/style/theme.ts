@@ -2,7 +2,7 @@ import { customize } from '@style/colors';
 
 export const light = {
   main: customize.slate['50'],
-  sub: customize.slate['100'],
+  sub: customize.slate['200'],
   typo_main: customize.slate['900'],
   typo_sub: customize.slate['500'],
 };

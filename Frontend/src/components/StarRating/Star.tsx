@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { motion, useAnimation, Variants } from 'framer-motion';
 import styled from 'styled-components';
-import Icon from '../common/Icon/index';
+import { IconStar } from '@style/icons';
+import { customize } from '@style/colors';
 
 interface IProps {
   i: number;
@@ -45,14 +46,18 @@ const Background = styled(motion.div)`
   height: 0.6rem;
   width: 0.6rem;
   border-radius: 50%;
-  background: #aaa;
+  background: ${customize.gray['300']};
   cursor: pointer;
 `;
 
-const IconStar = styled(motion.i)`
+const IconStarWrapper = styled(motion.i)`
   position: relative;
   z-index: 10;
   cursor: pointer;
+  svg {
+    height: 2rem;
+    width: 2rem;
+  }
 `;
 
 export default function Star({ i, isHoveringWrapper, isClicked }: IProps) {
@@ -72,7 +77,9 @@ export default function Star({ i, isHoveringWrapper, isClicked }: IProps) {
 
   useEffect(() => {
     backgroundControls.start({
-      background: isHoveringWrapper ? '#ffd700' : '#aaa',
+      background: isHoveringWrapper
+        ? customize.yellow['400']
+        : customize.gray['300'],
     });
   }, [isHoveringWrapper]);
 
@@ -80,7 +87,7 @@ export default function Star({ i, isHoveringWrapper, isClicked }: IProps) {
     <>
       <Background animate={backgroundControls} />
       {i !== 0 && (
-        <IconStar
+        <IconStarWrapper
           onMouseOver={() => setIsHovering(true)}
           onMouseOut={() => setIsHovering(false)}
           variants={starVariants}
@@ -88,8 +95,8 @@ export default function Star({ i, isHoveringWrapper, isClicked }: IProps) {
           animate={starControls}
           custom={i}
         >
-          <Icon icon="Star" size="xl" />
-        </IconStar>
+          <IconStar />
+        </IconStarWrapper>
       )}
     </>
   );

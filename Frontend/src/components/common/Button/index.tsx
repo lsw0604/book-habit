@@ -4,17 +4,24 @@ import styled from 'styled-components';
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
   children: ReactNode;
+  text?: boolean;
 }
 
-const Container = styled.button<{ icon: boolean }>`
-  background-color: lightblue;
+const Container = styled.button<{ text: boolean }>`
+  background-color: ${(props) =>
+    props.text ? 'lightblue' : ({ theme }) => theme.mode.main};
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.25rem;
   display: inline-flex;
   align-items: center;
-  &:hover {
+  &:hover:enabled {
     background-color: blue;
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.mode.sub};
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 
@@ -35,9 +42,9 @@ const Span = styled.span`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function Button({ children, icon, ...props }: IProps) {
+export default function Button({ text, children, icon, ...props }: IProps) {
   return (
-    <Container icon={!!icon} {...props}>
+    <Container text={!text} {...props}>
       {icon && <Icon>{icon}</Icon>}
       <Span>{children}</Span>
     </Container>

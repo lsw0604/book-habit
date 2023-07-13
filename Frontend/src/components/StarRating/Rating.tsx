@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import Star from './Star';
+import { customize } from '@style/colors';
 
 interface IProps {
   isClicked: number;
@@ -12,8 +13,8 @@ interface IProps {
 }
 
 const Rating = styled.div`
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   display: grid;
   place-items: center center;
   background-color: ${({ theme }) => theme.mode.main};
@@ -23,7 +24,7 @@ const Container = styled.div`
   display: flex;
   font-size: 3rem;
   svg {
-    fill: gold !important;
+    fill: ${customize.yellow['400']} !important;
   }
 `;
 

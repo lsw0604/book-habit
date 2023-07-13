@@ -24,3 +24,5 @@ export { ReactComponent as IconPlus } from '../assets/icons/iconPlus.svg';
 export { ReactComponent as IconPencil } from '../assets/icons/iconPencil.svg';
 export { ReactComponent as IconTrashCan } from '../assets/icons/iconTrashCan.svg';
 export { ReactComponent as IconUpload } from '../assets/icons/iconUpload.svg';
+export { ReactComponent as IconPalette } from '../assets/icons/iconPalette.svg';
+export { ReactComponent as IconStar } from '../assets/icons/iconStar.svg';

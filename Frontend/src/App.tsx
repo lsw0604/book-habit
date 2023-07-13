@@ -1,5 +1,4 @@
 import { ThemeProvider } from 'styled-components';
-import { useEffect } from 'react';
 
 import GlobalStyle from './style/globalStyle';
 import useTheme from '@hooks/useTheme';
