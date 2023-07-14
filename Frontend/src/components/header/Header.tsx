@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
-import { IconPalette } from '@style/icons';
+import { IconCloudyParty, IconPalette, IconSunny } from '@style/icons';
 import Icon from 'components/common/Button/Icon';
 import HeaderAuth from './HeaderAuth';
 import StarRating from 'components/StarRating/Rating';
@@ -86,7 +86,11 @@ export default function Index({ onToggle }: IProps) {
           setIsClicked={setStar}
           setIsHovering={setHovering}
         />
-        <Toggle isOn={isOn} setIsOn={setIsOn} />
+        <Toggle
+          isOn={isOn}
+          setIsOn={setIsOn}
+          icons={[<IconSunny key="sunny" />, <IconCloudyParty key="cloud" />]}
+        />
         <HeaderPalette />
         <HeaderAuth />
       </Container>

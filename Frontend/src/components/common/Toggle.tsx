@@ -1,15 +1,15 @@
 import { customize } from '@style/colors';
-import { ButtonHTMLAttributes, SetStateAction } from 'react';
+import { SetStateAction } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
 
-interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IProps {
   icons?: JSX.Element[];
   isOn: boolean;
   setIsOn: (value: SetStateAction<boolean>) => void;
 }
 
-const Container = styled.button<{ isOn: boolean }>`
+const Container = styled.div<{ isOn: boolean }>`
   padding: 0;
   margin: 0;
   height: 1.5rem;
@@ -22,6 +22,7 @@ const Container = styled.button<{ isOn: boolean }>`
   background-color: ${(props) =>
     props.isOn ? customize.lime['500'] : customize.gray['500']};
   justify-content: ${(props) => (props.isOn ? 'flex-end' : 'flex-start')};
+  transition: all 0.3s;
 `;
 
 const Handle = styled(motion.div)`
@@ -35,25 +36,30 @@ const Handle = styled(motion.div)`
   overflow: hidden;
 `;
 
-const Wrapper = styled(motion.div)<{ isOn: boolean }>`
+const Icon = styled(motion.i)`
   display: flex;
-  padding: 10px;
-  /* position: relative; */
-  align-items: center;
   justify-content: center;
-  width: 45%;
-  height: 90%;
-  border-radius: 50%;
-  background-color: white;
+  align-items: center;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 `;
-
-const Label = styled.label``;
 
 export default function Toggle({ setIsOn, isOn, icons, ...props }: IProps) {
   return (
     <Container {...props} isOn={isOn} onClick={() => setIsOn((prev) => !prev)}>
       <Handle layout>
-        <AnimatePresence initial={isOn}></AnimatePresence>
+        <AnimatePresence initial={isOn}>
+          <Icon
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 30, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {icons !== undefined ? (isOn ? icons[0] : icons[1]) : null}
+          </Icon>
+        </AnimatePresence>
       </Handle>
     </Container>
   );

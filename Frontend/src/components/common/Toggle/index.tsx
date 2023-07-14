@@ -4,7 +4,10 @@ interface IProps {
   onClick: () => void;
 }
 
-const Container = styled.label`
+const Container = styled.button`
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
   position: relative;
   display: inline-block;
   width: 60px;
