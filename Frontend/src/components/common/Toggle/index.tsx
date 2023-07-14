@@ -1,65 +1,53 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
 
-const Container = styled.div<{ on: boolean }>`
-  height: 40px;
-  width: 100px;
-  background-image: ${({ on }) =>
-    on
-      ? `radial-gradient(circle farthest-corner at 10% 20%,rgba(253, 203, 50, 1) 0%,rgba(244, 56, 98, 1) 100.2%)`
-      : `linear-gradient(109.8deg, rgba(62,5,116,1) -5.2%, rgba(41,14,151,1) -5.2%, rgba(216,68,148,1) 103.3%) `};
-  border-radius: 25px;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  cursor: pointer;
-  padding: 0 5px;
-  transition: all 0.3s;
-  justify-content: ${({ on }) => (on ? 'flex-end' : 'flex-start')};
-`;
+interface IProps {
+  onClick: () => void;
+}
 
-const Handle = styled(motion.div)<{ on: boolean }>`
+const Container = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
   height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  background-color: #fff;
-  overflow: hidden;
+  &::before {
+    position: absolute;
+    content: '';
+    height: 25px;
+    width: 25px;
+    bottom: 2.6px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+  }
 `;
 
-const Icon = styled(motion.i)<{ on: boolean }>`
-  color: ${({ on }) => (on ? '#f88748' : '#501a96')};
+const Input = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+  &:checked + span {
+    background-color: #00c853;
+  }
+
+  &:checked + span::before {
+    transform: translateX(29px);
+  }
 `;
 
-interface IProps {}
+const Background = styled.span`
+  position: absolute;
+  cursor: pointer;
+  inset: 0 0 0 0;
+  background-color: #2c3e50;
+  transition: 0.3s;
+  border-radius: 30px;
+`;
 
-const Switch: React.FC<IProps> = () => {
-  const [isOn, setIsOn] = useState<boolean>(false);
-
-  const onClick = () => {
-    setIsOn((prev) => !prev);
-  };
-
+export default function Index() {
   return (
-    <Container on={isOn} onClick={onClick}>
-      <Handle layout on={isOn}>
-        <AnimatePresence initial={false}>
-          <Icon
-            on={isOn}
-            className={`icon far fa-${isOn ? 'moon' : 'sun'}`}
-            key={isOn ? 'moon' : 'sun'}
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 30, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          />
-        </AnimatePresence>
-      </Handle>
+    <Container>
+      <Input type="checkbox" />
+      <Background />
     </Container>
   );
-};
-
-export default Switch;
+}
