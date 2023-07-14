@@ -38,7 +38,6 @@ const Logo = styled.div`
 
 export default function Index({ onToggle }: IProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isOn, setIsOn] = useState(false);
   const navigate = useNavigate();
   const paletteRef = useRef<HTMLDivElement>(null);
   const { setHovering, setStar, star, hovering } = useStarHook();
@@ -85,11 +84,6 @@ export default function Index({ onToggle }: IProps) {
           isHovering={hovering}
           setIsClicked={setStar}
           setIsHovering={setHovering}
-        />
-        <Toggle
-          isOn={isOn}
-          setIsOn={setIsOn}
-          icons={[<IconSunny key="sunny" />, <IconCloudyParty key="cloud" />]}
         />
         <HeaderPalette />
         <HeaderAuth />

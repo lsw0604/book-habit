@@ -1,8 +1,9 @@
 import Icon from 'components/common/Button/Icon';
 import styled from 'styled-components';
-import { IconPalette } from '@style/icons';
+import { IconCloudyParty, IconPalette, IconSunny } from '@style/icons';
 import { useEffect, useRef, useState } from 'react';
 import { customize } from '@style/colors';
+import Toggle from 'components/common/Toggle';
 
 const Container = styled.div`
   display: flex;
@@ -12,16 +13,42 @@ const Container = styled.div`
   height: auto;
 `;
 
-const PaletteMenu = styled.ul`
+const PaletteDropdownContainer = styled.div`
   position: absolute;
-  inset: 0px auto auto 0px;
+  top: 3.5rem;
+  display: flex;
+  padding: 0.1rem;
+  margin-top: 1rem;
+  flex-direction: column;
+  width: 10rem;
   height: auto;
-  padding: 0.5rem;
-  background-color: black;
+  border-width: 1px;
+  border-color: ${customize.gray['100']};
+  border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.mode.main};
+`;
+
+const PaletteDropdownMenu = styled.ul`
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+`;
+
+const PaletteDropdownButton = styled.li`
+  border-radius: 0.5rem;
+  padding: 10px;
+  width: 100%;
+  height: auto;
+  background-color: ${({ theme }) => theme.mode.sub};
+  color: ${({ theme }) => theme.mode.typo_sub};
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export default function HeaderPalette() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
+  const [isOn, setIsOn] = useState(false);
 
   const paletteRef = useRef<HTMLDivElement>(null);
 
@@ -53,46 +80,29 @@ export default function HeaderPalette() {
         </Icon>
         {isOpened && (
           <PaletteDropdownContainer>
-            <li>
-              <PaletteMenu></PaletteMenu>
-            </li>
+            <PaletteDropdownMenu>
+              <PaletteDropdownButton style={{ marginBottom: '10px' }}>
+                Theme
+                <Toggle
+                  isOn={isOn}
+                  setIsOn={setIsOn}
+                  icons={[
+                    <IconCloudyParty
+                      key="cloud"
+                      style={{ fill: customize.yellow['400'] }}
+                    />,
+                    <IconSunny
+                      key="sunny"
+                      style={{ fill: customize.yellow['300'] }}
+                    />,
+                  ]}
+                />
+              </PaletteDropdownButton>
+              <PaletteDropdownButton>Color</PaletteDropdownButton>
+            </PaletteDropdownMenu>
           </PaletteDropdownContainer>
         )}
       </Container>
     </>
   );
 }
-
-const PaletteDropdownMenu = styled.div`
-  display: none;
-  width: 100%;
-`;
-
-const PaletteDropdownContainer = styled.ul`
-  display: flex;
-  padding: 1rem;
-  margin-top: 1rem;
-  flex-direction: column;
-  border-width: 1px;
-  border-color: ${customize.gray['100']};
-  border-radius: 0.5rem;
-  background-color: ${customize.gray['50']};
-`;
-
-const PaletteDropdownButton = styled.a`
-  display: block;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 1rem;
-  padding-left: 0.75rem;
-  color: ${({ theme }) => theme.mode.typo_main};
-  background-color: ${({ theme }) => theme.mode.main};
-  border-radius: 0.25rem;
-`;
-
-const PaletteDropdownNavbar = styled.div`
-  z-index: 10rem;
-  display: none;
-  background-color: ${({ theme }) => theme.mode.main};
-  color: ${({ theme }) => theme.mode.typo_main};
-`;
