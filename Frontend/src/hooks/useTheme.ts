@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 type Theme = 'light' | 'dark';
 
-const useTheme = (): { theme: Theme; toggleTheme: () => void } => {
+const useTheme = (): { theme: Theme; onToggle: () => void } => {
   const [theme, setTheme] = useState<Theme>(() => {
     const localTheme = window.localStorage.getItem('theme');
     if (localTheme === 'dark' || localTheme === 'light') {
@@ -14,7 +14,7 @@ const useTheme = (): { theme: Theme; toggleTheme: () => void } => {
     return systemTheme ? 'dark' : 'light';
   });
 
-  const toggleTheme = (): void => {
+  const onToggle = (): void => {
     const newTheme: Theme = theme === 'light' ? 'dark' : 'light';
     window.localStorage.setItem('theme', newTheme);
     setTheme(newTheme);
@@ -38,7 +38,7 @@ const useTheme = (): { theme: Theme; toggleTheme: () => void } => {
     };
   }, []);
 
-  return { theme, toggleTheme };
+  return { theme, onToggle };
 };
 
 export default useTheme;

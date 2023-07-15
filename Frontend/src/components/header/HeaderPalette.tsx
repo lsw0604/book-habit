@@ -4,6 +4,15 @@ import { IconCloudyParty, IconPalette, IconSunny } from '@style/icons';
 import { useEffect, useRef, useState } from 'react';
 import { customize } from '@style/colors';
 import Toggle from 'components/common/Toggle';
+import HeaderPaletteColorBox from './HeaderPaletteColorBox';
+import { ColorType } from 'types/style';
+
+interface IProps {
+  onToggle: () => void;
+  isOn: boolean;
+  selectedColor: ColorType;
+  colorHandler: (color: ColorType) => void;
+}
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +27,7 @@ const PaletteDropdownContainer = styled.div`
   top: 3.5rem;
   display: flex;
   padding: 0.1rem;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   flex-direction: column;
   width: 10rem;
   height: auto;
@@ -26,6 +35,7 @@ const PaletteDropdownContainer = styled.div`
   border-color: ${customize.gray['100']};
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.mode.main};
+  box-shadow: ${({ theme }) => theme.shadow.xl};
 `;
 
 const PaletteDropdownMenu = styled.ul`
@@ -46,9 +56,13 @@ const PaletteDropdownButton = styled.li`
   align-items: center;
 `;
 
-export default function HeaderPalette() {
+export default function HeaderPalette({
+  onToggle,
+  isOn,
+  selectedColor,
+  colorHandler,
+}: IProps) {
   const [isOpened, setIsOpened] = useState<boolean>(false);
-  const [isOn, setIsOn] = useState(false);
 
   const paletteRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +89,11 @@ export default function HeaderPalette() {
   return (
     <>
       <Container ref={paletteRef}>
-        <Icon icon={<IconPalette />} onClick={handlePalette}>
+        <Icon
+          style={{ backgroundColor: customize[selectedColor]['400'] }}
+          icon={<IconPalette />}
+          onClick={handlePalette}
+        >
           Palette Settings
         </Icon>
         {isOpened && (
@@ -85,20 +103,28 @@ export default function HeaderPalette() {
                 Theme
                 <Toggle
                   isOn={isOn}
-                  setIsOn={setIsOn}
+                  setIsOn={onToggle}
                   icons={[
-                    <IconCloudyParty
-                      key="cloud"
-                      style={{ fill: customize.yellow['400'] }}
-                    />,
                     <IconSunny
                       key="sunny"
+                      style={{ fill: customize.yellow['300'] }}
+                    />,
+                    <IconCloudyParty
+                      key="cloud"
                       style={{ fill: customize.yellow['300'] }}
                     />,
                   ]}
                 />
               </PaletteDropdownButton>
-              <PaletteDropdownButton>Color</PaletteDropdownButton>
+              <PaletteDropdownButton
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
+                Color
+                <HeaderPaletteColorBox
+                  selectedColor={selectedColor}
+                  colorHandler={colorHandler}
+                />
+              </PaletteDropdownButton>
             </PaletteDropdownMenu>
           </PaletteDropdownContainer>
         )}

@@ -5,12 +5,13 @@ declare module 'styled-components' {
       sub: string;
       typo_main: string;
       typo_sub: string;
+      typo_white: string;
     };
     shadow: Record<
       'sm' | 'n' | 'md' | 'lg' | 'xl' | 'xxl' | 'inner' | 'none',
       string
     >;
-    // color: Record<ColorType, string>;
+    colors: ColorType<Record<'main' | 'sub' | 'font', string>>;
   }
 }
 
@@ -57,7 +58,9 @@ export type ColorType =
   | 'sky'
   | 'lime'
   | 'rose'
-  | 'yellow';
+  | 'yellow'
+  | 'orange'
+  | 'fuchsia';
 
 export type ColorNumType =
   | '50'
@@ -70,23 +73,5 @@ export type ColorNumType =
   | '700'
   | '800'
   | '900';
-
-export type ToggleIconTupleType<
-  IconType,
-  K extends number,
-  T extends IconType[] = []
-> = T['length'] extends K ? T : IconTuple<IconType, K, [...T, IconType]>;
-
-export type NormalButtonSizeType = Record<
-  SizeType,
-  Record<'height' | 'lineHeight' | 'fontSize', number>
->;
-
-export type IconButtonSizeType = Record<
-  SizeType,
-  Record<'width' | 'height', number>
->;
-
-export type ColorModeType = 'fill' | 'isFill';
 
 export type ColorStateType = Record<ColorType, Record<ColorNumType, string>>;

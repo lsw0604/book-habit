@@ -50,15 +50,30 @@ export default function Toggle({ setIsOn, isOn, icons, ...props }: IProps) {
   return (
     <Container {...props} isOn={isOn} onClick={() => setIsOn((prev) => !prev)}>
       <Handle layout>
-        <AnimatePresence initial={isOn}>
-          <Icon
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 30, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {icons !== undefined ? (isOn ? icons[0] : icons[1]) : null}
-          </Icon>
+        <AnimatePresence initial={isOn} mode={'wait'}>
+          {icons !== undefined ? (
+            isOn ? (
+              <Icon
+                key={0}
+                initial={{ y: -30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 30, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {icons[0]}
+              </Icon>
+            ) : (
+              <Icon
+                key={1}
+                initial={{ y: -30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 30, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {icons[1]}
+              </Icon>
+            )
+          ) : null}
         </AnimatePresence>
       </Handle>
     </Container>

@@ -9,14 +9,19 @@ interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Container = styled.button<{ text: boolean }>`
   background-color: ${(props) =>
-    props.text ? 'lightblue' : ({ theme }) => theme.mode.main};
+    props.text
+      ? ({ theme }) => theme.colors.main
+      : ({ theme }) => theme.mode.main};
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.25rem;
   display: inline-flex;
   align-items: center;
   &:hover:enabled {
-    background-color: blue;
+    background-color: ${(props) =>
+      props.text
+        ? ({ theme }) => theme.colors.sub
+        : ({ theme }) => theme.mode.sub};
   }
   &:disabled {
     background-color: ${({ theme }) => theme.mode.sub};

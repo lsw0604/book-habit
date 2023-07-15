@@ -6,11 +6,29 @@ import Home from './Home';
 import Login from './user/Login';
 import Register from './user/Register';
 import MyProfile from './user/MyProfile';
+import { ColorType } from 'types/style';
 
-export default function Router({ onToggle }: { onToggle: () => void }) {
+interface IProps {
+  isOn: boolean;
+  onToggle: () => void;
+  selectedColor: ColorType;
+  colorHandler: (color: ColorType) => void;
+}
+
+export default function Router({
+  onToggle,
+  isOn,
+  selectedColor,
+  colorHandler,
+}: IProps) {
   return (
     <BrowserRouter>
-      <Header onToggle={onToggle} />
+      <Header
+        onToggle={onToggle}
+        isOn={isOn}
+        selectedColor={selectedColor}
+        colorHandler={colorHandler}
+      />
       <DesktopLayout>
         <Routes>
           <Route path="/" Component={Home} />
