@@ -1,6 +1,5 @@
 import { customize } from '@style/colors';
-import { IconPencil, IconSuccess, IconX } from '@style/icons';
-import { useState, useCallback, MouseEvent } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { ColorType } from 'types/style';
 
@@ -27,29 +26,47 @@ const ColorButton = styled.button<{
   margin: 3px;
   background-color: ${(props) => customize[`${props.btnColor}`][400]};
   border: 0;
+  justify-content: center;
+  align-items: center;
 `;
 
-const colors: ColorType[] = [
-  'cyan',
-  'gray',
-  'lime',
-  'rose',
-  'sky',
-  'teal',
-  'yellow',
-  'fuchsia',
-  'orange',
-];
-
 interface IProps {
-  selectedColor: ColorType;
   colorHandler: (color: ColorType) => void;
+  selectedColor: ColorType;
 }
 
 export default function HeaderPaletteColorBox({
-  selectedColor,
   colorHandler,
+  selectedColor,
 }: IProps) {
+  const [colors, setColors] = useState<ColorType[]>([
+    'lime',
+    'rose',
+    'sky',
+    'teal',
+    'yellow',
+    'fuchsia',
+    'orange',
+    'gray',
+  ]);
+
+  const handleColors = useCallback(
+    (color: ColorType) => {
+      colorHandler(color);
+      setColors((prev) => {
+        if (!prev.includes(selectedColor)) {
+          return [...prev, selectedColor];
+        }
+        return prev;
+      });
+    },
+    [colorHandler, selectedColor]
+  );
+
+  useEffect(() => {
+    setColors((prev) => prev.filter((color) => color !== selectedColor));
+  }, [selectedColor]);
+
   return (
     <Container>
       <ColorButtonsList>
@@ -58,10 +75,8 @@ export default function HeaderPaletteColorBox({
             key={color}
             type="button"
             btnColor={color}
-            onClick={() => colorHandler(color)}
-          >
-            {selectedColor === color && <IconX />}
-          </ColorButton>
+            onClick={() => handleColors(color)}
+          />
         ))}
       </ColorButtonsList>
     </Container>

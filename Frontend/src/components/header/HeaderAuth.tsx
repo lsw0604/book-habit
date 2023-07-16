@@ -13,8 +13,12 @@ export default function HeaderAuth() {
   const navigate = useNavigate();
   return (
     <Container>
-      <Button onClick={() => navigate('/register')}>회원가입</Button>
-      <Button onClick={() => navigate('/login')}>로그인</Button>
+      <Button text onClick={() => navigate('/register')}>
+        회원가입
+      </Button>
+      <Button text onClick={() => navigate('/login')}>
+        로그인
+      </Button>
     </Container>
   );
 }

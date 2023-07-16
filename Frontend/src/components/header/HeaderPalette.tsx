@@ -44,7 +44,7 @@ const PaletteDropdownMenu = styled.ul`
   padding: 5px;
 `;
 
-const PaletteDropdownButton = styled.li`
+const PaletteDropdownList = styled.li`
   border-radius: 0.5rem;
   padding: 10px;
   width: 100%;
@@ -53,6 +53,26 @@ const PaletteDropdownButton = styled.li`
   color: ${({ theme }) => theme.mode.typo_sub};
   display: inline-flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const PaletteDropdownLabel = styled.label`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+`;
+
+const ColorButton = styled.div<{ btnColor: ColorType }>`
+  width: 1.5rem;
+  height: 1.5rem;
+  outline: 0;
+  border-radius: 50%;
+  margin: 3px;
+  background-color: ${(props) => customize[`${props.btnColor}`][400]};
+  border: 0;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -89,42 +109,43 @@ export default function HeaderPalette({
   return (
     <>
       <Container ref={paletteRef}>
-        <Icon
-          style={{ backgroundColor: customize[selectedColor]['400'] }}
-          icon={<IconPalette />}
-          onClick={handlePalette}
-        >
+        <Icon icon={<IconPalette />} onClick={handlePalette}>
           Palette Settings
         </Icon>
         {isOpened && (
           <PaletteDropdownContainer>
             <PaletteDropdownMenu>
-              <PaletteDropdownButton style={{ marginBottom: '10px' }}>
-                Theme
-                <Toggle
-                  isOn={isOn}
-                  setIsOn={onToggle}
-                  icons={[
-                    <IconSunny
-                      key="sunny"
-                      style={{ fill: customize.yellow['300'] }}
-                    />,
-                    <IconCloudyParty
-                      key="cloud"
-                      style={{ fill: customize.yellow['300'] }}
-                    />,
-                  ]}
-                />
-              </PaletteDropdownButton>
-              <PaletteDropdownButton
+              <PaletteDropdownList style={{ marginBottom: '10px' }}>
+                <PaletteDropdownLabel>
+                  <span>Theme</span>
+                  <Toggle
+                    isOn={isOn}
+                    setIsOn={onToggle}
+                    icons={[
+                      <IconSunny
+                        key="sunny"
+                        style={{ fill: customize.yellow['300'] }}
+                      />,
+                      <IconCloudyParty
+                        key="cloud"
+                        style={{ fill: customize.yellow['300'] }}
+                      />,
+                    ]}
+                  />
+                </PaletteDropdownLabel>
+              </PaletteDropdownList>
+              <PaletteDropdownList
                 style={{ display: 'flex', flexDirection: 'column' }}
               >
-                Color
+                <PaletteDropdownLabel>
+                  <span>Color</span>
+                  <ColorButton btnColor={selectedColor} />
+                </PaletteDropdownLabel>
                 <HeaderPaletteColorBox
                   selectedColor={selectedColor}
                   colorHandler={colorHandler}
                 />
-              </PaletteDropdownButton>
+              </PaletteDropdownList>
             </PaletteDropdownMenu>
           </PaletteDropdownContainer>
         )}
