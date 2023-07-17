@@ -1,5 +1,5 @@
 import express from 'express';
-import Register from '../controller/register';
+import Register from '../controllers/register';
 const Router = express.Router();
 
 Router.post('/', Register);

@@ -1,7 +1,7 @@
 import { connectionPool } from '../DB';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { IUserEmailInfo, IRequestBodyRegister } from 'types';
+import { IUserEmailInfo, IRequestBodyRegister } from '../types';
 
 export default async function (req: Request, res: Response) {
   const { email, name, gender, birthday, password } =
@@ -36,12 +36,12 @@ export default async function (req: Request, res: Response) {
         name,
         gender,
         birthday,
-        encryptedPassword,
+        encryptedPassword
       ];
       await connection.query(sqlUserRegister, sqlUserRegisterValue);
       await connection.commit();
       res.status(200).json({
-        message: '회원가입에 성공 하셨습니다.',
+        message: '회원가입에 성공 하셨습니다.'
       });
 
       connection.release();
@@ -54,7 +54,7 @@ export default async function (req: Request, res: Response) {
         code: error?.code,
         errno: error?.errno,
         sql: error?.sql,
-        sqlMessage: error?.sqlMessage,
+        sqlMessage: error?.sqlMessage
       });
     }
   } catch (error: any) {
@@ -63,7 +63,7 @@ export default async function (req: Request, res: Response) {
       code: error?.code,
       errno: error?.errno,
       message: error?.sqlMessage,
-      sql: error?.sql,
+      sql: error?.sql
     });
   }
 }

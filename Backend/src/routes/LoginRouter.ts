@@ -1,6 +1,6 @@
 import express from 'express';
-import LocalLogin from '../controller/localLogin';
-import KakaoLogin from '../controller/kakaoLogin';
+import LocalLogin from '../controllers/localLogin';
+import KakaoLogin from '../controllers/kakaoLogin';
 import passport from 'passport';
 
 const Router = express.Router();

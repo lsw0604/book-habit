@@ -24,3 +24,20 @@ export interface IRequestBodyRegister {
   birthday: Date;
   password: string;
 }
+
+export interface ICrawledId extends RowDataPacket {
+  id: number;
+}
+
+export interface IBestSellerList extends RowDataPacket {
+  title: string;
+  author: string;
+  book_rank: number;
+  img: string;
+  company: string;
+  published_date: Date;
+}
+
+export interface ICountResult extends RowDataPacket {
+  total: number;
+}

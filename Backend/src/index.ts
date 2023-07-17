@@ -1,25 +1,22 @@
-import express from 'express';
-import 'dotenv/config';
-import { dbConfig } from './DB';
-import cors, { CorsOptions } from 'cors';
-import session, { SessionOptions } from 'express-session';
-import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as KakaoStrategy } from 'passport-kakao';
-import { localOptions, localVerify } from './strategy/LocalStrategy';
-import { kakaoOptions, kakaoVerify } from './strategy/KakaoStrategy';
+import http from 'http';
+import bodyParser from 'body-parser';
+import express, { NextFunction, Response, Request } from 'express';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
-import registerRouter from './routes/RegisterRouter';
-import loginRouter from './routes/LoginRouter';
+import session, { SessionOptions } from 'express-session';
+import cors, { CorsOptions } from 'cors';
 
-/**
- * ? options
- */
+import logging from './config/logging';
+import config from './config/config';
+import bookRoutes from './routes/book';
+import { dbConfig } from './config/database';
+
+const NAMESPACE = 'SERVER';
+const app = express();
+dbConfig();
 
 const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_URL,
-  credentials: true,
+  credentials: true
 };
 
 const sessionOptions: SessionOptions = {
@@ -28,45 +25,65 @@ const sessionOptions: SessionOptions = {
   secret: process.env.SESSION_SECRET as string,
   cookie: {
     httpOnly: true,
-    secure: false,
-  },
+    secure: false
+  }
 };
 
-const app = express();
-dbConfig();
+app.use((req, res, next) => {
+  logging.info(
+    NAMESPACE,
+    `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
+  );
 
-app.set('port', process.env.PORT);
+  res.on('finish', () => {
+    logging.info(
+      NAMESPACE,
+      `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${req.statusCode}] - IP: [${req.socket.remoteAddress}]`
+    );
+  });
+
+  next();
+});
+
 app.use(cors(corsOptions));
 app.use(session(sessionOptions));
-
-/**
- * ? Passport
- */
-
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use('local', new LocalStrategy(localOptions, localVerify));
-passport.use('kakao', new KakaoStrategy(kakaoOptions, kakaoVerify));
-
-passport.serializeUser((user, done) => {
-  console.log('serialize', user);
-  done(null, user);
-});
-
-passport.deserializeUser((id, done) => {
-  console.log('deserialize', id);
-  done(null, id as any);
-});
-
 app.use(cookieParser());
-app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
 
-app.use('/api/register', registerRouter);
-app.use('/api/auth', loginRouter);
+  if (req.method == 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    return res.status(200).json({});
+  }
 
-app.listen(app.get('port'), () => {
-  console.log(`Server Started on ${app.get('port')} PORT`);
+  next();
 });
+
+app.use('/api/books', bookRoutes);
+
+app.use((req, res, next) => {
+  const error = new Error('Not found');
+  next(error);
+});
+
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({
+    message: error.message
+  });
+});
+
+const httpSever = http.createServer(app);
+
+httpSever.listen(config.server.port, () =>
+  logging.info(
+    NAMESPACE,
+    `Server is running ${config.server.hostname}:${config.server.port}`
+  )
+);
