@@ -4,6 +4,7 @@ import express, { NextFunction, Response, Request } from 'express';
 import cookieParser from 'cookie-parser';
 import session, { SessionOptions } from 'express-session';
 import cors, { CorsOptions } from 'cors';
+import morgan from 'morgan';
 
 import logging from './config/logging';
 import config from './config/config';
@@ -28,43 +29,12 @@ const sessionOptions: SessionOptions = {
     secure: false
   }
 };
-
-app.use((req, res, next) => {
-  logging.info(
-    NAMESPACE,
-    `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`
-  );
-
-  res.on('finish', () => {
-    logging.info(
-      NAMESPACE,
-      `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${req.statusCode}] - IP: [${req.socket.remoteAddress}]`
-    );
-  });
-
-  next();
-});
-
 app.use(cors(corsOptions));
 app.use(session(sessionOptions));
 app.use(cookieParser());
+app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  );
-
-  if (req.method == 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-    return res.status(200).json({});
-  }
-
-  next();
-});
 
 app.use('/api/books', bookRoutes);
 

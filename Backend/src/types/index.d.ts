@@ -25,7 +25,7 @@ export interface IRequestBodyRegister {
   password: string;
 }
 
-export interface ICrawledId extends RowDataPacket {
+export interface ICrawledDateId extends RowDataPacket {
   id: number;
 }
 

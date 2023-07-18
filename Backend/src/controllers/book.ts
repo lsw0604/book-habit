@@ -2,15 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import dateParamsTranslate from '../utils/dateParamTranslate';
-import { IBestSellerList, ICountResult, ICrawledId } from '../types';
+import { IBestSellerList, ICountResult, ICrawledDateId } from '../types';
 
 const NAMESPACE = 'Books';
 
-const getBestSellerDay = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getBestSellerDay = async (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE, 'Loading books');
   try {
     const connection = await connectionPool.getConnection();
@@ -20,7 +16,7 @@ const getBestSellerDay = async (
       const sql = 'SELECT id FROM crawled_data WHERE period = ?';
       const value = [dateParamsTranslate(parseInt(req.params.date))];
 
-      const [crawledDataId] = await connection.query<ICrawledId[]>(sql, value);
+      const [crawledDataId] = await connection.query<ICrawledDateId[]>(sql, value);
 
       if (crawledDataId[0] !== undefined) {
         const limit = parseInt(req.query.limit as string);
@@ -36,19 +32,12 @@ const getBestSellerDay = async (
 
         const selectValue = [crawledDataId[0].id, limit, startIndex];
 
-        const [bestSellerList] = await connection.query<IBestSellerList[]>(
-          selectSql,
-          selectValue
-        );
+        const [bestSellerList] = await connection.query<IBestSellerList[]>(selectSql, selectValue);
 
-        const countSql =
-          'SELECT COUNT(*) AS total FROM books WHERE crawled_data_id = ?';
+        const countSql = 'SELECT COUNT(*) AS total FROM books WHERE crawled_data_id = ?';
         const countValue = [crawledDataId[0].id];
 
-        const [countResult] = await connection.query<ICountResult[]>(
-          countSql,
-          countValue
-        );
+        const [countResult] = await connection.query<ICountResult[]>(countSql, countValue);
 
         const totalBooks = countResult[0].total;
         const totalPages = Math.ceil(totalBooks / limit);
@@ -58,23 +47,23 @@ const getBestSellerDay = async (
           totalPages,
           limit,
           totalBooks,
-          books: bestSellerList
+          books: bestSellerList,
         });
       } else {
         res.status(404).json({
-          message: 'Crawled Data Not Found'
+          message: '해당 일자의 베스트셀러 목록을 찾지 못했습니다.',
         });
       }
       connection.release();
     } catch (error: any) {
+      logging.error(NAMESPACE, error.message, error);
       await connection.rollback();
       connection.release();
-
       res.status(403).json({
         code: error?.code,
         errno: error?.errno,
         message: error?.sqlMessage,
-        sql: error?.sql
+        sql: error?.sql,
       });
     }
   } catch (error: any) {
@@ -84,7 +73,7 @@ const getBestSellerDay = async (
       code: error?.code,
       errno: error?.errno,
       message: error?.sqlMessage,
-      sql: error?.sql
+      sql: error?.sql,
     });
   }
 };
