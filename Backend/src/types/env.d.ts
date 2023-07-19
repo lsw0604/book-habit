@@ -14,8 +14,8 @@ declare namespace NodeJS {
 
     SESSION_SECRET: string;
 
-    ACCESS: string;
-    REFRESH: string;
+    ACCESS_TOKEN: string;
+    REFRESH_TOKEN: string;
 
     KAKAO_CLIENT: string;
     KAKAO_SECRET: string;

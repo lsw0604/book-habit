@@ -4,10 +4,10 @@ import { connectionPool } from '../config/database';
 import dateParamsTranslate from '../utils/dateParamTranslate';
 import { IBestSellerList, ICountResult, ICrawledDateId } from '../types';
 
-const NAMESPACE = 'Books';
+const NAMESPACE = 'BOOKS';
 
 const getBestSellerDay = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, 'Loading books');
+  logging.info(NAMESPACE, ': START');
   try {
     const connection = await connectionPool.getConnection();
     try {

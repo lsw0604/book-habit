@@ -13,18 +13,14 @@ interface IQueryIdCheck extends RowDataPacket {
   email?: string;
 }
 
-const NAMESPACE = 'auth';
+const NAMESPACE = 'REGISTER';
 
 const register = async (
   req: IRequest<{ email: string; name: string; password: string }>,
   res: Response
 ) => {
   const { email, name, password } = req.body;
-
-  logging.info(NAMESPACE, 'Loading register');
-
-  console.log(email, name, password);
-
+  logging.debug(NAMESPACE, ': START');
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -48,14 +44,16 @@ const register = async (
       await connection.query(ID_REGISTER_SQL, ID_REGISTER_VALUE);
       await connection.commit();
       connection.release();
-      logging.info(NAMESPACE, 'success');
+
+      logging.debug(NAMESPACE, ': FINISH');
+
       res.status(200).json({
         message: '회원가입에 성공 하셨습니다.',
       });
     } catch (error: any) {
       await connection.rollback();
       connection.release();
-      logging.error(NAMESPACE, 'Error', error);
+      logging.error(NAMESPACE, 'ERROR :', error);
       res.status(400).json({
         message: '회원가입에 실패 하셨습니다.',
         code: error?.code,
@@ -65,7 +63,7 @@ const register = async (
       });
     }
   } catch (error: any) {
-    logging.error(NAMESPACE, 'Error', error);
+    logging.error(NAMESPACE, 'ERROR :', error);
     res.status(500).json({
       message: 'DB연결에 실패했습니다.',
       code: error?.code,
