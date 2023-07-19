@@ -1,39 +1,61 @@
-import { connectionPool } from '../DB';
 import { VerifyFunction as LocalVerify } from 'passport-local';
+import { RowDataPacket } from 'mysql2';
 import bcrypt from 'bcrypt';
-import { IUserAllInfo } from '../types';
+
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+
+interface IQuery extends RowDataPacket {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+}
+
+const NAMESPACE = 'LOCAL_STRATEGY';
 
 const localOptions = {
   usernameField: 'email',
   passwordField: 'password',
 };
 
-const localVerify: LocalVerify = async (email, password, done) => {
-  const connection = await connectionPool.getConnection();
+const LocalVerify: LocalVerify = async (email, password, done) => {
   try {
-    await connection.beginTransaction();
+    const connection = await connectionPool.getConnection();
+    try {
+      await connection.beginTransaction();
 
-    const sql = `SELECT id, email, name, gender, birthday, password FROM users WHERE email = ?`;
-    const value = [email];
+      const SQL = 'SELECT id, email, name, password FROM user WHERE email = ?';
+      const VALUE = [email];
 
-    const [rows] = await connection.query<
-      Omit<IUserAllInfo[], 'provider' | 'refresh_token' | 'created_at'>
-    >(sql, value);
+      const [rows] = await connection.query<IQuery[]>(SQL, VALUE);
 
-    if (rows[0] === undefined)
-      return done(null, false, { message: '존재하지 않는 사용자 입니다.' });
+      if (rows[0] === undefined) {
+        logging.info(NAMESPACE, '존재하지 않는 사용자입니다.');
+        connection.release();
+        return done(null, false, { message: '존재하지 않는 사용자입니다.' });
+      }
 
-    const comparedPassword = await bcrypt.compare(password, rows[0].password);
+      const comparedPassword = await bcrypt.compare(password, rows[0].password);
 
-    if (!comparedPassword)
-      return done(null, false, { message: '비밀번호가 다릅니다.' });
+      if (!comparedPassword) {
+        logging.info(NAMESPACE, '비밀번호가 다릅니다.');
+        connection.release();
+        return done(null, false, { message: '비밀번호가 다릅니다.' });
+      }
 
-    connection.release();
-    return done(null, rows[0]);
-  } catch (error) {
-    console.log('error', error);
+      connection.release();
+      logging.info(NAMESPACE, '로그인에 성공했습니다.');
+      return done(null, { id: rows[0].id, email: rows[0].email, name: rows[0].name });
+    } catch (error: any) {
+      connection.release();
+      logging.error(NAMESPACE, 'Error', error);
+      return done(null, false, { message: '로그인에 실패 하셨습니다.' });
+    }
+  } catch (error: any) {
+    logging.error(NAMESPACE, 'Error', error);
     return done(null, false, { message: 'DB에 연결 실패 했습니다.' });
   }
 };
 
-export { localOptions, localVerify };
+export { localOptions, LocalVerify };
