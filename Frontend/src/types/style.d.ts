@@ -11,7 +11,7 @@ declare module 'styled-components' {
       'sm' | 'n' | 'md' | 'lg' | 'xl' | 'xxl' | 'inner' | 'none',
       string
     >;
-    colors: ColorType<Record<'main' | 'sub' | 'font', string>>;
+    colors: Record<'main' | 'sub' | 'font', string>;
   }
 }
 

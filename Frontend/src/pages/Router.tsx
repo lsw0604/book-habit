@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from '../components/header/Header';
 
-import DesktopLayout from './layout/DesktopLayout';
 import Home from './Home';
 import Login from './user/Login';
 import Register from './user/Register';
@@ -29,14 +28,12 @@ export default function Router({
         selectedColor={selectedColor}
         colorHandler={colorHandler}
       />
-      <DesktopLayout>
-        <Routes>
-          <Route path="/" Component={Home} />
-          <Route path="/login" Component={Login} />
-          <Route path="/register" Component={Register} />
-          <Route path="/myprofile" Component={MyProfile} />
-        </Routes>
-      </DesktopLayout>
+      <Routes>
+        <Route path="/" Component={Home} />
+        <Route path="/login" Component={Login} />
+        <Route path="/register" Component={Register} />
+        <Route path="/myprofile" Component={MyProfile} />
+      </Routes>
     </BrowserRouter>
   );
 }

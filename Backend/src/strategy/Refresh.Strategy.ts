@@ -18,7 +18,7 @@ const RefreshJWTStrategyOptions: StrategyOptions = {
       return token;
     }
   },
-  secretOrKey: process.env.ACCESS_TOKEN as string,
+  secretOrKey: process.env.REFRESH_TOKEN as string,
 };
 
 const NAMESPACE = 'REFRESH_STRATEGY';
