@@ -13,7 +13,7 @@ import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import ErrorMessage from 'components/common/ErrorMessage';
-import { signUpAPI } from 'lib/api/auth';
+import { signUpAPI, fetchSignUpAPI } from 'lib/api/auth';
 import { IconMail, IconPerson } from '@style/icons';
 
 const Container = styled.form`
@@ -156,12 +156,10 @@ export default function Register() {
     event.preventDefault();
     setUseValidation(true);
     if (validateForm()) {
-      try {
-        const { data } = await signUpAPI({ email, name, password });
-        console.log('register success', data);
-      } catch (error: any) {
-        console.log(error);
-      }
+      fetchSignUpAPI({ email, name, password })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err))
+        .finally(() => console.log('finally'));
     }
   };
 
