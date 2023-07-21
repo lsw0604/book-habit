@@ -9,7 +9,7 @@ const Container = styled.hr<{ divider: number }>`
   width: 100%;
   margin-top: ${({ divider }) => `${divider}px`};
   margin-bottom: ${({ divider }) => `${divider}px`};
-  border-color: ${customize.gray['300']};
+  border-color: ${customize.gray['200']};
 `;
 
 export default function Divider({ divider }: IProps) {

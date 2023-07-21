@@ -7,6 +7,64 @@ import Divider from 'components/common/Divider';
 import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 
+const Container = styled.form`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  @media screen and (min-width: 768px) {
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  @media screen and (min-width: 768px) {
+    width: 100%;
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+`;
+
+const Box = styled.div`
+  box-shadow: ${({ theme }) => theme.shadow.xxl};
+  background-color: ${({ theme }) => theme.mode.main};
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+  flex-direction: column;
+  width: 100%;
+  display: flex;
+`;
+
+const Stack = styled.div`
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+`;
+
+const Header = styled.h1`
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 28px;
+  line-height: 16px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.sub};
+`;
+
+const Footer = styled.p`
+  color: ${({ theme }) => theme.mode.typo_sub};
+  span {
+    margin-left: 10px;
+    cursor: pointer;
+    color: ${({ theme }) => theme.colors.sub};
+  }
+`;
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -89,61 +147,3 @@ export default function Login() {
     </>
   );
 }
-
-const Container = styled.form`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  @media screen and (min-width: 768px) {
-    width: 100%;
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-`;
-
-const Wrapper = styled.div`
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  @media screen and (min-width: 768px) {
-    width: 100%;
-    margin-right: 0px;
-    margin-left: 0px;
-  }
-`;
-
-const Box = styled.div`
-  box-shadow: ${({ theme }) => theme.shadow.xxl};
-  background-color: ${({ theme }) => theme.mode.main};
-  padding: 2.5rem;
-  border-radius: 0.75rem;
-  flex-direction: column;
-  width: 100%;
-  display: flex;
-`;
-
-const Stack = styled.div`
-  position: relative;
-  width: 100%;
-  margin-bottom: 8px;
-`;
-
-const Header = styled.h1`
-  margin-bottom: 16px;
-  text-align: center;
-  font-size: 28px;
-  line-height: 16px;
-  font-weight: 800;
-  color: ${({ theme }) => theme.colors.sub};
-`;
-
-const Footer = styled.p`
-  color: ${({ theme }) => theme.mode.typo_sub};
-  span {
-    margin-left: 10px;
-    cursor: pointer;
-    color: ${({ theme }) => theme.colors.sub};
-  }
-`;
