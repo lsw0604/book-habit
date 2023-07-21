@@ -8,6 +8,8 @@ interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Container = styled.button<{ text: boolean }>`
+  width: 100%;
+  justify-content: center;
   background-color: ${(props) =>
     props.text
       ? ({ theme }) => theme.colors.main
@@ -33,7 +35,7 @@ const Container = styled.button<{ text: boolean }>`
 const Icon = styled.div`
   margin-right: 12px;
   svg {
-    width: 1rme;
+    width: 1rem;
     height: 1rem;
     fill: ${({ theme }) => theme.mode.typo_main};
   }
@@ -43,8 +45,8 @@ const Span = styled.span`
   font-family: 'SUIT';
   font-weight: 700;
   font-size: 1rem;
-  line-height: 1rem;
-  color: ${({ theme }) => theme.mode.typo_main};
+  line-height: 1.2rem;
+  color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
 export default function Button({ text, children, icon, ...props }: IProps) {

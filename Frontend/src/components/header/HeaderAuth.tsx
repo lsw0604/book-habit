@@ -9,16 +9,24 @@ const Container = styled.div`
   justify-content: center;
 `;
 
+const Wrapper = styled.div`
+  width: auto;
+`;
+
 export default function HeaderAuth() {
   const navigate = useNavigate();
   return (
     <Container>
-      <Button text onClick={() => navigate('/register')}>
-        회원가입
-      </Button>
-      <Button text onClick={() => navigate('/login')}>
-        로그인
-      </Button>
+      <Wrapper>
+        <Button text onClick={() => navigate('/register')}>
+          회원가입
+        </Button>
+      </Wrapper>
+      <Wrapper>
+        <Button text onClick={() => navigate('/login')}>
+          로그인
+        </Button>
+      </Wrapper>
     </Container>
   );
 }

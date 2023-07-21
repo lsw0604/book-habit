@@ -1,6 +1,6 @@
 import { customize } from '@style/colors';
 import styled, { css } from 'styled-components';
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, memo } from 'react';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: JSX.Element;
@@ -10,48 +10,59 @@ interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
 }
 
-const Container = styled.div`
+const Container = styled.div<{ icon: boolean }>`
+  width: 100%;
   display: flex;
-`;
-
-const Label = styled.label`
-  margin-left: 8px;
-  margin-bottom: 8px;
-  span {
-    display: block;
-    color: ${({ theme }) => theme.mode.typo_main};
-    font-size: 14px;
-    line-height: 18px;
+  height: 40px;
+  input {
+    position: relative;
+    background-color: ${({ theme }) => theme.mode.main};
+    width: 100%;
+    height: auto;
+    padding: ${({ icon }) => (icon ? '0 44px 0 11px' : '0 11px')};
+    border: 2px solid ${({ theme }) => theme.mode.typo_sub};
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    color: ${({ theme }) => theme.mode.typo_sub};
+  }
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  input:-webkit-autofill:hover {
+    transition: background-color 600000s 0s, color 600000s 0s;
   }
 `;
 
-const Input = styled.input<{ icon: boolean }>`
-  position: relative;
-  background-color: ${({ theme }) => theme.mode.main};
-  width: 100%;
-  height: 46px;
-  padding: ${({ icon }) => (icon ? '0 44px 0 11px' : '0 11px')};
-  border: 2px solid ${({ theme }) => theme.mode.typo_sub};
-  border-radius: 5px;
-  outline: none;
-  font-size: 16px;
-  &:focus {
-    border-color: ${customize.sky['300']};
+const Label = styled.label`
+  span {
+    margin-left: 10px;
+    margin-bottom: 8px;
+    display: block;
+    color: ${({ theme }) => theme.mode.typo_sub};
+    font-size: 14px;
+    line-height: 18px;
   }
 `;
 
 const Icon = styled.div`
   position: relative;
   width: 0px;
-  top: 8px;
-  right: 38px;
+  top: 10px;
+  right: 32px;
   svg {
-    height: 30px;
+    height: 1rem;
+    width: 1rem;
     fill: ${({ theme }) => theme.mode.typo_sub};
-    &:focus-within {
-      fill: ${customize.sky['300']};
-    }
   }
+`;
+
+const ErrorMessage = styled.p`
+  margin-top: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: ${customize.red['300']};
+  margin-left: 10px;
 `;
 
 const Index = ({
@@ -67,12 +78,17 @@ const Index = ({
       <Label>
         <span>{label}</span>
       </Label>
-      <Container>
-        <Input {...props} icon={!!icon} />
+      <Container icon={!!icon}>
+        <input {...props} />
         <Icon>{icon}</Icon>
       </Container>
+      {errorMessage && isValid && useValidation && (
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      )}
     </>
   );
 };
 
-export default Index;
+const Input = memo(Index);
+
+export default Input;
