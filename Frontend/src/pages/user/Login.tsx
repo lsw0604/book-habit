@@ -10,7 +10,7 @@ import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 const Container = styled.form`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  min-width: 460px;
   margin-left: auto;
   margin-right: auto;
   @media screen and (min-width: 768px) {
