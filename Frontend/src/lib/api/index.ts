@@ -1,6 +1,11 @@
-import axios from 'axios';
+import Axios from 'axios';
 
-export const Client = axios.create({
-  url: process.env.BASE_URL,
+console.log(import.meta.env.VITE_SERVER);
+
+export const axios = Axios.create({
+  url: 'http://localhost:3001',
   withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });

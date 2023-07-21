@@ -8,13 +8,13 @@ import {
 } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 
 import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
-import { IconMail, IconPerson, IconOpenEye, IconClosedEye } from '@style/icons';
 import ErrorMessage from 'components/common/ErrorMessage';
+import { signUpAPI } from 'lib/api/auth';
+import { IconMail, IconPerson } from '@style/icons';
 
 const Container = styled.form`
   display: flex;
@@ -156,7 +156,12 @@ export default function Register() {
     event.preventDefault();
     setUseValidation(true);
     if (validateForm()) {
-      console.log('form', email, password, checkedPassword, name);
+      try {
+        const { data } = await signUpAPI({ email, name, password });
+        console.log('register success', data);
+      } catch (error: any) {
+        console.log(error);
+      }
     }
   };
 
