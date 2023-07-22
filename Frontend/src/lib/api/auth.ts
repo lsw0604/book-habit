@@ -1,24 +1,43 @@
-import { axios } from '.';
+import { axios } from './';
 
-type SignUpAPIType = {
+type SignUpRequestType = {
   email: string;
   password: string;
   name: string;
 };
 
-export const signUpAPI = async (body: SignUpAPIType) => {
-  const { data } = await axios.post('/api/auth/register', body);
+type SignUpResponseType = {
+  message: string;
+  status: boolean;
+};
+
+export const signUpAPI = async (body: SignUpRequestType) => {
+  const { data } = await axios.post<SignUpResponseType>(
+    '/api/auth/register',
+    body,
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
   return data;
 };
 
-export const fetchSignUpAPI = async (body: SignUpAPIType) => {
-  const { body: response } = await fetch(
-    'http://localhost:3001/api/auth/register',
+type LoginRequestType = {
+  email: string;
+  password: string;
+};
+
+type LoginResponseType = {
+  message: string;
+};
+
+export const loginAPI = async (body: LoginRequestType) => {
+  const { data } = await axios.post<LoginResponseType>(
+    '/api/auth/login',
+    body,
     {
-      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
     }
   );
-  return response;
+  return data;
 };

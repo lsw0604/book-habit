@@ -32,7 +32,8 @@ const register = async (
       const [IdCheckResult] = await connection.query<IQueryIdCheck[]>(ID_CHECK_SQL, ID_CHECK_VALUE);
 
       if (!!IdCheckResult[0]) {
-        return res.status(200).json({ message: '이미 존재하는 email입니다.' });
+        connection.release();
+        return res.status(200).json({ status: false, message: '이미 존재하는 email입니다.' });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -48,6 +49,7 @@ const register = async (
       logging.debug(NAMESPACE, ': FINISH');
 
       res.status(200).json({
+        status: true,
         message: '회원가입에 성공 하셨습니다.',
       });
     } catch (error: any) {
@@ -55,6 +57,7 @@ const register = async (
       connection.release();
       logging.error(NAMESPACE, 'ERROR :', error);
       res.status(400).json({
+        status: false,
         message: '회원가입에 실패 하셨습니다.',
         code: error?.code,
         errno: error?.errno,
@@ -65,6 +68,7 @@ const register = async (
   } catch (error: any) {
     logging.error(NAMESPACE, 'ERROR :', error);
     res.status(500).json({
+      status: false,
       message: 'DB연결에 실패했습니다.',
       code: error?.code,
       errno: error?.errno,

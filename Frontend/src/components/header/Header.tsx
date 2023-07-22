@@ -22,10 +22,8 @@ const Container = styled.nav`
   align-items: center;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.mode.main};
-  padding: 0 4rem;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  padding: 0 2rem;
+  z-index: 9999;
 `;
 
 const Logo = styled.div`
@@ -42,6 +40,8 @@ export default function Index({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const paletteRef = useRef<HTMLDivElement>(null);
+
+  const path = window.location.pathname.slice(1);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -62,29 +62,18 @@ export default function Index({
   return (
     <header>
       <Container ref={paletteRef}>
-        {isOpen && (
-          <div
-            style={{
-              marginTop: '100px',
-              width: '100px',
-              height: '100px',
-              background: 'black',
-              zIndex: '1111px',
-            }}
-          >
-            Open
+        <Logo onClick={() => navigate('/')}>Logo</Logo>
+        {path === 'register' || path === 'login' ? null : (
+          <div style={{ display: 'inline-flex', gap: '10px' }}>
+            <HeaderPalette
+              onToggle={onToggle}
+              isOn={isOn}
+              selectedColor={selectedColor}
+              colorHandler={colorHandler}
+            />
+            <HeaderAuth />
           </div>
         )}
-        <Logo onClick={() => navigate('/')}>Logo</Logo>
-        <div style={{ display: 'inline-flex', gap: '10px' }}>
-          <HeaderPalette
-            onToggle={onToggle}
-            isOn={isOn}
-            selectedColor={selectedColor}
-            colorHandler={colorHandler}
-          />
-          <HeaderAuth />
-        </div>
       </Container>
     </header>
   );

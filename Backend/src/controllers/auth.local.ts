@@ -21,7 +21,9 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         httpOnly: true,
       });
 
-      res.status(200).json({ id, name, email });
+      res
+        .status(200)
+        .json({ id, name, email, message: '로그인에 성공했습니다.', status: 'success' });
       next();
     }
   )(req, res, next);

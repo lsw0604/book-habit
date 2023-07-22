@@ -13,19 +13,17 @@ import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import ErrorMessage from 'components/common/ErrorMessage';
-import { signUpAPI, fetchSignUpAPI } from 'lib/api/auth';
+import { signUpAPI } from 'lib/api/auth';
 import { IconMail, IconPerson } from '@style/icons';
 
 const Container = styled.form`
   display: flex;
   flex-direction: row;
-  min-width: 460px;
   margin-left: auto;
   margin-right: auto;
-  @media screen and (min-width: 768px) {
-    width: 100%;
-    margin-left: 0px;
-    margin-right: 0px;
+  @media screen and (max-width: 768px) {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
   }
 `;
 
@@ -33,17 +31,11 @@ const Wrapper = styled.div`
   width: 100%;
   margin-right: auto;
   margin-left: auto;
-  @media screen and (min-width: 768px) {
-    width: 100%;
-    margin-right: 0px;
-    margin-left: 0px;
-  }
 `;
 
 const Box = styled.div`
-  box-shadow: ${({ theme }) => theme.shadow.xxl};
-  background-color: ${({ theme }) => theme.mode.main};
-  padding: 2.5rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  /* padding: 2.5rem; */
   border-radius: 0.75rem;
   flex-direction: column;
   width: 100%;
@@ -156,10 +148,14 @@ export default function Register() {
     event.preventDefault();
     setUseValidation(true);
     if (validateForm()) {
-      fetchSignUpAPI({ email, name, password })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
-        .finally(() => console.log('finally'));
+      const { message, status } = await signUpAPI({ email, name, password });
+
+      if (status) {
+        navigate('/login');
+        console.log(message);
+      } else {
+        console.log(message);
+      }
     }
   };
 
@@ -179,6 +175,7 @@ export default function Register() {
               <Input
                 icon={<IconMail />}
                 label="이메일"
+                type="email"
                 value={email}
                 onChange={onChangeEmail}
                 useValidation={useValidation}
@@ -190,6 +187,7 @@ export default function Register() {
               <Input
                 icon={<IconPerson />}
                 label="이름"
+                type="text"
                 value={name}
                 onChange={onChangeName}
                 useValidation={useValidation}
@@ -200,6 +198,7 @@ export default function Register() {
             <Stack>
               <Input
                 label="비밀번호"
+                type="password"
                 value={password}
                 onChange={onChangePassword}
                 useValidation={useValidation}
@@ -211,6 +210,7 @@ export default function Register() {
             <Stack>
               <Input
                 label="비밀번호 확인"
+                type="password"
                 value={checkedPassword}
                 onChange={onChangeCheckedPassword}
                 useValidation={useValidation}
@@ -231,6 +231,10 @@ export default function Register() {
                 <ErrorMessage
                   errorMessage="숫자나 기호를 포함하세요."
                   isValid={isPasswordHasNumberOrSymbol}
+                />
+                <ErrorMessage
+                  errorMessage="비밀번호와 비밀번호 확인은 같아야합니다."
+                  isValid={password !== checkedPassword}
                 />
               </Stack>
             )}

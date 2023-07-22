@@ -22,8 +22,9 @@ const Container = styled.div`
   height: auto;
 `;
 
-const PaletteDropdownContainer = styled.div`
+const Dropdown = styled.div`
   position: absolute;
+  z-index: 9999;
   top: 3.5rem;
   display: flex;
   padding: 0.1rem;
@@ -38,13 +39,13 @@ const PaletteDropdownContainer = styled.div`
   box-shadow: ${({ theme }) => theme.shadow.xl};
 `;
 
-const PaletteDropdownMenu = styled.ul`
+const Wrapper = styled.ul`
   width: 100%;
   height: 100%;
   padding: 5px;
 `;
 
-const PaletteDropdownList = styled.li`
+const Box = styled.li`
   border-radius: 0.5rem;
   padding: 10px;
   width: 100%;
@@ -56,7 +57,7 @@ const PaletteDropdownList = styled.li`
   align-items: center;
 `;
 
-const PaletteDropdownLabel = styled.label`
+const Label = styled.label`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -113,11 +114,11 @@ export default function HeaderPalette({
           Palette Settings
         </Icon>
         {isOpened && (
-          <PaletteDropdownContainer>
-            <PaletteDropdownMenu>
-              <PaletteDropdownList style={{ marginBottom: '10px' }}>
-                <PaletteDropdownLabel>
-                  <span>Theme</span>
+          <Dropdown>
+            <Wrapper>
+              <Box style={{ marginBottom: '10px' }}>
+                <Label>
+                  <span>테마</span>
                   <Toggle
                     isOn={isOn}
                     setIsOn={onToggle}
@@ -132,22 +133,20 @@ export default function HeaderPalette({
                       />,
                     ]}
                   />
-                </PaletteDropdownLabel>
-              </PaletteDropdownList>
-              <PaletteDropdownList
-                style={{ display: 'flex', flexDirection: 'column' }}
-              >
-                <PaletteDropdownLabel>
-                  <span>Color</span>
+                </Label>
+              </Box>
+              <Box style={{ display: 'flex', flexDirection: 'column' }}>
+                <Label>
+                  <span>색상</span>
                   <ColorButton btnColor={selectedColor} />
-                </PaletteDropdownLabel>
+                </Label>
                 <HeaderPaletteColorBox
                   selectedColor={selectedColor}
                   colorHandler={colorHandler}
                 />
-              </PaletteDropdownList>
-            </PaletteDropdownMenu>
-          </PaletteDropdownContainer>
+              </Box>
+            </Wrapper>
+          </Dropdown>
         )}
       </Container>
     </>

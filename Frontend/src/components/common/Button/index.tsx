@@ -46,7 +46,7 @@ const Span = styled.span`
   font-weight: 700;
   font-size: 1rem;
   line-height: 1.2rem;
-  color: ${({ theme }) => theme.mode.typo_sub};
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 export default function Button({ text, children, icon, ...props }: IProps) {

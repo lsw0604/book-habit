@@ -16,7 +16,7 @@ const Container = styled.div<{ icon: boolean }>`
   height: 40px;
   input {
     position: relative;
-    background-color: ${({ theme }) => theme.mode.main};
+    background-color: ${({ theme }) => theme.mode.sub};
     width: 100%;
     height: auto;
     padding: ${({ icon }) => (icon ? '0 44px 0 11px' : '0 11px')};

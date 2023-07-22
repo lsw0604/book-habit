@@ -10,13 +10,10 @@ import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 const Container = styled.form`
   display: flex;
   flex-direction: row;
-  min-width: 460px;
   margin-left: auto;
   margin-right: auto;
-  @media screen and (min-width: 768px) {
-    width: 100%;
-    margin-left: 0px;
-    margin-right: 0px;
+  @media screen and (max-width: 768px) {
+    margin-top: 4rem;
   }
 `;
 
@@ -24,17 +21,11 @@ const Wrapper = styled.div`
   width: 100%;
   margin-right: auto;
   margin-left: auto;
-  @media screen and (min-width: 768px) {
-    width: 100%;
-    margin-right: 0px;
-    margin-left: 0px;
-  }
 `;
 
 const Box = styled.div`
-  box-shadow: ${({ theme }) => theme.shadow.xxl};
-  background-color: ${({ theme }) => theme.mode.main};
-  padding: 2.5rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  /* padding: 2.5rem; */
   border-radius: 0.75rem;
   flex-direction: column;
   width: 100%;
