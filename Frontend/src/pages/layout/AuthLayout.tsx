@@ -26,9 +26,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
     <>
       <main>
         <section>
-          <Layout className="layout">
-            <Container className="container">
-              <Contents className="contents">{children}</Contents>
+          <Layout>
+            <Container>
+              <Contents>{children}</Contents>
             </Container>
           </Layout>
         </section>

@@ -1,11 +1,15 @@
 import styled from 'styled-components';
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
+import { loginAPI } from 'lib/api/auth';
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from 'recoil/user';
 
 const Container = styled.form`
   display: flex;
@@ -25,7 +29,6 @@ const Wrapper = styled.div`
 
 const Box = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
-  /* padding: 2.5rem; */
   border-radius: 0.75rem;
   flex-direction: column;
   width: 100%;
@@ -63,6 +66,9 @@ export default function Login() {
   const [eyeOpen, setEyeOpen] = useState(false);
 
   const navigate = useNavigate();
+  const cookie = new Cookies();
+
+  const setUserState = useSetRecoilState(userAtom);
 
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -76,9 +82,56 @@ export default function Login() {
     setEyeOpen((prev) => !prev);
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const isEmailValid = useMemo(
+    () => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email),
+    [email]
+  );
+
+  const validateForm = (): boolean => {
+    if (!email || !password) {
+      return false;
+    }
+
+    if (!isEmailValid) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
+    if (validateForm()) {
+      const response = await loginAPI({
+        email,
+        password,
+      });
+
+      const {
+        email: loggedEmail,
+        name: loggedName,
+        id: loggedId,
+        access,
+        refresh,
+      } = response;
+
+      if (loggedEmail && loggedName && loggedId) {
+        setUserState({ email: loggedEmail, name: loggedName, id: loggedId });
+      }
+      if (access) {
+        cookie.set('access', access, {
+          path: '/',
+          maxAge: 1000 * 60,
+        });
+      }
+      if (refresh) {
+        cookie.set('refresh', refresh, {
+          path: '/',
+          maxAge: 1000 * 60 * 60,
+        });
+      }
+    }
     console.log('form', email, password);
   };
 

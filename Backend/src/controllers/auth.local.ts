@@ -14,16 +14,22 @@ const login = (req: Request, res: Response, next: NextFunction) => {
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
-      res.cookie('access', access_jwt, { path: '/', maxAge: 60 * 60 * 1000, httpOnly: true });
-      res.cookie('refresh', refresh_jwt, {
-        path: '/',
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
+      // res.cookie('access', access_jwt, { path: '/', maxAge: 60 * 60 * 1000, httpOnly: true });
+      // res.cookie('refresh', refresh_jwt, {
+      //   path: '/',
+      //   maxAge: 24 * 60 * 60 * 1000,
+      //   httpOnly: true,
+      // });
 
-      res
-        .status(200)
-        .json({ id, name, email, message: '로그인에 성공했습니다.', status: 'success' });
+      res.status(200).json({
+        id,
+        name,
+        email,
+        message: '로그인에 성공했습니다.',
+        status: 'success',
+        access: access_jwt,
+        refresh: refresh_jwt,
+      });
       next();
     }
   )(req, res, next);

@@ -8,7 +8,7 @@ type SignUpRequestType = {
 
 type SignUpResponseType = {
   message: string;
-  status: boolean;
+  status: 'success' | 'failure';
 };
 
 export const signUpAPI = async (body: SignUpRequestType) => {
@@ -28,7 +28,13 @@ type LoginRequestType = {
 };
 
 type LoginResponseType = {
+  id?: number;
+  name?: string;
+  email?: string;
   message: string;
+  status: 'success' | 'failure';
+  access: string;
+  refresh: string;
 };
 
 export const loginAPI = async (body: LoginRequestType) => {

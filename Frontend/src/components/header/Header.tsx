@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import { userAtom } from 'recoil/user';
+import { useRecoilValue } from 'recoil';
 
 import HeaderAuth from './HeaderAuth';
 import HeaderPalette from './HeaderPalette';
 import { ColorType } from 'types/style';
+import { Cookies } from 'react-cookie';
 
 interface IProps {
   onToggle: () => void;
@@ -42,6 +45,8 @@ export default function Index({
   const paletteRef = useRef<HTMLDivElement>(null);
 
   const path = window.location.pathname.slice(1);
+  const userState = useRecoilValue(userAtom);
+  const cookies = new Cookies();
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -58,6 +63,11 @@ export default function Index({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    console.log(userState);
+    console.log(cookies.get('access'));
+  }, [userState]);
 
   return (
     <header>

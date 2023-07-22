@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from '../components/header/Header';
 
 import Home from './Home';
-import Login from './user/Login';
-import Register from './user/Register';
-import MyProfile from './user/MyProfile';
+import Login from 'components/user/Login';
+import Register from 'components/user/Register';
+import MyProfile from 'components/user/MyProfile';
 import { ColorType } from 'types/style';
 import AuthLayout from './layout/AuthLayout';
 
