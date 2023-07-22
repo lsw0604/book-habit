@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import { useState, useEffect, ChangeEvent, FormEvent, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
+import { useSetRecoilState } from 'recoil';
 
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import { loginAPI } from 'lib/api/auth';
-import { useSetRecoilState } from 'recoil';
+import cookie from 'lib/utils/cookies';
 import { userAtom } from 'recoil/user';
 
 const Container = styled.form`
@@ -66,9 +66,8 @@ export default function Login() {
   const [eyeOpen, setEyeOpen] = useState(false);
 
   const navigate = useNavigate();
-  const cookie = new Cookies();
-
   const setUserState = useSetRecoilState(userAtom);
+  const { setAccessCookie, setRefreshCookie } = cookie();
 
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -103,33 +102,30 @@ export default function Login() {
     event.preventDefault();
     setUseValidation(true);
     if (validateForm()) {
-      const response = await loginAPI({
-        email,
-        password,
-      });
-
-      const {
-        email: loggedEmail,
-        name: loggedName,
-        id: loggedId,
-        access,
-        refresh,
-      } = response;
-
-      if (loggedEmail && loggedName && loggedId) {
-        setUserState({ email: loggedEmail, name: loggedName, id: loggedId });
-      }
-      if (access) {
-        cookie.set('access', access, {
-          path: '/',
-          maxAge: 1000 * 60,
+      try {
+        const response = await loginAPI({
+          email,
+          password,
         });
-      }
-      if (refresh) {
-        cookie.set('refresh', refresh, {
-          path: '/',
-          maxAge: 1000 * 60 * 60,
-        });
+
+        const {
+          email: loggedEmail,
+          name: loggedName,
+          id: loggedId,
+          access,
+          refresh,
+          message,
+          status,
+        } = response;
+
+        if (loggedEmail && loggedName && loggedId) {
+          setUserState({ email: loggedEmail, name: loggedName, id: loggedId });
+        }
+        console.log(message, status);
+        setRefreshCookie(refresh);
+        setAccessCookie(access);
+      } catch (error: unknown) {
+        console.log(error);
       }
     }
     console.log('form', email, password);

@@ -1,9 +1,10 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 
-const TOAST_ATOM_KEY = 'toast_atom_key';
+const TOAST_ATOM_KEY = 'TOAST_ATOM_KEY';
+const TOAST_SELECTOR_KEY = 'TOAST_SELECTOR_KEY';
 
 type IToastAtomType = {
-  id: string;
+  id: number;
   status: 'success' | 'failure' | 'info' | 'error';
   message: string;
 };
@@ -11,4 +12,12 @@ type IToastAtomType = {
 export const toastAtom = atom<IToastAtomType[]>({
   key: TOAST_ATOM_KEY,
   default: [],
+});
+
+export const toastSelector = selector({
+  key: TOAST_SELECTOR_KEY,
+  get: ({ get }) => {
+    const initialToastProps = get(toastAtom);
+    return initialToastProps;
+  },
 });

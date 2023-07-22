@@ -57,9 +57,13 @@ export default function Index({
   const access = cookies.get('access');
 
   const fetchUser = async () => {
-    const { email, name, id } = await accessAPI();
-    if (id && email && name) {
-      userSetState({ email, id, name });
+    try {
+      const { email, name, id } = await accessAPI();
+      if (id && email && name) {
+        userSetState({ email, id, name });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

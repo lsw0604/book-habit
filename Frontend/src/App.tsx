@@ -1,5 +1,4 @@
 import { ThemeProvider } from 'styled-components';
-import { Cookies } from 'react-cookie';
 import { useSetRecoilState } from 'recoil';
 
 import { refreshAPI } from 'lib/api/auth';
@@ -9,13 +8,17 @@ import Router from 'pages/Router';
 import { dark, light, shadow, colors } from './style/theme';
 import useColorTheme from '@hooks/useColor';
 import { axios } from './lib/api';
+import cookie from 'lib/utils/cookies';
 import { userAtom } from 'recoil/user';
 
 const App = () => {
-  const cookie = new Cookies();
-  const userSetState = useSetRecoilState(userAtom);
   const { theme, onToggle } = useTheme();
   const { selectedColor, colorHandler } = useColorTheme();
+
+  const setUserState = useSetRecoilState(userAtom);
+
+  const { setAccessCookie } = cookie();
+
   const mode =
     theme === 'light' ? { mode: light, shadow } : { mode: dark, shadow };
 
@@ -35,9 +38,9 @@ const App = () => {
       console.log(error.response.status);
       if (error.response && error.response.status === 403) {
         const { email, id, name, access } = await refreshAPI();
-        cookie.set('access', access, { path: '/', maxAge: 1000 * 60 });
+        setAccessCookie(access);
         if (email && id && name) {
-          userSetState({ email, id, name });
+          setUserState({ email, id, name });
         }
       }
     }
