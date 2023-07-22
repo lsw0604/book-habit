@@ -16,8 +16,9 @@ const AccessJWTStrategyOptions: StrategyOptions = {
 const NAMESPACE = 'ACCESS_STRATEGY';
 
 const AccessVerify: VerifyCallback = (payload, done) => {
-  logging.debug(NAMESPACE, 'ACCESS_STRATEGY: START');
-  logging.debug(NAMESPACE, 'ACCESS_STRATEGY: FINISH');
+  logging.debug(NAMESPACE, ' : START');
+  logging.debug(NAMESPACE, ' : [INFO]', payload);
+  logging.debug(NAMESPACE, ' : FINISH');
   return done(null, { id: payload.id, name: payload.name, email: payload.email });
 };
 

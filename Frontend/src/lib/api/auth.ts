@@ -47,3 +47,34 @@ export const loginAPI = async (body: LoginRequestType) => {
   );
   return data;
 };
+
+type AccessResponseType = {
+  id?: number;
+  name: string;
+  email: string;
+  message: string;
+  status: 'success' | 'failure';
+};
+
+export const accessAPI = async () => {
+  const { data } = await axios.get<AccessResponseType>('/api/auth/access', {
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return data;
+};
+
+type RefreshResponseType = {
+  id?: number;
+  name: string;
+  email: string;
+  message: string;
+  status: 'success' | 'failure';
+  access: string;
+};
+
+export const refreshAPI = async () => {
+  const { data } = await axios.get<RefreshResponseType>('/api/auth/refresh', {
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return data;
+};
