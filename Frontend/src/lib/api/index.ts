@@ -68,7 +68,7 @@ refreshAxios.interceptors.response.use(
   async (error) => {
     const response = await logoutAPI();
 
-    if (response?.status === 'failure') {
+    if (response?.status === 'success') {
       return Promise.reject(response);
     }
 

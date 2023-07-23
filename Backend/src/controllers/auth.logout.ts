@@ -12,5 +12,5 @@ export default function logout(req: Request, res: Response, next: NextFunction) 
 
   logging.info(NAMESPACE, ': FINISH');
 
-  return res.status(200).json({ message: '계정이 로그아웃됐습니다.', status: 'failure' });
+  return res.status(200).json({ message: '계정이 로그아웃됐습니다.', status: 'success' });
 }

@@ -1,38 +1,10 @@
-import { ReactNode } from 'react';
-import styled from 'styled-components';
+import { Outlet, Navigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
-const Layout = styled.div`
-  background-color: ${({ theme }) => theme.mode.sub};
-  width: 100vw;
-  height: 100vh;
-  overflow: scroll;
-`;
+import { userAtom } from 'recoil/user';
 
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-`;
+export default function AuthLayout() {
+  const userState = useRecoilValue(userAtom);
 
-const Contents = styled.div`
-  margin-top: 4rem;
-  margin-bottom: 12rem;
-`;
-
-export default function AuthLayout({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <main>
-        <section>
-          <Layout>
-            <Container>
-              <Contents>{children}</Contents>
-            </Container>
-          </Layout>
-        </section>
-      </main>
-    </>
-  );
+  return userState.isLogged ? <Outlet /> : <Navigate to="/login" />;
 }

@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { userAtom } from 'recoil/user';
+import { ColorType } from 'types/style';
 import HeaderAuth from './HeaderAuth';
 import HeaderPalette from './HeaderPalette';
-import { ColorType } from 'types/style';
+import HeaderProfile from './HeaderProfile';
 
 interface IProps {
   onToggle: () => void;
@@ -28,6 +28,13 @@ const Container = styled.nav`
   z-index: 9999;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+`;
+
 const Logo = styled.div`
   cursor: pointer;
   color: ${({ theme }) => theme.mode.typo_main};
@@ -39,45 +46,26 @@ export default function Index({
   selectedColor,
   colorHandler,
 }: IProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-  const paletteRef = useRef<HTMLDivElement>(null);
-
   const userState = useRecoilValue(userAtom);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        paletteRef.current &&
-        !paletteRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(!isOpen);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
     <header>
-      <Container ref={paletteRef}>
+      <Container>
         <Logo onClick={() => navigate('/')}>Logo</Logo>
-        {userState.isLogged ? (
-          <>{userState.email}</>
-        ) : (
-          <div style={{ display: 'inline-flex', gap: '10px' }}>
-            <HeaderPalette
-              onToggle={onToggle}
-              isOn={isOn}
-              selectedColor={selectedColor}
-              colorHandler={colorHandler}
-            />
+        <Wrapper>
+          <HeaderPalette
+            onToggle={onToggle}
+            isOn={isOn}
+            selectedColor={selectedColor}
+            colorHandler={colorHandler}
+          />
+          {userState.isLogged ? (
+            <HeaderProfile name={userState.name} />
+          ) : (
             <HeaderAuth />
-          </div>
-        )}
+          )}
+        </Wrapper>
       </Container>
     </header>
   );

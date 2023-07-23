@@ -6,8 +6,9 @@ import Login from 'components/user/Login';
 import Register from 'components/user/Register';
 import MyProfile from 'components/user/MyProfile';
 import { ColorType } from 'types/style';
-import AuthLayout from './layout/AuthLayout';
+import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
+import AuthLayout from './layout/AuthLayout';
 
 interface IProps {
   isOn: boolean;
@@ -30,16 +31,18 @@ export default function Router({
         selectedColor={selectedColor}
         colorHandler={colorHandler}
       />
-      <AuthLayout>
+      <DefaultLayout>
         <Routes>
           <Route path="/" Component={Home} />
           <Route element={<PublicLayout />}>
             <Route path="/login" Component={Login} />
             <Route path="/register" Component={Register} />
           </Route>
-          <Route path="/myprofile" Component={MyProfile} />
+          <Route element={<AuthLayout />}>
+            <Route path="/profile/:id" Component={MyProfile} />
+          </Route>
         </Routes>
-      </AuthLayout>
+      </DefaultLayout>
     </BrowserRouter>
   );
 }

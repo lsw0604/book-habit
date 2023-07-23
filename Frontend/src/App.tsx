@@ -2,7 +2,7 @@ import { ThemeProvider } from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { useEffect } from 'react';
 
-import { accessAPI, refreshAPI } from 'lib/api/auth';
+import { accessAPI } from 'lib/api/auth';
 import GlobalStyle from './style/globalStyle';
 import useTheme from '@hooks/useTheme';
 import Router from 'pages/Router';
@@ -26,10 +26,11 @@ const App = () => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const { id, name, email, message, status } = await accessAPI();
+        const { id, name, email } = await accessAPI();
         if (id) {
           setUserState({ id, name, email, isLogged: true });
         }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log('UseEffect [ERROR]', error);
         if (
