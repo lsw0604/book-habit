@@ -13,7 +13,12 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react", "react-refresh"],
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-refresh",
+    "@tanstack/query"
+  ],
   "rules": {
     "no-unused-vars": "off", //사용안한 변수 경고 중복
     "spaced-comment": "off", //주석을 뒤에 쓰지 말라는 경고
