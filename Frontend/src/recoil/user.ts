@@ -7,6 +7,7 @@ type IUserAtomType = {
   id: number;
   email: string;
   name: string;
+  isLogged: boolean;
 };
 
 export const userAtom = atom<IUserAtomType>({
@@ -15,6 +16,7 @@ export const userAtom = atom<IUserAtomType>({
     id: 0,
     email: '',
     name: '',
+    isLogged: false,
   },
 });
 

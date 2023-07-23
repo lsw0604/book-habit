@@ -8,9 +8,7 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
     'refresh',
     { session: false },
     (_: any, user: Express.User, info: { name: string; message: string; expiredAt?: Date }) => {
-      if (!!info) {
-        res.cookie('access', {}, { path: '/', maxAge: 0, httpOnly: true });
-        res.cookie('refresh', {}, { path: '/', maxAge: 0, httpOnly: true });
+      if (!user) {
         return res
           .status(401)
           .json({ name: info.name, message: info.message, expiredAt: info.expiredAt });
@@ -18,11 +16,15 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
       const { id, name, email } = user as { id: number; name: string; email: string };
       const { access_jwt } = tokenGenerator({ id, name, email });
 
+      res.cookie('access', access_jwt, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 60,
+        path: '/',
+      });
       res.status(200).json({
         ...user,
         message: 'REFRESH_TOKEN_VERIFIED',
         status: 'success',
-        access: access_jwt,
       });
       next();
     }

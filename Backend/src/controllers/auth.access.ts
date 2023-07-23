@@ -8,7 +8,7 @@ const access = (req: Request, res: Response, next: NextFunction) => {
     (_: any, user: Express.User, info: { name: string; message: string; expiredAt?: Date }) => {
       if (!user) {
         return res
-          .status(403)
+          .status(401)
           .json({ name: info.name, message: info.message, expiredAt: info.expiredAt });
       }
       res.status(200).json({ ...user, message: 'ACCESS_TOKEN_VERIFIED.', status: 'success' });

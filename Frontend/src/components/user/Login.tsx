@@ -8,7 +8,6 @@ import Divider from 'components/common/Divider';
 import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import { loginAPI } from 'lib/api/auth';
-import cookie from 'lib/utils/cookies';
 import { userAtom } from 'recoil/user';
 
 const Container = styled.form`
@@ -67,7 +66,6 @@ export default function Login() {
 
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userAtom);
-  const { setAccessCookie, setRefreshCookie } = cookie();
 
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -112,18 +110,19 @@ export default function Login() {
           email: loggedEmail,
           name: loggedName,
           id: loggedId,
-          access,
-          refresh,
           message,
           status,
         } = response;
 
         if (loggedEmail && loggedName && loggedId) {
-          setUserState({ email: loggedEmail, name: loggedName, id: loggedId });
+          setUserState({
+            email: loggedEmail,
+            name: loggedName,
+            id: loggedId,
+            isLogged: true,
+          });
         }
         console.log(message, status);
-        setRefreshCookie(refresh);
-        setAccessCookie(access);
       } catch (error: unknown) {
         console.log(error);
       }

@@ -1,15 +1,4 @@
-import { axios } from './';
-
-type SignUpRequestType = {
-  email: string;
-  password: string;
-  name: string;
-};
-
-type SignUpResponseType = {
-  message: string;
-  status: 'success' | 'failure';
-};
+import { axios, accessAxios, refreshAxios } from './';
 
 export const signUpAPI = async (body: SignUpRequestType) => {
   const { data } = await axios.post<SignUpResponseType>(
@@ -20,21 +9,6 @@ export const signUpAPI = async (body: SignUpRequestType) => {
     }
   );
   return data;
-};
-
-type LoginRequestType = {
-  email: string;
-  password: string;
-};
-
-type LoginResponseType = {
-  id?: number;
-  name?: string;
-  email?: string;
-  message: string;
-  status: 'success' | 'failure';
-  access: string;
-  refresh: string;
 };
 
 export const loginAPI = async (body: LoginRequestType) => {
@@ -48,32 +22,22 @@ export const loginAPI = async (body: LoginRequestType) => {
   return data;
 };
 
-type AccessResponseType = {
-  id?: number;
-  name: string;
-  email: string;
-  message: string;
-  status: 'success' | 'failure';
-};
-
 export const accessAPI = async () => {
-  const { data } = await axios.get<AccessResponseType>('/api/auth/access', {
+  const { data } = await accessAxios.get<AccessResponseType>('', {
     headers: { 'Content-Type': 'application/json' },
   });
   return data;
 };
 
-type RefreshResponseType = {
-  id?: number;
-  name: string;
-  email: string;
-  message: string;
-  status: 'success' | 'failure';
-  access: string;
+export const refreshAPI = async () => {
+  const { data } = await refreshAxios.get<RefreshResponseType>('', {
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return data;
 };
 
-export const refreshAPI = async () => {
-  const { data } = await axios.get<RefreshResponseType>('/api/auth/refresh', {
+export const logoutAPI = async () => {
+  const { data } = await axios.get<LogoutResponseType>('/api/auth/logout', {
     headers: { 'Content-Type': 'application/json' },
   });
   return data;

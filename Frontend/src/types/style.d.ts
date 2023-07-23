@@ -47,8 +47,6 @@ export type IconType =
   | 'Search'
   | 'Home';
 
-export type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
 export type ColorType =
   | 'slate'
   | 'gray'

@@ -8,11 +8,22 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     { session: false },
     (_: any, user: Express.User, info: { message: string }) => {
       if (!user) {
-        return res.status(200).json({ message: info.message, status: 'failure' });
+        return res.status(200).json({ message: info.message, status: 'fa' });
       }
       const { id, name, email } = user as { id: number; name: string; email: string };
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
+
+      res.cookie('access', access_jwt, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        path: '/',
+      });
+      res.cookie('refresh', refresh_jwt, {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        path: '/',
+      });
 
       res.status(200).json({
         id,
@@ -20,8 +31,6 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         email,
         message: '로그인에 성공했습니다.',
         status: 'success',
-        access: access_jwt,
-        refresh: refresh_jwt,
       });
       next();
     }
