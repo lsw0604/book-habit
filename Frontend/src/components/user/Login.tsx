@@ -8,6 +8,7 @@ import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import useLoginHook from '../../hooks/useLoginHook';
 import useValidateHook from '@hooks/useValidateHook';
+import Loader from 'components/common/Loader';
 
 const Container = styled.form`
   display: flex;
@@ -65,7 +66,7 @@ export default function Login() {
 
   const navigate = useNavigate();
   const { isLoading, mutate } = useLoginHook();
-  const validate = useValidateHook({ email, password, mode: 'login' });
+  const { validate } = useValidateHook({ email, password, mode: 'login' });
 
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -79,13 +80,10 @@ export default function Login() {
     setEyeOpen((prev) => !prev);
   };
 
-  if (isLoading) {
-    console.log('loading...');
-  }
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
+
     if (validate) return mutate({ email, password });
   };
 
@@ -132,7 +130,9 @@ export default function Login() {
               />
             </Stack>
             <Stack>
-              <Button type="submit">로그인</Button>
+              <Button type="submit" isLoading={isLoading}>
+                로그인
+              </Button>
             </Stack>
             <Divider divider={12} />
             <Footer>

@@ -1,10 +1,12 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 import styled from 'styled-components';
+import Loader from '../Loader';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
   children: ReactNode;
   text?: boolean;
+  isLoading?: boolean;
 }
 
 const Container = styled.button<{ text: boolean }>`
@@ -49,11 +51,26 @@ const Span = styled.span`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function Button({ text, children, icon, ...props }: IProps) {
+export default function Button({
+  text,
+  children,
+  icon,
+  isLoading,
+  ...props
+}: IProps) {
   return (
     <Container text={!text} {...props}>
-      {icon && <Icon>{icon}</Icon>}
-      <Span>{children}</Span>
+      {isLoading ? (
+        <>
+          <Loader />
+          <Span>Loading</Span>
+        </>
+      ) : (
+        <>
+          {icon && <Icon>{icon}</Icon>}
+          <Span>{children}</Span>
+        </>
+      )}
     </Container>
   );
 }

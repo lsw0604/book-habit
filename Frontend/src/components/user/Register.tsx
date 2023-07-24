@@ -123,7 +123,6 @@ export default function Register() {
         console.log(message);
       }
     }
-    console.log('ss');
   };
 
   useEffect(() => {
@@ -206,7 +205,9 @@ export default function Register() {
               </Stack>
             )}
             <Stack>
-              <Button type="submit">회원가입</Button>
+              <Button type="submit" isLoading={isLoading}>
+                회원가입
+              </Button>
             </Stack>
             <Divider divider={12} />
             <Footer>
