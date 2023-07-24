@@ -2,7 +2,6 @@ import {
   useState,
   useEffect,
   useCallback,
-  useMemo,
   ChangeEvent,
   FormEvent,
 } from 'react';
@@ -15,6 +14,7 @@ import Divider from 'components/common/Divider';
 import ErrorMessage from 'components/common/ErrorMessage';
 import { signUpAPI } from 'lib/api/auth';
 import { IconMail, IconPerson } from '@style/icons';
+import useValidateHook from '@hooks/useValidateHook';
 
 const Container = styled.form`
   display: flex;
@@ -66,8 +66,6 @@ const Footer = styled.p`
   }
 `;
 
-const PASSWORD_MIN_LENGTH = 8;
-
 export default function Register() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -105,49 +103,17 @@ export default function Register() {
   );
 
   const navigate = useNavigate();
-
-  const isPasswordHasNameOrEmail = useMemo(
-    () =>
-      !password ||
-      !name ||
-      password.includes(name) ||
-      password.includes(email.split('@')[0]),
-    [password, name, email]
-  );
-
-  const isPasswordOverMinLength = useMemo(
-    () => password.length >= PASSWORD_MIN_LENGTH,
-    [password]
-  );
-
-  const isPasswordHasNumberOrSymbol = useMemo(
-    () =>
-      !(
-        /[{}[\]/?.,;:|)*~`!^\-_+<>@#$%&\\=('"]/g.test(password) ||
-        /[0-9]/g.test(password)
-      ),
-    [password]
-  );
-
-  const validateForm = (): boolean => {
-    if (!email || !name || !password) {
-      return false;
-    }
-
-    if (
-      isPasswordHasNameOrEmail ||
-      !isPasswordOverMinLength ||
-      isPasswordHasNumberOrSymbol
-    ) {
-      return false;
-    }
-    return true;
-  };
+  const {
+    validate,
+    isPasswordHasNameOrEmail,
+    isPasswordHasNumberOrSymbol,
+    isPasswordOverMinLength,
+  } = useValidateHook({ email, name, password, mode: 'register' });
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
-    if (validateForm()) {
+    if (validate) {
       const { message, status } = await signUpAPI({ email, name, password });
 
       if (status) {
@@ -157,6 +123,7 @@ export default function Register() {
         console.log(message);
       }
     }
+    console.log('ss');
   };
 
   useEffect(() => {

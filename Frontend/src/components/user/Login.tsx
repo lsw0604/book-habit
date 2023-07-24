@@ -1,14 +1,13 @@
 import styled from 'styled-components';
-import { useState, useEffect, ChangeEvent, FormEvent, useMemo } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
-import { loginAPI } from 'lib/api/auth';
-import { userAtom } from 'recoil/user';
+import useLoginHook from '../../hooks/useLoginHook';
+import useValidateHook from '@hooks/useValidateHook';
 
 const Container = styled.form`
   display: flex;
@@ -65,7 +64,8 @@ export default function Login() {
   const [eyeOpen, setEyeOpen] = useState(false);
 
   const navigate = useNavigate();
-  const setUserState = useSetRecoilState(userAtom);
+  const { isLoading, mutate } = useLoginHook();
+  const validate = useValidateHook({ email, password, mode: 'login' });
 
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -79,55 +79,14 @@ export default function Login() {
     setEyeOpen((prev) => !prev);
   };
 
-  const isEmailValid = useMemo(
-    () => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email),
-    [email]
-  );
-
-  const validateForm = (): boolean => {
-    if (!email || !password) {
-      return false;
-    }
-
-    if (!isEmailValid) {
-      return false;
-    }
-
-    return true;
-  };
+  if (isLoading) {
+    console.log('loading...');
+  }
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
-    if (validateForm()) {
-      try {
-        const response = await loginAPI({
-          email,
-          password,
-        });
-
-        const {
-          email: loggedEmail,
-          name: loggedName,
-          id: loggedId,
-          message,
-          status,
-        } = response;
-
-        if (loggedEmail && loggedName && loggedId) {
-          setUserState({
-            email: loggedEmail,
-            name: loggedName,
-            id: loggedId,
-            isLogged: true,
-          });
-        }
-        console.log(message, status);
-      } catch (error: unknown) {
-        console.log(error);
-      }
-    }
-    console.log('form', email, password);
+    if (validate) return mutate({ email, password });
   };
 
   useEffect(() => {

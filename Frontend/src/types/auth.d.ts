@@ -15,9 +15,9 @@ type LoginRequestType = {
 };
 
 type LoginResponseType = {
-  id?: number;
-  name?: string;
-  email?: string;
+  id: number;
+  name: string;
+  email: string;
   message: string;
   status: 'success' | 'failure';
 };

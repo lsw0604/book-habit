@@ -24,6 +24,7 @@ export const userSelector = selector({
   key: USER_SELECTOR_KEY,
   get: ({ get }) => {
     const initialUserProps = get(userAtom);
+    console.log(USER_SELECTOR_KEY, initialUserProps);
     return initialUserProps;
   },
 });

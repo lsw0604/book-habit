@@ -24,36 +24,39 @@ const App = () => {
   const isOn = theme === 'light' ? true : false;
 
   useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const { id, name, email } = await accessAPI();
-        if (id) {
-          setUserState({ id, name, email, isLogged: true });
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.log('UseEffect [ERROR]', error);
-        if (
-          error?.status === 'success' &&
-          error.id &&
-          error.name &&
-          error.email
-        ) {
-          setUserState({
-            id: error.id,
-            name: error.name,
-            email: error.email,
-            isLogged: true,
-          });
-        }
+    if (document.cookie.includes('access')) {
+      const fetchApi = async () => {
+        try {
+          const { id, name, email } = await accessAPI();
+          if (id) {
+            setUserState({ id, name, email, isLogged: true });
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          if (
+            error?.status === 'success' &&
+            error.id &&
+            error.name &&
+            error.email
+          ) {
+            setUserState({
+              id: error.id,
+              name: error.name,
+              email: error.email,
+              isLogged: true,
+            });
+          }
 
-        if (error?.status === 'success' && error?.message) {
-          console.log(error.message);
+          if (error?.status === 'success' && error?.message) {
+            console.log(error.message);
+          } else {
+            console.log('UseEffect [ERROR]', error);
+          }
         }
-      }
-    };
+      };
 
-    fetchApi();
+      fetchApi();
+    }
   }, []);
 
   return (
