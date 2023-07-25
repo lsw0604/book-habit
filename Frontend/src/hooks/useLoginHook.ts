@@ -3,23 +3,27 @@ import { AxiosError } from 'axios';
 import { loginAPI } from 'lib/api/auth';
 import { useSetRecoilState } from 'recoil';
 import { userAtom } from 'recoil/user';
+import useToastHook from './useToastHook';
 
 const REACT_QUERY_KEY = 'USE_LOGIN_HOOK';
 
 export default function useLoginHook() {
   const setUserState = useSetRecoilState(userAtom);
+  const { addToast } = useToastHook();
   const { isLoading, data, mutate } = useMutation<
     LoginResponseType,
-    AxiosError | null,
+    AxiosError | Error | null,
     LoginRequestType
   >([REACT_QUERY_KEY], loginAPI, {
     onSuccess: (data) => {
-      console.log(data);
-      const { id, email, name } = data;
+      const { id, email, name, status, message } = data;
       setUserState({ id, email, name, isLogged: true });
+      addToast({ message, status });
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
-      console.log(error.response.data);
+      const { message, status } = error.response.data;
+      addToast({ message, status });
     },
   });
 

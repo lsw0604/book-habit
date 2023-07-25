@@ -63,7 +63,6 @@ export default function Button({
       {isLoading ? (
         <>
           <Loader />
-          <Span>Loading</Span>
         </>
       ) : (
         <>

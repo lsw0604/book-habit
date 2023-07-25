@@ -8,7 +8,6 @@ const Container = styled.div`
   align-items: center;
   width: 1rem;
   height: 1rem;
-  margin-right: 10px;
 `;
 
 const Spinner = styled(motion.div)`

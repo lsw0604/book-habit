@@ -3,13 +3,7 @@ import { atom, selector } from 'recoil';
 const TOAST_ATOM_KEY = 'TOAST_ATOM_KEY';
 const TOAST_SELECTOR_KEY = 'TOAST_SELECTOR_KEY';
 
-type IToastAtomType = {
-  id: number;
-  status: 'success' | 'failure' | 'info' | 'error';
-  message: string;
-};
-
-export const toastAtom = atom<IToastAtomType[]>({
+export const toastAtom = atom<ToastType[]>({
   key: TOAST_ATOM_KEY,
   default: [],
 });

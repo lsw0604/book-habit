@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import Loader from 'components/common/Loader';
 import { list } from 'lib/api/book';
 import { useRecoilState } from 'recoil';
 import { bookAtom } from 'recoil/book';
@@ -9,13 +10,23 @@ export default function Home() {
     onSuccess: (data) => {
       setBookState([...data]);
     },
-    staleTime: 1000,
+    staleTime: Infinity,
   });
 
   return (
     <>
       {isLoading ? (
-        <div>loading...</div>
+        <div
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Loader />
+        </div>
       ) : (
         <>
           {bookState &&

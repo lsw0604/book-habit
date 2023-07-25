@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 interface IProps {
   email: string;
   password: string;
+  check_password?: string;
   name?: string;
   mode: 'login' | 'register';
 }
@@ -10,6 +11,7 @@ interface IProps {
 export default function useValidateHook({
   email,
   password,
+  check_password,
   name,
   mode,
 }: IProps) {
@@ -45,7 +47,8 @@ export default function useValidateHook({
   );
 
   const registerValidateForm = (): boolean => {
-    if (!email || !name || password) return false;
+    if (!email || !name || !password) return false;
+    if (password !== check_password) return false;
     if (
       isPasswordHasNameOrEmail ||
       !isPasswordOverMinLength ||

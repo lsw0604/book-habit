@@ -30,18 +30,22 @@ export const refreshAxios = Axios.create({
 
 accessAxios.interceptors.request.use(
   (config) => {
+    console.log('[REQUEST][ACCESS][CONFIG]', config);
     return config;
   },
   async (error) => {
+    console.log('[REQUEST][ACCESS][ERROR]', error);
     return Promise.reject(error);
   }
 );
 
 accessAxios.interceptors.response.use(
   (config) => {
+    console.log('[RESPONSE][ACCESS][CONFIG', config);
     return config;
   },
   async (error) => {
+    console.log('[RESPONSE][ACCESS][ERROR]', error);
     const response = await refreshAPI();
 
     if (response?.status === 'success') {
@@ -54,18 +58,22 @@ accessAxios.interceptors.response.use(
 
 refreshAxios.interceptors.request.use(
   (config) => {
+    console.log('[REQUEST][REFRESH][CONFIG]', config);
     return config;
   },
   async (error) => {
+    console.log('[REQUEST][REFRESH][ERROR]', error);
     return Promise.reject(error);
   }
 );
 
 refreshAxios.interceptors.response.use(
   (config) => {
+    console.log('[RESPONSE][REFRESH][CONFIG]', config);
     return config;
   },
   async (error) => {
+    console.log('[RESPONSE][REFRESH][ERROR]', error);
     const response = await logoutAPI();
 
     if (response?.status === 'success') {

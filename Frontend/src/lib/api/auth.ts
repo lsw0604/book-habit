@@ -1,4 +1,3 @@
-import { isAxiosError } from 'axios';
 import { axios, accessAxios, refreshAxios } from './';
 
 export const signUpAPI = async (body: SignUpRequestType) => {

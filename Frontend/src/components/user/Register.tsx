@@ -12,9 +12,10 @@ import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import ErrorMessage from 'components/common/ErrorMessage';
-import { signUpAPI } from 'lib/api/auth';
 import { IconMail, IconPerson } from '@style/icons';
+import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
+import useSignupHook from '@hooks/useSignupHook';
 
 const Container = styled.form`
   display: flex;
@@ -35,7 +36,6 @@ const Wrapper = styled.div`
 
 const Box = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
-  /* padding: 2.5rem; */
   border-radius: 0.75rem;
   flex-direction: column;
   width: 100%;
@@ -103,25 +103,29 @@ export default function Register() {
   );
 
   const navigate = useNavigate();
+  const { mutate, isLoading } = useSignupHook();
+  const { addToast } = useToastHook();
+
   const {
     validate,
     isPasswordHasNameOrEmail,
     isPasswordHasNumberOrSymbol,
     isPasswordOverMinLength,
-  } = useValidateHook({ email, name, password, mode: 'register' });
+  } = useValidateHook({
+    email,
+    name,
+    password,
+    check_password: checkedPassword,
+    mode: 'register',
+  });
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
     if (validate) {
-      const { message, status } = await signUpAPI({ email, name, password });
-
-      if (status) {
-        navigate('/login');
-        console.log(message);
-      } else {
-        console.log(message);
-      }
+      return mutate({ email, name, password });
+    } else {
+      addToast({ status: 'failure', message: '회원가입 폼을 지켜주세요.' });
     }
   };
 

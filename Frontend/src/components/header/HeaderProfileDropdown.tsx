@@ -4,6 +4,7 @@ import { logoutAPI } from 'lib/api/auth';
 import { useRecoilState } from 'recoil';
 import { userAtom } from 'recoil/user';
 import { useNavigate } from 'react-router-dom';
+import useToastHook from '@hooks/useToastHook';
 
 const Container = styled.div`
   position: absolute;
@@ -53,12 +54,14 @@ const Label = styled.label`
 
 export default function HeaderProfileDropdown() {
   const [userState, setUserState] = useRecoilState(userAtom);
+  const { addToast } = useToastHook();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     const { message, status } = await logoutAPI();
     if (status === 'success') {
       setUserState({ id: 0, name: '', email: '', isLogged: false });
+      addToast({ message, status });
     }
   };
 
