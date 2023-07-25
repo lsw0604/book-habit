@@ -33,7 +33,7 @@ const register = async (
 
       if (!!IdCheckResult[0]) {
         connection.release();
-        return res.status(200).json({ status: 'failure', message: '이미 존재하는 email입니다.' });
+        return res.status(200).json({ status: 'error', message: '이미 존재하는 email입니다.' });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -57,7 +57,7 @@ const register = async (
       connection.release();
       logging.error(NAMESPACE, 'ERROR :', error);
       res.status(400).json({
-        status: 'failure',
+        status: 'error',
         message: '회원가입에 실패 하셨습니다.',
         code: error?.code,
         errno: error?.errno,
@@ -68,7 +68,7 @@ const register = async (
   } catch (error: any) {
     logging.error(NAMESPACE, 'ERROR :', error);
     res.status(500).json({
-      status: 'failure',
+      status: 'error',
       message: 'DB연결에 실패했습니다.',
       code: error?.code,
       errno: error?.errno,

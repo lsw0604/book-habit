@@ -1,21 +1,48 @@
 import styled from 'styled-components';
 import Icon from './Button/Icon';
-import { IconX } from '@style/icons';
+import {
+  IconError,
+  IconInfo,
+  IconSuccess,
+  IconWarning,
+  IconX,
+} from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
+
+const icons = {
+  success: <IconSuccess />,
+  error: <IconError />,
+  warning: <IconWarning />,
+  info: <IconInfo />,
+};
 
 const Container = styled.div`
   width: 100%;
   position: fixed;
   bottom: 0px;
+  height: auto;
 `;
 
 const Item = styled.div`
-  padding: 0 2rem;
+  margin: 0 2rem;
+  padding: 0.5rem 0.7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: ${({ theme }) => theme.mode.main};
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const Span = styled.span``;
 
-const IconWrapper = styled.div``;
+const IconWrapper = styled.div`
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: ${({ theme }) => theme.colors.main};
+  }
+`;
 
 export default function Toast() {
   const { toastState, deleteToast } = useToastHook();
@@ -24,9 +51,12 @@ export default function Toast() {
       {toastState &&
         toastState.map((toast) => (
           <Item key={toast.id}>
-            <IconWrapper>{}</IconWrapper>
+            {toast.status !== '' && (
+              <IconWrapper>{icons[toast.status]}</IconWrapper>
+            )}
             <Span>{toast.message}</Span>
             <Icon
+              text
               onClick={() => deleteToast({ id: toast.id })}
               icon={<IconX />}
             >

@@ -8,7 +8,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     { session: false },
     (_: any, user: Express.User, info: { message: string }) => {
       if (!user) {
-        return res.status(403).json({ message: info.message, status: 'failure' });
+        return res.status(403).json({ message: info.message, status: 'error' });
       }
       const { id, name, email } = user as { id: number; name: string; email: string };
 

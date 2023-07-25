@@ -4,11 +4,13 @@ import { ButtonHTMLAttributes, ReactNode } from 'react';
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
   children: ReactNode;
+  text?: boolean;
 }
 
-const Container = styled.button`
+const Container = styled.button<{ text: boolean }>`
   border-radius: 9999px;
-  background-color: ${({ theme }) => theme.mode.sub};
+  background-color: ${({ text }) =>
+    text ? ({ theme }) => theme.mode.main : ({ theme }) => theme.mode.sub};
   padding: 0.125rem;
   color: ${({ theme }) => theme.mode.typo_sub};
   border: none;
@@ -20,6 +22,10 @@ const Container = styled.button`
   cursor: pointer;
   &:focus {
     outline: none;
+  }
+  &:hover {
+    background-color: ${({ text }) =>
+      text ? ({ theme }) => theme.mode.sub : ({ theme }) => theme.mode.main};
   }
 `;
 
@@ -43,9 +49,9 @@ const IconWrapper = styled.div`
   }
 `;
 
-export default function Icon({ icon, children, ...props }: IProps) {
+export default function Icon({ text, icon, children, ...props }: IProps) {
   return (
-    <Container {...props}>
+    <Container text={!!text} {...props}>
       {icon && <IconWrapper>{icon}</IconWrapper>}
       <Span>{children}</Span>
     </Container>

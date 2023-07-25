@@ -22,7 +22,7 @@ export default function useAccessHook() {
     refetchInterval: REACT_QUERY_TIME,
     refetchIntervalInBackground: false,
     staleTime: REACT_QUERY_TIME,
-    cacheTime: REACT_QUERY_TIME,
+    cacheTime: REACT_QUERY_TIME + 1000 * 2,
     onSuccess: (data) => {
       const { email, name, id } = data;
       if (id) {

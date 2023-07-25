@@ -125,7 +125,7 @@ export default function Register() {
     if (validate) {
       return mutate({ email, name, password });
     } else {
-      addToast({ status: 'failure', message: '회원가입 폼을 지켜주세요.' });
+      addToast({ status: 'error', message: '회원가입 폼을 지켜주세요.' });
     }
   };
 

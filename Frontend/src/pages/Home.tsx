@@ -30,7 +30,12 @@ export default function Home() {
       ) : (
         <>
           {bookState &&
-            bookState.map((value) => <div key={value.rank}>{value.title}</div>)}
+            bookState.map((value) => (
+              <div key={value.rank}>
+                <div>{value.title}</div>
+                <div>{value.author}</div>
+              </div>
+            ))}
         </>
       )}
     </>
