@@ -32,9 +32,12 @@ const Item = styled.div`
   background-color: ${({ theme }) => theme.mode.main};
   border-radius: 1rem;
   margin-bottom: 0.5rem;
+  box-shadow: ${({ theme }) => theme.shadow.xxl};
 `;
 
-const Span = styled.span``;
+const Span = styled.span`
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
 
 const IconWrapper = styled.div`
   svg {

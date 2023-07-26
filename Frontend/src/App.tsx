@@ -1,32 +1,20 @@
 import { ThemeProvider } from 'styled-components';
+import { ReactElement } from 'react';
 
 import GlobalStyle from './style/globalStyle';
 import useTheme from '@hooks/useThemeHook';
-import useColorTheme from '@hooks/useColorHook';
 import Router from 'pages/Router';
-import { dark, light, shadow, colors } from './style/theme';
 import useAccessHook from '@hooks/useAccessHook';
 import Toast from 'components/common/Toast';
-import Debugger from 'lib/utils/Debugger';
 
-const App = () => {
-  const { theme, onToggle } = useTheme();
-  const { selectedColor, colorHandler } = useColorTheme();
+export default function App(): ReactElement {
+  const { theme, onToggle, isOn, selectedColor, colorHandler } = useTheme();
 
-  const mode =
-    theme === 'light' ? { mode: light, shadow } : { mode: dark, shadow };
-
-  const colorMode = { ...mode, colors: colors[selectedColor] };
-
-  const isOn = theme === 'light' ? true : false;
-
-  if (document.cookie.includes('access')) {
-    useAccessHook();
-  }
+  useAccessHook();
 
   return (
     <>
-      <ThemeProvider theme={colorMode}>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Router
           isOn={isOn}
@@ -34,11 +22,8 @@ const App = () => {
           selectedColor={selectedColor}
           colorHandler={colorHandler}
         />
-        <Debugger />
         <Toast />
       </ThemeProvider>
     </>
   );
-};
-
-export default App;
+}

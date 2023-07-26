@@ -22,14 +22,14 @@ export default function useToastHook() {
     []
   );
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (toastState.length > 0) {
-  //       deleteToast({ id: toastState[0].id });
-  //     }
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, [toastState, deleteToast]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (toastState.length > 0) {
+        deleteToast({ id: toastState[0].id });
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [toastState, deleteToast]);
 
   return { addToast, deleteToast, toastState };
 }

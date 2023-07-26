@@ -34,7 +34,7 @@ accessAxios.interceptors.request.use(
     return config;
   },
   async (error) => {
-    console.log('[REQUEST][ACCESS][ERROR]', error);
+    console.error('[REQUEST][ACCESS][ERROR]', error);
     return Promise.reject(error);
   }
 );
@@ -45,7 +45,7 @@ accessAxios.interceptors.response.use(
     return config;
   },
   async (error) => {
-    console.log('[RESPONSE][ACCESS][ERROR]', error);
+    console.error('[RESPONSE][ACCESS][ERROR]', error);
     const response = await refreshAPI();
 
     if (response?.status === 'success') {
@@ -62,7 +62,7 @@ refreshAxios.interceptors.request.use(
     return config;
   },
   async (error) => {
-    console.log('[REQUEST][REFRESH][ERROR]', error);
+    console.error('[REQUEST][REFRESH][ERROR]', error);
     return Promise.reject(error);
   }
 );
@@ -73,7 +73,7 @@ refreshAxios.interceptors.response.use(
     return config;
   },
   async (error) => {
-    console.log('[RESPONSE][REFRESH][ERROR]', error);
+    console.error('[RESPONSE][REFRESH][ERROR]', error);
     const response = await logoutAPI();
 
     if (response?.status === 'success') {

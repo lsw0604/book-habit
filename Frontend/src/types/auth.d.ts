@@ -6,7 +6,7 @@ type SignUpRequestType = {
 
 type SignUpResponseType = {
   message: string;
-  status: 'success' | 'error';
+  status: StatusType;
 };
 
 type LoginRequestType = {
@@ -19,27 +19,29 @@ type LoginResponseType = {
   name: string;
   email: string;
   message: string;
-  status: 'success' | 'error';
+  status: StatusType;
 };
 
 type AccessResponseType = {
-  id?: number;
+  id: number;
   name: string;
   email: string;
   message: string;
-  status: 'success' | 'error';
+  status: StatusType;
 };
 
 type RefreshResponseType = {
-  id?: number;
+  id: number;
   name: string;
   email: string;
   message: string;
-  status: 'success' | 'error';
+  status: StatusType;
   access: string;
 };
 
 type LogoutResponseType = {
   message: string;
-  status: 'success' | 'error';
+  status: StatusType;
 };
+
+type StatusType = 'success' | 'error' | 'warning' | 'info' | '';

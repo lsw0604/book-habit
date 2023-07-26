@@ -1,11 +1,5 @@
 import styled from 'styled-components';
-import {
-  useState,
-  useEffect,
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-} from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Input from 'components/common/Input';
@@ -14,7 +8,6 @@ import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import useLoginHook from '@hooks/useLoginHook';
 import useValidateHook from '@hooks/useValidateHook';
-import ErrorMessage from 'components/common/ErrorMessage';
 
 const Container = styled.form`
   display: flex;
@@ -69,7 +62,6 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [useValidation, setUseValidation] = useState(false);
   const [eyeOpen, setEyeOpen] = useState(false);
-  const [focusedEmail, setFocusedEmail] = useState(false);
 
   const navigate = useNavigate();
   const { isLoading, mutate } = useLoginHook();
@@ -98,10 +90,6 @@ export default function Login() {
     if (validate) mutate({ email, password });
   };
 
-  const onFocusEmail = useCallback(() => {
-    setFocusedEmail(true);
-  }, []);
-
   useEffect(() => {
     return () => {
       setUseValidation(false);
@@ -124,7 +112,6 @@ export default function Login() {
                 useValidation={useValidation}
                 isValid={!email}
                 errorMessage="이메일이 필요합니다."
-                onFocus={onFocusEmail}
               />
             </Stack>
             <Stack>
@@ -145,14 +132,6 @@ export default function Login() {
                 errorMessage="비밀번호가 필요합니다."
               />
             </Stack>
-            {focusedEmail && (
-              <Stack>
-                <ErrorMessage
-                  errorMessage="이메일 형식을 지켜주세요."
-                  isValid={!isEmailValid}
-                />
-              </Stack>
-            )}
             <Stack>
               <Button type="submit" isLoading={isLoading}>
                 로그인
