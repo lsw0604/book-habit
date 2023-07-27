@@ -1,17 +1,35 @@
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+
+import useBookHook from '@hooks/useBookHook';
 import Loader from 'components/common/Loader';
-import { list } from 'lib/api/book';
-import { useRecoilState } from 'recoil';
-import { bookAtom } from 'recoil/book';
 
 export default function Home() {
-  const [bookState, setBookState] = useRecoilState(bookAtom);
-  const { isLoading } = useQuery(['book_list'], list, {
-    onSuccess: (data) => {
-      setBookState([...data]);
-    },
-    staleTime: Infinity,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
+    useBookHook();
+
+  const lastBookRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 1.0,
+    };
+
+    const observer = new IntersectionObserver((entires) => {
+      if (entires[0].isIntersecting && hasNextPage && !isFetching) {
+        fetchNextPage();
+      }
+    }, options);
+
+    if (lastBookRef.current) {
+      observer.observe(lastBookRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [fetchNextPage, hasNextPage, isFetching]);
 
   return (
     <>
@@ -28,15 +46,38 @@ export default function Home() {
           <Loader />
         </div>
       ) : (
-        <>
-          {bookState &&
-            bookState.map((value) => (
-              <div key={value.rank}>
-                <div>{value.title}</div>
-                <div>{value.author}</div>
+        <div>
+          {data?.pages.map((page) =>
+            page.books.map((book) => (
+              <div key={book.title}>
+                <div>{book.book_rank}</div>
+                <img
+                  height="140px"
+                  width="100px"
+                  src={book.img}
+                  key={book.img}
+                />
+                <span>{book.title}</span>
+                <span>{book.author}</span>
               </div>
-            ))}
-        </>
+            ))
+          )}
+          {!isFetching ? (
+            <div ref={lastBookRef} style={{ marginBottom: '10px' }} />
+          ) : (
+            <div
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                height: '30px',
+              }}
+            >
+              <Loader />
+            </div>
+          )}
+        </div>
       )}
     </>
   );

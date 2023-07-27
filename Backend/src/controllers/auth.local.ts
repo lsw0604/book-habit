@@ -16,8 +16,10 @@ const login = (req: Request, res: Response, next: NextFunction) => {
 
       res.cookie('access', access_jwt, {
         maxAge: 1000 * 60 * 60,
+        httpOnly: true,
         path: '/',
       });
+
       res.cookie('refresh', refresh_jwt, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,

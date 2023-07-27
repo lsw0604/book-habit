@@ -7,6 +7,8 @@ import { ColorType } from 'types/style';
 import HeaderAuth from './HeaderAuth';
 import HeaderPalette from './HeaderPalette';
 import HeaderProfile from './HeaderProfile';
+import Loader from 'components/common/Loader';
+import useAccessHook from '@hooks/useAccessHook';
 
 interface IProps {
   onToggle: () => void;
@@ -48,6 +50,7 @@ export default function Index({
 }: IProps) {
   const navigate = useNavigate();
   const userState = useRecoilValue(userAtom);
+  useAccessHook();
 
   return (
     <header>

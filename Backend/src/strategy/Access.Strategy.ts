@@ -4,6 +4,7 @@ import logging from '../config/logging';
 
 const AccessJWTStrategyOptions: StrategyOptions = {
   jwtFromRequest: (req) => {
+    console.log(req);
     let token;
     if (req && req.cookies) {
       token = req.cookies['access'];
@@ -16,10 +17,12 @@ const AccessJWTStrategyOptions: StrategyOptions = {
 const NAMESPACE = 'ACCESS_STRATEGY';
 
 const AccessVerify: VerifyCallback = (payload, done) => {
-  logging.debug(NAMESPACE, ' : START');
+  logging.debug(NAMESPACE, ' : [START]');
   logging.debug(NAMESPACE, ' : [INFO]', payload);
   logging.debug(NAMESPACE, ' : FINISH');
-  return done(null, { id: payload.id, name: payload.name, email: payload.email });
+  if (payload.id) {
+    return done(null, { id: payload.id, name: payload.name, email: payload.email });
+  }
 };
 
 export { AccessJWTStrategyOptions, AccessVerify };

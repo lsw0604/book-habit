@@ -136,6 +136,14 @@ export default function Login() {
               <Button type="submit" isLoading={isLoading}>
                 로그인
               </Button>
+              <Button
+                onClick={(e: FormEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  console.log('ss');
+                }}
+              >
+                카카오
+              </Button>
             </Stack>
             <Divider divider={12} />
             <Footer>

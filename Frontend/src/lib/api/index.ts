@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import { logoutAPI, refreshAPI } from './auth';
 
 export const axios = Axios.create({
@@ -10,76 +10,132 @@ export const axios = Axios.create({
   withCredentials: true,
 });
 
-export const accessAxios = Axios.create({
-  baseURL: `${import.meta.env.VITE_SERVER}/api/auth/access`,
-  headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    Accept: 'application/json',
-  },
-  withCredentials: true,
-});
-
-export const refreshAxios = Axios.create({
-  baseURL: `${import.meta.env.VITE_SERVER}/api/auth/refresh`,
-  headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    Accept: 'application/json',
-  },
-  withCredentials: true,
-});
-
-accessAxios.interceptors.request.use(
+axios.interceptors.request.use(
   (config) => {
-    console.log('[REQUEST][ACCESS][CONFIG]', config);
+    console.log(config);
     return config;
   },
-  async (error) => {
-    console.error('[REQUEST][ACCESS][ERROR]', error);
-    return Promise.reject(error);
+  async (err) => {
+    console.log(err);
+    return Promise.reject(err);
   }
 );
 
-accessAxios.interceptors.response.use(
-  (config) => {
-    console.log('[RESPONSE][ACCESS][CONFIG', config);
-    return config;
+axios.interceptors.response.use(
+  (response) => {
+    return response;
   },
-  async (error) => {
-    console.error('[RESPONSE][ACCESS][ERROR]', error);
-    const response = await refreshAPI();
 
-    if (response?.status === 'success') {
-      return Promise.reject(response);
+  async (
+    error: AxiosError<{
+      message: string;
+      status: 'error' | 'success';
+      strategy: 'access' | 'refresh';
+    }>
+  ) => {
+    console.log('[4]', error);
+    const response = error.response;
+    const status = error.response?.status;
+    const message = response?.data.message;
+    const strategy = response?.data.strategy;
+
+    if (strategy === 'access') {
+      if (
+        (response && status === 403 && message === 'No auth token') ||
+        (response && status === 403 && message === 'jwt malformed') ||
+        (response && status === 403 && message === 'jwt expired') ||
+        (response && status === 403 && message === 'invalid token')
+      ) {
+        const { name, id, email, status, message } = await refreshAPI();
+        return Promise.reject({ email, id, name, status, message });
+      }
+    } else if (strategy === 'refresh') {
+      if (
+        (response && status === 403 && message === 'No auth token') ||
+        (response && status === 403 && message === 'jwt malformed') ||
+        (response && status === 403 && message === 'jwt expired') ||
+        (response && status === 403 && message === 'invalid token')
+      ) {
+        // delete axios.defaults.headers.common['Authorization'];?
+        await logoutAPI();
+      }
     }
-
     return Promise.reject(error);
   }
 );
 
-refreshAxios.interceptors.request.use(
-  (config) => {
-    console.log('[REQUEST][REFRESH][CONFIG]', config);
-    return config;
-  },
-  async (error) => {
-    console.error('[REQUEST][REFRESH][ERROR]', error);
-    return Promise.reject(error);
-  }
-);
+// let isRefreshing = false;
+// let requestQueue: (() => void)[] = [];
 
-refreshAxios.interceptors.response.use(
-  (config) => {
-    console.log('[RESPONSE][REFRESH][CONFIG]', config);
-    return config;
-  },
-  async (error) => {
-    console.error('[RESPONSE][REFRESH][ERROR]', error);
-    const response = await logoutAPI();
+// axios.interceptors.response.use(
+//   (response) => {
+//     console.log('[3]', response.data);
+//     if (response.data.message === 'ACCESS_TOKEN_VERIFIED') {
+//       return response;
+//     }
 
-    if (response?.status === 'success') {
-      return Promise.reject(response);
-    }
+//     if (response.data.message === 'REFRESH_TOKEN_VERIFIED') {
+//       axios.defaults.headers.common[
+//         'Authorization'
+//       ] = `Bearer ${response.data.access}`;
+//       requestQueue.forEach((resolve) => resolve());
+//       requestQueue = [];
+//     }
+//     return response;
+//   },
 
-    return Promise.reject(error);
-  }
-);
+//   async (
+//     error: AxiosError<{
+//       message: string;
+//       status: 'error' | 'success';
+//       strategy: 'access' | 'refresh';
+//     }>
+//   ) => {
+//     console.log('[4]', error);
+//     const response = error.response;
+//     const status = error.response?.status;
+//     const message = response?.data.message;
+//     const strategy = response?.data.strategy;
+
+//     if (strategy === 'access') {
+//       if (
+//         response &&
+//         status === 403 &&
+//         message &&
+//         [
+//           'No auth token',
+//           'jwt malformed',
+//           'jwt expired',
+//           'invalid token',
+//         ].includes(message)
+//       ) {
+//         const retryOriginalRequest = new Promise<void>((resolve) => {
+//           requestQueue.push(() => resolve());
+//         });
+
+//         if (!isRefreshing) {
+//           isRefreshing = true;
+//           await refreshAPI();
+//           isRefreshing = false;
+//         }
+
+//         return retryOriginalRequest;
+//       }
+//     } else if (strategy === 'refresh') {
+//       if (
+//         response &&
+//         status === 403 &&
+//         message &&
+//         [
+//           'No auth token',
+//           'jwt malformed',
+//           'jwt expired',
+//           'invalid token',
+//         ].includes(message)
+//       ) {
+//         await logoutAPI();
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );

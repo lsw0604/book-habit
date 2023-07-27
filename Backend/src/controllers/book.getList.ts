@@ -7,6 +7,7 @@ import { IBestSellerList, ICountResult, ICrawledDateId } from '../types';
 const NAMESPACE = 'BOOKS';
 
 const getBestSellerDay = async (req: Request, res: Response, next: NextFunction) => {
+  console.log('req', req.params.date);
   logging.info(NAMESPACE, ': START');
   try {
     const connection = await connectionPool.getConnection();
@@ -14,7 +15,7 @@ const getBestSellerDay = async (req: Request, res: Response, next: NextFunction)
       await connection.beginTransaction();
 
       const sql = 'SELECT id FROM crawled_data WHERE period = ?';
-      const value = [dateParamsTranslate(parseInt(req.params.date))];
+      const value = [req.params.date];
 
       const [crawledDataId] = await connection.query<ICrawledDateId[]>(sql, value);
 
@@ -47,6 +48,14 @@ const getBestSellerDay = async (req: Request, res: Response, next: NextFunction)
           totalPages,
           limit,
           totalBooks,
+          nextPage:
+            parseInt(req.query.page as string) + 1 >= totalPages
+              ? false
+              : parseInt(req.query.page as string) + 1,
+          prevPage:
+            parseInt(req.query.page as string) - 1 <= 0
+              ? false
+              : parseInt(req.query.page as string) - 1,
           books: bestSellerList,
         });
       } else {

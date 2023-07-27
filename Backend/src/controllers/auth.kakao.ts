@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { connectionPool } from '../DB/index';
+import { connectionPool } from '../config/database';
 
 interface KakaoRequest {
   provider: 'kakao';
@@ -32,15 +32,7 @@ interface KakaoRequest {
   };
 }
 
-export default async function (
-  req: KakaoRequest,
-  res: Response,
-  next: NextFunction
-) {
-  const { provider, id, username } = req;
-  try {
-    connectionPool.beginTransaction();
-  } catch (error) {}
-
+export default async function (req: KakaoRequest, res: Response, next: NextFunction) {
   console.log('login', req);
+  res.status(200).json({ success: true });
 }

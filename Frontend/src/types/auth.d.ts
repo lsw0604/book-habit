@@ -36,7 +36,6 @@ type RefreshResponseType = {
   email: string;
   message: string;
   status: StatusType;
-  access: string;
 };
 
 type LogoutResponseType = {
