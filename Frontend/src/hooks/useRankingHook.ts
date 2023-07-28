@@ -1,13 +1,14 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { bestsellerAPI } from 'lib/api/book';
+import { rankingAPI } from 'lib/api/book';
 
-export default function useBookHook() {
+export default function useRankingHook() {
   const { data, fetchNextPage, isLoading, isFetching, hasNextPage } =
     useInfiniteQuery<ResponseBookType>(
       ['BESTSELLER'],
-      ({ pageParam = 1 }) => bestsellerAPI(pageParam, 10),
+      ({ pageParam = 1 }) => rankingAPI(pageParam, 10),
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
+        staleTime: Infinity,
       }
     );
 

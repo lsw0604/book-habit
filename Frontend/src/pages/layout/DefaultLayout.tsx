@@ -16,20 +16,13 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Contents = styled.div`
-  margin-top: 4rem;
-  margin-bottom: 12rem;
-`;
-
 export default function DefaultLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <main>
         <section>
           <Layout>
-            <Container>
-              <Contents>{children}</Contents>
-            </Container>
+            <Container>{children}</Container>
           </Layout>
         </section>
       </main>

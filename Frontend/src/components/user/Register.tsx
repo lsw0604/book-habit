@@ -22,10 +22,7 @@ const Container = styled.form`
   flex-direction: row;
   margin-left: auto;
   margin-right: auto;
-  @media screen and (max-width: 768px) {
-    margin-top: 4rem;
-    margin-bottom: 4rem;
-  }
+  width: 375px;
 `;
 
 const Wrapper = styled.div`
@@ -208,12 +205,12 @@ export default function Register() {
                 />
               </Stack>
             )}
-            <Stack>
+            <Stack style={{ marginBottom: '0px' }}>
               <Button type="submit" isLoading={isLoading}>
                 회원가입
               </Button>
             </Stack>
-            <Divider divider={12} />
+            <Divider divider={8} />
             <Footer>
               계정이 있나요 ?{' '}
               <span onClick={() => navigate('/login')}>로그인</span>

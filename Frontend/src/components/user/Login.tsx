@@ -14,9 +14,7 @@ const Container = styled.form`
   flex-direction: row;
   margin-left: auto;
   margin-right: auto;
-  @media screen and (max-width: 768px) {
-    margin-top: 4rem;
-  }
+  width: 375px;
 `;
 
 const Wrapper = styled.div`
@@ -132,8 +130,12 @@ export default function Login() {
                 errorMessage="비밀번호가 필요합니다."
               />
             </Stack>
-            <Stack>
-              <Button type="submit" isLoading={isLoading}>
+            <Stack style={{ marginBottom: '0px' }}>
+              <Button
+                type="submit"
+                isLoading={isLoading}
+                style={{ marginBottom: '8px' }}
+              >
                 로그인
               </Button>
               <Button
@@ -145,7 +147,7 @@ export default function Login() {
                 카카오
               </Button>
             </Stack>
-            <Divider divider={12} />
+            <Divider divider={8} />
             <Footer>
               계정이 없나요 ?{' '}
               <span onClick={() => navigate('/register')}>회원가입</span>

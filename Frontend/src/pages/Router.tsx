@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from '../components/header/Header';
 
-import Home from './Home';
-import Login from 'components/user/Login';
-import Register from 'components/user/Register';
-import MyProfile from 'components/user/MyProfile';
 import { ColorType } from 'types/style';
+import Home from './Home';
+import Login from './LoginPage';
+import Register from './RegisterPage';
+import MyProfile from 'components/user/MyProfile';
 import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
 import AuthLayout from './layout/AuthLayout';
@@ -33,8 +33,8 @@ export default function Router({
       />
       <DefaultLayout>
         <Routes>
-          <Route path="/" Component={Home} />
           <Route element={<PublicLayout />}>
+            <Route path="/" Component={Home} />
             <Route path="/login" Component={Login} />
             <Route path="/register" Component={Register} />
           </Route>

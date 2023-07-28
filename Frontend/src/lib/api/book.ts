@@ -21,11 +21,11 @@ export const list = async () => {
   return data;
 };
 
-export const bestsellerAPI = async (page: number, limit: number) => {
+export const rankingAPI = async (page: number, limit: number) => {
   const { data } = await axios.get(
     `${
       import.meta.env.VITE_SERVER
-    }/api/books/list/20230726?page=${page}&limit=${limit}`
+    }/api/books/ranking?page=${page}&limit=${limit}`
   );
   return data;
 };

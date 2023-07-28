@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-
-import Ranking from 'components/Rank/List';
+import Login from 'components/user/Login';
 
 const Container = styled.div`
   width: 100%;
@@ -8,13 +7,12 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 4rem;
 `;
 
-export default function Home() {
+export default function LoginPage() {
   return (
     <Container>
-      <Ranking />
+      <Login />
     </Container>
   );
 }

@@ -13,7 +13,7 @@ const Container = styled.div`
 const Spinner = styled(motion.div)`
   height: 100%;
   width: 100%;
-  border: ${({ theme }) => theme.colors.main} solid 2px;
+  border: ${({ theme }) => theme.colors.spinner} solid 2px;
   border-top: transparent solid 2px;
   border-radius: 50%;
 `;

@@ -1,8 +1,8 @@
 import express from 'express';
-import controller from '../controllers/book.getList';
+import ranking from '../controllers/book.ranking';
 
 const router = express.Router();
 
-router.get('/list/:date', controller.getBestSellerDay);
+router.get('/ranking', ranking);
 
 export = router;

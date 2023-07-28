@@ -31,8 +31,9 @@ interface KakaoRequest {
     };
   };
 }
-
-export default async function (req: KakaoRequest, res: Response, next: NextFunction) {
+const kakao = (req: Request, res: Response, next: NextFunction) => {
   console.log('login', req);
   res.status(200).json({ success: true });
-}
+};
+
+export default kakao;

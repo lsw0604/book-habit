@@ -25,19 +25,16 @@ export interface IRequestBodyRegister {
   password: string;
 }
 
-export interface ICrawledDateId extends RowDataPacket {
-  id: number;
-}
-
-export interface IBestSellerList extends RowDataPacket {
+export interface IRanking extends RowDataPacket {
   title: string;
   author: string;
-  book_rank: number;
-  img: string;
+  ranking: number;
+  isbn: string;
+  image: string;
   company: string;
-  published_date: Date;
+  price: number;
 }
 
-export interface ICountResult extends RowDataPacket {
+export interface IRankingCount extends RowDataPacket {
   total: number;
 }

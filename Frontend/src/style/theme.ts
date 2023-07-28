@@ -28,110 +28,68 @@ export const shadow = {
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
 };
 
-export const sky = {
-  main: customize.sky['500'],
-  sub: customize.sky['400'],
-  font: customize.sky['50'],
-};
-
-export const cyan = {
-  main: customize.cyan['500'],
-  sub: customize.cyan['400'],
-  font: customize.cyan['50'],
-};
-
-export const lime = {
-  main: customize.lime['500'],
-  sub: customize.lime['400'],
-  font: customize.lime['50'],
-};
-
-export const rose = {
-  main: customize.rose['300'],
-  sub: customize.rose['200'],
-  font: customize.rose['50'],
-};
-
-export const teal = {
-  main: customize.teal['500'],
-  sub: customize.teal['400'],
-  font: customize.teal['50'],
-};
-
-export const yellow = {
-  main: customize.yellow['500'],
-  sub: customize.yellow['400'],
-  font: customize.yellow['50'],
-};
-
-export const gray = {
-  main: customize.gray['500'],
-  sub: customize.gray['400'],
-  font: customize.gray['50'],
-};
-
-type T = 'main' | 'sub' | 'font';
+type T = 'main' | 'sub' | 'spinner';
 
 export const colors: Record<ColorType, Record<T, string>> = {
   sky: {
     main: customize.sky['500'],
     sub: customize.sky['400'],
-    font: customize.sky['50'],
+    spinner: customize.sky['300'],
   },
 
   cyan: {
     main: customize.cyan['500'],
     sub: customize.cyan['400'],
-    font: customize.cyan['50'],
+    spinner: customize.cyan['300'],
   },
 
   lime: {
     main: customize.lime['500'],
     sub: customize.lime['400'],
-    font: customize.lime['50'],
+    spinner: customize.lime['300'],
   },
 
   rose: {
-    main: customize.rose['300'],
-    sub: customize.rose['200'],
-    font: customize.rose['50'],
+    main: customize.rose['500'],
+    sub: customize.rose['400'],
+    spinner: customize.rose['300'],
   },
 
   teal: {
     main: customize.teal['500'],
     sub: customize.teal['400'],
-    font: customize.teal['50'],
+    spinner: customize.teal['300'],
   },
 
   yellow: {
     main: customize.yellow['500'],
     sub: customize.yellow['400'],
-    font: customize.yellow['50'],
+    spinner: customize.yellow['300'],
   },
 
   gray: {
     main: customize.gray['500'],
     sub: customize.gray['400'],
-    font: customize.gray['50'],
+    spinner: customize.gray['300'],
   },
   red: {
     main: customize.red['500'],
     sub: customize.red['400'],
-    font: customize.red['50'],
+    spinner: customize.red['300'],
   },
   fuchsia: {
     main: customize.fuchsia['500'],
     sub: customize.fuchsia['400'],
-    font: customize.fuchsia['50'],
+    spinner: customize.fuchsia['300'],
   },
   slate: {
     main: customize.slate['500'],
     sub: customize.slate['400'],
-    font: customize.slate['50'],
+    spinner: customize.slate['300'],
   },
   orange: {
     main: customize.orange['500'],
     sub: customize.orange['400'],
-    font: customize.orange['50'],
+    spinner: customize.orange['300'],
   },
 };

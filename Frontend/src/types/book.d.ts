@@ -10,9 +10,10 @@ type ResponseBookType = {
 
 type BooksType = {
   title: string;
-  book_rank: number;
+  ranking: number;
   author: string;
-  img: string;
+  image: string;
+  isbn: string;
   company: string;
-  published_date?: string;
+  price: number;
 };

@@ -56,7 +56,6 @@ axios.interceptors.response.use(
         (response && status === 403 && message === 'jwt expired') ||
         (response && status === 403 && message === 'invalid token')
       ) {
-        // delete axios.defaults.headers.common['Authorization'];?
         await logoutAPI();
       }
     }

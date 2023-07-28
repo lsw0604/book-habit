@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-
-import Ranking from 'components/Rank/List';
+import Register from 'components/user/Register';
 
 const Container = styled.div`
   width: 100%;
@@ -11,10 +10,10 @@ const Container = styled.div`
   padding-top: 4rem;
 `;
 
-export default function Home() {
+export default function RegisterPage() {
   return (
     <Container>
-      <Ranking />
+      <Register />
     </Container>
   );
 }
