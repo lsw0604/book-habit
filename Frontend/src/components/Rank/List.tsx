@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ChangeEvent, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import useRankingHook from '@hooks/useRankingHook';
@@ -10,7 +10,7 @@ const Container = styled.div`
   height: 100%;
   justify-content: center;
   align-items: center;
-  display: grid;
+  margin-top: 10px;
 
   .loader {
     margin: 10px 0;
@@ -28,9 +28,15 @@ const Container = styled.div`
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
+  display: grid;
+  gap: 1rem;
 `;
 
-const Page = styled.div``;
+const Page = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+`;
 
 export default function RankList() {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
@@ -86,7 +92,7 @@ export default function RankList() {
             <div className="loader">
               <Loader />
             </div>
-          ) : (
+          ) : !hasNextPage ? null : (
             <div ref={lastBookRef} className="observer" />
           )}
         </Wrapper>

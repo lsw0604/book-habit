@@ -41,18 +41,10 @@ const getRanking = async (req: Request, res: Response, next: NextFunction) => {
       const totalPages = Math.ceil(totalBooks / limit);
 
       res.status(200).json({
-        page,
-        totalPages,
-        limit,
-        totalBooks,
         nextPage:
-          parseInt(req.query.page as string) + 1 >= totalPages
-            ? false
+          parseInt(req.query.page as string) >= totalPages
+            ? undefined
             : parseInt(req.query.page as string) + 1,
-        prevPage:
-          parseInt(req.query.page as string) - 1 <= 0
-            ? false
-            : parseInt(req.query.page as string) - 1,
         books: ranks,
       });
 

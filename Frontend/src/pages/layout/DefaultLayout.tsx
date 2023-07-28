@@ -5,6 +5,7 @@ const Layout = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   width: 100vw;
   height: 100vh;
+  padding-top: 4rem;
   overflow: scroll;
 `;
 
@@ -16,16 +17,12 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-export default function DefaultLayout({ children }: { children: ReactNode }) {
+const DefaultLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <>
-      <main>
-        <section>
-          <Layout>
-            <Container>{children}</Container>
-          </Layout>
-        </section>
-      </main>
-    </>
+    <Layout>
+      <Container>{children}</Container>
+    </Layout>
   );
-}
+};
+
+export default DefaultLayout;

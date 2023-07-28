@@ -25,24 +25,30 @@ export default function Router({
 }: IProps) {
   return (
     <BrowserRouter>
-      <Header
-        onToggle={onToggle}
-        isOn={isOn}
-        selectedColor={selectedColor}
-        colorHandler={colorHandler}
-      />
-      <DefaultLayout>
-        <Routes>
-          <Route element={<PublicLayout />}>
-            <Route path="/" Component={Home} />
-            <Route path="/login" Component={Login} />
-            <Route path="/register" Component={Register} />
-          </Route>
-          <Route element={<AuthLayout />}>
-            <Route path="/profile/:id" Component={MyProfile} />
-          </Route>
-        </Routes>
-      </DefaultLayout>
+      <header>
+        <Header
+          onToggle={onToggle}
+          isOn={isOn}
+          selectedColor={selectedColor}
+          colorHandler={colorHandler}
+        />
+      </header>
+      <main>
+        <section>
+          <DefaultLayout>
+            <Routes>
+              <Route element={<PublicLayout />}>
+                <Route path="/" Component={Home} />
+                <Route path="/login" Component={Login} />
+                <Route path="/register" Component={Register} />
+              </Route>
+              <Route element={<AuthLayout />}>
+                <Route path="/profile/:id" Component={MyProfile} />
+              </Route>
+            </Routes>
+          </DefaultLayout>
+        </section>
+      </main>
     </BrowserRouter>
   );
 }

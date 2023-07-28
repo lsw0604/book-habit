@@ -1,10 +1,5 @@
 type ResponseBookType = {
-  page: number;
-  totalPage: number;
-  limit: number;
-  totalBooks: number;
-  nextPage: number | boolean;
-  prevPage: number | boolean;
+  nextPage?: number;
   books: BooksType[];
 };
 

@@ -7,7 +7,7 @@ export default function useRankingHook() {
       ['BESTSELLER'],
       ({ pageParam = 1 }) => rankingAPI(pageParam, 10),
       {
-        getNextPageParam: (lastPage) => lastPage.nextPage,
+        getNextPageParam: (response) => response.nextPage,
         staleTime: Infinity,
       }
     );

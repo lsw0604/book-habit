@@ -9,6 +9,7 @@ import HeaderPalette from './HeaderPalette';
 import HeaderProfile from './HeaderProfile';
 import Loader from 'components/common/Loader';
 import useAccessHook from '@hooks/useAccessHook';
+import { Suspense } from 'react';
 
 interface IProps {
   onToggle: () => void;
@@ -28,6 +29,7 @@ const Container = styled.nav`
   background-color: ${({ theme }) => theme.mode.main};
   padding: 0 2rem;
   z-index: 9999;
+  box-shadow: ${({ theme }) => theme.shadow.n};
 `;
 
 const Wrapper = styled.div`
@@ -53,23 +55,23 @@ export default function Index({
   useAccessHook();
 
   return (
-    <header>
-      <Container>
-        <Logo onClick={() => navigate('/')}>Logo</Logo>
-        <Wrapper>
-          <HeaderPalette
-            onToggle={onToggle}
-            isOn={isOn}
-            selectedColor={selectedColor}
-            colorHandler={colorHandler}
-          />
-          {userState.isLogged ? (
+    <Container>
+      <Logo onClick={() => navigate('/')}>Logo</Logo>
+      <Wrapper>
+        <HeaderPalette
+          onToggle={onToggle}
+          isOn={isOn}
+          selectedColor={selectedColor}
+          colorHandler={colorHandler}
+        />
+        {userState.isLogged ? (
+          <Suspense fallback={<Loader />}>
             <HeaderProfile name={userState.name} />
-          ) : (
-            <HeaderAuth />
-          )}
-        </Wrapper>
-      </Container>
-    </header>
+          </Suspense>
+        ) : (
+          <HeaderAuth />
+        )}
+      </Wrapper>
+    </Container>
   );
 }
