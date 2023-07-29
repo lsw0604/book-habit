@@ -1,29 +1,41 @@
-import React from 'react';
+import { customize } from '@style/colors';
+import { IconCheck } from '@style/icons';
 import styled from 'styled-components';
 
 interface IProps {
-  value: string[];
-  onChange: (selected: string[]) => void;
-  options: string[];
+  value: { title: string; description?: string }[];
+  onChange: (selected: { title: string; description?: string }[]) => void;
+  options: { title: string; description?: string }[];
 }
 
 const Container = styled.div`
   &::after {
-    display: block;
+    display: flex;
     content: '';
     clear: both;
   }
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
 `;
 
-const Label = styled.label`
+const Label = styled.label<{ checked: boolean }>`
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
   float: left;
   clear: both;
+  border: 2px solid ${({ theme }) => theme.mode.typo_sub};
+  border-radius: 1.5rem;
+  padding: ${({ checked }) =>
+    checked ? '0.5rem 3rem 0.5rem 0.5rem' : '0.5rem 0.5rem 0.5rem 3rem'};
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
   margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0px;
+  }
 `;
 
 const Input = styled.input`
@@ -48,60 +60,78 @@ const Input = styled.input`
   &[type='checkbox'] + & {
     display: none;
   }
+`;
 
-  &[type='checkbox'] + span {
-    width: 18px;
-    height: 18px;
-    margin-right: 8px;
-    display: inline-block;
-  }
-
-  &[type='Checkbox'] + span::before {
-    content: '';
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    top: 0;
-    display: inline-table;
-    border: 2px solid black;
-    border-radius: 2px;
-    box-sizing: border-box;
-    background-color: white;
-    cursor: pointer;
-  }
-
-  &[type='checkbox']:checked + span::before {
-    content: ' ';
-    width: 18px;
-    height: 18px;
-    display: inline-table;
-    border: 0;
-    border-radius: 2px;
-    background-color: blue;
-    position: absolute;
+const Icon = styled.i`
+  height: auto;
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: ${customize.lime['500']};
   }
 `;
 
-const CheckBoxGroup = ({ onChange, options = [], value = [] }: IProps) => {
+const Info = styled.div`
+  width: 100%;
+`;
+
+const Title = styled.h1`
+  width: 100%;
+  display: inline-flex;
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 900;
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
+
+const Description = styled.span`
+  width: 100%;
+  display: inline-block;
+  font-size: 4px;
+  line-height: 10px;
+  color: ${customize.gray['400']};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+`;
+
+const CheckBoxGroup = ({ onChange, options, value = [] }: IProps) => {
+  const isOptionChecked = (option: { title: string; description?: string }) =>
+    value.some((val) => val.title === option.title);
+
   return (
     <Container>
-      {options.map((option) => (
-        <Label key={option}>
-          <Input
-            type="checkbox"
-            checked={value.includes(option)}
-            onChange={(e) => {
-              if (e.target.checked) {
-                onChange([...value, option]);
-              } else {
-                onChange(value.filter((option_) => option_ !== option));
-              }
-            }}
-          />
-          <span />
-          {option}
-        </Label>
-      ))}
+      {options &&
+        options.map((option) => (
+          <Label key={option.title} checked={isOptionChecked(option)}>
+            <Input
+              type="checkbox"
+              checked={isOptionChecked(option)}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  onChange([...value, option]);
+                } else {
+                  onChange(
+                    value.filter((option_) => option_.title !== option.title)
+                  );
+                }
+              }}
+            />
+            {isOptionChecked(option) && <Icon>{<IconCheck />}</Icon>}
+            <Info>
+              <Title>{option.title}</Title>
+              {option.description ? (
+                <Description>{option.description}</Description>
+              ) : (
+                <Description></Description>
+              )}
+            </Info>
+          </Label>
+        ))}
     </Container>
   );
 };
