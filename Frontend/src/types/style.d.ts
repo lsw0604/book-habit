@@ -73,3 +73,8 @@ export type ColorNumType =
   | '900';
 
 export type ColorStateType = Record<ColorType, Record<ColorNumType, string>>;
+
+type CheckBoxOptionType<T> = {
+  title: T;
+  description?: string;
+};

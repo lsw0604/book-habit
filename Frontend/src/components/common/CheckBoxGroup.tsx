@@ -1,11 +1,12 @@
 import { customize } from '@style/colors';
 import { IconCheck } from '@style/icons';
 import styled from 'styled-components';
+import { CheckBoxOptionType } from 'types/style';
 
-interface IProps {
-  value: { title: string; description?: string }[];
-  onChange: (selected: { title: string; description?: string }[]) => void;
-  options: { title: string; description?: string }[];
+interface IProps<T> {
+  value: CheckBoxOptionType<T>[];
+  onChange: (selected: CheckBoxOptionType<T>[]) => void;
+  options: CheckBoxOptionType<T>[];
 }
 
 const Container = styled.div`
@@ -99,8 +100,12 @@ const Description = styled.span`
   text-align: left;
 `;
 
-const CheckBoxGroup = ({ onChange, options, value = [] }: IProps) => {
-  const isOptionChecked = (option: { title: string; description?: string }) =>
+const CheckBoxGroup = <T extends string>({
+  onChange,
+  options,
+  value = [],
+}: IProps<T>) => {
+  const isOptionChecked = (option: CheckBoxOptionType<T>) =>
     value.some((val) => val.title === option.title);
 
   return (

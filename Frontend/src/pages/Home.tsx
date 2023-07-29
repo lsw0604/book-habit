@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Ranking from 'components/Rank/List';
 import CheckBoxGroup from 'components/common/CheckBoxGroup';
+import { CheckBoxOptionType } from 'types/style';
 
 const Container = styled.div`
   width: 100%;
@@ -22,49 +23,43 @@ const Content = styled.div`
 `;
 
 export default function Home() {
-  const [value, setValue] = useState<{ title: string; description?: string }[]>(
-    []
-  );
+  const [value, setValue] = useState<CheckBoxOptionType<string>[]>([]);
 
   const options = [
     {
-      title: 'Ipsum 1',
+      title: 'female',
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'Ipsum 2',
+      title: 'male',
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'Ipsum 3',
+      title: 'male',
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'Ipsum 4',
+      title: 'female',
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'Ipsum 5',
+      title: 'male',
     },
   ];
 
-  useEffect(() => {
-    console.log('value', value);
-  }, [value, setValue]);
-
-  const onChange = (ctx: { title: string; description?: string }[]) => {
+  const onChange = (ctx: CheckBoxOptionType<string>[]) => {
     setValue([...ctx]);
   };
   return (
     <Container>
       <Heading>베스트 셀러 100</Heading>
       <Content>
-        {/* <Ranking /> */}
         <CheckBoxGroup value={value} options={options} onChange={onChange} />
+        <Ranking />
       </Content>
     </Container>
   );
