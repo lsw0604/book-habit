@@ -32,7 +32,7 @@ interface KakaoRequest {
   };
 }
 const kakao = (req: Request, res: Response, next: NextFunction) => {
-  console.log('login', req);
+  // console.log('login', req);
   res.status(200).json({ success: true });
 };
 

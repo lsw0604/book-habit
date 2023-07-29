@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from '../components/header/Header';
 
 import { ColorType } from 'types/style';
-import Home from './Home';
+import Home from './HomePage';
 import Login from './LoginPage';
 import Register from './RegisterPage';
 import MyProfile from 'components/user/MyProfile';

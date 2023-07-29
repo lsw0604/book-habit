@@ -78,3 +78,10 @@ type CheckBoxOptionType<T> = {
   title: T;
   description?: string;
 };
+
+type RadioGroupOptionType<T> = {
+  label: string;
+  value: T;
+  description?: string;
+  icon?: JSX.Element;
+};

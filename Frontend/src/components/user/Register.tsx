@@ -11,11 +11,12 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
-import ErrorMessage from 'components/common/ErrorMessage';
-import { IconMail, IconPerson } from '@style/icons';
+import ValidationMessage from 'components/common/ValidationMessage';
+import { IconFemale, IconMail, IconMale, IconPerson } from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
 import useSignupHook from '@hooks/useSignupHook';
+import RadioGroup from 'components/common/RadioGroup';
 
 const Container = styled.form`
   display: flex;
@@ -23,6 +24,7 @@ const Container = styled.form`
   margin-left: auto;
   margin-right: auto;
   width: 375px;
+  height: 100%;
 `;
 
 const Wrapper = styled.div`
@@ -68,6 +70,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [checkedPassword, setCheckedPassword] = useState('');
+  const [gender, setGender] = useState<string>('');
 
   const [useValidation, setUseValidation] = useState(false);
 
@@ -185,21 +188,45 @@ export default function Register() {
                 errorMessage="비밀번호 확인을 입력해주세요."
               />
             </Stack>
+            <Stack>
+              <RadioGroup<string>
+                label="성별"
+                isValid={!gender}
+                useValidation={useValidation}
+                value={gender}
+                onChange={(e) => setGender(e)}
+                errorMessage="성별을 입력해주세요."
+                options={[
+                  {
+                    label: '남자',
+                    icon: <IconMale />,
+                    value: 'male',
+                    description: 'male',
+                  },
+                  {
+                    label: '여자',
+                    icon: <IconFemale />,
+                    value: 'female',
+                    description: 'female',
+                  },
+                ]}
+              />
+            </Stack>
             {focusedPassword && (
               <Stack>
-                <ErrorMessage
+                <ValidationMessage
                   errorMessage="비밀번호에 본인 이름이나 이메일을 포함할 수 없습니다."
                   isValid={isPasswordHasNameOrEmail}
                 />
-                <ErrorMessage
+                <ValidationMessage
                   errorMessage="최소 8자리의 비밀번호를 설정하세요."
                   isValid={!isPasswordOverMinLength}
                 />
-                <ErrorMessage
+                <ValidationMessage
                   errorMessage="숫자나 기호를 포함하세요."
                   isValid={isPasswordHasNumberOrSymbol}
                 />
-                <ErrorMessage
+                <ValidationMessage
                   errorMessage="비밀번호와 비밀번호 확인은 같아야합니다."
                   isValid={password !== checkedPassword}
                 />

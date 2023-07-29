@@ -1,6 +1,7 @@
-import { customize } from '@style/colors';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { InputHTMLAttributes, memo } from 'react';
+
+import ErrorMessage from '../ErrorMessage';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: JSX.Element;
@@ -57,14 +58,6 @@ const Icon = styled.div`
   }
 `;
 
-const ErrorMessage = styled.p`
-  margin-top: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  color: ${customize.red['300']};
-  margin-left: 10px;
-`;
-
 const Index = ({
   icon,
   label,
@@ -83,7 +76,7 @@ const Index = ({
         <Icon>{icon}</Icon>
       </Container>
       {errorMessage && isValid && useValidation && (
-        <ErrorMessage>{errorMessage}</ErrorMessage>
+        <ErrorMessage message={errorMessage} />
       )}
     </>
   );

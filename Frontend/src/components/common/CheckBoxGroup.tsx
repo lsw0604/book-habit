@@ -1,6 +1,8 @@
+import styled from 'styled-components';
+import { useMemo } from 'react';
+
 import { customize } from '@style/colors';
 import { IconCheck } from '@style/icons';
-import styled from 'styled-components';
 import { CheckBoxOptionType } from 'types/style';
 
 interface IProps<T> {
@@ -79,13 +81,15 @@ const Info = styled.div`
   width: 100%;
 `;
 
-const Title = styled.h1`
+const Title = styled.h1<{ isDescription: boolean }>`
   width: 100%;
   display: inline-flex;
   font-size: 20px;
   line-height: 26px;
   font-weight: 900;
+  font-size: 20px;
   color: ${({ theme }) => theme.mode.typo_main};
+  line-height: ${({ isDescription }) => (isDescription ? '26px' : '44px')};
 `;
 
 const Description = styled.span`
@@ -100,13 +104,24 @@ const Description = styled.span`
   text-align: left;
 `;
 
-const CheckBoxGroup = <T extends string>({
+const CheckBoxGroup = <T extends string | number>({
   onChange,
   options,
   value = [],
 }: IProps<T>) => {
-  const isOptionChecked = (option: CheckBoxOptionType<T>) =>
-    value.some((val) => val.title === option.title);
+  const isOptionChecked = useMemo(
+    () => (option: CheckBoxOptionType<T>) =>
+      value.some((val) => val.title === option.title),
+    [value]
+  );
+
+  const onChangeOptions = (option: CheckBoxOptionType<T>) => {
+    const isSelectedOption = isOptionChecked(option);
+    const updatedOptionOptions = isSelectedOption
+      ? value.filter((val) => val.title !== option.title)
+      : [...value, option];
+    onChange(updatedOptionOptions);
+  };
 
   return (
     <Container>
@@ -116,24 +131,14 @@ const CheckBoxGroup = <T extends string>({
             <Input
               type="checkbox"
               checked={isOptionChecked(option)}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  onChange([...value, option]);
-                } else {
-                  onChange(
-                    value.filter((option_) => option_.title !== option.title)
-                  );
-                }
-              }}
+              onChange={() => onChangeOptions(option)}
             />
             {isOptionChecked(option) && <Icon>{<IconCheck />}</Icon>}
             <Info>
-              <Title>{option.title}</Title>
+              <Title isDescription={!!option.description}>{option.title}</Title>
               {option.description ? (
                 <Description>{option.description}</Description>
-              ) : (
-                <Description></Description>
-              )}
+              ) : null}
             </Info>
           </Label>
         ))}

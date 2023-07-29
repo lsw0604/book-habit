@@ -1,9 +1,11 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Ranking from 'components/Rank/List';
 import CheckBoxGroup from 'components/common/CheckBoxGroup';
+import RadioGroup from 'components/common/RadioGroup';
 import { CheckBoxOptionType } from 'types/style';
+import { IconBeach } from '@style/icons';
 
 const Container = styled.div`
   width: 100%;
@@ -22,45 +24,68 @@ const Content = styled.div`
   grid-template-columns: repeat(1, minmax(0, 1fr));
 `;
 
-export default function Home() {
-  const [value, setValue] = useState<CheckBoxOptionType<string>[]>([]);
+const HomePage = () => {
+  const [value, setValue] = useState<CheckBoxOptionType<number>[]>([]);
+  const [option, setOption] = useState<string>('');
 
   const options = [
     {
-      title: 'female',
+      title: 1,
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'male',
+      title: 2,
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'male',
+      title: 3,
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'female',
+      title: 4,
       description:
         "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
-      title: 'male',
+      title: 5,
     },
   ];
 
-  const onChange = (ctx: CheckBoxOptionType<string>[]) => {
-    setValue([...ctx]);
-  };
+  useEffect(() => {
+    console.log('value', option);
+  }, [option]);
+
   return (
     <Container>
       <Heading>베스트 셀러 100</Heading>
       <Content>
-        <CheckBoxGroup value={value} options={options} onChange={onChange} />
-        <Ranking />
+        <RadioGroup<string>
+          label="test"
+          options={[
+            { label: 'test!', value: 'test1', icon: <IconBeach /> },
+            { label: 'test2', value: 'test2', description: 'ss' },
+            { label: 'test3', value: 'test3', description: 'ss' },
+            { label: 'test4', value: 'test4', description: 'ss' },
+            { label: 'test5', value: 'test5', description: 'ss' },
+            { label: 'test6', value: 'test6', description: 'ss' },
+            { label: 'test7', value: 'test7', description: 'ss' },
+            { label: 'test8', value: 'test8', description: 'ss' },
+          ]}
+          value={option}
+          onChange={(e) => setOption(e)}
+        />
+        {/* <CheckBoxGroup<number>
+          value={value}
+          options={options}
+          onChange={(e) => setValue(e)}
+        />
+        <Ranking /> */}
       </Content>
     </Container>
   );
-}
+};
+
+export default HomePage;
