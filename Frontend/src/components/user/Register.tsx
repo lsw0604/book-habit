@@ -11,26 +11,21 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
-import ValidationMessage from 'components/common/ValidationMessage';
+import ValidationMessage from 'components/common/Message/ValidationMessage';
 import { IconFemale, IconMail, IconMale, IconPerson } from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
 import useSignupHook from '@hooks/useSignupHook';
-import RadioGroup from 'components/common/RadioGroup';
+import RadioGroup from 'components/common/Radio';
 
 const Container = styled.form`
   display: flex;
   flex-direction: row;
   margin-left: auto;
   margin-right: auto;
-  width: 375px;
-  height: 100%;
-`;
-
-const Wrapper = styled.div`
+  max-width: 375px;
   width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+  height: auto;
 `;
 
 const Box = styled.div`
@@ -102,6 +97,10 @@ export default function Register() {
     []
   );
 
+  const onChangeGender = (ctx: string) => {
+    setGender(ctx);
+  };
+
   const navigate = useNavigate();
   const { mutate, isLoading } = useSignupHook();
   const { addToast } = useToastHook();
@@ -136,115 +135,110 @@ export default function Register() {
   }, []);
 
   return (
-    <>
-      <Container onSubmit={onSubmit}>
-        <Wrapper>
-          <Box>
-            <Header>회원가입</Header>
-            <Stack>
-              <Input
-                icon={<IconMail />}
-                label="이메일"
-                type="email"
-                value={email}
-                onChange={onChangeEmail}
-                useValidation={useValidation}
-                isValid={!email}
-                errorMessage="이메일을 입력해주세요."
-              />
-            </Stack>
-            <Stack>
-              <Input
-                icon={<IconPerson />}
-                label="이름"
-                type="text"
-                value={name}
-                onChange={onChangeName}
-                useValidation={useValidation}
-                isValid={!name}
-                errorMessage="이름을 입력해주세요."
-              />
-            </Stack>
-            <Stack>
-              <Input
-                label="비밀번호"
-                type="password"
-                value={password}
-                onChange={onChangePassword}
-                useValidation={useValidation}
-                isValid={!password}
-                errorMessage="비밀번호를 입력해주세요."
-                onFocus={onFocusPassword}
-              />
-            </Stack>
-            <Stack>
-              <Input
-                label="비밀번호 확인"
-                type="password"
-                value={checkedPassword}
-                onChange={onChangeCheckedPassword}
-                useValidation={useValidation}
-                isValid={!checkedPassword}
-                errorMessage="비밀번호 확인을 입력해주세요."
-              />
-            </Stack>
-            <Stack>
-              <RadioGroup<string>
-                label="성별"
-                isValid={!gender}
-                useValidation={useValidation}
-                value={gender}
-                onChange={(e) => setGender(e)}
-                errorMessage="성별을 입력해주세요."
-                options={[
-                  {
-                    label: '남자',
-                    icon: <IconMale />,
-                    value: 'male',
-                    description: 'male',
-                  },
-                  {
-                    label: '여자',
-                    icon: <IconFemale />,
-                    value: 'female',
-                    description: 'female',
-                  },
-                ]}
-              />
-            </Stack>
-            {focusedPassword && (
-              <Stack>
-                <ValidationMessage
-                  errorMessage="비밀번호에 본인 이름이나 이메일을 포함할 수 없습니다."
-                  isValid={isPasswordHasNameOrEmail}
-                />
-                <ValidationMessage
-                  errorMessage="최소 8자리의 비밀번호를 설정하세요."
-                  isValid={!isPasswordOverMinLength}
-                />
-                <ValidationMessage
-                  errorMessage="숫자나 기호를 포함하세요."
-                  isValid={isPasswordHasNumberOrSymbol}
-                />
-                <ValidationMessage
-                  errorMessage="비밀번호와 비밀번호 확인은 같아야합니다."
-                  isValid={password !== checkedPassword}
-                />
-              </Stack>
-            )}
-            <Stack style={{ marginBottom: '0px' }}>
-              <Button type="submit" isLoading={isLoading}>
-                회원가입
-              </Button>
-            </Stack>
-            <Divider divider={8} />
-            <Footer>
-              계정이 있나요 ?{' '}
-              <span onClick={() => navigate('/login')}>로그인</span>
-            </Footer>
-          </Box>
-        </Wrapper>
-      </Container>
-    </>
+    <Container onSubmit={onSubmit}>
+      <Box>
+        <Header>회원가입</Header>
+        <Stack>
+          <Input
+            icon={<IconMail />}
+            label="이메일"
+            type="email"
+            value={email}
+            onChange={onChangeEmail}
+            useValidation={useValidation}
+            isValid={!email}
+            errorMessage="이메일을 입력해주세요."
+          />
+        </Stack>
+        <Stack>
+          <Input
+            icon={<IconPerson />}
+            label="이름"
+            type="text"
+            value={name}
+            onChange={onChangeName}
+            useValidation={useValidation}
+            isValid={!name}
+            errorMessage="이름을 입력해주세요."
+          />
+        </Stack>
+        <Stack>
+          <Input
+            label="비밀번호"
+            type="password"
+            value={password}
+            onChange={onChangePassword}
+            useValidation={useValidation}
+            isValid={!password}
+            errorMessage="비밀번호를 입력해주세요."
+            onFocus={onFocusPassword}
+          />
+        </Stack>
+        <Stack>
+          <Input
+            label="비밀번호 확인"
+            type="password"
+            value={checkedPassword}
+            onChange={onChangeCheckedPassword}
+            useValidation={useValidation}
+            isValid={!checkedPassword}
+            errorMessage="비밀번호 확인을 입력해주세요."
+          />
+        </Stack>
+        <Stack>
+          <RadioGroup
+            label="성별"
+            isValid={!gender}
+            useValidation={useValidation}
+            value={gender}
+            onChange={onChangeGender}
+            errorMessage="성별을 입력해주세요."
+            options={[
+              {
+                label: '남자',
+                icon: <IconMale />,
+                value: 'male',
+                description: 'male',
+              },
+              {
+                label: '여자',
+                icon: <IconFemale />,
+                value: 'female',
+                description: 'female',
+              },
+            ]}
+          />
+        </Stack>
+        {focusedPassword && (
+          <Stack>
+            <ValidationMessage
+              errorMessage="비밀번호에 본인 이름이나 이메일을 포함할 수 없습니다."
+              isValid={isPasswordHasNameOrEmail}
+            />
+            <ValidationMessage
+              errorMessage="최소 8자리의 비밀번호를 설정하세요."
+              isValid={!isPasswordOverMinLength}
+            />
+            <ValidationMessage
+              errorMessage="숫자나 기호를 포함하세요."
+              isValid={isPasswordHasNumberOrSymbol}
+            />
+            <ValidationMessage
+              errorMessage="비밀번호와 비밀번호 확인은 같아야합니다."
+              isValid={password !== checkedPassword}
+            />
+          </Stack>
+        )}
+        <Stack style={{ marginBottom: '0px' }}>
+          <Button type="submit" isLoading={isLoading}>
+            회원가입
+          </Button>
+        </Stack>
+        <Divider divider={8} />
+        <Footer>
+          계정이 있나요 ? <span onClick={() => navigate('/login')}>로그인</span>
+        </Footer>
+      </Box>
+    </Container>
   );
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import Ranking from 'components/Rank/List';
 import CheckBoxGroup from 'components/common/CheckBoxGroup';
-import RadioGroup from 'components/common/RadioGroup';
+import RadioGroup from 'components/common/Radio';
 import { CheckBoxOptionType } from 'types/style';
 import { IconBeach } from '@style/icons';
 

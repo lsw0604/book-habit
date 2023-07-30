@@ -10,9 +10,12 @@ const Container = styled.div`
   padding: 2rem 0;
 `;
 
+const RegisterFormWrapper = styled.div``;
+
 export default function RegisterPage() {
   return (
     <Container>
+      <RegisterFormWrapper></RegisterFormWrapper>
       <Register />
     </Container>
   );

@@ -20,7 +20,6 @@ interface IProps {
 
 const Container = styled.nav`
   position: fixed;
-  top: 0;
   height: 4rem;
   width: 100vw;
   display: flex;

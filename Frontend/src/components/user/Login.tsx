@@ -8,19 +8,15 @@ import Button from 'components/common/Button';
 import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import useLoginHook from '@hooks/useLoginHook';
 import useValidateHook from '@hooks/useValidateHook';
+import { customize } from '@style/colors';
 
 const Container = styled.form`
   display: flex;
   flex-direction: row;
   margin-left: auto;
   margin-right: auto;
-  width: 375px;
-`;
-
-const Wrapper = styled.div`
+  max-width: 375px;
   width: 100%;
-  margin-right: auto;
-  margin-left: auto;
 `;
 
 const Box = styled.div`
@@ -47,7 +43,9 @@ const Header = styled.h1`
 `;
 
 const Footer = styled.p`
-  color: ${({ theme }) => theme.mode.typo_sub};
+  color: ${customize.gray['400']};
+  font-size: 12px;
+  margin: 0 0 0 10px;
   span {
     margin-left: 10px;
     cursor: pointer;
@@ -63,7 +61,7 @@ export default function Login() {
 
   const navigate = useNavigate();
   const { isLoading, mutate } = useLoginHook();
-  const { validate, isEmailValid } = useValidateHook({
+  const { validate } = useValidateHook({
     email,
     password,
     mode: 'login',
@@ -97,63 +95,61 @@ export default function Login() {
   return (
     <>
       <Container onSubmit={onSubmit}>
-        <Wrapper>
-          <Box>
-            <Header>로그인</Header>
-            <Stack>
-              <Input
-                label="이메일"
-                icon={<IconMail />}
-                type="email"
-                value={email}
-                onChange={onChangeEmail}
-                useValidation={useValidation}
-                isValid={!email}
-                errorMessage="이메일이 필요합니다."
-              />
-            </Stack>
-            <Stack>
-              <Input
-                label="비밀번호"
-                icon={
-                  eyeOpen ? (
-                    <IconOpenEye onClick={toggleIcon} />
-                  ) : (
-                    <IconClosedEye onClick={toggleIcon} />
-                  )
-                }
-                type={eyeOpen ? 'text' : 'password'}
-                value={password}
-                onChange={onChangePassword}
-                useValidation={useValidation}
-                isValid={!password}
-                errorMessage="비밀번호가 필요합니다."
-              />
-            </Stack>
-            <Stack style={{ marginBottom: '0px' }}>
-              <Button
-                type="submit"
-                isLoading={isLoading}
-                style={{ marginBottom: '8px' }}
-              >
-                로그인
-              </Button>
-              <Button
-                onClick={(e: FormEvent<HTMLButtonElement>) => {
-                  e.preventDefault();
-                  console.log('ss');
-                }}
-              >
-                카카오
-              </Button>
-            </Stack>
-            <Divider divider={8} />
-            <Footer>
-              계정이 없나요 ?{' '}
-              <span onClick={() => navigate('/register')}>회원가입</span>
-            </Footer>
-          </Box>
-        </Wrapper>
+        <Box>
+          <Header>로그인</Header>
+          <Stack>
+            <Input
+              label="이메일"
+              icon={<IconMail />}
+              type="email"
+              value={email}
+              onChange={onChangeEmail}
+              useValidation={useValidation}
+              isValid={!email}
+              errorMessage="이메일이 필요합니다."
+            />
+          </Stack>
+          <Stack>
+            <Input
+              label="비밀번호"
+              icon={
+                eyeOpen ? (
+                  <IconOpenEye onClick={toggleIcon} />
+                ) : (
+                  <IconClosedEye onClick={toggleIcon} />
+                )
+              }
+              type={eyeOpen ? 'text' : 'password'}
+              value={password}
+              onChange={onChangePassword}
+              useValidation={useValidation}
+              isValid={!password}
+              errorMessage="비밀번호가 필요합니다."
+            />
+          </Stack>
+          <Footer>
+            계정이 없나요 ?{' '}
+            <span onClick={() => navigate('/register')}>회원가입</span>
+          </Footer>
+          <Divider divider={10} />
+          <Stack style={{ marginBottom: '0px' }}>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              style={{ marginBottom: '8px' }}
+            >
+              로그인
+            </Button>
+            <Button
+              onClick={(e: FormEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                console.log('ss');
+              }}
+            >
+              카카오
+            </Button>
+          </Stack>
+        </Box>
       </Container>
     </>
   );

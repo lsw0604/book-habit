@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { customize } from '@style/colors';
 import { RadioGroupOptionType } from 'types/style';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 interface IProps<T> {
   label?: string;
@@ -23,7 +23,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   &:after {
     display: grid;
     content: '';
@@ -110,7 +110,7 @@ const InfoDescription = styled.span`
   font-size: 14px;
 `;
 
-const RadioGroup = <T extends string | number>({
+const Radio = <T extends string>({
   label,
   value,
   options,
@@ -159,5 +159,7 @@ const RadioGroup = <T extends string | number>({
     </>
   );
 };
+
+const RadioGroup = memo(Radio);
 
 export default RadioGroup;

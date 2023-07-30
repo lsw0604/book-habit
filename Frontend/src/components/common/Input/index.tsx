@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { InputHTMLAttributes, memo } from 'react';
 
-import ErrorMessage from '../ErrorMessage';
+import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: JSX.Element;

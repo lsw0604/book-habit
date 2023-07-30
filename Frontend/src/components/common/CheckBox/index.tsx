@@ -4,11 +4,15 @@ import { useMemo } from 'react';
 import { customize } from '@style/colors';
 import { IconCheck } from '@style/icons';
 import { CheckBoxOptionType } from 'types/style';
+import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 interface IProps<T> {
   value: CheckBoxOptionType<T>[];
   onChange: (selected: CheckBoxOptionType<T>[]) => void;
   options: CheckBoxOptionType<T>[];
+  isValid?: boolean;
+  useValidation?: boolean;
+  errorMessage: string;
 }
 
 const Container = styled.div`
@@ -108,6 +112,9 @@ const CheckBoxGroup = <T extends string | number>({
   onChange,
   options,
   value = [],
+  useValidation,
+  isValid,
+  errorMessage,
 }: IProps<T>) => {
   const isOptionChecked = useMemo(
     () => (option: CheckBoxOptionType<T>) =>
@@ -124,25 +131,32 @@ const CheckBoxGroup = <T extends string | number>({
   };
 
   return (
-    <Container>
-      {options &&
-        options.map((option) => (
-          <Label key={option.title} checked={isOptionChecked(option)}>
-            <Input
-              type="checkbox"
-              checked={isOptionChecked(option)}
-              onChange={() => onChangeOptions(option)}
-            />
-            {isOptionChecked(option) && <Icon>{<IconCheck />}</Icon>}
-            <Info>
-              <Title isDescription={!!option.description}>{option.title}</Title>
-              {option.description ? (
-                <Description>{option.description}</Description>
-              ) : null}
-            </Info>
-          </Label>
-        ))}
-    </Container>
+    <>
+      <Container>
+        {options &&
+          options.map((option) => (
+            <Label key={option.title} checked={isOptionChecked(option)}>
+              <Input
+                type="checkbox"
+                checked={isOptionChecked(option)}
+                onChange={() => onChangeOptions(option)}
+              />
+              {isOptionChecked(option) && <Icon>{<IconCheck />}</Icon>}
+              <Info>
+                <Title isDescription={!!option.description}>
+                  {option.title}
+                </Title>
+                {option.description ? (
+                  <Description>{option.description}</Description>
+                ) : null}
+              </Info>
+            </Label>
+          ))}
+      </Container>
+      {errorMessage && isValid && useValidation && (
+        <ErrorMessage message={errorMessage} />
+      )}
+    </>
   );
 };
 
