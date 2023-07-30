@@ -10,7 +10,13 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (!user) {
         return res.status(403).json({ message: info.message, status: 'error' });
       }
-      const { id, name, email } = user as { id: number; name: string; email: string };
+      const { id, name, email, age, gender } = user as {
+        id: number;
+        name: string;
+        email: string;
+        gender: 'male' | 'female';
+        age: number;
+      };
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
@@ -30,6 +36,8 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         id,
         name,
         email,
+        gender,
+        age,
         message: '로그인에 성공했습니다.',
         status: 'success',
       });

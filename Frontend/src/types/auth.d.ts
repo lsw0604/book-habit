@@ -2,6 +2,8 @@ type SignUpRequestType = {
   email: string;
   password: string;
   name: string;
+  gender: 'male' | 'female';
+  age: number;
 };
 
 type SignUpResponseType = {
@@ -18,6 +20,8 @@ type LoginResponseType = {
   id: number;
   name: string;
   email: string;
+  gender: 'male' | 'female';
+  age: number;
   message: string;
   status: StatusType;
 };

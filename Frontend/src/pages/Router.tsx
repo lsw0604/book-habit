@@ -37,8 +37,8 @@ export default function Router({
         <section>
           <DefaultLayout>
             <Routes>
+              <Route path="/" Component={Home} />
               <Route element={<PublicLayout />}>
-                <Route path="/" Component={Home} />
                 <Route path="/login" Component={Login} />
                 <Route path="/register" Component={Register} />
               </Route>

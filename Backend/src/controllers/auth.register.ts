@@ -16,17 +16,23 @@ interface IQueryIdCheck extends RowDataPacket {
 const NAMESPACE = 'REGISTER';
 
 const register = async (
-  req: IRequest<{ email: string; name: string; password: string }>,
+  req: IRequest<{
+    email: string;
+    name: string;
+    password: string;
+    gender: 'female' | 'male';
+    age: number;
+  }>,
   res: Response
 ) => {
-  const { email, name, password } = req.body;
+  const { email, name, password, gender, age } = req.body;
   logging.debug(NAMESPACE, ': START');
   try {
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
 
-      const ID_CHECK_SQL = 'SELECT email FROM user WHERE email = ?';
+      const ID_CHECK_SQL = 'SELECT email FROM users WHERE email = ?';
       const ID_CHECK_VALUE = [email];
 
       const [IdCheckResult] = await connection.query<IQueryIdCheck[]>(ID_CHECK_SQL, ID_CHECK_VALUE);
@@ -39,8 +45,9 @@ const register = async (
       const salt = await bcrypt.genSalt(10);
       const encryptedPassword = bcrypt.hashSync(password, salt);
 
-      const ID_REGISTER_SQL = 'INSERT INTO user (email, name, password) VALUES(?, ?, ?)';
-      const ID_REGISTER_VALUE = [email, name, encryptedPassword];
+      const ID_REGISTER_SQL =
+        'INSERT INTO users (email, name, password, gender, age) VALUES(?, ?, ?, ?, ?)';
+      const ID_REGISTER_VALUE = [email, name, encryptedPassword, gender, age];
 
       await connection.query(ID_REGISTER_SQL, ID_REGISTER_VALUE);
       await connection.commit();

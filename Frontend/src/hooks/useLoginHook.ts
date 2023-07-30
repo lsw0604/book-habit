@@ -16,8 +16,8 @@ export default function useLoginHook() {
     LoginRequestType
   >([REACT_QUERY_KEY], loginAPI, {
     onSuccess: (data) => {
-      const { id, email, name, status, message } = data;
-      setUserState({ id, email, name, isLogged: true });
+      const { id, email, name, status, message, age, gender } = data;
+      setUserState({ id, email, name, gender, age, isLogged: true });
       addToast({ message, status });
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

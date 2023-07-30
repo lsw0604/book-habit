@@ -67,7 +67,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [checkedPassword, setCheckedPassword] = useState('');
-  const [gender, setGender] = useState<string>('');
+  const [gender, setGender] = useState<'female' | 'male' | ''>('');
   const [age, setAge] = useState<number>(0);
 
   const [useValidation, setUseValidation] = useState(false);
@@ -100,7 +100,7 @@ export default function Register() {
     []
   );
 
-  const onChangeGender = (ctx: string) => {
+  const onChangeGender = (ctx: 'male' | 'female' | '') => {
     setGender(ctx);
   };
 
@@ -109,7 +109,7 @@ export default function Register() {
   };
 
   const navigate = useNavigate();
-  const { mutate, isLoading } = useSignupHook();
+  const { mutate, isLoading, isSuccess } = useSignupHook();
   const { addToast } = useToastHook();
 
   const {
@@ -129,7 +129,9 @@ export default function Register() {
     event.preventDefault();
     setUseValidation(true);
     if (validate) {
-      return mutate({ email, name, password });
+      if (email && name && password && gender && age) {
+        return mutate({ email, name, password, gender, age });
+      }
     } else {
       addToast({ status: 'error', message: '회원가입 폼을 지켜주세요.' });
     }

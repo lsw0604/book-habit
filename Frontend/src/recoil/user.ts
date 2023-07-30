@@ -8,6 +8,8 @@ type IUserAtomType = {
   email: string;
   name: string;
   isLogged: boolean;
+  age: number;
+  gender: 'male' | 'female' | '';
 };
 
 export const userAtom = atom<IUserAtomType>({
@@ -17,6 +19,8 @@ export const userAtom = atom<IUserAtomType>({
     email: '',
     name: '',
     isLogged: false,
+    age: 0,
+    gender: '',
   },
 });
 

@@ -58,6 +58,7 @@ const Icon = styled.i`
   svg {
     width: 2rem;
     height: 2rem;
+    fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;
 
