@@ -17,6 +17,8 @@ import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
 import useSignupHook from '@hooks/useSignupHook';
 import RadioGroup from 'components/common/Radio';
+import Selector from 'components/common/Selector';
+import { ageList } from 'lib/staticData';
 
 const Container = styled.form`
   display: flex;
@@ -66,6 +68,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [checkedPassword, setCheckedPassword] = useState('');
   const [gender, setGender] = useState<string>('');
+  const [age, setAge] = useState<number>(0);
 
   const [useValidation, setUseValidation] = useState(false);
 
@@ -99,6 +102,10 @@ export default function Register() {
 
   const onChangeGender = (ctx: string) => {
     setGender(ctx);
+  };
+
+  const onChangeAge = (event: ChangeEvent<HTMLSelectElement>) => {
+    setAge(parseInt(event.target.value));
   };
 
   const navigate = useNavigate();
@@ -150,18 +157,32 @@ export default function Register() {
             errorMessage="이메일을 입력해주세요."
           />
         </Stack>
-        <Stack>
-          <Input
-            icon={<IconPerson />}
-            label="이름"
-            type="text"
-            value={name}
-            onChange={onChangeName}
-            useValidation={useValidation}
-            isValid={!name}
-            errorMessage="이름을 입력해주세요."
-          />
-        </Stack>
+        <Box style={{ flexDirection: 'row', gap: '8px' }}>
+          <Stack>
+            <Input
+              icon={<IconPerson />}
+              label="이름"
+              type="text"
+              value={name}
+              onChange={onChangeName}
+              useValidation={useValidation}
+              isValid={!name}
+              errorMessage="이름을 입력해주세요."
+            />
+          </Stack>
+          <Stack>
+            <Selector
+              label="나이"
+              disabledOptions={[0]}
+              options={ageList}
+              isValid={!age}
+              value={age}
+              onChange={onChangeAge}
+              useValidation={useValidation}
+              errorMessage="나이를 입력해주세요."
+            />
+          </Stack>
+        </Box>
         <Stack>
           <Input
             label="비밀번호"

@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import styled from 'styled-components';
 
 import { customize } from '@style/colors';
@@ -110,7 +109,7 @@ const InfoDescription = styled.span`
   font-size: 14px;
 `;
 
-const Radio = <T extends string>({
+const Radio = <T extends string | number>({
   label,
   value,
   options,
@@ -160,6 +159,4 @@ const Radio = <T extends string>({
   );
 };
 
-const RadioGroup = memo(Radio);
-
-export default RadioGroup;
+export default Radio;

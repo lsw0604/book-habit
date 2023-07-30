@@ -12,8 +12,18 @@ interface IProps<T> {
   options: CheckBoxOptionType<T>[];
   isValid?: boolean;
   useValidation?: boolean;
-  errorMessage: string;
+  errorMessage?: string;
+  label?: string;
 }
+
+const Heading = styled.span`
+  margin-left: 10px;
+  margin-bottom: 8px;
+  display: block;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 14px;
+  line-height: 18px;
+`;
 
 const Container = styled.div`
   &::after {
@@ -23,7 +33,6 @@ const Container = styled.div`
   }
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
 `;
 
 const Label = styled.label<{ checked: boolean }>`
@@ -115,6 +124,7 @@ const CheckBoxGroup = <T extends string | number>({
   useValidation,
   isValid,
   errorMessage,
+  label,
 }: IProps<T>) => {
   const isOptionChecked = useMemo(
     () => (option: CheckBoxOptionType<T>) =>
@@ -132,6 +142,7 @@ const CheckBoxGroup = <T extends string | number>({
 
   return (
     <>
+      {label && <Heading>{label}</Heading>}
       <Container>
         {options &&
           options.map((option) => (

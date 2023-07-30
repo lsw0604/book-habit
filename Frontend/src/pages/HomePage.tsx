@@ -1,11 +1,12 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import Ranking from 'components/Rank/List';
-import CheckBoxGroup from 'components/common/CheckBoxGroup';
+import CheckBoxGroup from 'components/common/CheckBox';
 import RadioGroup from 'components/common/Radio';
 import { CheckBoxOptionType } from 'types/style';
 import { IconBeach } from '@style/icons';
+import Selector from 'components/common/Selector';
 
 const Container = styled.div`
   width: 100%;
@@ -27,6 +28,7 @@ const Content = styled.div`
 const HomePage = () => {
   const [value, setValue] = useState<CheckBoxOptionType<number>[]>([]);
   const [option, setOption] = useState<string>('');
+  const [select, setSelect] = useState<number>(0);
 
   const options = [
     {
@@ -58,10 +60,21 @@ const HomePage = () => {
     console.log('value', option);
   }, [option]);
 
+  const onChangeSelector = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelect(parseInt(event.target.value));
+  };
+
   return (
     <Container>
       <Heading>베스트 셀러 100</Heading>
       <Content>
+        <Selector<number>
+          disabledOptions={[0]}
+          options={[1, 2, 3, 4]}
+          label="test"
+          value={select}
+          onChange={onChangeSelector}
+        />
         <RadioGroup<string>
           label="test"
           options={[
@@ -77,12 +90,13 @@ const HomePage = () => {
           value={option}
           onChange={(e) => setOption(e)}
         />
-        {/* <CheckBoxGroup<number>
+        <CheckBoxGroup<number>
+          label="test"
           value={value}
           options={options}
           onChange={(e) => setValue(e)}
         />
-        <Ranking /> */}
+        <Ranking />
       </Content>
     </Container>
   );
