@@ -31,6 +31,8 @@ type AccessResponseType = {
   name: string;
   email: string;
   message: string;
+  gender: 'female' | 'male';
+  age: number;
   status: StatusType;
 };
 

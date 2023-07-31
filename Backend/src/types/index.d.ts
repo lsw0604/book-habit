@@ -38,3 +38,28 @@ export interface IRanking extends RowDataPacket {
 export interface IRankingCount extends RowDataPacket {
   total: number;
 }
+
+/**
+ * * SQL SELECT id, name, gender, age, email FROM users WHERE id = ?
+ */
+export interface ISelectFromJWTPayload extends RowDataPacket {
+  id: number;
+  email: string;
+  name: string;
+  age: number;
+  gender: 'male' | 'female';
+}
+
+/**
+ *  * SQL SELECT * FROM users WHERE email = ?;
+ *  * PAYLOAD { id: number, email: string, name: string, age: number, gender: 'female' | 'male' }
+ */
+
+export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  gender: 'male' | 'female';
+  age: number;
+}

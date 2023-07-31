@@ -25,6 +25,14 @@ const Container = styled.div`
   }
 `;
 
+const Loading = styled.div`
+  width: 100%;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -67,9 +75,13 @@ export default function RankList() {
   }, [fetchNextPage, hasNextPage, isFetching]);
 
   return (
-    <Container>
-      {isLoading ? (
-        <Loader />
+    <>
+      {!isLoading ? (
+        <Container>
+          <Loading>
+            <Loader size={2} />
+          </Loading>
+        </Container>
       ) : (
         <Wrapper>
           {data?.pages.map((page, i) => (
@@ -97,6 +109,6 @@ export default function RankList() {
           )}
         </Wrapper>
       )}
-    </Container>
+    </>
   );
 }

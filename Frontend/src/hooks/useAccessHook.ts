@@ -22,13 +22,15 @@ export default function useAccessHook() {
     retry: false,
     onError: (error) => {
       if (error?.message === 'REFRESH_TOKEN_VERIFIED') {
-        const { email, name, id } = error as AccessResponseType;
-        userSetState({ email, id, name, isLogged: true });
+        console.log(error);
+        const { email, name, id, age, gender } = error as AccessResponseType;
+        userSetState({ email, id, name, isLogged: true, age, gender });
       }
     },
     onSuccess: (config) => {
-      const { email, id, name } = config;
-      userSetState({ email, id, name, isLogged: true });
+      const { email, id, name, age, gender } = config;
+      console.log('config', config);
+      userSetState({ email, id, name, isLogged: true, age, gender });
     },
   });
 

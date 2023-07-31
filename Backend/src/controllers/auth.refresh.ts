@@ -29,6 +29,12 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
           .json({ status: 'error', message: 'invalid token', strategy: 'refresh' });
       }
 
+      if (!user) {
+        return res
+          .status(403)
+          .json({ status: 'error', message: info.message, strategy: 'refresh' });
+      }
+
       const { id, name, email } = user as { id: number; name: string; email: string };
       const { access_jwt } = tokenGenerator({ id, name, email });
 

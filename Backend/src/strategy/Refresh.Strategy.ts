@@ -2,13 +2,7 @@ import { StrategyOptions, VerifyCallback } from 'passport-jwt';
 
 import { connectionPool } from '../config/database';
 import logging from '../config/logging';
-import { RowDataPacket } from 'mysql2';
-
-interface IQuery extends RowDataPacket {
-  id: string;
-  email: string;
-  name: string;
-}
+import { ISelectFromJWTPayload } from '../types';
 
 const RefreshJWTStrategyOptions: StrategyOptions = {
   jwtFromRequest: (req) => {
@@ -24,30 +18,36 @@ const RefreshJWTStrategyOptions: StrategyOptions = {
 const NAMESPACE = 'REFRESH_STRATEGY';
 
 const RefreshVerify: VerifyCallback = async (payload, done) => {
-  logging.debug(NAMESPACE, ': START');
+  logging.debug(NAMESPACE, ': [START]');
   try {
     const connection = await connectionPool.getConnection();
     try {
-      await connection.beginTransaction();
-
-      const SQL = 'SELECT id, email, name FROM user WHERE id = ?';
+      const SQL = 'SELECT id, email, name, age, gender FROM users WHERE id = ?';
       const VALUE = [payload.id];
 
-      const [rows] = await connection.query<IQuery[]>(SQL, VALUE);
+      const [rows] = await connection.query<ISelectFromJWTPayload[]>(SQL, VALUE);
 
-      logging.debug(NAMESPACE, ': FINISH');
-
-      connection.release();
-
-      return done(null, { id: rows[0].id, name: rows[0].name, email: rows[0].email });
+      if (rows[0] !== undefined) {
+        const { id, age, gender, name, email } = rows[0];
+        connection.release();
+        logging.debug(NAMESPACE, ' : [FINISH]');
+        return done(null, { id, age, name, email, gender });
+      } else {
+        connection.release();
+        logging.error(NAMESPACE, 'SQL 문 실행 결과가 존재하지 않습니다.');
+        return done(null, false, {
+          name: 'error',
+          message: 'SQL 문 실행 결과가 존재하지 않습나다.',
+        });
+      }
     } catch (error: any) {
       connection.release();
-      logging.error(NAMESPACE, 'ERROR : ', error);
-      return done(null, false, { message: 'SQL 문 실행에 실패 했습니다.' });
+      logging.error(NAMESPACE, ' : ', error);
+      return done(null, false, { name: 'error', message: 'SQL 문 실행에 실패 했습니다.' });
     }
   } catch (error: any) {
-    logging.error(NAMESPACE, 'ERROR : ', error);
-    return done(null, false, { message: 'DB에 연결 실패 했습니다.' });
+    logging.error(NAMESPACE, ' : ', error);
+    return done(null, false, { name: 'error', message: 'DB에 연결 실패 했습니다.' });
   }
 };
 

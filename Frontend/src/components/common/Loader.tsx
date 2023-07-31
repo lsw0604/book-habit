@@ -1,13 +1,26 @@
 import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const Container = styled.div`
+const SpinnerSize = (ctx?: number) => {
+  if (ctx === undefined) {
+    return css`
+      width: 1rem;
+      height: 1rem;
+    `;
+  } else {
+    return css`
+      width: ${ctx}rem;
+      height: ${ctx}rem;
+    `;
+  }
+};
+
+const Container = styled.div<{ size?: number }>`
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
-  width: 1rem;
-  height: 1rem;
+  ${({ size }) => SpinnerSize(size)}
 `;
 
 const Spinner = styled(motion.div)`
@@ -29,9 +42,13 @@ const animationVariants = {
   },
 };
 
-export default function Loader() {
+interface IProps {
+  size?: number;
+}
+
+export default function Loader({ size }: IProps) {
   return (
-    <Container>
+    <Container size={size}>
       <Spinner animate="animate" variants={animationVariants} />
     </Container>
   );

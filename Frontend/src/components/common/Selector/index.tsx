@@ -28,6 +28,7 @@ const Select = styled.select`
   border-radius: 5px;
   font-size: 1rem;
   padding: 0 1rem;
+  color: ${({ theme }) => theme.mode.typo_sub};
   outline: none;
   -webkit-appearance: none;
   &:focus {

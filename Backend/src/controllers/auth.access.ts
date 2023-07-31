@@ -28,6 +28,11 @@ const access = (req: Request, res: Response, next: NextFunction) => {
           .status(403)
           .json({ status: 'error', message: 'invalid token', strategy: 'access' });
       }
+
+      if (!user) {
+        return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
+      }
+
       req.user = user;
       next();
     }

@@ -27,6 +27,11 @@ const Container = styled.div<{ icon: boolean }>`
     font-size: 16px;
     color: ${({ theme }) => theme.mode.typo_sub};
   }
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   input:-webkit-autofill,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active,

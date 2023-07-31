@@ -12,13 +12,18 @@ import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import ValidationMessage from 'components/common/Message/ValidationMessage';
-import { IconFemale, IconMail, IconMale, IconPerson } from '@style/icons';
+import {
+  IconFemale,
+  IconMail,
+  IconMale,
+  IconNumber,
+  IconPerson,
+} from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
 import useSignupHook from '@hooks/useSignupHook';
 import RadioGroup from 'components/common/Radio';
-import Selector from 'components/common/Selector';
-import { ageList } from 'lib/staticData';
+import { customize } from '@style/colors';
 
 const Container = styled.form`
   display: flex;
@@ -54,7 +59,9 @@ const Header = styled.h1`
 `;
 
 const Footer = styled.p`
-  color: ${({ theme }) => theme.mode.typo_sub};
+  color: ${customize.gray['400']};
+  font-size: 12px;
+  margin: 0 0 0 10px;
   span {
     margin-left: 10px;
     cursor: pointer;
@@ -68,7 +75,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [checkedPassword, setCheckedPassword] = useState('');
   const [gender, setGender] = useState<'female' | 'male' | ''>('');
-  const [age, setAge] = useState<number>(0);
+  const [age, setAge] = useState<number | ''>('');
 
   const [useValidation, setUseValidation] = useState(false);
 
@@ -104,12 +111,19 @@ export default function Register() {
     setGender(ctx);
   };
 
-  const onChangeAge = (event: ChangeEvent<HTMLSelectElement>) => {
-    setAge(parseInt(event.target.value));
-  };
+  const onChangeAge = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const isValid = /^\d+$/.test(value);
+
+    if (isValid) {
+      setAge(parseInt(value, 10));
+    } else {
+      setAge('');
+    }
+  }, []);
 
   const navigate = useNavigate();
-  const { mutate, isLoading, isSuccess } = useSignupHook();
+  const { mutate, isLoading } = useSignupHook();
   const { addToast } = useToastHook();
 
   const {
@@ -173,15 +187,15 @@ export default function Register() {
             />
           </Stack>
           <Stack>
-            <Selector
+            <Input
+              type="number"
               label="나이"
-              disabledOptions={[0]}
-              options={ageList}
+              errorMessage="나이를 입력해주세요."
+              icon={<IconNumber />}
               isValid={!age}
+              useValidation={useValidation}
               value={age}
               onChange={onChangeAge}
-              useValidation={useValidation}
-              errorMessage="나이를 입력해주세요."
             />
           </Stack>
         </Box>
