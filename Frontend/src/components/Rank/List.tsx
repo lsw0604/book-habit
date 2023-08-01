@@ -76,7 +76,7 @@ export default function RankList() {
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <Container>
           <Loading>
             <Loader size={2} />

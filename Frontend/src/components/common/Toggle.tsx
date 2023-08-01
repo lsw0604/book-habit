@@ -6,7 +6,7 @@ import styled from 'styled-components';
 interface IProps {
   icons?: JSX.Element[];
   isOn: boolean;
-  setIsOn: (value: SetStateAction<boolean>) => void;
+  toggleHandler: (value: SetStateAction<boolean>) => void;
 }
 
 const Container = styled.div<{ isOn: boolean }>`
@@ -46,9 +46,18 @@ const Icon = styled(motion.i)`
   }
 `;
 
-export default function Toggle({ setIsOn, isOn, icons, ...props }: IProps) {
+export default function Toggle({
+  toggleHandler,
+  isOn,
+  icons,
+  ...props
+}: IProps) {
   return (
-    <Container {...props} isOn={isOn} onClick={() => setIsOn((prev) => !prev)}>
+    <Container
+      {...props}
+      isOn={isOn}
+      onClick={() => toggleHandler((prev) => !prev)}
+    >
       <Handle layout>
         <AnimatePresence initial={isOn} mode={'wait'}>
           {icons !== undefined ? (

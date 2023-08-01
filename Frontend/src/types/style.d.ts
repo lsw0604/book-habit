@@ -85,3 +85,5 @@ type RadioGroupOptionType<T> = {
   description?: string;
   icon?: JSX.Element;
 };
+
+type SystemTheme = 'light' | 'dark';

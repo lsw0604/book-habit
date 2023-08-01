@@ -3,20 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import { userAtom } from 'recoil/user';
-import { ColorType } from 'types/style';
 import HeaderAuth from './HeaderAuth';
 import HeaderPalette from './HeaderPalette';
 import HeaderProfile from './HeaderProfile';
 import Loader from 'components/common/Loader';
 import useAccessHook from '@hooks/useAccessHook';
 import { Suspense } from 'react';
-
-interface IProps {
-  onToggle: () => void;
-  isOn: boolean;
-  selectedColor: ColorType;
-  colorHandler: (color: ColorType) => void;
-}
 
 const Container = styled.nav`
   position: fixed;
@@ -43,12 +35,7 @@ const Logo = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function Index({
-  onToggle,
-  isOn,
-  selectedColor,
-  colorHandler,
-}: IProps) {
+export default function Index() {
   const navigate = useNavigate();
   const userState = useRecoilValue(userAtom);
   useAccessHook();
@@ -57,12 +44,7 @@ export default function Index({
     <Container>
       <Logo onClick={() => navigate('/')}>Logo</Logo>
       <Wrapper>
-        <HeaderPalette
-          onToggle={onToggle}
-          isOn={isOn}
-          selectedColor={selectedColor}
-          colorHandler={colorHandler}
-        />
+        <HeaderPalette />
         {userState.isLogged ? (
           <Suspense fallback={<Loader />}>
             <HeaderProfile name={userState.name} />

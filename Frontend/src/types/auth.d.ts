@@ -40,6 +40,8 @@ type RefreshResponseType = {
   id: number;
   name: string;
   email: string;
+  gender: 'female' | 'male';
+  age: number;
   message: string;
   status: StatusType;
 };

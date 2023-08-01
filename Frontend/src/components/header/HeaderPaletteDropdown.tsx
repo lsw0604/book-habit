@@ -5,13 +5,7 @@ import HeaderPaletteColorBox from './HeaderPaletteColorBox';
 import { ColorType } from 'types/style';
 import { customize } from '@style/colors';
 import { IconCloudyParty, IconSunny } from '@style/icons';
-
-interface IProps {
-  onToggle: () => void;
-  isOn: boolean;
-  selectedColor: ColorType;
-  colorHandler: (color: ColorType) => void;
-}
+import useThemeHook from '@hooks/useThemeHook';
 
 const Container = styled.div`
   position: absolute;
@@ -61,18 +55,15 @@ const ColorButton = styled.div<{ btnColor: ColorType }>`
   outline: 0;
   border-radius: 50%;
   margin: 3px;
-  background-color: ${(props) => customize[`${props.btnColor}`][400]};
+  background-color: ${({ btnColor }) => customize[btnColor]['400']};
   border: 0;
   justify-content: center;
   align-items: center;
 `;
 
-export default function HeaderPaletteDropdown({
-  colorHandler,
-  isOn,
-  onToggle,
-  selectedColor,
-}: IProps) {
+export default function HeaderPaletteDropdown() {
+  const { isOn, toggleHandler, color } = useThemeHook();
+
   return (
     <Container>
       <Ul>
@@ -81,7 +72,7 @@ export default function HeaderPaletteDropdown({
             <span>테마</span>
             <Toggle
               isOn={isOn}
-              setIsOn={onToggle}
+              toggleHandler={toggleHandler}
               icons={[
                 <IconSunny
                   key="sunny"
@@ -98,12 +89,9 @@ export default function HeaderPaletteDropdown({
         <Li style={{ display: 'flex', flexDirection: 'column' }}>
           <Label>
             <span>색상</span>
-            <ColorButton btnColor={selectedColor} />
+            <ColorButton btnColor={color} />
           </Label>
-          <HeaderPaletteColorBox
-            selectedColor={selectedColor}
-            colorHandler={colorHandler}
-          />
+          <HeaderPaletteColorBox />
         </Li>
       </Ul>
     </Container>

@@ -2,15 +2,7 @@ import Icon from 'components/common/Button/Icon';
 import styled from 'styled-components';
 import { IconPalette } from '@style/icons';
 import { useEffect, useRef, useState } from 'react';
-import { ColorType } from 'types/style';
 import HeaderPaletteDropdown from './HeaderPaletteDropdown';
-
-interface IProps {
-  onToggle: () => void;
-  isOn: boolean;
-  selectedColor: ColorType;
-  colorHandler: (color: ColorType) => void;
-}
 
 const Container = styled.div`
   display: flex;
@@ -20,12 +12,7 @@ const Container = styled.div`
   height: auto;
 `;
 
-export default function HeaderPalette({
-  onToggle,
-  isOn,
-  selectedColor,
-  colorHandler,
-}: IProps) {
+export default function HeaderPalette() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
   const paletteRef = useRef<HTMLDivElement>(null);
@@ -56,14 +43,7 @@ export default function HeaderPalette({
         <Icon icon={<IconPalette />} onClick={handlePalette}>
           Palette Settings
         </Icon>
-        {isOpened && (
-          <HeaderPaletteDropdown
-            isOn={isOn}
-            colorHandler={colorHandler}
-            selectedColor={selectedColor}
-            onToggle={onToggle}
-          />
-        )}
+        {isOpened && <HeaderPaletteDropdown />}
       </Container>
     </>
   );

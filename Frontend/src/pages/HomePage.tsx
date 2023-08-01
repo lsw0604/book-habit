@@ -1,13 +1,15 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 
-import Ranking from 'components/Rank/List';
-import { booksSearchAPI } from 'lib/api/book';
+import Search from 'components/common/Input/Search';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
 `;
 
 const Heading = styled.span`
@@ -17,33 +19,23 @@ const Heading = styled.span`
 `;
 
 const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
 `;
 
 const HomePage = () => {
-  const [value, setValue] = useState('');
   return (
-    <Container>
-      <Heading>베스트 셀러 100</Heading>
-      <Content>
-        <form>
-          <input value={value} onChange={(e) => setValue(e.target.value)} />
-          <button
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              booksSearchAPI(value)
-                .then((res) => console.log('ssss', JSON.stringify(res)))
-                .catch((err) => console.log(err));
-            }}
-          >
-            submit
-          </button>
-        </form>
-        <Ranking />
-      </Content>
-    </Container>
+    <>
+      <Container>
+        <Heading>베스트 셀러 100</Heading>
+        <Content>
+          <Search />
+        </Content>
+      </Container>
+    </>
   );
 };
 

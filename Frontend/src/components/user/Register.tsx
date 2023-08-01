@@ -249,7 +249,7 @@ export default function Register() {
         {focusedPassword && (
           <Stack>
             <ValidationMessage
-              errorMessage="비밀번호에 본인 이름이나 이메일을 포함할 수 없습니다."
+              errorMessage="비밀번호에 이름 이메일을 포함할 수 없습니다."
               isValid={isPasswordHasNameOrEmail}
             />
             <ValidationMessage

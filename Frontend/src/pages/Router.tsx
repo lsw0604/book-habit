@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from '../components/header/Header';
 
-import { ColorType } from 'types/style';
+import Header from '../components/header/Header';
 import Home from './HomePage';
 import Login from './LoginPage';
 import Register from './RegisterPage';
@@ -10,28 +9,11 @@ import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
 import AuthLayout from './layout/AuthLayout';
 
-interface IProps {
-  isOn: boolean;
-  onToggle: () => void;
-  selectedColor: ColorType;
-  colorHandler: (color: ColorType) => void;
-}
-
-export default function Router({
-  onToggle,
-  isOn,
-  selectedColor,
-  colorHandler,
-}: IProps) {
+export default function Router() {
   return (
     <BrowserRouter>
       <header>
-        <Header
-          onToggle={onToggle}
-          isOn={isOn}
-          selectedColor={selectedColor}
-          colorHandler={colorHandler}
-        />
+        <Header />
       </header>
       <main>
         <section>

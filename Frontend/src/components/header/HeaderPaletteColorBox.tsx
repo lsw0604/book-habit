@@ -1,5 +1,7 @@
 import { customize } from '@style/colors';
 import { useEffect, useState, useCallback } from 'react';
+import { useRecoilState } from 'recoil';
+import { colorAtom } from 'recoil/theme';
 import styled from 'styled-components';
 import { ColorType } from 'types/style';
 
@@ -30,15 +32,20 @@ const ColorButton = styled.button<{
   align-items: center;
 `;
 
-interface IProps {
-  colorHandler: (color: ColorType) => void;
-  selectedColor: ColorType;
-}
+export default function HeaderPaletteColorBox() {
+  const arr = [
+    'lime',
+    'rose',
+    'sky',
+    'teal',
+    'yellow',
+    'fuchsia',
+    'orange',
+    'gray',
+  ];
 
-export default function HeaderPaletteColorBox({
-  colorHandler,
-  selectedColor,
-}: IProps) {
+  const [color, setColor] = useRecoilState(colorAtom);
+
   const [colors, setColors] = useState<ColorType[]>([
     'lime',
     'rose',
@@ -52,20 +59,16 @@ export default function HeaderPaletteColorBox({
 
   const handleColors = useCallback(
     (color: ColorType) => {
-      colorHandler(color);
+      setColor(color);
       setColors((prev) => {
-        if (!prev.includes(selectedColor)) {
-          return [...prev, selectedColor];
+        if (!prev.includes(color)) {
+          return [...prev, color];
         }
         return prev;
       });
     },
-    [colorHandler, selectedColor]
+    [color, setColor]
   );
-
-  useEffect(() => {
-    setColors((prev) => prev.filter((color) => color !== selectedColor));
-  }, [selectedColor]);
 
   return (
     <Container>
