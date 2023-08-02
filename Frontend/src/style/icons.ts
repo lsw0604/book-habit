@@ -1,5 +1,5 @@
 export { ReactComponent as IconMail } from '../assets/icons/iconMail.svg';
-export { ReactComponent as IconX } from '../assets/icons/iconX.svg';
+export { ReactComponent as IconClose } from '../assets/icons/iconClose.svg';
 export { ReactComponent as IconMale } from '../assets/icons/iconMale.svg';
 export { ReactComponent as IconFemale } from '../assets/icons/iconFemale.svg';
 export { ReactComponent as IconError } from '../assets/icons/iconError.svg';
@@ -28,3 +28,5 @@ export { ReactComponent as IconPalette } from '../assets/icons/iconPalette.svg';
 export { ReactComponent as IconStar } from '../assets/icons/iconStar.svg';
 export { ReactComponent as IconCheck } from '../assets/icons/iconCheck.svg';
 export { ReactComponent as IconNumber } from '../assets/icons/iconNumber.svg';
+export { ReactComponent as IconImage } from '../assets/icons/iconImage.svg';
+export { ReactComponent as IconSearch } from '../assets/icons/iconSearch.svg';

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { InputHTMLAttributes, memo } from 'react';
+import { InputHTMLAttributes } from 'react';
 
 import ErrorMessage from 'components/common/Message/ErrorMessage';
 
@@ -73,9 +73,11 @@ const Index = ({
 }: IProps) => {
   return (
     <>
-      <Label>
-        <span>{label}</span>
-      </Label>
+      {label && (
+        <Label>
+          <span>{label}</span>
+        </Label>
+      )}
       <Container icon={!!icon}>
         <input {...props} />
         <Icon>{icon}</Icon>
@@ -87,6 +89,4 @@ const Index = ({
   );
 };
 
-const Input = memo(Index);
-
-export default Input;
+export default Index;

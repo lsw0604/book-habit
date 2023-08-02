@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { IconX, IconCheck } from '@style/icons';
+import { IconClose, IconCheck } from '@style/icons';
 import { customize } from '@style/colors';
 
 interface IProps {
@@ -29,7 +29,7 @@ export default function ValidationMessage({ isValid, errorMessage }: IProps) {
   return (
     <>
       <Container isValid={isValid}>
-        {isValid ? <IconX /> : <IconCheck />}
+        {isValid ? <IconClose /> : <IconCheck />}
         {errorMessage}
       </Container>
     </>

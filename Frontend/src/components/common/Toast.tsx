@@ -5,7 +5,7 @@ import {
   IconInfo,
   IconSuccess,
   IconWarning,
-  IconX,
+  IconClose,
 } from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
 
@@ -61,7 +61,7 @@ export default function Toast() {
             <Icon
               text
               onClick={() => deleteToast({ id: toast.id })}
-              icon={<IconX />}
+              icon={<IconClose />}
             >
               Icon_btn
             </Icon>

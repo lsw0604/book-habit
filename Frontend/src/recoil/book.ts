@@ -3,7 +3,7 @@ import { atom, selector } from 'recoil';
 const BOOK_ATOM_KEY = 'BOOK_ATOM_KEY';
 const BOOK_SELECTOR_KEY = 'BOOK_SELECTOR_KEY';
 
-type IBookAtomType = {
+type BookAtomType = {
   title: string;
   author: string;
   company: string;
@@ -12,7 +12,7 @@ type IBookAtomType = {
   rank: number;
 };
 
-export const bookAtom = atom<IBookAtomType[]>({
+export const bookAtom = atom<BookAtomType[]>({
   key: BOOK_ATOM_KEY,
   default: [],
 });
