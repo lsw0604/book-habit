@@ -81,7 +81,6 @@ const Item = ({
           <Rank>{ranking} </Rank>
           {title}
         </Heading>
-
         <Span>
           <P>{author}</P>/<P>{company}</P>/<P>{price}</P>
         </Span>

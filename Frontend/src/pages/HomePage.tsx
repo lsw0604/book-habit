@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 import SearchBox from 'components/Search/SearchBox';
+import ModalPortal from 'components/ModalPortal';
+import BottomSheet from 'components/BottomSheet';
 
 const Container = styled.div`
   width: 100%;
@@ -16,6 +18,7 @@ const Heading = styled.span`
   color: ${({ theme }) => theme.mode.typo_main};
   font-size: 40px;
   font-weight: bold;
+  margin-bottom: 12px;
 `;
 
 const Content = styled.div`
@@ -33,6 +36,9 @@ const HomePage = () => {
       <Content>
         <SearchBox />
       </Content>
+      <ModalPortal>
+        <BottomSheet />
+      </ModalPortal>
     </Container>
   );
 };

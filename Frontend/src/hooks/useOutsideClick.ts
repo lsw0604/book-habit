@@ -1,4 +1,4 @@
-import { useState, useEffect, RefObject, MutableRefObject } from 'react';
+import { useState, useEffect, MutableRefObject } from 'react';
 
 interface IProps {
   target: MutableRefObject<HTMLDivElement>;

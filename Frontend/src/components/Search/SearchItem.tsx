@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import { IconImage } from '@style/icons';
 import SearchItemHeader from 'components/Search/SearchItemHeader';
+import { useSetRecoilState } from 'recoil';
+import { modalAtom } from 'recoil/modal';
 
 const Container = styled.button`
   background-color: ${({ theme }) => theme.mode.sub};
@@ -79,8 +81,14 @@ export default function SearchItem({
 
   const ISBN = isbn.split(' ');
 
+  const modalSetState = useSetRecoilState(modalAtom);
+
   return (
-    <Container onClick={() => console.log(ISBN)}>
+    <Container
+      onClick={() => {
+        modalSetState({ isOpen: true, title, isbn });
+      }}
+    >
       <ImageWrapper>
         {thumbnail ? <img alt={isbn} src={thumbnail} /> : <IconImage />}
       </ImageWrapper>
