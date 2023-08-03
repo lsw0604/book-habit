@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useCallback, ChangeEvent } from 'react';
+import { useState, useCallback, ChangeEvent, FormEvent } from 'react';
 
 import SearchInput from './SearchInput';
 import SearchList from './SearchList';
@@ -31,17 +31,19 @@ export default function SearchBox() {
     setSearch(event.target.value);
   }, []);
 
-  const onClick = () => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     refetch();
   };
 
   return (
     <Container>
       <Wrapper>
-        <SearchInput onChange={onChange} search={search} onClick={onClick} />
+        <SearchInput onChange={onChange} search={search} onSubmit={onSubmit} />
       </Wrapper>
       <Wrapper>
         <SearchList
+          search={search}
           data={data}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}

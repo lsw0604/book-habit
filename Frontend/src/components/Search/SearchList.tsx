@@ -1,8 +1,9 @@
 import { InfiniteData } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { useEffect, useRef } from 'react';
+
 import Loader from 'components/common/Loader';
-import SearchItem from './SearchItem';
+import SearchItem from 'components/Search/SearchItem';
 
 const Container = styled.div`
   width: 100%;
@@ -45,6 +46,7 @@ interface IProps {
   hasNextPage: boolean | undefined;
   isFetching: boolean;
   isLoading: boolean;
+  search: string;
 }
 
 export default function SearchList({
@@ -53,6 +55,7 @@ export default function SearchList({
   hasNextPage,
   isFetching,
   isLoading,
+  search,
 }: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
 
@@ -84,7 +87,7 @@ export default function SearchList({
         data?.pages.map((page, i) => (
           <Page key={i}>
             {page.documents.map((document) => (
-              <SearchItem key={document.isbn} {...document} />
+              <SearchItem key={document.isbn} search={search} {...document} />
             ))}
           </Page>
         ))

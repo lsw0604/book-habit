@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 
 import Input from 'components/common/Input';
@@ -8,10 +8,10 @@ import { IconSearch } from '@style/icons';
 interface IProps {
   search: string;
   onChange: (query: ChangeEvent<HTMLInputElement>) => void;
-  onClick: () => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-const Container = styled.div`
+const Container = styled.form`
   width: 100%;
   display: flex;
 `;
@@ -24,16 +24,16 @@ const IconWrapper = styled.div`
   right: 35px;
 `;
 
-export default function SearchInput({ search, onChange, onClick }: IProps) {
+export default function SearchInput({ search, onChange, onSubmit }: IProps) {
   return (
-    <Container>
+    <Container onSubmit={onSubmit}>
       <Input
         style={{ borderRadius: '5rem', padding: '0rem 2rem' }}
         value={search}
         onChange={onChange}
       />
       <IconWrapper>
-        <Icon onClick={onClick} icon={<IconSearch />}>
+        <Icon type="submit" icon={<IconSearch />}>
           Search
         </Icon>
       </IconWrapper>

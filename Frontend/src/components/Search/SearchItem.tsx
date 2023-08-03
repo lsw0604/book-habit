@@ -1,13 +1,15 @@
-import { IconImage } from '@style/icons';
 import styled from 'styled-components';
 
-const Container = styled.div`
+import { IconImage } from '@style/icons';
+import SearchItemHeader from 'components/Search/SearchItemHeader';
+
+const Container = styled.button`
+  background-color: ${({ theme }) => theme.mode.sub};
+  border: none;
   width: 100%;
   height: 160px;
   display: flex;
-  position: relative;
   gap: 1rem;
-  border: 2px solid red;
 `;
 
 const ImageWrapper = styled.div`
@@ -26,8 +28,8 @@ const ImageWrapper = styled.div`
   img {
     border-radius: 5px;
     object-fit: fill;
-    width: 100%;
-    height: 100%;
+    width: 100px;
+    height: 160px;
   }
 
   svg {
@@ -38,24 +40,17 @@ const ImageWrapper = styled.div`
 `;
 
 const InfoWrapper = styled.div`
-  border: 2px solid blue;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-`;
-
-const Heading = styled.h1`
-  font-size: 18px;
-  font-weight: 800;
-  color: ${({ theme }) => theme.mode.typo_sub};
+  height: 100%;
 `;
 
 const Span = styled.span`
-  font-size: 8px;
-  line-height: 10px;
+  font-size: 10px;
+  line-height: 12px;
   width: 100%;
   display: inline-flex;
-  font-weight: 400;
+  gap: 8px;
+  font-weight: 600;
   overflow: hidden;
   color: ${({ theme }) => theme.mode.typo_sub};
 `;
@@ -63,13 +58,12 @@ const Span = styled.span`
 const P = styled.p`
   font-size: 10px;
   line-height: 12px;
-  font-weight: 500;
+  font-weight: 400;
   overflow: hidden;
 `;
 
 export default function SearchItem({
   authors,
-  contents,
   datetime,
   isbn,
   price,
@@ -79,26 +73,44 @@ export default function SearchItem({
   thumbnail,
   title,
   translators,
-  url,
-}: KakaoSearchResponseDocumentType) {
-  const date = datetime.toString().split('T')[0];
+  search,
+}: KakaoSearchResponseDocumentType & { search: string }) {
+  const date = datetime.toString().split('-');
+
+  const ISBN = isbn.split(' ');
+
   return (
-    <Container>
+    <Container onClick={() => console.log(ISBN)}>
       <ImageWrapper>
         {thumbnail ? <img alt={isbn} src={thumbnail} /> : <IconImage />}
       </ImageWrapper>
       <InfoWrapper>
-        <Heading>{title}</Heading>
+        <SearchItemHeader title={title} query={search} />
         <Span>
-          <P>{publisher}</P>/
-          {translators.map((v) => (
-            <P key={v}>{v}</P>
-          ))}
+          출판사 <P>{publisher}</P>
         </Span>
         <Span>
-          <P>{price}</P>/<P>{sale_price}</P>
+          작가
+          {authors && authors.map((author) => <P key={author}>{author}</P>)}
         </Span>
-        <Span>{date}</Span>
+        <Span>
+          번역
+          {translators.length !== 0 ? (
+            translators.map((v) => <P key={v}>{v}</P>)
+          ) : (
+            <P>미상</P>
+          )}
+        </Span>
+        <Span>
+          판매가 <P style={{ textDecorationLine: 'line-through' }}>{price}</P>/
+          <P>{sale_price}</P>/<P>{status}</P>
+        </Span>
+        <Span>
+          출판<P>{`${date[0]}년 ${date[1]}월`}</P>
+        </Span>
+        <Span>
+          ISBN<P>{ISBN[1]}</P>
+        </Span>
       </InfoWrapper>
     </Container>
   );

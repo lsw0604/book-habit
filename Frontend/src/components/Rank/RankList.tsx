@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import useRankingHook from '@hooks/useRankingHook';
 import Loader from 'components/common/Loader';
-import Item from './Item';
+import Item from 'components/Rank/RankItem';
 
 const Container = styled.div`
   width: 100%;
