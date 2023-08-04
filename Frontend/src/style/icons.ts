@@ -30,3 +30,7 @@ export { ReactComponent as IconCheck } from '../assets/icons/iconCheck.svg';
 export { ReactComponent as IconNumber } from '../assets/icons/iconNumber.svg';
 export { ReactComponent as IconImage } from '../assets/icons/iconImage.svg';
 export { ReactComponent as IconSearch } from '../assets/icons/iconSearch.svg';
+export { ReactComponent as IconFlag } from '../assets/icons/iconFlag.svg';
+export { ReactComponent as IconBookMark } from '../assets/icons/iconBookmark.svg';
+export { ReactComponent as IconBook } from '../assets/icons/iconBook.svg';
+export { ReactComponent as IconHeart } from '../assets/icons/iconHeart.svg';

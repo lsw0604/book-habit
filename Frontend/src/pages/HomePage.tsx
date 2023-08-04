@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import SearchBox from 'components/Search/SearchBox';
-import ModalPortal from 'components/ModalPortal';
+import ModalPortal from 'components/common/ModalPortal';
 import BottomSheet from 'components/BottomSheet';
 
 const Container = styled.div`

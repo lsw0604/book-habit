@@ -21,9 +21,9 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  gap: 8px;
+  display: flex;
   &:after {
-    content: '';
+    content: ' ';
     clear: both;
   }
 `;
@@ -39,75 +39,67 @@ const Heading = styled.span`
 
 const Label = styled.label`
   display: flex;
-  gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
-  width: auto;
-  margin-bottom: 8px;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: 2px solid ${({ theme }) => theme.mode.sub};
+  border-radius: 5px;
+  &:hover {
+    border: 2px solid ${({ theme }) => theme.colors.spinner};
+  }
 `;
 
-const Input = styled.input`
-  &[type='radio'] {
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-    position: relative;
-    -webkit-appearance: none;
-    border: 2px solid ${({ theme }) => theme.colors.sub};
-    border-radius: 50%;
-    outline: none;
-    cursor: pointer;
-  }
-
-  &[type='radio']:checked {
-    border: 2px solid ${({ theme }) => theme.colors.sub};
-  }
-
-  &[type='radio']:checked:after {
-    content: '';
-    width: 0.5rem;
-    height: 0.5rem;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: ${({ theme }) => theme.colors.main};
-    border-radius: 50%;
-    display: block;
-  }
+const Input = styled.input.attrs({ type: 'radio' })`
+  width: 0;
+  height: 0;
+  margin: 0;
+  position: relative;
+  -webkit-appearance: none;
+  outline: none;
 `;
 
 const Icon = styled.i`
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1rem;
+  height: 1rem;
   svg {
-    width: 100%;
-    height: 100%;
+    width: 1rem;
+    height: 1rem;
     fill: ${({ theme }) => theme.mode.typo_main};
   }
-`;
-
-const RadioInfo = styled.span`
-  display: flex;
-  flex-direction: column;
 `;
 
 const InfoLabel = styled.label<{ isDescription: boolean }>`
   color: ${({ theme }) => theme.mode.typo_main};
   text-align: center;
-  font-size: 18px;
+  font-size: 1rem;
   line-height: ${({ isDescription }) => (isDescription ? '20px' : '34px')};
+  height: auto;
+  width: 100%;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  justify-content: center;
+`;
+
+const InfoLabelWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 `;
 
 const InfoDescription = styled.span`
   color: ${customize.gray['400']};
-  font-size: 12px;
-  font-size: 14px;
+  font-size: 10px;
+  line-height: 14px;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
-const Radio = <T extends string | number>({
+const RadioButton = <T extends string | number>({
   label,
   value,
   options,
@@ -132,20 +124,24 @@ const Radio = <T extends string | number>({
               <Label key={index}>
                 <Input
                   type="radio"
+                  id={`radio-${index}`}
                   checked={value === option.value}
                   onChange={() => {
                     onChange && onChange(option.value);
                   }}
                 />
-                {option.icon && <Icon>{option.icon}</Icon>}
-                <RadioInfo>
-                  <InfoLabel isDescription={!!option.description}>
-                    {option.label}
-                  </InfoLabel>
+                <InfoLabel
+                  isDescription={!!option.description}
+                  htmlFor={`radio-${index}`}
+                >
+                  <InfoLabelWrapper>
+                    {option.icon && <Icon>{option.icon}</Icon>}
+                    <div>{option.label}</div>
+                  </InfoLabelWrapper>
                   {option.description && (
                     <InfoDescription>{option.description}</InfoDescription>
                   )}
-                </RadioInfo>
+                </InfoLabel>
               </Label>
             ))}
         </Wrapper>
@@ -157,4 +153,4 @@ const Radio = <T extends string | number>({
   );
 };
 
-export default Radio;
+export default RadioButton;

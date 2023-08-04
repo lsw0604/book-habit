@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ReactNode, useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { AnimatePresence } from 'framer-motion';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { modalAtom } from 'recoil/modal';
@@ -42,13 +43,15 @@ const ModalPortal = ({ children }: IProps) => {
     }
   }, []);
 
+  const onModalClose = () => {
+    setModalState({ isOpen: false, isbn: '', title: '' });
+  };
+
   if (ref.current && mounted && modalState.isOpen) {
     return createPortal(
       <Container role="presentation">
-        <Background
-          onClick={() => setModalState({ isOpen: false, isbn: '', title: '' })}
-        />
-        {children}
+        <Background onClick={onModalClose} />
+        <AnimatePresence>{children}</AnimatePresence>
       </Container>,
       ref.current
     );

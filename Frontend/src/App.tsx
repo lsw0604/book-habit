@@ -18,7 +18,7 @@ export default function App(): ReactElement {
         <GlobalStyle />
         <Router />
         <Toast />
-        <div id="root-modal"></div>
+        <div id="root-modal" />
       </ThemeProvider>
     </>
   );
