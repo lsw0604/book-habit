@@ -1,32 +1,37 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import Radio from 'components/common/Radio';
 import { modalAtom } from 'recoil/modal';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
+import BottomSheetRead from './BottomSheetRead';
+import BottomSheetReading from './BottomSheetReading';
+import BottomSheetToRead from './BottomSheetToRead';
+import Button from 'components/common/Button';
 
 const Container = styled(motion.form)`
-  z-index: 9999;
-  background-color: ${({ theme }) => theme.mode.sub};
   position: absolute;
-  bottom: 0;
+  z-index: 9999;
   width: 100%;
   height: 50%;
+  bottom: 0;
   border-radius: 1rem 1rem 0 0;
   padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: sc;
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const Contents = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Heading = styled.h1`
@@ -45,8 +50,10 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
+type ModalType = '다읽음' | '읽고싶음' | '읽는중';
+
 export default function Index() {
-  const [value, setValue] = useState<string>('');
+  const [value, setValue] = useState<ModalType>('다읽음');
 
   const options: RadioGroupOptionType<string>[] = [
     {
@@ -70,7 +77,7 @@ export default function Index() {
   ];
 
   const onChange = (value: string) => {
-    setValue(value);
+    setValue(value as ModalType);
   };
 
   const modalState = useRecoilValue(modalAtom);
@@ -96,6 +103,16 @@ export default function Index() {
             options={options}
             onChange={onChange}
           />
+        </Stack>
+        <Stack style={{ height: '100%' }}>
+          <AnimatePresence>
+            {value === '다읽음' && <BottomSheetRead />}
+            {value === '읽는중' && <BottomSheetReading />}
+            {value === '읽고싶음' && <BottomSheetToRead />}
+          </AnimatePresence>
+        </Stack>
+        <Stack>
+          <Button>SUBMIT</Button>
         </Stack>
       </Contents>
     </Container>

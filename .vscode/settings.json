@@ -6,6 +6,7 @@
     "pino",
     "resave",
     "svgr",
-    "tanstack"
+    "tanstack",
+    "datepicker"
   ]
 }

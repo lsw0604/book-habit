@@ -37,18 +37,19 @@ const Heading = styled.span`
   line-height: 18px;
 `;
 
-const Label = styled.label`
+const Label = styled.label<{ isChecked: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
   cursor: pointer;
-  border: 2px solid ${({ theme }) => theme.mode.sub};
+  border: 2px solid
+    ${({ isChecked }) =>
+      !isChecked
+        ? ({ theme }) => theme.mode.sub
+        : ({ theme }) => theme.colors.spinner};
   border-radius: 5px;
-  &:hover {
-    border: 2px solid ${({ theme }) => theme.colors.spinner};
-  }
 `;
 
 const Input = styled.input.attrs({ type: 'radio' })`
@@ -121,7 +122,7 @@ const RadioButton = <T extends string | number>({
         <Wrapper>
           {options &&
             options.map((option, index) => (
-              <Label key={index}>
+              <Label isChecked={option.value === value} key={index}>
                 <Input
                   type="radio"
                   id={`radio-${index}`}

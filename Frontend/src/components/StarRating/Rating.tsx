@@ -7,22 +7,19 @@ import { customize } from '@style/colors';
 
 interface IProps {
   isClicked: number;
-  isHovering: number;
   setIsClicked: (value: SetStateAction<number>) => void;
-  setIsHovering: (value: SetStateAction<number>) => void;
 }
 
 const Rating = styled.div`
-  width: auto;
+  width: 100%;
   height: auto;
-  display: grid;
-  place-items: center center;
   background-color: ${({ theme }) => theme.mode.main};
 `;
 
 const Container = styled.div`
-  display: flex;
-  font-size: 3rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  font-size: 1rem;
   svg {
     fill: ${customize.yellow['400']} !important;
   }
@@ -30,41 +27,28 @@ const Container = styled.div`
 
 const Wrapper = styled(motion.div)`
   position: relative;
-  width: 2.6rem;
+  width: 100%;
   margin: 0.5rem;
-  display: grid;
-  place-items: center center;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
 `;
 
-export default function StarRating({
-  isClicked,
-  isHovering,
-  setIsClicked,
-  setIsHovering,
-}: IProps) {
+export default function StarRating({ isClicked, setIsClicked }: IProps) {
   const isClickedHandler = (i: number) => {
     if (i === isClicked) {
       setIsClicked((prev) => prev - 1);
-      setIsHovering((prev) => prev - 1);
     } else {
       setIsClicked(i);
     }
   };
 
   return (
-    <Rating onMouseLeave={() => setIsHovering(0)}>
+    <Rating>
       <Container>
         {[1, 2, 3, 4, 5].map((i) => (
-          <Wrapper
-            key={i}
-            onMouseOver={() => setIsHovering(i)}
-            onClick={() => isClickedHandler(i)}
-          >
-            <Star
-              i={i}
-              isHoveringWrapper={isHovering >= i}
-              isClicked={isClicked >= i}
-            />
+          <Wrapper key={i} onClick={() => isClickedHandler(i)}>
+            <Star i={i} isClicked={isClicked >= i} />
           </Wrapper>
         ))}
       </Container>
