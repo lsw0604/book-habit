@@ -33,7 +33,10 @@ export const meAPI = async () => {
   return data;
 };
 
-export const kakaoAPI = async () => {
-  const { data } = await axios.post('/api/auth/kaka');
-  return data;
-};
+export const kakaoAPI = async () =>
+  await axios.get('/api/auth/kakao', {
+    headers: {
+      'Access-Allow-Control-Origin': '*',
+      'Access-Allow-Control-Credential': 'include',
+    },
+  });

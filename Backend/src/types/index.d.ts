@@ -39,9 +39,6 @@ export interface IRankingCount extends RowDataPacket {
   total: number;
 }
 
-/**
- * * SQL SELECT id, name, gender, age, email FROM users WHERE id = ?
- */
 export interface ISelectFromJWTPayload extends RowDataPacket {
   id: number;
   email: string;
@@ -49,11 +46,6 @@ export interface ISelectFromJWTPayload extends RowDataPacket {
   age: number;
   gender: 'male' | 'female';
 }
-
-/**
- *  * SQL SELECT * FROM users WHERE email = ?;
- *  * PAYLOAD { id: number, email: string, name: string, age: number, gender: 'female' | 'male' }
- */
 
 export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
   id: number;
@@ -63,3 +55,11 @@ export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
   gender: 'male' | 'female';
   age: number;
 }
+
+export type ResponseLoginType = {
+  id: number;
+  name: string;
+  email: string;
+  gender: 'male' | 'female';
+  age: number;
+};

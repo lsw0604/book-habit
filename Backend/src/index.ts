@@ -26,6 +26,7 @@ dbConfig();
 
 const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_URL,
+  methods: 'GET, POST, PUT, DELETE',
   credentials: true,
 };
 
@@ -47,11 +48,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(passport.initialize());
+app.use(passport.session());
 passport.use('local', new LocalStrategy(localOptions, LocalVerify));
 passport.use('access', new JWTStrategy(AccessJWTStrategyOptions, AccessVerify));
 passport.use('refresh', new JWTStrategy(RefreshJWTStrategyOptions, RefreshVerify));
 passport.use('kakao', new KakaoStrategy(KakaoOauthStrategyOptions, kakaoVerify));
 
+passport.serializeUser((user, done) => {
+  console.log('serialize', user);
+  done(null, user);
+});
+
+passport.deserializeUser((id: any, done) => {
+  console.log('deserialize', id);
+  done(null, id);
+});
 app.use('/api/books', bookRoutes);
 app.use('/api/auth', authRoutes);
 

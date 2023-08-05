@@ -10,20 +10,10 @@ export const axios = Axios.create({
   withCredentials: true,
 });
 
-axios.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  async (err) => {
-    return Promise.reject(err);
-  }
-);
-
 axios.interceptors.response.use(
   (response) => {
     return response;
   },
-
   async (
     error: AxiosError<{
       message: string;
@@ -43,8 +33,17 @@ axios.interceptors.response.use(
         (response && status === 403 && message === 'jwt expired') ||
         (response && status === 403 && message === 'invalid token')
       ) {
-        const { name, id, email, status, message } = await refreshAPI();
-        return Promise.reject({ email, id, name, status, message });
+        const { name, id, email, status, message, age, gender } =
+          await refreshAPI();
+        return Promise.reject({
+          email,
+          id,
+          name,
+          status,
+          message,
+          age,
+          gender,
+        });
       }
     } else if (strategy === 'refresh') {
       if (
@@ -54,8 +53,9 @@ axios.interceptors.response.use(
         (response && status === 403 && message === 'invalid token')
       ) {
         await logoutAPI();
-        return Promise.reject(error);
+        return Promise.reject({ message: 'LOGOUT', status: 'success' });
       }
     }
+    return Promise.reject(error);
   }
 );

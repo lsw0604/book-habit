@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import tokenGenerator from '../utils/token';
 import passport from 'passport';
+
+import tokenGenerator from '../utils/token';
+import { ResponseLoginType } from '../types';
 
 const login = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
@@ -10,13 +12,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (!user) {
         return res.status(403).json({ message: info.message, status: 'error' });
       }
-      const { id, name, email, age, gender } = user as {
-        id: number;
-        name: string;
-        email: string;
-        gender: 'male' | 'female';
-        age: number;
-      };
+      const { id, name, email, age, gender } = user as ResponseLoginType;
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 

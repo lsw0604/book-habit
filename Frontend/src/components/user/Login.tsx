@@ -9,6 +9,7 @@ import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import useLoginHook from '@hooks/useLoginHook';
 import useValidateHook from '@hooks/useValidateHook';
 import { customize } from '@style/colors';
+import { kakaoAPI } from 'lib/api/auth';
 
 const Container = styled.form`
   display: flex;
@@ -141,9 +142,9 @@ export default function Login() {
               로그인
             </Button>
             <Button
-              onClick={(e: FormEvent<HTMLButtonElement>) => {
+              onClick={async (e: FormEvent<HTMLButtonElement>) => {
                 e.preventDefault();
-                console.log('ss');
+                window.open('http://localhost:3001/api/auth/kakao', '_self');
               }}
             >
               카카오

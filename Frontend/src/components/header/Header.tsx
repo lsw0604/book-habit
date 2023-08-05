@@ -8,7 +8,6 @@ import HeaderPalette from './HeaderPalette';
 import HeaderProfile from './HeaderProfile';
 import Loader from 'components/common/Loader';
 import useAccessHook from '@hooks/useAccessHook';
-import { Suspense } from 'react';
 
 const Container = styled.nav`
   position: fixed;
@@ -35,10 +34,17 @@ const Logo = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
+const LoaderWrapper = styled.div`
+  width: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export default function Index() {
   const navigate = useNavigate();
   const userState = useRecoilValue(userAtom);
-  useAccessHook();
+  const isLoading = useAccessHook();
 
   return (
     <Container>
@@ -46,9 +52,11 @@ export default function Index() {
       <Wrapper>
         <HeaderPalette />
         {userState.isLogged ? (
-          <Suspense fallback={<Loader />}>
-            <HeaderProfile name={userState.name} />
-          </Suspense>
+          <HeaderProfile name={userState.name} />
+        ) : isLoading ? (
+          <LoaderWrapper>
+            <Loader size={2} />
+          </LoaderWrapper>
         ) : (
           <HeaderAuth />
         )}

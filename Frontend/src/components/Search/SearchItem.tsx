@@ -86,7 +86,15 @@ export default function SearchItem({
   return (
     <Container
       onClick={() => {
-        modalSetState({ isOpen: true, title, isbn: ISBN[1] });
+        modalSetState({
+          isOpen: true,
+          title,
+          isbn: ISBN[1],
+          author: authors,
+          company: publisher,
+          price,
+          image: thumbnail,
+        });
       }}
     >
       <ImageWrapper>

@@ -7,7 +7,8 @@ import local from '../controllers/auth.local';
 import access from '../controllers/auth.access';
 import refresh from '../controllers/auth.refresh';
 import logout from '../controllers/auth.logout';
-import kakao from '../controllers/auth.kakao';
+import kakao from '../controllers/auth.kakao.login';
+import passport from 'passport';
 
 const Router = express.Router();
 
@@ -25,8 +26,17 @@ Router.get('/refresh', refresh, (req, res) => {
   res.status(200).json({ ...req.user, status: 'success', message: 'REFRESH_TOKEN_VERIFIED' });
 });
 
-Router.post('/kakao', kakao);
-Router.get('/kakao/callback');
+Router.get('/kakao', passport.authenticate('kakao'));
+
+Router.get(
+  '/kakao/callback',
+  passport.authenticate('kakao', {
+    failureRedirect: `${process.env.CLIENT_URL}/login`,
+  }),
+  (req, res) => {
+    res.status(200).json({ ss: 'ss' });
+  }
+);
 
 Router.post('/test', access, (req, res) => {
   console.log(req.body);

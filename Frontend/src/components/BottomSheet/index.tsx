@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -82,8 +82,14 @@ export default function Index() {
 
   const modalState = useRecoilValue(modalAtom);
 
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log({ ...modalState });
+  };
+
   return (
     <Container
+      onSubmit={onSubmit}
       initial={{ opacity: 0, y: '100%' }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: '100%' }}
@@ -112,7 +118,7 @@ export default function Index() {
           </AnimatePresence>
         </Stack>
         <Stack>
-          <Button>SUBMIT</Button>
+          <Button type="submit">SUBMIT</Button>
         </Stack>
       </Contents>
     </Container>

@@ -1,33 +1,43 @@
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { AxiosError } from 'axios';
 
 import { accessAPI } from 'lib/api/auth';
 import { userAtom } from 'recoil/user';
 
-const REACT_QUERY_KEY = 'USE_ACCESS_KEY';
-
 export default function useAccessHook() {
   const userSetState = useSetRecoilState(userAtom);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { isLoading, isError, data, error, isFetching } = useQuery<
-    AccessResponseType,
-    AxiosError | Error | null
-  >([REACT_QUERY_KEY], accessAPI, {
-    refetchInterval: 10 * 60 * 1000,
-    staleTime: 10 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
-    onError: (error) => {
-      if (error?.message === 'REFRESH_TOKEN_VERIFIED') {
-        const { email, name, id, age, gender } = error as AccessResponseType;
-        userSetState({ email, id, name, isLogged: true, age, gender });
+  const fetch = async () => {
+    try {
+      const { age, email, gender, id, name, message, status } =
+        await accessAPI();
+      if (message === 'ACCESS_TOKEN_VERIFIED' && status === 'success') {
+        userSetState({ age, email, gender, id, isLogged: true, name });
       }
-    },
-    onSuccess: (config) => {
-      const { email, id, name, age, gender } = config;
-      userSetState({ email, id, name, isLogged: true, age, gender });
-    },
-  });
+    } catch (err) {
+      const { age, email, gender, id, name, message, status } =
+        err as LoginResponseType;
+      if (message === 'REFRESH_TOKEN_VERIFIED' && status === 'success') {
+        userSetState({ age, email, gender, id, isLogged: true, name });
+      }
+      if (message === 'LOGOUT' && status === 'success') {
+        userSetState({
+          age: 0,
+          email: '',
+          id: 0,
+          isLogged: false,
+          name: '',
+          gender: '',
+        });
+      }
+    }
+  };
 
-  return { isLoading, isError, data, error, isFetching };
+  useEffect(() => {
+    setIsLoading(true);
+    fetch().then(() => setIsLoading(false));
+  }, []);
+
+  return isLoading;
 }
