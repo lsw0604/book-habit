@@ -34,7 +34,8 @@ Router.get(
     failureRedirect: `${process.env.CLIENT_URL}/login`,
   }),
   (req, res) => {
-    res.status(200).json({ ss: 'ss' });
+    console.log(req.user);
+    res.status(200);
   }
 );
 

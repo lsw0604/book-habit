@@ -32,8 +32,7 @@ const kakaoVerify: KakaoVerify = async (access, refresh, profile, done) => {
         EMAIL_CHECK_VALUE
       );
 
-      console.log('exist_id', exist_id);
-      // if (exist_id[0] === undefined) return done(null, profile);
+      if (exist_id[0] !== undefined) return done(null, exist_id[0]);
 
       const REGISTER_SQL = 'INSERT INTO users (email, provider) VALUES (?, ?)';
       const REGISTER_VALUE = [profile.id, profile.provider];
@@ -42,7 +41,7 @@ const kakaoVerify: KakaoVerify = async (access, refresh, profile, done) => {
 
       connection.release();
 
-      return done(null, profile);
+      return done(null, profile._json);
       // return done(null, false, { message: 'KAKAO로그인에 실패 하셨습니다.' });
     } catch (error: any) {
       await connection.rollback();
