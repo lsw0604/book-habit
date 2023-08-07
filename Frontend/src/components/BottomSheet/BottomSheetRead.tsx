@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import StarRating from 'components/StarRating/Rating';
 import useStarHook from '@hooks/useStarHook';
+import Selector from 'components/common/Selector';
 import DatePicker from 'components/common/DatePicker';
 
 const Container = styled(motion.div)`
@@ -16,18 +17,20 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
-export default function BottomSheetRead() {
-  const [startDate, setStartDate] = useState<string | null>(null);
+const Box = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+`;
 
-  const onChange = (date: Date | null) => {
-    if (date) {
-      setStartDate(date.toISOString());
-    } else {
-      setStartDate(null);
-    }
-  };
+export default function BottomSheetRead() {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const { setStar, star } = useStarHook();
+
   return (
     <Container
       initial={{ opacity: 0, y: '100%' }}
@@ -40,9 +43,7 @@ export default function BottomSheetRead() {
         duration: 0.3,
       }}
     >
-      <Stack>
-        <DatePicker onChange={onChange} />
-      </Stack>
+      <Stack></Stack>
       <Stack>
         평가하기
         <StarRating isClicked={star} setIsClicked={setStar} />

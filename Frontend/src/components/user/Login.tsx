@@ -9,7 +9,6 @@ import { IconClosedEye, IconOpenEye, IconMail } from '@style/icons';
 import useLoginHook from '@hooks/useLoginHook';
 import useValidateHook from '@hooks/useValidateHook';
 import { customize } from '@style/colors';
-import { kakaoAPI } from 'lib/api/auth';
 
 const Container = styled.form`
   display: flex;
@@ -146,8 +145,28 @@ export default function Login() {
                 e.preventDefault();
                 window.open('http://localhost:3001/api/auth/kakao', '_self');
               }}
+              style={{ marginBottom: '8px' }}
             >
               카카오
+            </Button>
+          </Stack>
+          <Stack>
+            <Button
+              type="button"
+              onClick={async () => {
+                const response = await fetch(
+                  'http://localhost:3001/api/auth/kakao/logout',
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                  }
+                );
+                console.log(response);
+              }}
+            >
+              로그아웃
             </Button>
           </Stack>
         </Box>
