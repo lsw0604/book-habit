@@ -50,10 +50,10 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
-type ModalType = '다읽음' | '읽고싶음' | '읽는중';
+type ModalType = '다읽음' | '읽고싶음' | '읽는중' | '';
 
 export default function Index() {
-  const [value, setValue] = useState<ModalType>('다읽음');
+  const [value, setValue] = useState<ModalType>('');
 
   const options: RadioGroupOptionType<string>[] = [
     {

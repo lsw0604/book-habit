@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Home from './HomePage';
 import Login from './LoginPage';
+import Kakao from './KakaoPage';
 import Register from './RegisterPage';
 import MyProfile from 'components/user/MyProfile';
 import DefaultLayout from './layout/DefaultLayout';
@@ -22,6 +23,7 @@ export default function Router() {
               <Route path="/" Component={Home} />
               <Route element={<PublicLayout />}>
                 <Route path="/login" Component={Login} />
+                <Route path="/login/kakao" Component={Kakao} />
                 <Route path="/register" Component={Register} />
               </Route>
               <Route element={<AuthLayout />}>

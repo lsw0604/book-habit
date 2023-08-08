@@ -11,7 +11,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 0;
+  padding: 1.5rem 0;
 `;
 
 const Heading = styled.span`
@@ -32,7 +32,6 @@ const Content = styled.div`
 const HomePage = () => {
   return (
     <Container>
-      <Heading>베스트 셀러 100</Heading>
       <Content>
         <SearchBox />
       </Content>

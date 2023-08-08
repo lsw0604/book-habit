@@ -6,10 +6,10 @@ const USER_SELECTOR_KEY = 'USER_SELECTOR_KEY';
 type IUserAtomType = {
   id: number;
   email: string;
-  name: string;
+  name?: string;
   isLogged: boolean;
-  age: number;
-  gender: 'male' | 'female' | '';
+  age?: number;
+  gender?: 'male' | 'female' | '';
 };
 
 export const userAtom = atom<IUserAtomType>({

@@ -15,8 +15,9 @@ const RegisterFormWrapper = styled.div``;
 export default function RegisterPage() {
   return (
     <Container>
-      <RegisterFormWrapper></RegisterFormWrapper>
-      <Register />
+      <RegisterFormWrapper>
+        <Register />
+      </RegisterFormWrapper>
     </Container>
   );
 }
