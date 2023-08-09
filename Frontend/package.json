@@ -23,7 +23,8 @@
     "react-router-dom": "^6.14.1",
     "recoil": "^0.7.7",
     "styled-components": "^5.3.10",
-    "styled-reset": "^4.4.7"
+    "styled-reset": "^4.4.7",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",
@@ -37,6 +38,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/recoil": "^0.0.9",
     "@types/styled-components": "^5.1.26",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "@vitejs/plugin-react": "^4.0.0",

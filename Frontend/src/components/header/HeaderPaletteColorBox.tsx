@@ -1,5 +1,6 @@
+import useThemeHook from '@hooks/useThemeHook';
 import { customize } from '@style/colors';
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 import { colorAtom } from 'recoil/theme';
 import styled from 'styled-components';
@@ -33,19 +34,7 @@ const ColorButton = styled.button<{
 `;
 
 export default function HeaderPaletteColorBox() {
-  const arr = [
-    'lime',
-    'rose',
-    'sky',
-    'teal',
-    'yellow',
-    'fuchsia',
-    'orange',
-    'gray',
-  ];
-
   const [color, setColor] = useRecoilState(colorAtom);
-
   const [colors, setColors] = useState<ColorType[]>([
     'lime',
     'rose',
@@ -56,10 +45,12 @@ export default function HeaderPaletteColorBox() {
     'orange',
     'gray',
   ]);
+  const { colorHandler } = useThemeHook();
 
   const handleColors = useCallback(
     (color: ColorType) => {
       setColor(color);
+      colorHandler(color);
       setColors((prev) => {
         if (!prev.includes(color)) {
           return [...prev, color];

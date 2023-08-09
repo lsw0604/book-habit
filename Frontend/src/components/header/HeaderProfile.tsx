@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import HeaderProfileDropdown from './HeaderProfileDropdown';
 
 interface IProps {
-  name: string;
+  name?: string;
 }
 
 const Container = styled.div<{ isHamburger: boolean }>`

@@ -5,9 +5,15 @@ export default function Kakao() {
     import.meta.env.VITE_KAKAO_REST_API
   }&redirect_uri=http://localhost:5173/login/kakao&response_type=code`;
 
+  const onWindowOpen = () => {
+    window.open(url, '_self');
+  };
+
   return (
     <>
-      <Button onClick={() => window.open(url, '_self')}>카카오</Button>
+      <Button type="button" onClick={onWindowOpen}>
+        카카오
+      </Button>
     </>
   );
 }

@@ -7,6 +7,7 @@ import refresh from '../controllers/auth.refresh';
 import logout from '../controllers/auth.logout';
 import kakao from '../controllers/auth.kakao.login';
 import KakaoCallback from '../controllers/auth.kakao.callback';
+import KakaoRegister from '../controllers/auth.kakao.register';
 
 const Router = express.Router();
 
@@ -26,5 +27,6 @@ Router.get('/refresh', refresh, (req, res) => {
 
 Router.get('/kakao', kakao);
 Router.get('/kakao/callback', KakaoCallback);
+Router.post('/kakao/register', access, KakaoRegister);
 
 export default Router;

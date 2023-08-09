@@ -1,11 +1,20 @@
 import { VerifyFunction as LocalVerify } from 'passport-local';
 import bcrypt from 'bcrypt';
+import { RowDataPacket } from 'mysql2';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ISelectAllFromUsersWhereEmail } from '../types';
+import { GenderType, ISelectAllFromUsersWhereEmail, ProviderType } from '../types';
 
-const NAMESPACE = 'LOCAL_STRATEGY';
+interface IQueryResult extends RowDataPacket {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  gender: GenderType;
+  age: number;
+  provider: ProviderType;
+}
 
 const localOptions = {
   usernameField: 'email',
@@ -13,15 +22,18 @@ const localOptions = {
 };
 
 const LocalVerify: LocalVerify = async (email, password, done) => {
+  const NAMESPACE = 'LOCAL_STRATEGY';
+
   try {
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
 
-      const SQL = 'SELECT id, email, name, password, gender, age FROM users WHERE email = ?';
+      const SQL =
+        'SELECT id, email, name, password, gender, age, provider FROM users WHERE email = ?';
       const VALUE = [email];
 
-      const [rows] = await connection.query<ISelectAllFromUsersWhereEmail[]>(SQL, VALUE);
+      const [rows] = await connection.query<IQueryResult[]>(SQL, VALUE);
 
       if (rows[0] === undefined) {
         logging.info(NAMESPACE, '존재하지 않는 사용자입니다.');
@@ -38,13 +50,16 @@ const LocalVerify: LocalVerify = async (email, password, done) => {
       }
 
       connection.release();
+
       logging.info(NAMESPACE, '로그인에 성공했습니다.');
+
       return done(null, {
         id: rows[0].id,
         email: rows[0].email,
         name: rows[0].name,
         gender: rows[0].gender,
         age: rows[0].age,
+        provider: rows[0].provider,
       });
     } catch (error: any) {
       connection.release();

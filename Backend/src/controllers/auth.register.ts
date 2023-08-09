@@ -26,7 +26,7 @@ const register = async (
   res: Response
 ) => {
   const { email, name, password, gender, age } = req.body;
-  logging.debug(NAMESPACE, ': START');
+  logging.debug(NAMESPACE, '[START]');
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -46,14 +46,14 @@ const register = async (
       const encryptedPassword = bcrypt.hashSync(password, salt);
 
       const ID_REGISTER_SQL =
-        'INSERT INTO users (email, name, password, gender, age) VALUES(?, ?, ?, ?, ?)';
-      const ID_REGISTER_VALUE = [email, name, encryptedPassword, gender, age];
+        'INSERT INTO users (email, name, password, gender, age, provider) VALUES(?, ?, ?, ?, ?, ?)';
+      const ID_REGISTER_VALUE = [email, name, encryptedPassword, gender, age, 'local'];
 
       await connection.query(ID_REGISTER_SQL, ID_REGISTER_VALUE);
       await connection.commit();
       connection.release();
 
-      logging.debug(NAMESPACE, ': FINISH');
+      logging.debug(NAMESPACE, '[FINISH]');
 
       res.status(200).json({
         status: 'success',
@@ -62,7 +62,7 @@ const register = async (
     } catch (error: any) {
       await connection.rollback();
       connection.release();
-      logging.error(NAMESPACE, 'ERROR :', error);
+      logging.error(NAMESPACE, ' : ', error);
       res.status(400).json({
         status: 'error',
         message: '회원가입에 실패 하셨습니다.',
@@ -73,7 +73,7 @@ const register = async (
       });
     }
   } catch (error: any) {
-    logging.error(NAMESPACE, 'ERROR :', error);
+    logging.error(NAMESPACE, ' : ', error);
     res.status(500).json({
       status: 'error',
       message: 'DB연결에 실패했습니다.',

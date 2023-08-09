@@ -1,8 +1,18 @@
 import { StrategyOptions, VerifyCallback } from 'passport-jwt';
+import { RowDataPacket } from 'mysql2';
 
 import { connectionPool } from '../config/database';
 import logging from '../config/logging';
-import { ISelectFromJWTPayload } from '../types';
+import { GenderType, ProviderType } from '../types';
+
+interface IProps extends RowDataPacket {
+  id: number;
+  email: string;
+  name: string;
+  gender: GenderType;
+  age: number;
+  provider: ProviderType;
+}
 
 const RefreshJWTStrategyOptions: StrategyOptions = {
   jwtFromRequest: (req) => {
@@ -18,20 +28,20 @@ const RefreshJWTStrategyOptions: StrategyOptions = {
 const NAMESPACE = 'REFRESH_STRATEGY';
 
 const RefreshVerify: VerifyCallback = async (payload, done) => {
-  logging.debug(NAMESPACE, ': [START]');
+  logging.debug(NAMESPACE, '[START]', payload.id);
   try {
     const connection = await connectionPool.getConnection();
     try {
-      const SQL = 'SELECT id, email, name, age, gender FROM users WHERE id = ?';
+      const SQL = 'SELECT id, email, name, age, gender, provider FROM users WHERE id = ?';
       const VALUE = [payload.id];
 
-      const [rows] = await connection.query<ISelectFromJWTPayload[]>(SQL, VALUE);
+      const [rows] = await connection.query<IProps[]>(SQL, VALUE);
 
       if (rows[0] !== undefined) {
-        const { id, age, gender, name, email } = rows[0];
+        const { id, age, gender, name, email, provider } = rows[0];
         connection.release();
-        logging.debug(NAMESPACE, ' : [FINISH]');
-        return done(null, { id, age, name, email, gender });
+        logging.debug(NAMESPACE, '[FINISH]');
+        return done(null, { id, age, name, email, gender, provider });
       } else {
         connection.release();
         logging.error(NAMESPACE, 'SQL 문 실행 결과가 존재하지 않습니다.');

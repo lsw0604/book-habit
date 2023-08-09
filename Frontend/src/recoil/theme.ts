@@ -6,7 +6,6 @@ const COLOR_THEME_ATOM_KEY = 'COLOR_THEME_ATOM_KEY';
 
 const localTheme = window.localStorage.getItem('theme');
 const systemTheme = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-
 const localColor = window.localStorage.getItem('color-theme') as ColorType;
 
 export const themeAtom = atom<SystemTheme>({
@@ -21,5 +20,5 @@ export const themeAtom = atom<SystemTheme>({
 
 export const colorAtom = atom<ColorType>({
   key: COLOR_THEME_ATOM_KEY,
-  default: localColor === null ? 'orange' : localColor,
+  default: localColor === null ? 'teal' : localColor,
 });

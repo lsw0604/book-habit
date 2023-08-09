@@ -1,15 +1,16 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
+import { v1 } from 'uuid';
 
-const USER_ATOM_KEY = 'USER_ATOM_KEY';
-const USER_SELECTOR_KEY = 'USER_SELECTOR_KEY';
+const USER_ATOM_KEY = `USER_ATOM_KEY/${v1()}`;
 
 type IUserAtomType = {
   id: number;
   email: string;
-  name?: string;
+  name: string;
   isLogged: boolean;
-  age?: number;
-  gender?: 'male' | 'female' | '';
+  age: number;
+  gender: 'male' | 'female' | '';
+  provider: 'local' | 'kakao' | '';
 };
 
 export const userAtom = atom<IUserAtomType>({
@@ -21,14 +22,6 @@ export const userAtom = atom<IUserAtomType>({
     isLogged: false,
     age: 0,
     gender: '',
-  },
-});
-
-export const userSelector = selector({
-  key: USER_SELECTOR_KEY,
-  get: ({ get }) => {
-    const initialUserProps = get(userAtom);
-    console.log(USER_SELECTOR_KEY, initialUserProps);
-    return initialUserProps;
+    provider: '',
   },
 });

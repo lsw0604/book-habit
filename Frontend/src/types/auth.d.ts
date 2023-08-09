@@ -2,11 +2,22 @@ type SignUpRequestType = {
   email: string;
   password: string;
   name: string;
-  gender: 'male' | 'female';
+  gender: GenderType;
   age: number;
 };
 
 type SignUpResponseType = {
+  message: string;
+  status: StatusType;
+};
+
+type KakaoSignUpRequestType = {
+  name: string;
+  gender: GenderType;
+  age: number;
+};
+
+type KakaoSignUpResponseType = {
   message: string;
   status: StatusType;
 };
@@ -20,8 +31,9 @@ type LoginResponseType = {
   id: number;
   name: string;
   email: string;
-  gender: 'male' | 'female';
+  gender: GenderType;
   age: number;
+  provider: ProviderType;
   message: string;
   status: StatusType;
 };
@@ -31,16 +43,17 @@ type AccessResponseType = {
   name: string;
   email: string;
   message: string;
-  gender: 'female' | 'male';
+  gender: GenderType;
   age: number;
   status: StatusType;
+  provider: ProviderType;
 };
 
 type RefreshResponseType = {
   id: number;
   name: string;
   email: string;
-  gender: 'female' | 'male';
+  gender: GenderType;
   age: number;
   message: string;
   status: StatusType;
@@ -52,3 +65,7 @@ type LogoutResponseType = {
 };
 
 type StatusType = 'success' | 'error' | 'warning' | 'info' | '';
+
+type GenderType = 'male' | 'female' | '';
+
+type ProviderType = 'local' | 'kakao' | '';

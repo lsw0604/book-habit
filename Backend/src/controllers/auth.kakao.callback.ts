@@ -2,17 +2,18 @@ import { Response, Request, NextFunction } from 'express';
 import qs from 'qs';
 
 import { connectionPool } from '../config/database';
-
 import logging from '../config/logging';
 import { RowDataPacket } from 'mysql2';
 import tokenGenerator from '../utils/token';
+import { GenderType, ProviderType } from '../types';
 
-interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
+interface IQueryResult extends RowDataPacket {
   id: number;
-  name?: string;
-  gender?: 'female' | 'male';
-  age?: number;
+  name: string;
+  gender: GenderType;
+  age: number;
   email: string;
+  provider: ProviderType;
 }
 
 export default async function KakaoCallback(req: Request, res: Response, next: NextFunction) {
@@ -48,13 +49,10 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
       await connection.beginTransaction();
 
       const EXIST_SQL =
-        'SELECT id, email, gender, age, name FROM users WHERE email = ? AND provider = ?';
+        'SELECT id, email, gender, age, name, provider FROM users WHERE email = ? AND provider = ?';
       const EXIST_VALUE = [id, 'kakao'];
 
-      const [EXIST_RESULT] = await connection.query<ISelectAllFromUsersWhereEmail[]>(
-        EXIST_SQL,
-        EXIST_VALUE
-      );
+      const [EXIST_RESULT] = await connection.query<IQueryResult[]>(EXIST_SQL, EXIST_VALUE);
 
       if (EXIST_RESULT[0] !== undefined) {
         connection.release();
@@ -62,18 +60,20 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
         const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
         res.cookie('access', access_jwt, {
-          maxAge: expires_in,
+          maxAge: 1000 * 60 * 60,
           httpOnly: true,
           path: '/',
         });
 
         res.cookie('refresh', refresh_jwt, {
-          maxAge: refresh_token_expires_in,
+          maxAge: 1000 * 60 * 60,
           httpOnly: true,
           path: '/',
         });
 
-        return res.status(200).json({ ...EXIST_RESULT[0] });
+        return res
+          .status(200)
+          .json({ ...EXIST_RESULT[0], message: '로그인에 성공 하셨습니다.', status: 'success' });
       }
       const REGISTER_SQL = 'INSERT INTO users (email, provider) VALUES(?, ?)';
       const REGISTER_VALUE = [id, 'kakao'];

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Toggle from 'components/common/Toggle';
-import HeaderPaletteColorBox from './HeaderPaletteColorBox';
+import HeaderPaletteColorBox from 'components/header/HeaderPaletteColorBox';
 import { ColorType } from 'types/style';
 import { customize } from '@style/colors';
 import { IconCloudyParty, IconSunny } from '@style/icons';

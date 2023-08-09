@@ -10,16 +10,32 @@ export default function useAccessHook() {
 
   const fetch = async () => {
     try {
-      const { age, email, gender, id, name, message, status } =
+      const { age, email, gender, id, name, message, status, provider } =
         await accessAPI();
       if (message === 'ACCESS_TOKEN_VERIFIED' && status === 'success') {
-        userSetState({ age, email, gender, id, isLogged: true, name });
+        userSetState({
+          age,
+          email,
+          gender,
+          id,
+          isLogged: true,
+          name,
+          provider,
+        });
       }
     } catch (err) {
-      const { age, email, gender, id, name, message, status } =
+      const { age, email, gender, id, name, message, status, provider } =
         err as LoginResponseType;
       if (message === 'REFRESH_TOKEN_VERIFIED' && status === 'success') {
-        userSetState({ age, email, gender, id, isLogged: true, name });
+        userSetState({
+          age,
+          email,
+          gender,
+          id,
+          isLogged: true,
+          name,
+          provider,
+        });
       }
       if (message === 'LOGOUT' && status === 'success') {
         userSetState({
@@ -28,6 +44,7 @@ export default function useAccessHook() {
           id: 0,
           isLogged: false,
           name: '',
+          provider: '',
           gender: '',
         });
       }

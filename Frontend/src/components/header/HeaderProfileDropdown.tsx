@@ -60,7 +60,15 @@ export default function HeaderProfileDropdown() {
   const handleLogout = async () => {
     const { message, status } = await logoutAPI();
     if (status === 'success') {
-      setUserState({ id: 0, name: '', email: '', isLogged: false });
+      setUserState({
+        id: 0,
+        name: '',
+        email: '',
+        provider: '',
+        isLogged: false,
+        age: 0,
+        gender: '',
+      });
       addToast({ message, status });
     }
   };

@@ -5,9 +5,9 @@ export interface IUserAllInfo extends RowDataPacket {
   email: string;
   name: string;
   password: string;
-  gender: 'female' | 'male';
+  gender: GenderType;
   birthday: Date;
-  provider: 'local' | 'kakao';
+  provider: ProviderType;
   refresh_token: string;
   created_at: Date;
 }
@@ -44,7 +44,8 @@ export interface ISelectFromJWTPayload extends RowDataPacket {
   email: string;
   name: string;
   age: number;
-  gender: 'male' | 'female';
+  gender: GenderType;
+  provider: ProviderType;
 }
 
 export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
@@ -52,14 +53,20 @@ export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
   email: string;
   name: string;
   password: string;
-  gender: 'male' | 'female';
+  gender: GenderType;
   age: number;
+  provider: ProviderType;
 }
 
 export type ResponseLoginType = {
   id: number;
   name: string;
   email: string;
-  gender: 'male' | 'female';
+  gender: GenderType;
   age: number;
+  provider: ProviderType;
 };
+
+type GenderType = 'male' | 'female';
+
+type ProviderType = 'local' | 'kakao';
