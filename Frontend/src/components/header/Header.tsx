@@ -41,22 +41,23 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
-export default function Index() {
+export default function Index({ isLoading }: { isLoading: boolean }) {
   const navigate = useNavigate();
   const userState = useRecoilValue(userAtom);
-  const isLoading = useAccessHook();
 
   return (
     <Container>
-      <Logo onClick={() => navigate('/register/kakao')}>Logo</Logo>
+      <Logo onClick={() => navigate('/')}>Logo</Logo>
       <Wrapper>
         <HeaderPalette />
         {userState.isLogged ? (
-          <HeaderProfile name={userState.name} />
-        ) : isLoading ? (
-          <LoaderWrapper>
-            <Loader size={2} />
-          </LoaderWrapper>
+          !isLoading ? (
+            <HeaderProfile name={userState.name} />
+          ) : (
+            <LoaderWrapper>
+              <Loader />
+            </LoaderWrapper>
+          )
         ) : (
           <HeaderAuth />
         )}

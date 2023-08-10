@@ -10,6 +10,7 @@ const Container = styled.div`
   position: absolute;
   z-index: 9999;
   top: 3.5rem;
+  right: 2rem;
   display: flex;
   padding: 0.1rem;
   margin-top: 0.8rem;

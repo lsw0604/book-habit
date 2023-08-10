@@ -6,7 +6,7 @@ const USER_ATOM_KEY = `USER_ATOM_KEY/${v1()}`;
 type IUserAtomType = {
   id: number;
   email: string;
-  name: string;
+  name: string | '';
   isLogged: boolean;
   age: number;
   gender: 'male' | 'female' | '';

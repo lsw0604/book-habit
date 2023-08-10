@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 interface IProps {
   id?: number;
   email?: string;
-  name?: string;
+  name?: string | null;
 }
 
 export default function tokenGenerator({ id, email, name }: IProps): {

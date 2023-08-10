@@ -11,18 +11,21 @@ import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
 import AuthLayout from './layout/AuthLayout';
 import KakaoLayout from './layout/KakaoLayout';
+import KakaoRegisterLayout from './layout/KakaoRegisterLayout';
 
-export default function Router() {
+export default function Router({ isLoading }: { isLoading: boolean }) {
   return (
     <BrowserRouter>
       <header>
-        <Header />
+        <Header isLoading={isLoading} />
       </header>
       <main>
         <section>
           <DefaultLayout>
             <Routes>
-              <Route path="/register/kakao" Component={KakaoRegister} />
+              <Route element={<KakaoRegisterLayout />}>
+                <Route path="/register/kakao" Component={KakaoRegister} />
+              </Route>
               <Route element={<KakaoLayout />}>
                 <Route path="/" Component={Home} />
                 <Route element={<PublicLayout />}>

@@ -10,15 +10,6 @@ export const axios = Axios.create({
   withCredentials: true,
 });
 
-export const noInterceptorAxios = Axios.create({
-  baseURL: import.meta.env.VITE_SERVER,
-  headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
-    Accept: 'application/json',
-  },
-  withCredentials: true,
-});
-
 axios.interceptors.response.use(
   (response) => {
     return response;

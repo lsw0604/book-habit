@@ -1,7 +1,7 @@
-import { axios, noInterceptorAxios } from './';
+import { axios } from './';
 
 export const signUpAPI = async (body: SignUpRequestType) => {
-  const { data } = await noInterceptorAxios.post<SignUpResponseType>(
+  const { data } = await axios.post<SignUpResponseType>(
     '/api/auth/register',
     body
   );
@@ -9,10 +9,7 @@ export const signUpAPI = async (body: SignUpRequestType) => {
 };
 
 export const loginAPI = async (body: LoginRequestType) => {
-  const { data } = await noInterceptorAxios.post<LoginResponseType>(
-    '/api/auth/login',
-    body
-  );
+  const { data } = await axios.post<LoginResponseType>('/api/auth/login', body);
   return data;
 };
 
@@ -27,9 +24,7 @@ export const refreshAPI = async () => {
 };
 
 export const logoutAPI = async () => {
-  const { data } = await noInterceptorAxios.get<LogoutResponseType>(
-    '/api/auth/logout'
-  );
+  const { data } = await axios.get<LogoutResponseType>('/api/auth/logout');
   return data;
 };
 
@@ -39,7 +34,7 @@ export const meAPI = async () => {
 };
 
 export const kakaoSignupAPI = async (body: KakaoSignUpRequestType) => {
-  const { data } = await noInterceptorAxios.post<KakaoSignUpResponseType>(
+  const { data } = await axios.post<KakaoSignUpResponseType>(
     '/api/auth/kakao/register',
     body
   );
@@ -55,8 +50,6 @@ export const kakaoAPI = async () =>
   });
 
 export const kakaoCallbackAPI = async (code: string) => {
-  const { data } = await noInterceptorAxios.get(
-    `/api/auth/kakao/callback?code=${code}`
-  );
+  const { data } = await axios.get(`/api/auth/kakao/callback?code=${code}`);
   return data;
 };

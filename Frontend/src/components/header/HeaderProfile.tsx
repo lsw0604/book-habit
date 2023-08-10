@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import HeaderProfileDropdown from './HeaderProfileDropdown';
 
 interface IProps {
-  name?: string;
+  name: string | null;
 }
 
 const Container = styled.div<{ isHamburger: boolean }>`
@@ -54,14 +54,8 @@ export default function HeaderProfile({ name }: IProps) {
       onClick={handleHamburger}
     >
       <Span>
-        {name === null ? (
-          '추가정보 등록이 필요합니다.'
-        ) : (
-          <>
-            {name}
-            <P>님 환영합니다.</P>
-          </>
-        )}
+        {name}
+        <P>님 환영합니다.</P>
       </Span>
       {isHamburger && <HeaderProfileDropdown />}
     </Container>

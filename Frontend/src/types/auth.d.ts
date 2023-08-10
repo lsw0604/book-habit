@@ -18,6 +18,12 @@ type KakaoSignUpRequestType = {
 };
 
 type KakaoSignUpResponseType = {
+  id: number;
+  email: string;
+  name: string;
+  gender: GenderType;
+  provider: ProviderType;
+  age: number;
   message: string;
   status: StatusType;
 };

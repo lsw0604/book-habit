@@ -95,9 +95,19 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
 
       logging.info(NAMESPACE, '[RESULT_SET_HEADER]', REGISTER_RESULT.insertId);
 
+      const EXIST_SUB_SQL =
+        'SELECT id, email, gender, age, name, provider FROM users WHERE id = ? AND provider = ?';
+      const EXIST_SUB_VALUES = [REGISTER_RESULT.insertId, 'kakao'];
+      const [EXIST_SUB_RESULT] = await connection.query<IQueryResult[]>(
+        EXIST_SUB_SQL,
+        EXIST_SUB_VALUES
+      );
+
+      logging.info(NAMESPACE, '[EXIST_SUB_RESULT]', EXIST_SUB_RESULT[0]);
+
       const { access_jwt, refresh_jwt } = tokenGenerator({
         id: REGISTER_RESULT.insertId,
-        name: '',
+        name: null,
         email: id,
       });
 
@@ -115,7 +125,11 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
 
       await connection.commit();
       connection.release();
-      res.status(200).json({ message: '카카오 추가정보를 등록해주세요.', status: 'info' });
+      res.status(200).json({
+        ...EXIST_SUB_RESULT[0],
+        message: '카카오 추가정보를 등록해주세요.',
+        status: 'info',
+      });
     } catch (error) {
       await connection.rollback();
       connection.release();

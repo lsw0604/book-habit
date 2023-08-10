@@ -22,8 +22,10 @@ export default function useKakaoCallbackHook(code: string) {
       onSuccess: (data) => {
         const { email, id, gender, age, name, provider, message, status } =
           data;
-
         if (gender === null || age === null || name === null) {
+          console.log('[useKakaoCallbackHook][DATA]', data);
+          console.log('[useKakaoCallbackHook][MESSAGE]', status, message);
+
           setUserState({
             email,
             id,
@@ -35,20 +37,19 @@ export default function useKakaoCallbackHook(code: string) {
           });
 
           return navigate('/register/kakao');
+        } else {
+          setUserState({
+            email,
+            id,
+            gender,
+            age,
+            name,
+            isLogged: true,
+            provider,
+          });
+
+          return navigate('/');
         }
-
-        setUserState({
-          email,
-          id,
-          gender,
-          age,
-          name,
-          isLogged: true,
-          provider,
-        });
-
-        addToast({ message, status });
-        return navigate('/');
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (error: any) => {

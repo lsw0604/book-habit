@@ -12,6 +12,7 @@ import Input from 'components/common/Input';
 import { IconFemale, IconMale, IconNumber, IconPerson } from '@style/icons';
 import RadioGroup from 'components/common/Radio';
 import useKakaoSignupHook from '@hooks/useKakaoSignupHook';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.form`
   display: flex;
@@ -52,7 +53,9 @@ export default function KakaoRegister() {
   const [age, setAge] = useState<number | ''>('');
 
   const [useValidation, setUseValidation] = useState(false);
-  const { mutate, isLoading } = useKakaoSignupHook();
+  const { mutate, isLoading, isSuccess } = useKakaoSignupHook();
+
+  const navigate = useNavigate();
 
   const onChangeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -76,7 +79,10 @@ export default function KakaoRegister() {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
-    mutate({ age, gender, name });
+    if (age && name && gender) {
+      mutate({ age, gender, name });
+    }
+    if (isSuccess) return navigate('/');
   };
 
   useEffect(() => {
