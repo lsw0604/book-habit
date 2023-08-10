@@ -3,7 +3,7 @@ import qs from 'qs';
 
 import { connectionPool } from '../config/database';
 import logging from '../config/logging';
-import { RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import tokenGenerator from '../utils/token';
 import { GenderType, ProviderType } from '../types';
 
@@ -22,19 +22,22 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
   const body = qs.stringify({
     grant_type: 'authorization_code',
     client_id: process.env.KAKAO_CLIENT as string,
-    redirect_uri: 'http://localhost:5173/login/kakao',
+    redirect_uri: `${process.env.CLIENT_URL}/login/kakao`,
     code: code,
   });
+  logging.info(NAMESPACE, '[CODE]', code);
 
   try {
-    const { access_token, expires_in, refresh_token_expires_in } = await fetch(
-      'https://kauth.kakao.com/oauth/token',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body,
-      }
-    ).then((response) => response.json());
+    const { access_token } = await fetch('https://kauth.kakao.com/oauth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    }).then((response) => response.json());
+
+    if (access_token === undefined)
+      return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
+
+    logging.info(NAMESPACE, '[ACCESS_TOKEN]', access_token);
 
     const { id } = await fetch('https://kapi.kakao.com/v2/user/me', {
       method: 'GET',
@@ -43,6 +46,11 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
         'Authorization': `Bearer ${access_token}`,
       },
     }).then((res) => res.json());
+
+    if (id === undefined)
+      return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
+
+    logging.info(NAMESPACE, '[ID]', id);
 
     const connection = await connectionPool.getConnection();
     try {
@@ -54,6 +62,7 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
 
       const [EXIST_RESULT] = await connection.query<IQueryResult[]>(EXIST_SQL, EXIST_VALUE);
 
+      logging.info(NAMESPACE, '[EXIST_ID]', EXIST_RESULT[0]);
       if (EXIST_RESULT[0] !== undefined) {
         connection.release();
         const { id, email, name } = EXIST_RESULT[0];
@@ -75,28 +84,38 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
           .status(200)
           .json({ ...EXIST_RESULT[0], message: '로그인에 성공 하셨습니다.', status: 'success' });
       }
+
       const REGISTER_SQL = 'INSERT INTO users (email, provider) VALUES(?, ?)';
       const REGISTER_VALUE = [id, 'kakao'];
 
-      const [REGISTER_RESULT] = await connection.query(REGISTER_SQL, REGISTER_VALUE);
+      const [REGISTER_RESULT] = await connection.query<ResultSetHeader>(
+        REGISTER_SQL,
+        REGISTER_VALUE
+      );
 
-      const { access_jwt, refresh_jwt } = tokenGenerator({ id: 0, name: '', email: id });
+      logging.info(NAMESPACE, '[RESULT_SET_HEADER]', REGISTER_RESULT.insertId);
+
+      const { access_jwt, refresh_jwt } = tokenGenerator({
+        id: REGISTER_RESULT.insertId,
+        name: '',
+        email: id,
+      });
 
       res.cookie('access', access_jwt, {
-        maxAge: expires_in,
+        maxAge: 1000 * 60 * 60,
         httpOnly: true,
         path: '/',
       });
 
       res.cookie('refresh', refresh_jwt, {
-        maxAge: refresh_token_expires_in,
+        maxAge: 1000 * 60 * 60,
         httpOnly: true,
         path: '/',
       });
 
       await connection.commit();
       connection.release();
-      res.status(200).json({ email: id });
+      res.status(200).json({ message: '카카오 추가정보를 등록해주세요.', status: 'info' });
     } catch (error) {
       await connection.rollback();
       connection.release();

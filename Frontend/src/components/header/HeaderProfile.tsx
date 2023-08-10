@@ -54,8 +54,14 @@ export default function HeaderProfile({ name }: IProps) {
       onClick={handleHamburger}
     >
       <Span>
-        {name}
-        <P>님 환영합니다.</P>
+        {name === null ? (
+          '추가정보 등록이 필요합니다.'
+        ) : (
+          <>
+            {name}
+            <P>님 환영합니다.</P>
+          </>
+        )}
       </Span>
       {isHamburger && <HeaderProfileDropdown />}
     </Container>

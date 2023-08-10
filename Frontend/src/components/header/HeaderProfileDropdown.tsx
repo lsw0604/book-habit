@@ -69,6 +69,7 @@ export default function HeaderProfileDropdown() {
         age: 0,
         gender: '',
       });
+      navigate('/');
       addToast({ message, status });
     }
   };

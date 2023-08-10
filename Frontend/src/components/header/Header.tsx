@@ -48,7 +48,7 @@ export default function Index() {
 
   return (
     <Container>
-      <Logo onClick={() => navigate('/')}>Logo</Logo>
+      <Logo onClick={() => navigate('/register/kakao')}>Logo</Logo>
       <Wrapper>
         <HeaderPalette />
         {userState.isLogged ? (

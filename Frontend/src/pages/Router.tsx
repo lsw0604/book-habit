@@ -10,6 +10,7 @@ import MyProfile from 'components/user/MyProfile';
 import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
 import AuthLayout from './layout/AuthLayout';
+import KakaoLayout from './layout/KakaoLayout';
 
 export default function Router() {
   return (
@@ -21,15 +22,17 @@ export default function Router() {
         <section>
           <DefaultLayout>
             <Routes>
-              <Route path="/" Component={Home} />
-              <Route element={<PublicLayout />}>
-                <Route path="/login" Component={Login} />
-                <Route path="/login/kakao" Component={Kakao} />
-                <Route path="/register/kakao" Component={KakaoRegister} />
-                <Route path="/register" Component={Register} />
-              </Route>
-              <Route element={<AuthLayout />}>
-                <Route path="/profile/:id" Component={MyProfile} />
+              <Route path="/register/kakao" Component={KakaoRegister} />
+              <Route element={<KakaoLayout />}>
+                <Route path="/" Component={Home} />
+                <Route element={<PublicLayout />}>
+                  <Route path="/login" Component={Login} />
+                  <Route path="/login/kakao" Component={Kakao} />
+                  <Route path="/register" Component={Register} />
+                </Route>
+                <Route element={<AuthLayout />}>
+                  <Route path="/profile/:id" Component={MyProfile} />
+                </Route>
               </Route>
             </Routes>
           </DefaultLayout>

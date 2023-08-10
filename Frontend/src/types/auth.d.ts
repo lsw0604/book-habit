@@ -14,7 +14,7 @@ type SignUpResponseType = {
 type KakaoSignUpRequestType = {
   name: string;
   gender: GenderType;
-  age: number;
+  age: number | '';
 };
 
 type KakaoSignUpResponseType = {

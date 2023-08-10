@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+
 import KakaoRegister from 'components/user/KakaoRegister';
 
 const Container = styled.div`

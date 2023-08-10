@@ -6,13 +6,12 @@ import {
   FormEvent,
 } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
 import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import { IconFemale, IconMale, IconNumber, IconPerson } from '@style/icons';
-import useToastHook from '@hooks/useToastHook';
 import RadioGroup from 'components/common/Radio';
+import useKakaoSignupHook from '@hooks/useKakaoSignupHook';
 
 const Container = styled.form`
   display: flex;
@@ -53,6 +52,7 @@ export default function KakaoRegister() {
   const [age, setAge] = useState<number | ''>('');
 
   const [useValidation, setUseValidation] = useState(false);
+  const { mutate, isLoading } = useKakaoSignupHook();
 
   const onChangeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -73,33 +73,10 @@ export default function KakaoRegister() {
     }
   }, []);
 
-  const navigate = useNavigate();
-  const { addToast } = useToastHook();
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
-
-    await fetch('http://localhost:3001/api/auth/kakao/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Allow-Access-Control-Origin': '*',
-        'Allow-Access-Control-Credential': 'true',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        name,
-        gender,
-        age,
-      }),
-    }).then((res) => res.json());
-
-    if (name && gender && age) {
-      return;
-    } else {
-      addToast({ status: 'error', message: '추가 정보 입력 폼을 지켜주세요.' });
-    }
+    mutate({ age, gender, name });
   };
 
   useEffect(() => {
@@ -163,8 +140,9 @@ export default function KakaoRegister() {
           />
         </Stack>
         <Stack style={{ marginBottom: '0px' }}>
-          {/* <Button type="submit" isLoading={isLoading}> */}
-          <Button type="submit">등록</Button>
+          <Button type="submit" isLoading={isLoading}>
+            등록
+          </Button>
         </Stack>
       </Box>
     </Container>

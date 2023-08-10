@@ -1,51 +1,24 @@
+import useKakaoCallbackHook from '@hooks/useKakaoCallbackHook';
+import Loader from 'components/common/Loader';
 import styled from 'styled-components';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import useToastHook from '@hooks/useToastHook';
-import { useSetRecoilState } from 'recoil';
-import { userAtom } from 'recoil/user';
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 4rem);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 0;
 `;
 
 export default function KakaoPage() {
-  const code = new URLSearchParams(window.location.search).get('code');
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const code = new URLSearchParams(window.location.search).get(
+    'code'
+  ) as string;
 
-  const { addToast } = useToastHook();
-  const setUserState = useSetRecoilState(userAtom);
+  // if (code) {
+  const { isLoading } = useKakaoCallbackHook(code);
+  return <Container>{isLoading && <Loader size={2} />}</Container>;
+  // }
 
-  const fetchCode = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3001/api/auth/kakao/callback?code=${code}`,
-      { withCredentials: true }
-    );
-
-    const { id, email, name, gender, age, message, status, provider } = data;
-
-    if (!gender || !name || !id || !age || !email) {
-      navigate('/register/kakao');
-    }
-
-    if (id && email && name && gender && age) {
-      navigate('/');
-      setUserState({ id, isLogged: true, age, gender, name, email, provider });
-      addToast({ message, status });
-    }
-  };
-
-  useEffect(() => {
-    fetchCode().then((res) => console.log(res));
-  }, []);
-
-  return <Container></Container>;
+  return <Container>잘못된 접근 방식입니다.</Container>;
 }
