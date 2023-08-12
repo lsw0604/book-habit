@@ -17,6 +17,7 @@ export default function useLoginHook() {
   >([REACT_QUERY_KEY], loginAPI, {
     onSuccess: (data) => {
       const { id, email, name, status, message, age, gender, provider } = data;
+      console.log(provider);
       setUserState({ id, email, name, gender, age, isLogged: true, provider });
       addToast({ message, status });
     },

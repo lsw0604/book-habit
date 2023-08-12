@@ -4,14 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { kakaoCallbackAPI } from 'lib/api/auth';
 import { userAtom } from 'recoil/user';
-import useToastHook from './useToastHook';
 
 const REACT_QUERY_KEY = 'USE_KAKAO_CALLBACK_HOOK';
 
 export default function useKakaoCallbackHook(code: string) {
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userAtom);
-  const { addToast } = useToastHook();
 
   const queryClient = useQueryClient();
 
@@ -38,6 +36,8 @@ export default function useKakaoCallbackHook(code: string) {
 
           return navigate('/register/kakao');
         } else {
+          console.log('[useKakaoCallbackHook][DATA]', data);
+          console.log('[useKakaoCallbackHook][MESSAGE]', status, message);
           setUserState({
             email,
             id,
@@ -54,10 +54,7 @@ export default function useKakaoCallbackHook(code: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (error: any) => {
         if (error.response.status === 403) {
-          const { message, status } = error.response.data;
-
           queryClient.removeQueries([REACT_QUERY_KEY]);
-          addToast({ message, status });
           return navigate('/');
         }
         console.log('[useKakaoCallbackHook][ERROR]', error);

@@ -30,7 +30,7 @@ const corsOptions: CorsOptions = {
 
 const sessionOptions: SessionOptions = {
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   secret: process.env.SESSION_SECRET as string,
   cookie: {
     httpOnly: true,

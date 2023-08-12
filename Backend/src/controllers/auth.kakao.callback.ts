@@ -26,6 +26,8 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
     code: code,
   });
   logging.info(NAMESPACE, '[CODE]', code);
+  logging.info(NAMESPACE, '[ID]', req.session.id);
+  logging.info(NAMESPACE, '[COOKIE]', req.session.cookie);
 
   try {
     const { access_token } = await fetch('https://kauth.kakao.com/oauth/token', {

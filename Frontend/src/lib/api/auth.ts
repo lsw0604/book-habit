@@ -1,4 +1,5 @@
 import { axios } from './';
+import Axios from 'axios';
 
 export const signUpAPI = async (body: SignUpRequestType) => {
   const { data } = await axios.post<SignUpResponseType>(
@@ -52,4 +53,35 @@ export const kakaoAPI = async () =>
 export const kakaoCallbackAPI = async (code: string) => {
   const { data } = await axios.get(`/api/auth/kakao/callback?code=${code}`);
   return data;
+};
+
+export const kakaoLogoutAPI = async (target: string) => {
+  try {
+    const { data } = await Axios.post(
+      `https://kapi.kakao.com/v1/user/logout`,
+      `target_id_type=user_id&target_id=${target}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `KakaoAK ${import.meta.env.VITE_KAKAO_SERVICE_ADMIN}`,
+        },
+      }
+    );
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const kakaoLogoutUserAPI = async () => {
+  try {
+    const { data } = await Axios.get(
+      `https://kauth.kakao.com/oauth/logout?client_id=${
+        import.meta.env.VITE_KAKAO_REST_API
+      }&logout_redirect_uri=http://localhost:5173`
+    );
+    return data;
+  } catch (err) {
+    console.log('[KAKAO][LOGOUT]', err);
+  }
 };

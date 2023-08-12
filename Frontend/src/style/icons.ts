@@ -34,3 +34,4 @@ export { ReactComponent as IconFlag } from '../assets/icons/iconFlag.svg';
 export { ReactComponent as IconBookMark } from '../assets/icons/iconBookmark.svg';
 export { ReactComponent as IconBook } from '../assets/icons/iconBook.svg';
 export { ReactComponent as IconHeart } from '../assets/icons/iconHeart.svg';
+export { ReactComponent as IconKakao } from '../assets/icons/iconKakao.svg';

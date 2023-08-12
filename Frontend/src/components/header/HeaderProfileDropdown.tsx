@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { customize } from '@style/colors';
-import { logoutAPI } from 'lib/api/auth';
+import { kakaoLogoutAPI, kakaoLogoutUserAPI, logoutAPI } from 'lib/api/auth';
 import { useRecoilState } from 'recoil';
 import { userAtom } from 'recoil/user';
 import { useNavigate } from 'react-router-dom';
@@ -70,6 +70,11 @@ export default function HeaderProfileDropdown() {
         age: 0,
         gender: '',
       });
+
+      await kakaoLogoutAPI(userState.email);
+      await kakaoLogoutUserAPI();
+      // if (userState.provider === 'kakao') {
+      // }
       navigate('/');
       addToast({ message, status });
     }

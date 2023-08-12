@@ -1,10 +1,10 @@
 import Axios, { AxiosError } from 'axios';
-import { logoutAPI, refreshAPI } from './auth';
+import { refreshAPI } from './auth';
 
 export const axios = Axios.create({
   baseURL: import.meta.env.VITE_SERVER,
   headers: {
-    'Content-Type': 'application/json; charset=UTF-8',
+    'Content-Type': 'application/json;charset=UTF-8',
     Accept: 'application/json',
   },
   withCredentials: true,
@@ -44,16 +44,6 @@ axios.interceptors.response.use(
           age,
           gender,
         });
-      }
-    } else if (strategy === 'refresh') {
-      if (
-        (response && status === 403 && message === 'No auth token') ||
-        (response && status === 403 && message === 'jwt malformed') ||
-        (response && status === 403 && message === 'jwt expired') ||
-        (response && status === 403 && message === 'invalid token')
-      ) {
-        await logoutAPI();
-        return Promise.reject({ message: 'LOGOUT', status: 'success' });
       }
     }
     return Promise.reject(error);
