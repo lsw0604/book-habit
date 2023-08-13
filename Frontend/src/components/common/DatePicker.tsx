@@ -6,72 +6,84 @@ import 'react-datepicker/dist/react-datepicker.css';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  input {
+
+  .react-datepicker-popper {
     width: 100%;
   }
+
   .react-datepicker {
-    padding: 16px 32px;
+    width: 100%;
+    padding: 10px 10px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 20px !important;
     border-radius: 32px;
     cursor: default;
   }
+
   .react-datepicker__triangle {
-    border-bottom-color: white !important;
+    display: none;
   }
+
   .react-datepicker__month-container {
-    padding: 0 27px;
+    padding: 0;
+    width: 100%;
   }
+
   .react-datepicker__header {
-    padding-top: 22px;
+    width: 100%;
     font-size: 16px;
     font-weight: 600;
     border: 0;
     background-color: white;
   }
+
   .react-datepicker__navigation--previous {
-    top: 40px;
-    left: 56px;
+    top: 12px;
+    left: 34px;
     border: 0;
     background-image: url('/static/svg/common/datePicker/datepicker_left_arrow.svg');
     background-repeat: no-repeat;
   }
+
   .react-datepicker__navigation--next {
-    top: 40px;
-    right: 56px;
+    top: 12px;
+    right: 34px;
     border: 0;
     background-image: url('/static/svg/common/datePicker/datepicker_right_arrow.svg');
     background-repeat: no-repeat;
   }
+
   .react-datepicker__current-month {
+    width: 100%;
     font-size: 16px;
     font-weight: 600;
-    font-family: Airbnb Cereal, sans-serif;
   }
+
   .react-datepicker__day-names {
     padding-top: 16px;
   }
+
   .react-datepicker__day-name {
-    width: 48px;
+    width: 2rem;
     margin: 0;
     font-size: 12px;
     line-height: 16px;
-    font-weight: 400;
+    font-weight: 600;
     color: ${({ theme }) => theme.mode.typo_sub};
   }
   .react-datepicker__month {
     margin: 0;
   }
+
   .react-datepicker__day {
-    width: 48px;
-    height: 48px;
+    width: 2rem;
+    height: 2rem;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     margin: 0;
     font-size: 14px;
     font-weight: 600;
-    font-family: -apple-system, sans-serif;
     color: ${({ theme }) => theme.mode.typo_main};
     outline: none;
     &:hover {
