@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import SearchBox from 'components/Search/SearchBox';
 import ModalPortal from 'components/common/ModalPortal';
 import BottomSheet from 'components/BottomSheet';
-import DatePicker from 'components/common/DatePicker';
 
 const Container = styled.div`
   width: 100%;
@@ -34,8 +33,7 @@ const HomePage = () => {
   return (
     <Container>
       <Content>
-        {/* <SearchBox /> */}
-        <DatePicker />
+        <SearchBox />
       </Content>
       <ModalPortal>
         <BottomSheet />

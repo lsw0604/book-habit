@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 import StarRating from 'components/StarRating/Rating';
-import useStarHook from '@hooks/useStarHook';
-import Selector from 'components/common/Selector';
-import DatePicker from 'components/common/DatePicker';
+import BottomSheetStartDate from 'components/BottomSheet/BottomSheetStartDate';
+import BottomSheetEndDate from 'components/BottomSheet/BottomSheetEndDate';
+import useReadModalHook from '@hooks/useReadModalHook';
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -26,10 +25,7 @@ const Box = styled.div`
 `;
 
 export default function BottomSheetRead() {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
-  const { setStar, star } = useStarHook();
+  const { rating, setRating } = useReadModalHook();
 
   return (
     <Container
@@ -43,10 +39,20 @@ export default function BottomSheetRead() {
         duration: 0.3,
       }}
     >
-      <Stack></Stack>
+      <Box>
+        <Stack>
+          <BottomSheetStartDate />
+        </Stack>
+        <Stack>
+          <BottomSheetEndDate />
+        </Stack>
+      </Box>
       <Stack>
-        평가하기
-        <StarRating isClicked={star} setIsClicked={setStar} />
+        <StarRating
+          label="평가 점수"
+          isClicked={rating}
+          setIsClicked={setRating}
+        />
       </Stack>
     </Container>
   );

@@ -119,13 +119,7 @@ const Radio = <T extends string | number>({
   return (
     <>
       <Container>
-        {label ? (
-          <>
-            <Heading>{label}</Heading>
-          </>
-        ) : (
-          ''
-        )}
+        {label && <Heading>{label}</Heading>}
         <Wrapper>
           {options &&
             options.map((option, index) => (

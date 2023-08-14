@@ -40,6 +40,7 @@ const IconStarWrapper = styled(motion.i)`
   position: relative;
   z-index: 10;
   cursor: pointer;
+  width: auto;
   svg {
     height: 2rem;
     width: 2rem;

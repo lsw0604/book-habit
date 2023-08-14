@@ -3,7 +3,7 @@ import { useState, FormEvent } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { modalAtom } from 'recoil/modal';
+import { modalAtom, readBookStateAtom } from 'recoil/modal';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
@@ -16,7 +16,7 @@ const Container = styled(motion.form)`
   position: absolute;
   z-index: 9999;
   width: 100%;
-  height: 50%;
+  height: 55%;
   bottom: 0;
   border-radius: 1rem 1rem 0 0;
   padding: 1rem;
@@ -81,10 +81,17 @@ export default function Index() {
   };
 
   const modalState = useRecoilValue(modalAtom);
+  const readBookModalState = useRecoilValue(readBookStateAtom);
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log({ ...modalState });
+    if (value === '다읽음') {
+      console.log({ ...modalState, ...readBookModalState });
+    } else if (value === '읽고싶음') {
+      console.log('읽고싶어요.');
+    } else if (value === '읽는중') {
+      console.log('읽는중입니다.');
+    }
   };
 
   return (

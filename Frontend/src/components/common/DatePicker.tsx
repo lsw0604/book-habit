@@ -2,22 +2,37 @@ import styled from 'styled-components';
 import ko from 'date-fns/locale/ko';
 import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { customize } from '@style/colors';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
 
-  .react-datepicker-popper {
+  input {
+    color: ${({ theme }) => theme.mode.typo_main};
+  }
+
+  .react-datepicker-wrapper {
+    height: 100%;
     width: 100%;
+  }
+
+  .react-datepicker__input-container {
+    height: 100%;
+    width: 100%;
+    input {
+      background-color: ${({ theme }) => theme.mode.main};
+    }
   }
 
   .react-datepicker {
     width: 100%;
     padding: 10px 10px;
-    background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 20px !important;
-    border-radius: 32px;
+    background-color: ${({ theme }) => theme.mode.main};
+    border-radius: 12px;
     cursor: default;
+    border: none;
+    box-shadow: ${({ theme }) => theme.shadow.xxl};
   }
 
   .react-datepicker__triangle {
@@ -34,29 +49,26 @@ const Container = styled.div`
     font-size: 16px;
     font-weight: 600;
     border: 0;
-    background-color: white;
+    background-color: ${({ theme }) => theme.mode.main};
   }
 
   .react-datepicker__navigation--previous {
     top: 12px;
     left: 34px;
     border: 0;
-    background-image: url('/static/svg/common/datePicker/datepicker_left_arrow.svg');
-    background-repeat: no-repeat;
   }
 
   .react-datepicker__navigation--next {
     top: 12px;
     right: 34px;
     border: 0;
-    background-image: url('/static/svg/common/datePicker/datepicker_right_arrow.svg');
-    background-repeat: no-repeat;
   }
 
   .react-datepicker__current-month {
     width: 100%;
     font-size: 16px;
     font-weight: 600;
+    color: ${({ theme }) => theme.mode.typo_main};
   }
 
   .react-datepicker__day-names {
@@ -70,6 +82,12 @@ const Container = styled.div`
     line-height: 16px;
     font-weight: 600;
     color: ${({ theme }) => theme.mode.typo_sub};
+    &:first-child {
+      color: ${customize.red['400']};
+    }
+    &:last-child {
+      color: ${customize.sky['400']};
+    }
   }
   .react-datepicker__month {
     margin: 0;
@@ -87,43 +105,63 @@ const Container = styled.div`
     color: ${({ theme }) => theme.mode.typo_main};
     outline: none;
     &:hover {
-      border: 1px solid ${({ theme }) => theme.mode.typo_main};
-      color: ${({ theme }) => theme.mode.typo_main};
-      background-color: white;
+      color: ${({ theme }) => theme.mode.sub};
+      background-color: ${({ theme }) => theme.colors.sub};
       border-radius: 50%;
     }
   }
+
+  .react-datepicker__day--in-range:not(
+      .react-datepicker__day--in-selecting-range,
+      .react-datepicker__month-text--in-selecting-range,
+      .react-datepicker__quarter-text--in-selecting-range,
+      .react-datepicker__year-text--in-selecting-range
+    ) {
+    background-color: ${({ theme }) => theme.colors.spinner};
+    border-radius: 50%;
+  }
+  .react-datepicker__day--outside-month {
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .react-datepicker__close-icon {
+    &::after {
+      background-color: ${({ theme }) => theme.colors.spinner};
+    }
+  }
+
   .react-datepicker__day--in-range {
-    background-color: ${({ theme }) => theme.mode.typo_sub};
+    background-color: ${({ theme }) => theme.colors.spinner};
   }
+
   .react-datepicker__day--in-selecting-range {
-    background-color: ${({ theme }) => theme.mode.typo_sub};
+    background-color: ${({ theme }) => theme.colors.spinner};
+    border-radius: 50%;
   }
+
   .react-datepicker__day--selected {
-    background-color: ${({ theme }) => theme.mode.typo_main};
-    color: white;
+    background-color: ${({ theme }) => theme.colors.sub};
+    color: ${({ theme }) => theme.mode.sub};
     border-radius: 50%;
     &:hover {
-      background-color: ${({ theme }) => theme.mode.typo_main};
-      color: white;
+      background-color: ${({ theme }) => theme.colors.sub};
+      color: ${({ theme }) => theme.mode.sub};
     }
   }
   .react-datepicker__day--range-start {
-    background-color: ${({ theme }) => theme.mode.typo_main};
-    color: white;
+    background-color: ${({ theme }) => theme.colors.sub};
+    color: ${({ theme }) => theme.mode.sub};
     border-radius: 50%;
   }
   .react-datepicker__day--range-end {
-    background-color: ${({ theme }) => theme.mode.typo_main};
-    color: white;
+    background-color: ${({ theme }) => theme.colors.sub};
+    color: ${({ theme }) => theme.mode.sub};
     border-radius: 50%;
   }
   .react-datepicker__day--disabled {
-    color: gray;
+    color: rgba(0, 0, 0, 0.1);
     cursor: no-drop;
-    &:hover {
-      border: 0;
-    }
+    text-decoration: line-through;
   }
 `;
 
@@ -134,11 +172,18 @@ export default function DatePicker({
   return (
     <Container>
       <ReactDatePicker
+        popperPlacement="top-start"
         {...props}
         dateFormat="yyyy년 MM월 dd일"
         disabledKeyboardNavigation
         locale={ko}
-        onChange={onChange}
+        onChange={(date, event) => {
+          if (date) {
+            onChange(date, event);
+          } else {
+            onChange(null, event);
+          }
+        }}
       />
     </Container>
   );
