@@ -43,3 +43,28 @@ type KakaoSearchResponseDocumentType = {
   translators: string[];
   url: string;
 };
+
+type BookRegisterType = {
+  author: string;
+  company: string;
+  image: string;
+  isbn: string;
+  title: string;
+  status: ModalType;
+  price: number;
+};
+
+type ReadingBookRegisterType = BookRegisterType & {
+  page: number;
+  startDate: Date;
+};
+
+type ReadBookRegisterType = BookRegisterType & {
+  rating: number;
+  startDate: Date;
+  endDate: Date;
+};
+
+type ReadToBookRegisterType = BookRegisterType & {
+  rating: number;
+};
