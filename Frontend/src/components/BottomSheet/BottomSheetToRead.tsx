@@ -19,7 +19,7 @@ export default function BottomSheetToRead() {
         duration: 0.3,
       }}
     >
-      읽는중
+      읽을 예정
     </Container>
   );
 }

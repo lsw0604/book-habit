@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import DatePicker from 'components/common/DatePicker';
-import useReadModalHook from '@hooks/useReadModalHook';
+
+interface IProps {
+  startDate: Date | null;
+  endDate?: Date | null;
+  onChange: (date: Date | null) => void;
+}
 
 const Container = styled.div`
   position: relative;
@@ -30,15 +35,17 @@ const Heading = styled.span`
   line-height: 18px;
 `;
 
-export default function BottomSheetStartDate() {
-  const { setStartDate, startDate, endDate } = useReadModalHook();
-
+export default function BottomSheetStartDate({
+  endDate,
+  onChange,
+  startDate,
+}: IProps) {
   return (
     <>
       <Heading>책 읽기 시작한 날</Heading>
       <Container>
         <DatePicker
-          onChange={setStartDate}
+          onChange={onChange}
           selected={startDate}
           selectsStart
           startDate={startDate}

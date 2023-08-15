@@ -1,8 +1,13 @@
-import { DefaultValue, atom, selector } from 'recoil';
+import { atom, selector } from 'recoil';
 
 const MODAL_ATOM_KEY = 'MODAL_ATOM_KEY';
+const READING_BOOK_ATOM_KEY = 'READING_BOOK_ATOM_KEY';
 
-export const modalAtom = atom<ModalType>({
+/**
+ * * 책의 상태(BOTTOM_MODAL_SHEET)의 ATOM
+ */
+
+export const modalAtom = atom<ModalAtomType>({
   key: MODAL_ATOM_KEY,
   default: {
     isOpen: false,
@@ -15,58 +20,21 @@ export const modalAtom = atom<ModalType>({
   },
 });
 
-const READ_BOOK_MODAL_ATOM_KEY = 'READ_BOOK_MODAL_ATOM_KEY';
-const READ_BOOK_START_DATE_SELECTOR_KEY = 'READ_BOOK_START_DATE_SELECTOR_KEY';
-const READ_BOOK_END_DATE_SELECTOR_KEY = 'READ_BOOK_END_DATE_SELECTOR_KEY';
-const READ_BOOK_RATING_SELECTOR_KEY = 'READ_BOOK_RATING_SELECTOR_KEY';
-
-type ReadBookAtomType = {
-  startDate: Date | null | DefaultValue;
-  endDate: Date | null | DefaultValue;
-  rating: number | DefaultValue;
-};
-
-export const readBookStateAtom = atom<ReadBookAtomType>({
-  key: READ_BOOK_MODAL_ATOM_KEY,
+/**
+ * * 읽는중인 책(READING_BOOK)의 ATOM
+ */
+export const readingBookAtom = atom<ReadingBookAtomType>({
+  key: READING_BOOK_ATOM_KEY,
   default: {
     startDate: null,
-    endDate: null,
-    rating: 0,
+    page: 0,
   },
 });
 
-export const readBookStartDateSelector = selector({
-  key: READ_BOOK_START_DATE_SELECTOR_KEY,
+export const readingBookPageSelector = selector({
+  key: 'READING_BOOK_PAGE_SELECTOR',
   get: ({ get }) => {
-    const readBookState = get(readBookStateAtom);
-    return readBookState.startDate as Date | null;
-  },
-  set: ({ set, get }, startDate) => {
-    const readBookState = get(readBookStateAtom);
-    set(readBookStateAtom, { ...readBookState, startDate });
-  },
-});
-
-export const readBookEndDateSelector = selector({
-  key: READ_BOOK_END_DATE_SELECTOR_KEY,
-  get: ({ get }) => {
-    const readBookState = get(readBookStateAtom);
-    return readBookState.endDate as Date | null;
-  },
-  set: ({ set, get }, endDate) => {
-    const readBookState = get(readBookStateAtom);
-    set(readBookStateAtom, { ...readBookState, endDate });
-  },
-});
-
-export const readBookRatingSelector = selector({
-  key: READ_BOOK_RATING_SELECTOR_KEY,
-  get: ({ get }) => {
-    const readBookState = get(readBookStateAtom);
-    return readBookState.rating as number;
-  },
-  set: ({ set, get }, rating) => {
-    const readBookState = get(readBookStateAtom);
-    set(readBookStateAtom, { ...readBookState, rating });
+    const readingBookState = get(readingBookAtom);
+    return `${readingBookState.page} 쪽까지 읽었어요.`;
   },
 });

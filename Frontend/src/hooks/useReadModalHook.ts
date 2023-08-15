@@ -1,27 +1,52 @@
-import { useRecoilState } from 'recoil';
-import {
-  readBookEndDateSelector,
-  readBookStartDateSelector,
-  readBookRatingSelector,
-  readBookStateAtom,
-} from 'recoil/modal';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { readBookAtom, readBookSelector } from 'recoil/readBook';
 
 export default function useReadModalHook() {
-  const [startDate, setStartDate] = useRecoilState(readBookStartDateSelector);
-  const [endDate, setEndDate] = useRecoilState(readBookEndDateSelector);
-  const [rating, setRating] = useRecoilState(readBookRatingSelector);
+  const [readBookState, setReadBookState] = useRecoilState(readBookAtom);
+  const readBookStatus = useRecoilValue(readBookSelector);
 
-  const [readBookAtomState, setReadBookAtomState] =
-    useRecoilState(readBookStateAtom);
+  const onChangeReadBookStartDate = (startDate: Date | null) => {
+    if (startDate) {
+      setReadBookState((prev: ReadBookAtomType) => ({
+        ...prev,
+        startDate,
+      }));
+    } else {
+      setReadBookState((prev: ReadBookAtomType) => ({
+        ...prev,
+        startDate: null,
+      }));
+    }
+  };
+
+  const onChangeReadBookEndDate = (endDate: Date | null) => {
+    if (endDate) {
+      setReadBookState((prev: ReadBookAtomType) => ({ ...prev, endDate }));
+    } else {
+      setReadBookState((prev: ReadBookAtomType) => ({
+        ...prev,
+        endDate: null,
+      }));
+    }
+  };
+
+  const onChangeReadBookRating = (rating: number) => {
+    setReadBookState((prev: ReadBookAtomType) => ({ ...prev, rating }));
+  };
+
+  const readBookStartDate = readBookState.startDate;
+  const readBookEndDate = readBookState.endDate;
+  const readBookRating = readBookState.rating;
 
   return {
-    startDate,
-    endDate,
-    rating,
-    setEndDate,
-    setStartDate,
-    setRating,
-    readBookAtomState,
-    setReadBookAtomState,
+    readBookState,
+    readBookStartDate,
+    readBookEndDate,
+    readBookRating,
+    readBookStatus,
+    setReadBookState,
+    onChangeReadBookEndDate,
+    onChangeReadBookStartDate,
+    onChangeReadBookRating,
   };
 }

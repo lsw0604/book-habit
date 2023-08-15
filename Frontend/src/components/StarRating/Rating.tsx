@@ -1,4 +1,3 @@
-import { SetStateAction } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
@@ -6,8 +5,8 @@ import Star from './Star';
 import { customize } from '@style/colors';
 
 interface IProps {
-  isClicked: number;
-  setIsClicked: (value: SetStateAction<number>) => void;
+  rating: number;
+  onChange: (value: number) => void;
   label?: string;
 }
 
@@ -45,12 +44,12 @@ const Heading = styled.span`
   line-height: 18px;
 `;
 
-export default function StarRating({ isClicked, setIsClicked, label }: IProps) {
+export default function StarRating({ rating, onChange, label }: IProps) {
   const isClickedHandler = (i: number) => {
-    if (i === isClicked) {
-      setIsClicked((prev) => prev - 1);
+    if (i === rating) {
+      onChange(rating - 1);
     } else {
-      setIsClicked(i);
+      onChange(i);
     }
   };
 
@@ -61,7 +60,7 @@ export default function StarRating({ isClicked, setIsClicked, label }: IProps) {
         <Container>
           {[1, 2, 3, 4, 5].map((i) => (
             <Wrapper key={i} onClick={() => isClickedHandler(i)}>
-              <Star i={i} isClicked={isClicked >= i} />
+              <Star i={i} isClicked={rating >= i} />
             </Wrapper>
           ))}
         </Container>

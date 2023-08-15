@@ -5,6 +5,7 @@ import StarRating from 'components/StarRating/Rating';
 import BottomSheetStartDate from 'components/BottomSheet/BottomSheetStartDate';
 import BottomSheetEndDate from 'components/BottomSheet/BottomSheetEndDate';
 import useReadModalHook from '@hooks/useReadModalHook';
+import { useEffect } from 'react';
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -24,8 +25,29 @@ const Box = styled.div`
   gap: 8px;
 `;
 
+const Span = styled.span`
+  color: ${({ theme }) => theme.mode.typo_main};
+  display: flex;
+  flex-direction: column;
+`;
+
 export default function BottomSheetRead() {
-  const { rating, setRating } = useReadModalHook();
+  const {
+    onChangeReadBookRating,
+    onChangeReadBookStartDate,
+    onChangeReadBookEndDate,
+    readBookEndDate: endDate,
+    readBookRating: rating,
+    readBookStartDate: startDate,
+    readBookStatus,
+    setReadBookState,
+  } = useReadModalHook();
+
+  useEffect(() => {
+    return () => {
+      setReadBookState({ startDate: null, endDate: null, rating: 0 });
+    };
+  }, []);
 
   return (
     <Container
@@ -41,19 +63,39 @@ export default function BottomSheetRead() {
     >
       <Box>
         <Stack>
-          <BottomSheetStartDate />
+          <BottomSheetStartDate
+            startDate={startDate}
+            endDate={endDate}
+            onChange={onChangeReadBookStartDate}
+          />
         </Stack>
         <Stack>
-          <BottomSheetEndDate />
+          <BottomSheetEndDate
+            startDate={startDate}
+            endDate={endDate}
+            onChange={onChangeReadBookEndDate}
+          />
         </Stack>
       </Box>
       <Stack>
         <StarRating
-          label="평가 점수"
-          isClicked={rating}
-          setIsClicked={setRating}
+          label="다른 사람들에게 이 정도 추천해요."
+          rating={rating}
+          onChange={onChangeReadBookRating}
         />
       </Stack>
+      {startDate && endDate && rating !== 0 && (
+        <Stack>
+          <Span>
+            {readBookStatus &&
+              readBookStatus.map((value, index) => (
+                <span style={{ textAlign: 'center' }} key={index}>
+                  {value}
+                </span>
+              ))}
+          </Span>
+        </Stack>
+      )}
     </Container>
   );
 }
