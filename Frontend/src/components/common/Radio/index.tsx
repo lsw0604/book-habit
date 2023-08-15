@@ -96,7 +96,7 @@ const RadioInfo = styled.span`
 
 const InfoLabel = styled.label<{ isDescription: boolean }>`
   color: ${({ theme }) => theme.mode.typo_main};
-  text-align: center;
+  text-align: left;
   font-size: 18px;
   line-height: ${({ isDescription }) => (isDescription ? '20px' : '34px')};
 `;

@@ -13,6 +13,7 @@ import BottomSheetToRead from 'components/BottomSheet/BottomSheetToRead';
 import Button from 'components/common/Button';
 import useReadModalHook from '@hooks/useReadModalHook';
 import useReadingModalHook from '@hooks/useReadingModalHook';
+import useReadToModalHook from '@hooks/useReadToModalHook';
 
 const Container = styled(motion.form)`
   position: absolute;
@@ -54,8 +55,19 @@ const Stack = styled.div`
 
 export default function Index() {
   const [value, setValue] = useState<ModalType>('');
-  const { readBookState } = useReadModalHook();
-  const { readingBookState } = useReadingModalHook();
+
+  const { readBookState, onChangeReadBookUseValidation, readBookFormValidate } =
+    useReadModalHook();
+  const {
+    readingBookState,
+    onChangeReadingBookUseValidation,
+    readingBookFormUseValidate,
+  } = useReadingModalHook();
+  const {
+    readToBookState,
+    onChangeReadToBookUseValidation,
+    readToBookFormUseValidate,
+  } = useReadToModalHook();
 
   const options: RadioGroupOptionType<string>[] = [
     {
@@ -87,12 +99,23 @@ export default function Index() {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (value === '다읽음') {
-      console.log({ ...modalState, ...readBookState });
+      onChangeReadBookUseValidation(true);
+      console.log('ReadForm', readBookFormValidate);
+      if (readBookFormValidate) {
+        console.log({ ...modalState, ...readBookState });
+      }
     } else if (value === '읽고싶음') {
-      console.log('읽고싶어요.');
+      onChangeReadToBookUseValidation(true);
+      console.log('ReadToForm', readToBookFormUseValidate);
+      if (readToBookFormUseValidate) {
+        console.log({ ...modalState, ...readToBookState });
+      }
     } else if (value === '읽는중') {
-      console.log('읽는중입니다.');
-      console.log({ ...modalState, ...readingBookState });
+      onChangeReadingBookUseValidation(true);
+      console.log('ReadingForm', readingBookFormUseValidate);
+      if (readingBookFormUseValidate) {
+        console.log({ ...modalState, ...readingBookState });
+      }
     }
   };
 
@@ -110,7 +133,7 @@ export default function Index() {
       }}
     >
       <Contents>
-        <Heading>어떤 책인가요 ?</Heading>
+        <Heading>이 책은 어떤 책인가요 ?</Heading>
         <Stack>
           <RadioButton<string>
             label={modalState.title}
@@ -127,7 +150,7 @@ export default function Index() {
           </AnimatePresence>
         </Stack>
         <Stack>
-          <Button type="submit">SUBMIT</Button>
+          <Button type="submit">등록하기</Button>
         </Stack>
       </Contents>
     </Container>

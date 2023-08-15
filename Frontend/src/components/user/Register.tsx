@@ -24,6 +24,7 @@ import useValidateHook from '@hooks/useValidateHook';
 import useSignupHook from '@hooks/useSignupHook';
 import RadioGroup from 'components/common/Radio';
 import { customize } from '@style/colors';
+import { RadioGroupOptionType } from 'types/style';
 
 const Container = styled.form`
   display: flex;
@@ -125,6 +126,22 @@ export default function Register() {
   const navigate = useNavigate();
   const { mutate, isLoading } = useSignupHook();
   const { addToast } = useToastHook();
+
+  const registerGenderOptions: RadioGroupOptionType<'male' | 'female' | ''>[] =
+    [
+      {
+        label: '남자',
+        icon: <IconMale />,
+        value: 'male',
+        description: 'male',
+      },
+      {
+        label: '여자',
+        icon: <IconFemale />,
+        value: 'female',
+        description: 'female',
+      },
+    ];
 
   const {
     validate,
@@ -230,20 +247,7 @@ export default function Register() {
             value={gender}
             onChange={onChangeGender}
             errorMessage="성별을 입력해주세요."
-            options={[
-              {
-                label: '남자',
-                icon: <IconMale />,
-                value: 'male',
-                description: 'male',
-              },
-              {
-                label: '여자',
-                icon: <IconFemale />,
-                value: 'female',
-                description: 'female',
-              },
-            ]}
+            options={registerGenderOptions}
           />
         </Stack>
         {focusedPassword && (

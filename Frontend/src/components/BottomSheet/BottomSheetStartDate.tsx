@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 import DatePicker from 'components/common/DatePicker';
-
-interface IProps {
-  startDate: Date | null;
-  endDate?: Date | null;
-  onChange: (date: Date | null) => void;
-}
+import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 const Container = styled.div`
   position: relative;
@@ -39,7 +34,10 @@ export default function BottomSheetStartDate({
   endDate,
   onChange,
   startDate,
-}: IProps) {
+  errorMessage,
+  isValid,
+  useValidation,
+}: IBottomSheetStartDate) {
   return (
     <>
       <Heading>책 읽기 시작한 날</Heading>
@@ -54,6 +52,9 @@ export default function BottomSheetStartDate({
           isClearable
         />
       </Container>
+      {errorMessage && isValid && useValidation && (
+        <ErrorMessage message={errorMessage} />
+      )}
     </>
   );
 }

@@ -36,18 +36,31 @@ export default function BottomSheetRead() {
     onChangeReadBookRating,
     onChangeReadBookStartDate,
     onChangeReadBookEndDate,
+    onChangeReadBookUseValidation,
     readBookEndDate: endDate,
     readBookRating: rating,
     readBookStartDate: startDate,
+    readBookUseValidation: useValidation,
     readBookStatus,
     setReadBookState,
   } = useReadModalHook();
 
   useEffect(() => {
     return () => {
-      setReadBookState({ startDate: null, endDate: null, rating: 0 });
+      setReadBookState({
+        startDate: null,
+        endDate: null,
+        rating: 0,
+        useValidate: false,
+      });
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      onChangeReadBookUseValidation(false);
+    };
+  }, [startDate, endDate, rating]);
 
   return (
     <Container
@@ -67,6 +80,9 @@ export default function BottomSheetRead() {
             startDate={startDate}
             endDate={endDate}
             onChange={onChangeReadBookStartDate}
+            isValid={!startDate}
+            useValidation={useValidation}
+            errorMessage="날짜를 입력해주세요."
           />
         </Stack>
         <Stack>
@@ -74,6 +90,9 @@ export default function BottomSheetRead() {
             startDate={startDate}
             endDate={endDate}
             onChange={onChangeReadBookEndDate}
+            isValid={!endDate}
+            useValidation={useValidation}
+            errorMessage="날짜를 입력해주세요."
           />
         </Stack>
       </Box>
@@ -82,6 +101,9 @@ export default function BottomSheetRead() {
           label="다른 사람들에게 이 정도 추천해요."
           rating={rating}
           onChange={onChangeReadBookRating}
+          isValid={rating === 0}
+          useValidation={useValidation}
+          errorMessage="다른 사람들에게 어느정도 추천하는지 입력해주세요."
         />
       </Stack>
       {startDate && endDate && rating !== 0 && (

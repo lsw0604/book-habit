@@ -13,6 +13,7 @@ export const readBookAtom = atom<ReadBookAtomType>({
     startDate: null,
     endDate: null,
     rating: 0,
+    useValidate: false,
   },
 });
 

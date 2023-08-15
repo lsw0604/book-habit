@@ -5,6 +5,10 @@ export default function useReadModalHook() {
   const [readBookState, setReadBookState] = useRecoilState(readBookAtom);
   const readBookStatus = useRecoilValue(readBookSelector);
 
+  const onChangeReadBookUseValidation = (useValidate: boolean) => {
+    setReadBookState((prev: ReadBookAtomType) => ({ ...prev, useValidate }));
+  };
+
   const onChangeReadBookStartDate = (startDate: Date | null) => {
     if (startDate) {
       setReadBookState((prev: ReadBookAtomType) => ({
@@ -37,6 +41,11 @@ export default function useReadModalHook() {
   const readBookStartDate = readBookState.startDate;
   const readBookEndDate = readBookState.endDate;
   const readBookRating = readBookState.rating;
+  const readBookUseValidation = readBookState.useValidate;
+  const readBookFormValidate =
+    readBookState.endDate !== null &&
+    readBookState.startDate !== null &&
+    readBookState.rating !== 0;
 
   return {
     readBookState,
@@ -44,9 +53,12 @@ export default function useReadModalHook() {
     readBookEndDate,
     readBookRating,
     readBookStatus,
+    readBookUseValidation,
+    readBookFormValidate,
     setReadBookState,
     onChangeReadBookEndDate,
     onChangeReadBookStartDate,
     onChangeReadBookRating,
+    onChangeReadBookUseValidation,
   };
 }

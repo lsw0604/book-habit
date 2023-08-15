@@ -3,12 +3,7 @@ import { motion } from 'framer-motion';
 
 import Star from './Star';
 import { customize } from '@style/colors';
-
-interface IProps {
-  rating: number;
-  onChange: (value: number) => void;
-  label?: string;
-}
+import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 const Rating = styled.div`
   width: 100%;
@@ -44,7 +39,14 @@ const Heading = styled.span`
   line-height: 18px;
 `;
 
-export default function StarRating({ rating, onChange, label }: IProps) {
+export default function StarRating({
+  rating,
+  onChange,
+  label,
+  errorMessage,
+  isValid,
+  useValidation,
+}: IStarRating) {
   const isClickedHandler = (i: number) => {
     if (i === rating) {
       onChange(rating - 1);
@@ -65,6 +67,9 @@ export default function StarRating({ rating, onChange, label }: IProps) {
           ))}
         </Container>
       </Rating>
+      {errorMessage && isValid && useValidation && (
+        <ErrorMessage message={errorMessage} />
+      )}
     </>
   );
 }

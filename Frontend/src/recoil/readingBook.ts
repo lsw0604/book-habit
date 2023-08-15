@@ -11,6 +11,7 @@ export const readingBookAtom = atom<ReadingBookAtomType>({
   default: {
     startDate: null,
     page: 0,
+    useValidate: false,
   },
 });
 

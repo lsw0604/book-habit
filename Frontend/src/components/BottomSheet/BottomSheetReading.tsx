@@ -2,7 +2,7 @@ import useReadingModalHook from '@hooks/useReadingModalHook';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import BottomSheetStartDate from './BottomSheetStartDate';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Input from 'components/common/Input';
 import { IconNumber } from '@style/icons';
 
@@ -27,20 +27,25 @@ export default function BottomSheetReading() {
   const {
     onChangeReadingBookPage,
     onChangeReadingBookStartDate,
+    onChangeReadingBookUseValidation,
     readingBookPage: page,
     readingBookStartDate: startDate,
+    readingBookUseValidation: useValidation,
     readingBookStatus,
     setReadingBookState,
   } = useReadingModalHook();
 
-  const [useValidation, setUseValidation] = useState<boolean>(false);
+  useEffect(() => {
+    return () => {
+      setReadingBookState({ page: 0, startDate: null, useValidate: false });
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
-      setReadingBookState({ page: 0, startDate: null });
-      setUseValidation(false);
+      onChangeReadingBookUseValidation(false);
     };
-  }, []);
+  }, [startDate, page]);
   return (
     <Container
       initial={{ opacity: 0, y: '100%' }}
@@ -57,6 +62,9 @@ export default function BottomSheetReading() {
         <BottomSheetStartDate
           startDate={startDate}
           onChange={onChangeReadingBookStartDate}
+          isValid={!startDate}
+          useValidation={useValidation}
+          errorMessage="읽기 시작한 날짜를 입력해주세요."
         />
       </Stack>
       <Stack>
