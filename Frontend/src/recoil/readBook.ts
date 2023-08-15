@@ -23,13 +23,8 @@ export const readBookSelector = selector({
 
     const { startDate, endDate, rating } = readBookState;
 
-    if (!startDate || !endDate) {
-      return null;
-    }
-
-    if (!rating) {
-      return null;
-    }
+    if (!startDate || !endDate) return null;
+    if (!rating) return null;
 
     const dayDiff = differenceInDays(endDate, startDate);
 

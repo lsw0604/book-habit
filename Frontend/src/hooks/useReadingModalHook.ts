@@ -1,10 +1,12 @@
 import { ChangeEvent, useCallback } from 'react';
-import { useRecoilState } from 'recoil';
-import { readingBookAtom } from 'recoil/modal';
+import { useRecoilState, useRecoilValue } from 'recoil';
+
+import { readingBookAtom, readingBookSelector } from 'recoil/readingBook';
 
 export default function useReadingModalHook() {
   const [readingBookState, setReadingBookState] =
     useRecoilState(readingBookAtom);
+  const readingBookStatus = useRecoilValue(readingBookSelector);
 
   const onChangeReadingBookStartDate = (startDate: Date | null) => {
     setReadingBookState((prev: ReadingBookAtomType) => ({
@@ -30,6 +32,7 @@ export default function useReadingModalHook() {
     readingBookState,
     readingBookPage,
     readingBookStartDate,
+    readingBookStatus,
     setReadingBookState,
     onChangeReadingBookPage,
     onChangeReadingBookStartDate,

@@ -17,12 +17,19 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
+const Span = styled.span`
+  color: ${({ theme }) => theme.mode.typo_main};
+  display: flex;
+  flex-direction: column;
+`;
+
 export default function BottomSheetReading() {
   const {
     onChangeReadingBookPage,
     onChangeReadingBookStartDate,
     readingBookPage: page,
     readingBookStartDate: startDate,
+    readingBookStatus,
     setReadingBookState,
   } = useReadingModalHook();
 
@@ -64,6 +71,18 @@ export default function BottomSheetReading() {
           onChange={onChangeReadingBookPage}
         />
       </Stack>
+      {startDate && page !== 0 && (
+        <Stack>
+          <Span>
+            {readingBookStatus &&
+              readingBookStatus.map((value, index) => (
+                <span style={{ textAlign: 'center' }} key={index}>
+                  {value}
+                </span>
+              ))}
+          </Span>
+        </Stack>
+      )}
     </Container>
   );
 }
