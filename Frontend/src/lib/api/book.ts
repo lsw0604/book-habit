@@ -23,13 +23,13 @@ export const booksSearchAPI = async (body: string, page: number) => {
 };
 
 export const readBookRegisterAPI = async (body: ReadBookRegisterType) => {
-  console.log('readBookRegisterAPI', body);
   const { data } = await axios.post(`/api/books/read`, body);
   return data;
 };
 
 export const readingBookRegisterAPI = async (body: ReadingBookRegisterType) => {
-  console.log('readingBookRegisterAPI', body);
+  const { data } = await axios.post(`/api/books/reading`, body);
+  return data;
 };
 
 export const readToBookRegisterAPI = async (body: ReadToBookRegisterType) => {
