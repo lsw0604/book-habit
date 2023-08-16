@@ -76,3 +76,17 @@ declare module 'express-session' {
     kakaoAccessToken: string;
   }
 }
+
+declare global {
+  namespace Express {
+    interface User {
+      id?: number;
+      email?: string;
+      name?: string;
+      age?: number;
+      gender?: GenderType;
+      provider?: ProviderType;
+      access_jwt?: string;
+    }
+  }
+}
