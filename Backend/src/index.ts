@@ -30,7 +30,7 @@ const corsOptions: CorsOptions = {
 
 const sessionOptions: SessionOptions = {
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   secret: process.env.SESSION_SECRET as string,
   cookie: {
     httpOnly: true,
@@ -46,6 +46,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use('local', new LocalStrategy(localOptions, LocalVerify));
 passport.use('access', new JWTStrategy(AccessJWTStrategyOptions, AccessVerify));

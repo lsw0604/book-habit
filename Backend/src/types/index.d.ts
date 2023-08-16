@@ -70,3 +70,9 @@ export type ResponseLoginType = {
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';
+
+declare module 'express-session' {
+  interface SessionData {
+    kakaoAccessToken: string;
+  }
+}

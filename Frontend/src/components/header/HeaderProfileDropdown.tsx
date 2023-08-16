@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { customize } from '@style/colors';
-import { kakaoLogoutAPI, kakaoLogoutUserAPI, logoutAPI } from 'lib/api/auth';
+import { logoutAPI } from 'lib/api/auth';
 import { useRecoilState } from 'recoil';
 import { userAtom } from 'recoil/user';
 import { useNavigate } from 'react-router-dom';
@@ -59,24 +59,42 @@ export default function HeaderProfileDropdown() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    const { message, status } = await logoutAPI();
-    if (status === 'success') {
-      setUserState({
-        id: 0,
-        name: '',
-        email: '',
-        provider: '',
-        isLogged: false,
-        age: 0,
-        gender: '',
-      });
-
-      await kakaoLogoutAPI(userState.email);
-      await kakaoLogoutUserAPI();
-      // if (userState.provider === 'kakao') {
-      // }
-      navigate('/');
-      addToast({ message, status });
+    if (userState.provider === 'kakao') {
+      const { message, status } = await logoutAPI();
+      if (status === 'success') {
+        setUserState({
+          id: 0,
+          name: '',
+          email: '',
+          provider: '',
+          isLogged: false,
+          age: 0,
+          gender: '',
+        });
+        window.localStorage.removeItem('ACCESS');
+        window.open(
+          `https://kauth.kakao.com/oauth/logout?client_id=${
+            import.meta.env.VITE_KAKAO_REST_API
+          }&logout_redirect_uri=${import.meta.env.VITE_KAKAO_LOGOUT_URI}`,
+          '_self'
+        );
+        addToast({ message, status });
+      }
+    } else {
+      const { message, status } = await logoutAPI();
+      if (status === 'success') {
+        setUserState({
+          id: 0,
+          name: '',
+          email: '',
+          provider: '',
+          isLogged: false,
+          age: 0,
+          gender: '',
+        });
+        window.localStorage.removeItem('ACCESS');
+        addToast({ message, status });
+      }
     }
   };
 
@@ -86,6 +104,11 @@ export default function HeaderProfileDropdown() {
         <Li onClick={() => navigate(`/profile/${userState.id}`)}>
           <Label>
             <span>내 프로필</span>
+          </Label>
+        </Li>
+        <Li onClick={() => navigate('/search')}>
+          <Label>
+            <span>책 추가하기</span>
           </Label>
         </Li>
         <Li onClick={handleLogout}>

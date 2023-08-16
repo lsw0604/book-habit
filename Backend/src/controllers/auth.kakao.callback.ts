@@ -25,9 +25,6 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
     redirect_uri: `${process.env.CLIENT_URL}/login/kakao`,
     code: code,
   });
-  logging.info(NAMESPACE, '[CODE]', code);
-  logging.info(NAMESPACE, '[ID]', req.session.id);
-  logging.info(NAMESPACE, '[COOKIE]', req.session.cookie);
 
   try {
     const { access_token } = await fetch('https://kauth.kakao.com/oauth/token', {
@@ -38,8 +35,6 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
 
     if (access_token === undefined)
       return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
-
-    logging.info(NAMESPACE, '[ACCESS_TOKEN]', access_token);
 
     const { id } = await fetch('https://kapi.kakao.com/v2/user/me', {
       method: 'GET',
@@ -52,8 +47,6 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
     if (id === undefined)
       return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
 
-    logging.info(NAMESPACE, '[ID]', id);
-
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
@@ -61,20 +54,12 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
       const EXIST_SQL =
         'SELECT id, email, gender, age, name, provider FROM users WHERE email = ? AND provider = ?';
       const EXIST_VALUE = [id, 'kakao'];
-
       const [EXIST_RESULT] = await connection.query<IQueryResult[]>(EXIST_SQL, EXIST_VALUE);
 
-      logging.info(NAMESPACE, '[EXIST_ID]', EXIST_RESULT[0]);
       if (EXIST_RESULT[0] !== undefined) {
         connection.release();
         const { id, email, name } = EXIST_RESULT[0];
         const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
-
-        res.cookie('access', access_jwt, {
-          maxAge: 1000 * 60 * 60,
-          httpOnly: true,
-          path: '/',
-        });
 
         res.cookie('refresh', refresh_jwt, {
           maxAge: 1000 * 60 * 60,
@@ -82,9 +67,12 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
           path: '/',
         });
 
-        return res
-          .status(200)
-          .json({ ...EXIST_RESULT[0], message: '로그인에 성공 하셨습니다.', status: 'success' });
+        return res.status(200).json({
+          ...EXIST_RESULT[0],
+          access_jwt,
+          message: '로그인에 성공 하셨습니다.',
+          status: 'success',
+        });
       }
 
       const REGISTER_SQL = 'INSERT INTO users (email, provider) VALUES(?, ?)';
@@ -113,12 +101,6 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
         email: id,
       });
 
-      res.cookie('access', access_jwt, {
-        maxAge: 1000 * 60 * 60,
-        httpOnly: true,
-        path: '/',
-      });
-
       res.cookie('refresh', refresh_jwt, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
@@ -129,6 +111,7 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
       connection.release();
       res.status(200).json({
         ...EXIST_SUB_RESULT[0],
+        access_jwt,
         message: '카카오 추가정보를 등록해주세요.',
         status: 'info',
       });

@@ -1,4 +1,4 @@
-import { StrategyOptions, VerifyCallback } from 'passport-jwt';
+import { ExtractJwt, StrategyOptions, VerifyCallback } from 'passport-jwt';
 import { RowDataPacket } from 'mysql2';
 
 import logging from '../config/logging';
@@ -15,13 +15,7 @@ interface IProps extends RowDataPacket {
 }
 
 const AccessJWTStrategyOptions: StrategyOptions = {
-  jwtFromRequest: (req) => {
-    let token;
-    if (req && req.cookies) {
-      token = req.cookies['access'];
-      return token;
-    }
-  },
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.ACCESS_TOKEN as string,
 };
 

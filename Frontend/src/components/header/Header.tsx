@@ -7,7 +7,6 @@ import HeaderAuth from './HeaderAuth';
 import HeaderPalette from './HeaderPalette';
 import HeaderProfile from './HeaderProfile';
 import Loader from 'components/common/Loader';
-import useAccessHook from '@hooks/useAccessHook';
 
 const Container = styled.nav`
   position: fixed;

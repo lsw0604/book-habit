@@ -16,12 +16,6 @@ const login = (req: Request, res: Response, next: NextFunction) => {
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
-      res.cookie('access', access_jwt, {
-        maxAge: 1000 * 60 * 60,
-        httpOnly: true,
-        path: '/',
-      });
-
       res.cookie('refresh', refresh_jwt, {
         maxAge: 1000 * 60 * 60,
         httpOnly: true,
@@ -35,6 +29,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         gender,
         age,
         provider,
+        access_jwt,
         message: '로그인에 성공했습니다.',
         status: 'success',
       });

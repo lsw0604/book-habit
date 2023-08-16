@@ -40,6 +40,7 @@ type LoginResponseType = {
   gender: GenderType;
   age: number;
   provider: ProviderType;
+  access_jwt: string;
   message: string;
   status: StatusType;
 };
@@ -61,6 +62,7 @@ type RefreshResponseType = {
   email: string;
   gender: GenderType;
   age: number;
+  access_jwt: string;
   message: string;
   status: StatusType;
 };

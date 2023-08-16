@@ -10,6 +10,20 @@ export const axios = Axios.create({
   withCredentials: true,
 });
 
+axios.interceptors.request.use(
+  (config) => {
+    if (window.localStorage.getItem('ACCESS')) {
+      config.headers.Authorization = `bearer ${window.localStorage.getItem(
+        'ACCESS'
+      )}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 axios.interceptors.response.use(
   (response) => {
     return response;
@@ -33,8 +47,12 @@ axios.interceptors.response.use(
         (response && status === 403 && message === 'jwt expired') ||
         (response && status === 403 && message === 'invalid token')
       ) {
-        const { name, id, email, status, message, age, gender } =
+        const { name, id, email, status, message, age, gender, access_jwt } =
           await refreshAPI();
+        if (status === 'success' && message === 'REFRESH_TOKEN_VERIFIED') {
+          window.localStorage.setItem('ACCESS', access_jwt);
+        }
+
         return Promise.reject({
           email,
           id,

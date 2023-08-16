@@ -4,6 +4,7 @@ import Header from '../components/header/Header';
 import Home from './HomePage';
 import Login from './LoginPage';
 import Kakao from './KakaoPage';
+import Search from './SearchPage';
 import KakaoRegister from './KakaoRegisterPage';
 import Register from './RegisterPage';
 import MyProfile from 'components/user/MyProfile';
@@ -28,6 +29,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
               </Route>
               <Route element={<KakaoLayout />}>
                 <Route path="/" Component={Home} />
+                <Route path="/search" Component={Search} />
                 <Route element={<PublicLayout />}>
                   <Route path="/login" Component={Login} />
                   <Route path="/login/kakao" Component={Kakao} />

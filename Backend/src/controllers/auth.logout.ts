@@ -7,7 +7,6 @@ const NAMESPACE = 'LOGOUT';
 export default function logout(req: Request, res: Response, next: NextFunction) {
   logging.info(NAMESPACE, '[SESSION]', req.session.id);
 
-  res.cookie('access', {}, { path: '/', maxAge: 0, httpOnly: true });
   res.cookie('refresh', {}, { path: '/', maxAge: 0, httpOnly: true });
 
   logging.info(NAMESPACE, ': FINISH');

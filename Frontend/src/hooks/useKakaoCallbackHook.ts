@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { kakaoCallbackAPI } from 'lib/api/auth';
 import { userAtom } from 'recoil/user';
+import useToastHook from './useToastHook';
 
 const REACT_QUERY_KEY = 'USE_KAKAO_CALLBACK_HOOK';
 
 export default function useKakaoCallbackHook(code: string) {
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userAtom);
+  const { addToast } = useToastHook();
 
   const queryClient = useQueryClient();
 
@@ -18,12 +20,19 @@ export default function useKakaoCallbackHook(code: string) {
     () => kakaoCallbackAPI(code),
     {
       onSuccess: (data) => {
-        const { email, id, gender, age, name, provider, message, status } =
-          data;
+        const {
+          email,
+          id,
+          gender,
+          age,
+          name,
+          provider,
+          message,
+          status,
+          access_jwt,
+        } = data;
         if (gender === null || age === null || name === null) {
-          console.log('[useKakaoCallbackHook][DATA]', data);
-          console.log('[useKakaoCallbackHook][MESSAGE]', status, message);
-
+          window.localStorage.setItem('ACCESS', access_jwt);
           setUserState({
             email,
             id,
@@ -34,10 +43,10 @@ export default function useKakaoCallbackHook(code: string) {
             provider,
           });
 
+          addToast({ message, status });
           return navigate('/register/kakao');
         } else {
-          console.log('[useKakaoCallbackHook][DATA]', data);
-          console.log('[useKakaoCallbackHook][MESSAGE]', status, message);
+          window.localStorage.setItem('ACCESS', access_jwt);
           setUserState({
             email,
             id,
@@ -47,7 +56,7 @@ export default function useKakaoCallbackHook(code: string) {
             isLogged: true,
             provider,
           });
-
+          addToast({ message, status });
           return navigate('/');
         }
       },

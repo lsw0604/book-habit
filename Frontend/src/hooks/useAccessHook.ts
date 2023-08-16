@@ -22,6 +22,7 @@ export default function useAccessHook() {
           name,
           provider,
         });
+        setIsLoading(false);
       }
     } catch (err) {
       const { age, email, gender, id, name, message, status, provider } =
@@ -36,6 +37,7 @@ export default function useAccessHook() {
           name,
           provider,
         });
+        setIsLoading(false);
       }
       if (message === 'LOGOUT' && status === 'success') {
         userSetState({
@@ -47,13 +49,16 @@ export default function useAccessHook() {
           provider: '',
           gender: '',
         });
+        setIsLoading(false);
       }
     }
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch().then(() => setIsLoading(false));
+    if (window.localStorage.getItem('ACCESS')) {
+      setIsLoading(true);
+      fetch();
+    }
   }, []);
 
   return isLoading;

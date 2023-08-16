@@ -15,10 +15,8 @@ export default function KakaoPage() {
     'code'
   ) as string;
 
-  // if (code) {
+  if (!code) return <Container>Code를 불러오지 못 했습니다.</Container>;
+
   const { isLoading } = useKakaoCallbackHook(code);
   return <Container>{isLoading && <Loader size={2} />}</Container>;
-  // }
-
-  return <Container>잘못된 접근 방식입니다.</Container>;
 }
