@@ -35,7 +35,7 @@ const Heading = styled.h1`
   text-overflow: ellipsis;
   padding-right: 10px;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
@@ -56,7 +56,7 @@ const Span = styled.span`
 const P = styled.p`
   font-size: 10px;
   line-height: 12px;
-  font-weight: 500;
+  font-weight: 400;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

@@ -10,6 +10,7 @@ export default function useAccessHook() {
 
   const fetch = async () => {
     try {
+      setIsLoading(true);
       const { age, email, gender, id, name, message, status, provider } =
         await accessAPI();
       if (message === 'ACCESS_TOKEN_VERIFIED' && status === 'success') {
@@ -25,38 +26,13 @@ export default function useAccessHook() {
         setIsLoading(false);
       }
     } catch (err) {
-      const { age, email, gender, id, name, message, status, provider } =
-        err as LoginResponseType;
-      if (message === 'REFRESH_TOKEN_VERIFIED' && status === 'success') {
-        userSetState({
-          age,
-          email,
-          gender,
-          id,
-          isLogged: true,
-          name,
-          provider,
-        });
-        setIsLoading(false);
-      }
-      if (message === 'LOGOUT' && status === 'success') {
-        userSetState({
-          age: 0,
-          email: '',
-          id: 0,
-          isLogged: false,
-          name: '',
-          provider: '',
-          gender: '',
-        });
-        setIsLoading(false);
-      }
+      console.log(err);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (window.localStorage.getItem('ACCESS')) {
-      setIsLoading(true);
       fetch();
     }
   }, []);

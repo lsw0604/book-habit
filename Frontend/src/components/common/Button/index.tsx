@@ -44,7 +44,6 @@ const Icon = styled.div`
 `;
 
 const Span = styled.span`
-  font-family: 'SUIT';
   font-weight: 700;
   font-size: 1rem;
   line-height: 1.2rem;

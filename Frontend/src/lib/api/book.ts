@@ -33,5 +33,6 @@ export const readingBookRegisterAPI = async (body: ReadingBookRegisterType) => {
 };
 
 export const readToBookRegisterAPI = async (body: ReadToBookRegisterType) => {
-  console.log('readToBookRegisterAPI', body);
+  const { data } = await axios.post(`/api/books/read_to`, body);
+  return data;
 };

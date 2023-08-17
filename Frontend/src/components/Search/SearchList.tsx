@@ -86,9 +86,15 @@ export default function SearchList({
       {data && data?.pages.length > 0 ? (
         data?.pages.map((page, i) => (
           <Page key={i}>
-            {page.documents.map((document) => (
-              <SearchItem key={document.isbn} search={search} {...document} />
-            ))}
+            {page.documents.length !== 0 ? (
+              page.documents.map((document) => (
+                <SearchItem key={document.isbn} search={search} {...document} />
+              ))
+            ) : (
+              <ResultWrapper>
+                <span>검색 결과가 없습니다.</span>
+              </ResultWrapper>
+            )}
           </Page>
         ))
       ) : isLoading ? (

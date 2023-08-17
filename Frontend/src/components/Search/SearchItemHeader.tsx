@@ -8,7 +8,7 @@ interface IProps {
 const Container = styled.h1`
   font-size: 18px;
   line-height: 20px;
-  font-weight: 800;
+  font-weight: 700;
   color: ${({ theme }) => theme.mode.typo_sub};
   margin-bottom: 8px;
   float: left;

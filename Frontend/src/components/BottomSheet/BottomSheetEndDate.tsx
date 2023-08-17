@@ -15,7 +15,7 @@ const Container = styled.div`
     padding: 0 20px;
     border: 0;
     border-radius: 12px;
-    font-weight: 600;
+    font-weight: 700;
     outline: none;
     cursor: pointer;
   }

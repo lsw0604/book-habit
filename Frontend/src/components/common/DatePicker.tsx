@@ -47,7 +47,7 @@ const Container = styled.div`
   .react-datepicker__header {
     width: 100%;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     border: 0;
     background-color: ${({ theme }) => theme.mode.main};
   }
@@ -67,7 +67,7 @@ const Container = styled.div`
   .react-datepicker__current-month {
     width: 100%;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${({ theme }) => theme.mode.typo_main};
   }
 
@@ -80,7 +80,7 @@ const Container = styled.div`
     margin: 0;
     font-size: 12px;
     line-height: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${({ theme }) => theme.mode.typo_sub};
     &:first-child {
       color: ${customize.red['400']};
@@ -101,7 +101,7 @@ const Container = styled.div`
     align-items: center;
     margin: 0;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: ${({ theme }) => theme.mode.typo_main};
     outline: none;
     &:hover {

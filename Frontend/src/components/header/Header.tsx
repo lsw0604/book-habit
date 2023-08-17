@@ -44,6 +44,8 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
   const navigate = useNavigate();
   const userState = useRecoilValue(userAtom);
 
+  console.log(isLoading);
+
   return (
     <Container>
       <Logo onClick={() => navigate('/')}>Logo</Logo>
@@ -57,8 +59,12 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
               <Loader />
             </LoaderWrapper>
           )
-        ) : (
+        ) : !isLoading ? (
           <HeaderAuth />
+        ) : (
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
         )}
       </Wrapper>
     </Container>

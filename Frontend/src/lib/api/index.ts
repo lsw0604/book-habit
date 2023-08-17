@@ -1,5 +1,5 @@
-import Axios, { AxiosError } from 'axios';
-import { refreshAPI } from './auth';
+import Axios from 'axios';
+import { logoutAPI, refreshAPI } from './auth';
 
 export const axios = Axios.create({
   baseURL: import.meta.env.VITE_SERVER,
@@ -11,16 +11,16 @@ export const axios = Axios.create({
 });
 
 axios.interceptors.request.use(
-  (config) => {
-    if (window.localStorage.getItem('ACCESS')) {
-      config.headers.Authorization = `bearer ${window.localStorage.getItem(
-        'ACCESS'
-      )}`;
-    }
+  async (config) => {
+    config.headers.Authorization = `bearer ${window.localStorage.getItem(
+      'ACCESS'
+    )}`;
+    config.headers.Accept = 'application/json';
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    Promise.reject(error);
   }
 );
 
@@ -28,42 +28,27 @@ axios.interceptors.response.use(
   (response) => {
     return response;
   },
-  async (
-    error: AxiosError<{
-      message: string;
-      status: 'error' | 'success';
-      strategy: 'access' | 'refresh';
-    }>
-  ) => {
-    const response = error.response;
-    const status = error.response?.status;
-    const message = response?.data.message;
-    const strategy = response?.data.strategy;
+  async (error) => {
+    const originalRequest = error.config;
+    const statusCode = error.response.status;
+    const { message, strategy } = error.response.data;
 
-    if (strategy === 'access') {
-      if (
-        (response && status === 403 && message === 'No auth token') ||
-        (response && status === 403 && message === 'jwt malformed') ||
-        (response && status === 403 && message === 'jwt expired') ||
-        (response && status === 403 && message === 'invalid token')
-      ) {
-        const { name, id, email, status, message, age, gender, access_jwt } =
-          await refreshAPI();
-        if (status === 'success' && message === 'REFRESH_TOKEN_VERIFIED') {
-          window.localStorage.setItem('ACCESS', access_jwt);
-        }
+    if (statusCode === 403 && message && strategy === 'access') {
+      const { access_jwt } = await refreshAPI();
 
-        return Promise.reject({
-          email,
-          id,
-          name,
-          status,
-          message,
-          age,
-          gender,
-        });
-      }
+      originalRequest._retry = true;
+      window.localStorage.setItem('ACCESS', access_jwt);
+      return axios(originalRequest);
     }
+
+    if (statusCode === 403 && message && strategy === 'refresh') {
+      await logoutAPI();
+
+      originalRequest._retry = true;
+      window.localStorage.removeItem('ACCESS');
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );

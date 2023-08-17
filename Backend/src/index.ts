@@ -1,4 +1,5 @@
 import http from 'http';
+import path from 'path';
 import bodyParser from 'body-parser';
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -44,6 +45,7 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../../Frontend/dist')));
 
 app.use(passport.initialize());
 app.use(passport.session());

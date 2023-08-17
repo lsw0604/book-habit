@@ -5,9 +5,10 @@ const globalStyle = css`
   ${reset};
   * {
     box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
   }
   body {
-    font-family: 'SUIT', 'Noto Sans';
+    font-family: 'Noto Sans KR', sans-serif;
     font-weight: 700;
   }
   a {

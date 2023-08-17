@@ -49,22 +49,15 @@ type AccessResponseType = {
   id: number;
   name: string;
   email: string;
-  message: string;
   gender: GenderType;
   age: number;
-  status: StatusType;
   provider: ProviderType;
+  message: string;
+  status: StatusType;
 };
 
-type RefreshResponseType = {
-  id: number;
-  name: string;
-  email: string;
-  gender: GenderType;
-  age: number;
+type RefreshResponseType = AccessResponseType & {
   access_jwt: string;
-  message: string;
-  status: StatusType;
 };
 
 type LogoutResponseType = {

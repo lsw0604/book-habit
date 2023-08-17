@@ -55,7 +55,7 @@ const Header = styled.h1`
   text-align: center;
   font-size: 28px;
   line-height: 16px;
-  font-weight: 800;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.sub};
 `;
 

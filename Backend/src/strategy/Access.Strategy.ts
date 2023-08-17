@@ -31,8 +31,6 @@ const AccessVerify: VerifyCallback = async (payload, done) => {
 
       const [rows] = await connection.query<IProps[]>(SQL, VALUES);
 
-      console.log(rows);
-
       if (rows[0] !== undefined) {
         const { id, name, email, gender, age, provider } = rows[0];
         connection.release();

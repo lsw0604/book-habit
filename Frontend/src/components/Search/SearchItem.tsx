@@ -52,7 +52,7 @@ const Span = styled.span`
   width: 100%;
   display: inline-flex;
   gap: 8px;
-  font-weight: 600;
+  font-weight: 700;
   overflow: hidden;
   color: ${({ theme }) => theme.mode.typo_sub};
 `;
