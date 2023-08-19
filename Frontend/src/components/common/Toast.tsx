@@ -19,8 +19,10 @@ const icons = {
 const Container = styled.div`
   width: 100%;
   position: fixed;
-  bottom: 0px;
+  margin-top: 10px;
+  top: 4rem;
   height: auto;
+  z-index: 9999;
 `;
 
 const Item = styled.div`

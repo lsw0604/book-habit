@@ -99,7 +99,7 @@ const Title = styled.h1<{ isDescription: boolean }>`
   display: inline-flex;
   font-size: 20px;
   line-height: 26px;
-  font-weight: 900;
+  font-weight: 700;
   font-size: 20px;
   color: ${({ theme }) => theme.mode.typo_main};
   line-height: ${({ isDescription }) => (isDescription ? '26px' : '44px')};

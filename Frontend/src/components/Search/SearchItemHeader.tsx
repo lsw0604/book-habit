@@ -29,7 +29,11 @@ export default function SearchItemHeader({ title, query }: IProps) {
     return (
       <Container>
         {splitTitle.map((word, index) =>
-          word === query ? <Highlighted key={index}>{word}</Highlighted> : word
+          regExp.test(word) ? (
+            <Highlighted key={index}>{word}</Highlighted>
+          ) : (
+            word
+          )
         )}
       </Container>
     );

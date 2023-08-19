@@ -25,7 +25,6 @@ export default function useKakaoSignupHook() {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
-      console.log('[useKakaoSignupHook][ERROR]', error);
       const { message, status } = error.response.data;
       addToast({ message, status });
     },

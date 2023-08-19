@@ -1,7 +1,5 @@
 import { ThemeProvider } from 'styled-components';
 import { ReactElement } from 'react';
-import '@fontsource/noto-sans-kr/400.css';
-import '@fontsource/noto-sans-kr/700.css';
 
 import GlobalStyle from './style/globalStyle';
 import Router from 'pages/Router';

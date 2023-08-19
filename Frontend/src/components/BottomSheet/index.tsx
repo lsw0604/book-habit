@@ -14,12 +14,10 @@ import Button from 'components/common/Button';
 import useReadModalHook from '@hooks/useReadModalHook';
 import useReadingModalHook from '@hooks/useReadingModalHook';
 import useReadToModalHook from '@hooks/useReadToModalHook';
-import {
-  readBookRegisterAPI,
-  readToBookRegisterAPI,
-  readingBookRegisterAPI,
-} from 'lib/api/book';
 import BottomSheetSkeleton from './BottomSheetSkeleton';
+import useReadingRegisterHook from '@hooks/useReadingRegisterHook';
+import useReadRegisterHook from '@hooks/useReadRegisterHook';
+import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
 
 const Container = styled(motion.form)`
   position: absolute;
@@ -74,6 +72,12 @@ export default function Index() {
     readToBookFormUseValidate,
   } = useReadToModalHook();
 
+  const { mutate: readingMutate, isLoading: readingLoading } =
+    useReadingRegisterHook();
+  const { mutate: readMutate, isLoading: readLoading } = useReadRegisterHook();
+  const { mutate: readToMutate, isLoading: readToLoading } =
+    useReadToRegisterHook();
+
   const options: RadioGroupOptionType<string>[] = [
     {
       label: '읽은 책',
@@ -123,7 +127,7 @@ export default function Index() {
           endDate: readBookState.endDate as Date,
           rating: readBookState.rating as number,
         };
-        await readBookRegisterAPI(body);
+        return readMutate(body);
       }
     } else if (value === '읽는중') {
       onChangeReadingBookUseValidation(true);
@@ -133,7 +137,7 @@ export default function Index() {
           startDate: readingBookState.startDate as Date,
           page: readingBookState.page as number,
         };
-        await readingBookRegisterAPI(body);
+        return readingMutate(body);
       }
     } else if (value === '읽고싶음') {
       onChangeReadToBookUseValidation(true);
@@ -142,7 +146,7 @@ export default function Index() {
           ...registerBody,
           rating: readToBookState.rating as number,
         };
-        await readToBookRegisterAPI(body);
+        return readToMutate(body);
       }
     }
   };
@@ -179,7 +183,12 @@ export default function Index() {
           </AnimatePresence>
         </Stack>
         <Stack>
-          <Button type="submit">등록하기</Button>
+          <Button
+            type="submit"
+            isLoading={readingLoading || readLoading || readToLoading}
+          >
+            등록하기
+          </Button>
         </Stack>
       </Contents>
     </Container>

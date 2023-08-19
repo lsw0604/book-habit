@@ -3,10 +3,12 @@ import { useSetRecoilState } from 'recoil';
 
 import { accessAPI } from 'lib/api/auth';
 import { userAtom } from 'recoil/user';
+import useToastHook from './useToastHook';
 
 export default function useAccessHook() {
   const userSetState = useSetRecoilState(userAtom);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { addToast } = useToastHook();
 
   const fetch = async () => {
     try {
@@ -25,8 +27,11 @@ export default function useAccessHook() {
         });
         setIsLoading(false);
       }
-    } catch (err) {
-      console.log(err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err.response.data.status) {
+        addToast({ status: 'error', message: '로그인을 다시해주세요.' });
+      }
       setIsLoading(false);
     }
   };

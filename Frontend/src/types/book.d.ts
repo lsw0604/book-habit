@@ -68,3 +68,8 @@ type ReadBookRegisterType = BookRegisterType & {
 type ReadToBookRegisterType = BookRegisterType & {
   rating: number;
 };
+
+type BookRegisterResponseType = {
+  message: string;
+  status: 'success' | 'error';
+};

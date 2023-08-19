@@ -17,7 +17,7 @@ const Container = styled.nav`
   justify-content: space-between;
   background-color: ${({ theme }) => theme.mode.main};
   padding: 0 2rem;
-  z-index: 9999;
+  z-index: 9998;
   box-shadow: ${({ theme }) => theme.shadow.n};
 `;
 
@@ -43,8 +43,6 @@ const LoaderWrapper = styled.div`
 export default function Index({ isLoading }: { isLoading: boolean }) {
   const navigate = useNavigate();
   const userState = useRecoilValue(userAtom);
-
-  console.log(isLoading);
 
   return (
     <Container>
