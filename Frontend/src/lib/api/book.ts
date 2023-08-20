@@ -8,6 +8,13 @@ export const rankingAPI = async (page: number, limit: number) => {
   return data;
 };
 
+export const myBooksAPI = async (page: number) => {
+  const { data } = await axios.get<MyBookResponseType>(
+    `/api/books/my_books?page=${page}`
+  );
+  return data;
+};
+
 export const booksSearchAPI = async (body: string, page: number) => {
   const { data } = await Axios.get(
     `https://dapi.kakao.com/v3/search/book?query=${encodeURI(

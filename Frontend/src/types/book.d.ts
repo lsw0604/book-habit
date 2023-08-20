@@ -73,3 +73,18 @@ type BookRegisterResponseType = {
   message: string;
   status: 'success' | 'error';
 };
+
+type MyBookResponseType = {
+  nextPage?: number;
+  books: MyBookType[];
+};
+
+type MyBookType = Omit<BooksType, 'price'> & {
+  users_books_id: number;
+  status: '읽고싶음' | '다읽음' | '읽는중';
+  start_date: Date | null;
+  end_date: Date | null;
+  rating: number | null;
+  page: number | null;
+  created_at: Date;
+};

@@ -7,7 +7,7 @@ import Kakao from './KakaoPage';
 import Search from './SearchPage';
 import KakaoRegister from './KakaoRegisterPage';
 import Register from './RegisterPage';
-import MyProfile from 'components/user/MyProfile';
+import MyProfile from './Profile';
 import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
 import AuthLayout from './layout/AuthLayout';
