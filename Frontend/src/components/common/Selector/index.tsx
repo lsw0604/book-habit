@@ -42,12 +42,9 @@ const Select = styled.select`
 `;
 
 const Option = styled.option`
-  width: auto;
+  width: 100%;
   height: auto;
-  overflow: hidden;
   padding: 0 1rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `;
 
 const Icon = styled.i`

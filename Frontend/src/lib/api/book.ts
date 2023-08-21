@@ -8,9 +8,9 @@ export const rankingAPI = async (page: number, limit: number) => {
   return data;
 };
 
-export const myBooksAPI = async (page: number) => {
+export const myBooksAPI = async (page: number, status: BookStateType) => {
   const { data } = await axios.get<MyBookResponseType>(
-    `/api/books/my_books?page=${page}`
+    `/api/books/my_books?page=${page}&status=${status}`
   );
   return data;
 };

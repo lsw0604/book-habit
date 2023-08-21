@@ -79,12 +79,13 @@ type MyBookResponseType = {
   books: MyBookType[];
 };
 
-type MyBookType = Omit<BooksType, 'price'> & {
-  users_books_id: number;
-  status: '읽고싶음' | '다읽음' | '읽는중';
+type MyBookType = Pick<BooksType, 'books_id' | 'isbn' | 'image'> & {
+  status: BookStateType;
   start_date: Date | null;
   end_date: Date | null;
   rating: number | null;
   page: number | null;
   created_at: Date;
 };
+
+type BookStateType = '읽고싶음' | '다읽음' | '읽는중' | '';

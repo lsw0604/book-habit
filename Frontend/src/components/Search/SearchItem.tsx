@@ -124,9 +124,6 @@ export default function SearchItem({
         <Span>
           출판<P>{`${date[0]}년 ${date[1]}월`}</P>
         </Span>
-        <Span>
-          ISBN<P>{ISBN[1]}</P>
-        </Span>
       </InfoWrapper>
     </Container>
   );

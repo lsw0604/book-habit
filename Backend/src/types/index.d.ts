@@ -58,6 +58,22 @@ export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
   provider: ProviderType;
 }
 
+export interface IMyBooksResponse extends RowDataPacket {
+  books_id: number;
+  isbn: string;
+  status: string;
+  image: string;
+  start_date: Date;
+  end_date: Date;
+  rating: number;
+  page: number;
+  created_at: Date;
+}
+
+export interface IMyBooksCountResponse extends RowDataPacket {
+  books_id: number;
+}
+
 export type ResponseLoginType = {
   id: number;
   name: string;

@@ -12,9 +12,12 @@ const Container = styled.div`
   padding: 1.5rem 0;
 `;
 
+const Heading = styled.h1``;
+
 export default function Profile() {
   return (
     <Container>
+      <Heading>내 서제의 책</Heading>
       <MyBooks />
     </Container>
   );
