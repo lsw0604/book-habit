@@ -1,14 +1,24 @@
-import { SelectHTMLAttributes } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  MouseEvent as ReactMouseEvent,
+} from 'react';
 import styled from 'styled-components';
 
+import Divider from 'components/common/Divider';
 import ErrorMessage from 'components/common/Message/ErrorMessage';
-import { customize } from '@style/colors';
-import { IconDownArrow } from '@style/icons';
+import { IconClose, IconDownArrow } from '@style/icons';
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
-  height: 40px;
-  display: flex;
+  min-height: 40px;
+  border: 2px solid ${({ theme }) => theme.mode.typo_sub};
+  border-radius: 5px;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  outline: none;
 `;
 
 const Label = styled.span`
@@ -20,84 +30,228 @@ const Label = styled.span`
   line-height: 18px;
 `;
 
-const Select = styled.select`
-  width: 100%;
-  height: 100%;
-  background-color: ${({ theme }) => theme.mode.sub};
-  border: 2px solid ${({ theme }) => theme.mode.typo_sub};
-  border-radius: 5px;
-  font-size: 1rem;
-  padding: 0 1rem;
-  color: ${({ theme }) => theme.mode.typo_sub};
-  outline: none;
-  -webkit-appearance: none;
-  &:focus {
-    border: 2px solid ${({ theme }) => theme.mode.typo_sub};
-  }
-  &:disabled {
-    color: ${customize.gray['400']};
-    background-color: ${customize.gray['400']};
-    cursor: not-allowed;
-  }
+const Value = styled.span`
+  flex-grow: 1;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  text-align: center;
+  align-items: center;
 `;
 
-const Option = styled.option`
+const ValueContainer = styled.div`
+  display: flex;
+  gap: 8px;
   width: 100%;
-  height: auto;
-  padding: 0 1rem;
+  height: 100%;
+`;
+
+const SingleTag = styled.span`
+  font-size: 16px;
+  line-height: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
+
+const ValueTag = styled.button`
+  display: flex;
+  align-items: center;
+  border: 1px solid ${({ theme }) => theme.mode.typo_sub};
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  background-color: ${({ theme }) => theme.mode.main};
+  color: ${({ theme }) => theme.mode.typo_main};
+  padding: 0.15rem 0.25rem;
+  gap: 8px;
+  text-align: center;
+`;
+
+const ValueIndicator = styled.div`
+  display: flex;
+  width: auto;
+  height: 100%;
+  gap: 8px;
 `;
 
 const Icon = styled.i`
-  width: 0;
-  height: 0;
-  position: relative;
-  top: 4px;
-  right: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   svg {
-    width: 2rem;
-    height: 2rem;
-    fill: ${({ theme }) => theme.mode.typo_sub};
+    width: 1rem;
+    height: 1rem;
+    fill: ${({ theme }) => theme.mode.typo_main};
   }
 `;
 
-interface IProps<T extends number | string>
-  extends SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string;
-  options: T[];
-  isValid?: boolean;
-  useValidation?: boolean;
-  errorMessage?: string;
-  disabledOptions?: T[];
-}
+const Options = styled.ul<{ isOpen: boolean }>`
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+  max-height: 200px;
+  overflow-y: auto;
+  border: 2px solid ${({ theme }) => theme.mode.typo_sub};
+  border-radius: 0.25em;
+  width: 100%;
+  left: 0;
+  top: calc(100% + 0.75em);
+  background-color: ${({ theme }) => theme.mode.sub};
+  z-index: 100;
+`;
 
-export default function Selector<T extends string | number>({
-  label,
+const Option = styled.li`
+  padding: 0.25em 0.5em;
+  cursor: pointer;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid ${({ theme }) => theme.mode.typo_sub};
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const Empty = styled.div`
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
+
+/**
+ * * Multiple true : const [value, setValue] = useState<SelectorOptionType[]>([]);
+ * * Multiple false : const [value, setValue] = useState<SelectorOptionType | undefined>(undefined);
+ */
+export default function Index({
+  multiple,
+  value,
+  onChange,
   options,
+  label,
   isValid,
-  useValidation,
   errorMessage,
-  disabledOptions,
-  ...props
-}: IProps<T>) {
+  useValidation,
+}: SelectorType) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [selects, setSelects] = useState<string[]>(options);
+
+  const selectOption = (option: string) => {
+    if (multiple) {
+      if (value.includes(option)) {
+        onChange(value.filter((o) => o !== option));
+      } else {
+        onChange([...value, option]);
+      }
+    } else {
+      if (option !== value) return onChange(option);
+    }
+  };
+
+  const onRemoveHandler = (event: ReactMouseEvent, value: string) => {
+    event.stopPropagation();
+    selectOption(value);
+    setSelects((prev) => [...prev, value]);
+  };
+
+  const initSelectOption = () => {
+    setSelects(options);
+  };
+
+  const onClearHandler = (event: ReactMouseEvent) => {
+    event.stopPropagation();
+    setIsOpen(false);
+    initSelectOption();
+    return multiple ? onChange([]) : onChange(undefined);
+  };
+
+  const handleOptions = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const onAddOption = (event: ReactMouseEvent, option: string) => {
+    if (multiple) {
+      event.stopPropagation();
+      selectOption(option);
+      setSelects((prev) => prev.filter((v) => v !== option));
+      setIsOpen(false);
+    } else {
+      event.stopPropagation();
+      selectOption(option);
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <>
       {label && <Label>{label}</Label>}
-      <Container>
-        <Select {...props}>
-          {disabledOptions &&
-            disabledOptions.map((option, i) => (
-              <Option key={i} value={option} disabled>
+      <Container ref={containerRef} onClick={handleOptions}>
+        <ValueContainer>
+          <Value>
+            {multiple ? (
+              value.map((v, idx) => (
+                <ValueTag
+                  key={idx}
+                  onClick={(event) => onRemoveHandler(event, v)}
+                >
+                  {v}
+                  <span className="remove-btn">&times;</span>
+                </ValueTag>
+              ))
+            ) : (
+              <SingleTag>{value}</SingleTag>
+            )}
+          </Value>
+          {multiple ? (
+            <ValueIndicator>
+              <Icon onClick={(event) => onClearHandler(event)}>
+                <IconClose />
+              </Icon>
+              <Divider divider={1} />
+              <Icon>
+                <IconDownArrow />
+              </Icon>
+            </ValueIndicator>
+          ) : (
+            <Icon>
+              <IconDownArrow />
+            </Icon>
+          )}
+        </ValueContainer>
+        <Options isOpen={isOpen}>
+          {selects.length === 0 ? (
+            <Empty>
+              <span>목록이 없습니다.</span>
+            </Empty>
+          ) : (
+            selects.map((option, index) => (
+              <Option key={index} onClick={(e) => onAddOption(e, option)}>
                 {option}
               </Option>
-            ))}
-          {options &&
-            options.map((option, i) => (
-              <Option key={i} value={option}>
-                {option}
-              </Option>
-            ))}
-        </Select>
-        <Icon>{<IconDownArrow />}</Icon>
+            ))
+          )}
+        </Options>
       </Container>
       {errorMessage && isValid && useValidation && (
         <ErrorMessage message={errorMessage} />

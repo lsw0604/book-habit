@@ -89,3 +89,4 @@ type MyBookType = Pick<BooksType, 'books_id' | 'isbn' | 'image'> & {
 };
 
 type BookStateType = '읽고싶음' | '다읽음' | '읽는중' | '';
+type SelectorBookType = '읽고싶음' | '다읽음' | '읽는중' | '전체보기';

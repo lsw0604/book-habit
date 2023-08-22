@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useRef, useEffect, useState, ChangeEvent } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import useMyBookHook from '@hooks/useMyBookHook';
 import Loader from 'components/common/Loader';
 import MyBooksItem from 'components/MyBooks/MyBooksItem';
@@ -48,16 +48,18 @@ const Page = styled.div`
 `;
 
 export default function Index() {
-  const [value, setValue] = useState<'다읽음' | '읽는중' | '읽고싶음' | ''>('');
+  const options: SelectorBookType[] = [
+    '전체보기',
+    '다읽음',
+    '읽는중',
+    '읽고싶음',
+  ];
+
+  const [value, setValue] = useState<string | undefined>('전체보기');
 
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useMyBookHook(value);
+    useMyBookHook(value as SelectorBookType);
   const lastPageRef = useRef<HTMLDivElement>(null);
-
-  const onChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    if (event.target.value === '전체보기') return setValue('');
-    setValue(event.target.value as BookStateType);
-  };
 
   useEffect(() => {
     const observerOptions = {
@@ -91,11 +93,11 @@ export default function Index() {
         </Container>
       ) : (
         <Wrapper>
-          <Selector<string>
-            label="내 책 상태"
-            options={['전체보기', '읽는중', '다읽음', '읽고싶음']}
+          <Selector
+            label="내 책 상태에 따라 서재에 보여지는게 달라요"
+            options={options}
             value={value}
-            onChange={onChange}
+            onChange={(e) => setValue(e)}
           />
           {data?.pages.map((page, index) => (
             <Page key={index}>
