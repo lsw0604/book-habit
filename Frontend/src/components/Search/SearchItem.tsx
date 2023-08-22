@@ -22,7 +22,6 @@ const ImageWrapper = styled.div`
   padding: 0;
   min-height: 160px;
   min-width: 100px;
-
   display: flex;
   justify-content: center;
   align-items: center;

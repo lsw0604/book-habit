@@ -7,7 +7,6 @@ import Selector from 'components/common/Selector';
 
 const Container = styled.div`
   width: 100%;
-  height: 100;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,9 +41,17 @@ const Wrapper = styled.div`
 `;
 
 const Page = styled.div`
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  @media screen and (min-width: 414px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media screen and (min-width: 1014px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
 `;
 
 export default function Index() {

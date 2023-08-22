@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
-import SearchBox from 'components/Search/SearchBox';
 import SelectorBox from 'components/common/Selector';
 
 const Container = styled.div`
@@ -31,7 +30,6 @@ const HomePage = () => {
   return (
     <Container>
       <Content>
-        {/* <SearchBox /> */}
         <SelectorBox
           label="싱글"
           options={options}

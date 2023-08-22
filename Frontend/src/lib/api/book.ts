@@ -15,6 +15,13 @@ export const myBooksAPI = async (page: number, status: SelectorBookType) => {
   return data;
 };
 
+export const myBooksInfoAPI = async (isbn: string) => {
+  const { data } = await axios.get<MyBookInfoResponse>(
+    `/api/books/my_books/${isbn}`
+  );
+  return data;
+};
+
 export const booksSearchAPI = async (body: string, page: number) => {
   const { data } = await Axios.get(
     `https://dapi.kakao.com/v3/search/book?query=${encodeURI(

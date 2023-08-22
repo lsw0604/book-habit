@@ -101,7 +101,7 @@ export default function HeaderProfileDropdown() {
   return (
     <Container>
       <Ul>
-        <Li onClick={() => navigate(`/profile/${userState.id}`)}>
+        <Li onClick={() => navigate(`/my_books`)}>
           <Label>
             <span>내 프로필</span>
           </Label>

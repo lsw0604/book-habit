@@ -12,11 +12,21 @@ const Container = styled.div`
 
 const Page = styled.div`
   margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
   :first-child {
     margin-top: 0px;
+  }
+  @media screen and (min-width: 414px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media screen and (min-width: 814px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media screen and (min-width: 1614px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
   }
 `;
 

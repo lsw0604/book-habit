@@ -7,10 +7,10 @@ import Kakao from './KakaoPage';
 import Search from './SearchPage';
 import KakaoRegister from './KakaoRegisterPage';
 import Register from './RegisterPage';
-import MyProfile from './Profile';
+import MyBooks from './MyBooksPage';
+import MyBooksInfo from './MyBooksInfoPage';
 import DefaultLayout from './layout/DefaultLayout';
 import PublicLayout from './layout/PublicLayout';
-import AuthLayout from './layout/AuthLayout';
 import KakaoLayout from './layout/KakaoLayout';
 import KakaoRegisterLayout from './layout/KakaoRegisterLayout';
 
@@ -30,19 +30,21 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
               <Route element={<KakaoLayout />}>
                 <Route path="/" Component={Home} />
                 <Route path="/search" Component={Search} />
+                <Route path="/my_books" Component={MyBooks} />
+                <Route path="/my_books/:isbn" Component={MyBooksInfo} />
                 <Route element={<PublicLayout />}>
                   <Route path="/login" Component={Login} />
                   <Route path="/login/kakao" Component={Kakao} />
                   <Route path="/register" Component={Register} />
-                </Route>
-                <Route element={<AuthLayout />}>
-                  <Route path="/profile/:id" Component={MyProfile} />
                 </Route>
               </Route>
             </Routes>
           </DefaultLayout>
         </section>
       </main>
+      <footer>
+        <div>footer</div>
+      </footer>
     </BrowserRouter>
   );
 }

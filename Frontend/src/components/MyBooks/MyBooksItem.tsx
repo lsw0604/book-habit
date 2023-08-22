@@ -1,4 +1,5 @@
 import { IconImage } from '@style/icons';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface IProps {
@@ -8,13 +9,15 @@ interface IProps {
 }
 
 const Container = styled.div`
-  width: 100%;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
+
+const StatusWrapper = styled.div``;
 
 const ImageWrapper = styled.div`
   background-color: rgba(0, 0, 0, 0.1);
@@ -27,14 +30,12 @@ const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   img {
     border-radius: 5px;
     object-fit: fill;
     width: 180px;
     height: 240px;
   }
-
   svg {
     width: 2rem;
     height: 2rem;
@@ -43,12 +44,13 @@ const ImageWrapper = styled.div`
 `;
 
 export default function MyBooksItem({ isbn, image, status }: IProps) {
+  const navigate = useNavigate();
   return (
-    <Container>
+    <Container onClick={() => navigate(`/my_books/${isbn}`)}>
       <ImageWrapper>
         {image !== null ? <img src={image} alt={isbn} /> : <IconImage />}
       </ImageWrapper>
-      <div>{status}</div>
+      <StatusWrapper>{status}</StatusWrapper>
     </Container>
   );
 }

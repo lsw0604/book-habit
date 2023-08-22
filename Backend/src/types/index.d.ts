@@ -58,6 +58,18 @@ export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
   provider: ProviderType;
 }
 
+interface IMyBooksInfo extends RowDataPacket {
+  status: '다읽음' | '읽는중' | '읽고싶음';
+  start_date: Date | null;
+  end_date: Date | null;
+  created_at: Date;
+  updated_at: Date | null;
+  page: number | null;
+  rating: number | null;
+  isbn: string;
+  title: string;
+}
+
 export interface IMyBooksResponse extends RowDataPacket {
   books_id: number;
   isbn: string;
