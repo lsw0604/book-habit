@@ -23,19 +23,10 @@ const Content = styled.div`
 `;
 
 const HomePage = () => {
-  const options = [
-    { label: 'test', value: 'test1' },
-    { label: 'test2', value: 'test2' },
-    { label: 'test3', value: 'test3' },
-    { label: 'test4', value: 'test4' },
-    { label: 'test5', value: 'test5' },
-    { label: 'test6', value: 'test6' },
-  ];
+  const options = ['test', 'test2', 'test3', 'test4', 'test5', 'test6'];
 
-  const [multiValue, setMultiValue] = useState<SelectorOptionType[]>([]);
-  const [singleValue, setSingleValue] = useState<
-    SelectorOptionType | undefined
-  >(undefined);
+  const [multiValue, setMultiValue] = useState<string[]>([]);
+  const [singleValue, setSingleValue] = useState<string | undefined>(undefined);
 
   return (
     <Container>
