@@ -26,7 +26,7 @@ export default async function myBookAlready(req: Request, res: Response, next: N
         'FROM diary_status ds ' +
         'LEFT JOIN users_books ub ON ds.users_books_id = ub.id ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-        'WHERE ? = 20 AND isbn = ? ' +
+        'WHERE ub.users_id = ? AND isbn = ? ' +
         'ORDER BY created_at DESC ' +
         'LIMIT 1';
       const VALUE = [id, isbn];

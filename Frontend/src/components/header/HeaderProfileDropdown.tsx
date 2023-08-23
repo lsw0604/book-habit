@@ -103,12 +103,12 @@ export default function HeaderProfileDropdown() {
       <Ul>
         <Li onClick={() => navigate(`/my_books`)}>
           <Label>
-            <span>내 프로필</span>
+            <span>나의 서재</span>
           </Label>
         </Li>
         <Li onClick={() => navigate('/search')}>
           <Label>
-            <span>책 추가하기</span>
+            <span>서재에 책 꽂기</span>
           </Label>
         </Li>
         <Li onClick={handleLogout}>

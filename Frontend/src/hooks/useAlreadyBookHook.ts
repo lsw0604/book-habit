@@ -20,8 +20,7 @@ export default function useAlreadyBookHook(isbn: string) {
       [REACT_QUERY_KEY, isbn],
       () => myBooksAlreadyAPI(isbn),
       {
-        staleTime: 1000 * 50,
-        cacheTime: 1000 * 5,
+        staleTime: 1000 * 5,
       }
     );
 

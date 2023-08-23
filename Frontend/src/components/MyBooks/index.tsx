@@ -54,6 +54,33 @@ const Page = styled.div`
   }
 `;
 
+const EmptyPage = styled.div`
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  height: calc(100vh - 15rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  color: ${({ theme }) => theme.mode.typo_main};
+  .wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    gap: 3rem;
+  }
+  .header {
+    width: 100%;
+    text-align: center;
+  }
+  .content {
+    width: 100%;
+    text-align: center;
+  }
+`;
+
 export default function Index() {
   const options: SelectorBookType[] = [
     '전체보기',
@@ -106,18 +133,35 @@ export default function Index() {
             value={value}
             onChange={(e) => setValue(e)}
           />
-          {data?.pages.map((page, index) => (
-            <Page key={index}>
-              {page.books.map((book, index) => (
-                <Item
-                  key={index}
-                  image={book.image}
-                  isbn={book.isbn}
-                  status={book.status}
-                />
-              ))}
-            </Page>
-          ))}
+          {data &&
+            data.pages.map((page, index) => (
+              <Page key={index}>
+                {page.books.length !== 0
+                  ? page.books.map((book, index) => (
+                      <Item
+                        key={index}
+                        image={book.image}
+                        isbn={book.isbn}
+                        status={book.status}
+                      />
+                    ))
+                  : null}
+              </Page>
+            ))}
+          {data && data.pages && data.pages[0].books.length === 0 && (
+            <EmptyPage>
+              <span className="header">서재가 비어있어요.</span>
+              <span className="wrapper">
+                <span className="content">읽었거나</span>
+                <span className="content">읽는중이거나</span>
+                <span className="content">읽고싶은 책들을</span>
+                <span className="content">추가해보세요</span>
+                <span className="content">.</span>
+                <span className="content">.</span>
+                <span className="content">.</span>
+              </span>
+            </EmptyPage>
+          )}
           {isFetching ? (
             <div className="loader">
               <Loader size={2} />

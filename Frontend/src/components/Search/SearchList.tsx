@@ -47,7 +47,7 @@ const ResultWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 440px;
+  height: calc(100vh - 14rem);
 `;
 
 interface IProps {
