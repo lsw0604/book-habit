@@ -11,13 +11,33 @@ interface IProps {
 const Container = styled.div`
   height: 100%;
   width: 100%;
+  border: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-const StatusWrapper = styled.div``;
+const StatusWrapper = styled.div`
+  content: '';
+  margin: 0;
+  padding: 0;
+  height: 0;
+  width: 180px;
+`;
+
+const StatusInfo = styled.div`
+  position: relative;
+  width: 100%;
+  height: 2rem;
+  bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.spinner};
+  border-radius: 0 0 5px 5px;
+  opacity: 0.5;
+`;
 
 const ImageWrapper = styled.div`
   background-color: rgba(0, 0, 0, 0.1);
@@ -33,8 +53,8 @@ const ImageWrapper = styled.div`
   img {
     border-radius: 5px;
     object-fit: fill;
-    width: 180px;
-    height: 240px;
+    width: 100%;
+    height: 100%;
   }
   svg {
     width: 2rem;
@@ -43,14 +63,16 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default function MyBooksItem({ isbn, image, status }: IProps) {
+export default function Item({ isbn, image, status }: IProps) {
   const navigate = useNavigate();
   return (
     <Container onClick={() => navigate(`/my_books/${isbn}`)}>
       <ImageWrapper>
         {image !== null ? <img src={image} alt={isbn} /> : <IconImage />}
       </ImageWrapper>
-      <StatusWrapper>{status}</StatusWrapper>
+      <StatusWrapper>
+        <StatusInfo>{status}</StatusInfo>
+      </StatusWrapper>
     </Container>
   );
 }

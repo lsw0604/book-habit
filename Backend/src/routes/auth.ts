@@ -14,10 +14,6 @@ const Router = express.Router();
 Router.post('/register', register);
 Router.post('/login', local);
 Router.get('/logout', logout);
-
-Router.get('/me', access, (req, res) => {
-  res.status(200).json({ ...req.user, status: 'success', message: 'ME_API_SUCCESS' });
-});
 Router.get('/access', access, (req, res) => {
   res.status(200).json({ ...req.user, status: 'success', message: 'ACCESS_TOKEN_VERIFIED' });
 });

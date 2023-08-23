@@ -29,9 +29,16 @@ export default function useAccessHook() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err.response.data.status) {
-        addToast({ status: 'error', message: '로그인을 다시해주세요.' });
-      }
+      addToast({ status: 'error', message: '로그인을 다시해주세요.' });
+      userSetState({
+        age: 0,
+        email: '',
+        gender: '',
+        id: 0,
+        isLogged: false,
+        name: '',
+        provider: '',
+      });
       setIsLoading(false);
     }
   };

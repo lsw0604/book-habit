@@ -14,12 +14,12 @@ export default function tokenGenerator({ id, email, name, kakao_access, kakao_re
 } {
   if (kakao_access || kakao_refresh) {
     const access_jwt = sign({ id, email, name, kakao_access }, process.env.ACCESS_TOKEN as string, {
-      expiresIn: '10m',
+      expiresIn: '1h',
     });
     const refresh_jwt = sign(
       { id, email, name, kakao_refresh },
       process.env.REFRESH_TOKEN as string,
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
 
     return {
@@ -29,9 +29,9 @@ export default function tokenGenerator({ id, email, name, kakao_access, kakao_re
   }
 
   const access_jwt = sign({ id, email, name }, process.env.ACCESS_TOKEN as string, {
-    expiresIn: '10m',
+    expiresIn: '1h',
   });
-  const refresh_jwt = sign({ id }, process.env.REFRESH_TOKEN as string, { expiresIn: '1h' });
+  const refresh_jwt = sign({ id }, process.env.REFRESH_TOKEN as string, { expiresIn: '24h' });
 
   return {
     access_jwt,

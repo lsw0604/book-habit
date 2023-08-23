@@ -16,7 +16,11 @@ const Stack = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function BottomSheetSkeleton() {
+export default function BottomSheetSkeleton({
+  disabled,
+}: {
+  disabled: boolean;
+}) {
   return (
     <Container
       initial={{ opacity: 0, y: '100%' }}
@@ -29,7 +33,19 @@ export default function BottomSheetSkeleton() {
         duration: 0.3,
       }}
     >
-      <Stack>어떤 책인지 선택해주세요.</Stack>
+      <Stack>
+        {!disabled ? (
+          '어떤 책인지 선택해주세요.'
+        ) : (
+          <p>
+            <span>이미 등록된 책입니다.</span>
+            <br />
+            <span>나의 서재에서</span>
+            <br />
+            <span>책 정보를 수정해주세요.</span>
+          </p>
+        )}
+      </Stack>
     </Container>
   );
 }

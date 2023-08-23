@@ -1,11 +1,19 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { IMyBooksResponse } from '../types';
+import { RowDataPacket } from 'mysql2';
 
-const NAMESPACE = 'BOOKS_MY_BOOK_INFO';
+const NAMESPACE = 'BOOKS_ALREADY';
 
-export default async function myBookInfo(req: Request, res: Response, next: NextFunction) {
+interface IProps extends RowDataPacket {
+  status: '다읽음' | '읽는중' | '읽고싶음';
+  start_date: Date | null;
+  end_date: Date | null;
+  page: number | null;
+  rating: number | null;
+}
+
+export default async function myBookAlready(req: Request, res: Response, next: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
@@ -14,19 +22,22 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
     const connection = await connectionPool.getConnection();
     try {
       const SQL =
-        'SELECT status, start_date, end_date, created_at, updated_at, page, rating, isbn, title ' +
+        'SELECT status, start_date, end_date, page, rating ' +
         'FROM diary_status ds ' +
         'LEFT JOIN users_books ub ON ds.users_books_id = ub.id ' +
-        'LEFT JOIN books bs ON ub.books_id = bs.id ' +
-        'WHERE users_id = ? AND isbn = ? ' +
-        'ORDER BY created_at DESC';
+        'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
+        'WHERE ? = 20 AND isbn = ? ' +
+        'ORDER BY created_at DESC ' +
+        'LIMIT 1';
       const VALUE = [id, isbn];
-      const [RESULT] = await connection.query<IMyBooksResponse[]>(SQL, VALUE);
-
+      const [RESULT] = await connection.query<IProps[]>(SQL, VALUE);
+      if (RESULT[0] === undefined) {
+        connection.release();
+        return res.status(200).json({ message: '아직 서재에 등록되지않은 소중한 책이에요.' });
+      }
+      const { end_date, page, rating, start_date, status } = RESULT[0];
       connection.release();
-      res.status(200).json({
-        books: RESULT,
-      });
+      return res.status(200).json({ status, end_date, page, start_date, rating });
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);
       connection.release();
@@ -39,7 +50,6 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
     }
   } catch (error: any) {
     logging.error(NAMESPACE, error.message, error);
-
     return res.status(500).json({
       code: error?.code,
       errno: error?.errno,

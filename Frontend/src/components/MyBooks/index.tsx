@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useRef, useEffect, useState } from 'react';
 import useMyBookHook from '@hooks/useMyBookHook';
 import Loader from 'components/common/Loader';
-import MyBooksItem from 'components/MyBooks/MyBooksItem';
+import Item from 'components/MyBooks/Item';
 import Selector from 'components/common/Selector';
 
 const Container = styled.div`
@@ -109,7 +109,7 @@ export default function Index() {
           {data?.pages.map((page, index) => (
             <Page key={index}>
               {page.books.map((book, index) => (
-                <MyBooksItem
+                <Item
                   key={index}
                   image={book.image}
                   isbn={book.isbn}

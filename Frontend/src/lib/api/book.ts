@@ -16,9 +16,14 @@ export const myBooksAPI = async (page: number, status: SelectorBookType) => {
 };
 
 export const myBooksInfoAPI = async (isbn: string) => {
-  const { data } = await axios.get<MyBookInfoResponse>(
+  const { data } = await axios.get<{ books: MyBookInfoResponseType[] }>(
     `/api/books/my_books/${isbn}`
   );
+  return data;
+};
+
+export const myBooksAlreadyAPI = async (isbn: string) => {
+  const { data } = await axios.get(`/api/books/my_books/already/${isbn}`);
   return data;
 };
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -18,6 +18,9 @@ import BottomSheetSkeleton from './BottomSheetSkeleton';
 import useReadingRegisterHook from '@hooks/useReadingRegisterHook';
 import useReadRegisterHook from '@hooks/useReadRegisterHook';
 import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
+import { userAtom } from 'recoil/user';
+import useAlreadyBookHook from '@hooks/useAlreadyBookHook';
+import Loader from 'components/common/Loader';
 
 const Container = styled(motion.form)`
   position: absolute;
@@ -50,6 +53,23 @@ const Heading = styled.h1`
   text-align: center;
 `;
 
+const SubHeading = styled.span`
+  margin-left: 10px;
+  margin-bottom: 8px;
+  display: block;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 14px;
+  line-height: 18px;
+`;
+
+const LoaderWrapper = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Stack = styled.div`
   position: relative;
   width: 100%;
@@ -58,6 +78,7 @@ const Stack = styled.div`
 
 export default function Index() {
   const [value, setValue] = useState<ModalType>('');
+  const { isLogged } = useRecoilValue(userAtom);
 
   const { readBookState, onChangeReadBookUseValidation, readBookFormValidate } =
     useReadModalHook();
@@ -106,6 +127,8 @@ export default function Index() {
   const { image, isbn, price, author, company, title } =
     useRecoilValue(modalAtom);
 
+  const { filteringData, refetch, isLoading } = useAlreadyBookHook(isbn);
+
   const registerBody: BookRegisterType = {
     author: author.join(','),
     company,
@@ -115,7 +138,6 @@ export default function Index() {
     status: value,
     title,
   };
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (value === '다읽음') {
@@ -151,6 +173,10 @@ export default function Index() {
     }
   };
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   return (
     <Container
       onSubmit={onSubmit}
@@ -166,6 +192,13 @@ export default function Index() {
     >
       <Contents>
         <Heading>이 책은 어떤 책인가요 ?</Heading>
+        {!isLoading ? (
+          filteringData && <SubHeading>{filteringData.result}</SubHeading>
+        ) : (
+          <LoaderWrapper>
+            <Loader size={2} />
+          </LoaderWrapper>
+        )}
         <Stack>
           <RadioButton<string>
             label={title}
@@ -176,7 +209,9 @@ export default function Index() {
         </Stack>
         <Stack style={{ height: '100%' }}>
           <AnimatePresence>
-            {value === '' && <BottomSheetSkeleton />}
+            {value === '' && (
+              <BottomSheetSkeleton disabled={filteringData.disabled} />
+            )}
             {value === '다읽음' && <BottomSheetRead />}
             {value === '읽는중' && <BottomSheetReading />}
             {value === '읽고싶음' && <BottomSheetToRead />}
@@ -184,10 +219,11 @@ export default function Index() {
         </Stack>
         <Stack>
           <Button
+            disabled={filteringData.disabled || !isLogged}
             type="submit"
             isLoading={readingLoading || readLoading || readToLoading}
           >
-            등록하기
+            추가하기
           </Button>
         </Stack>
       </Contents>
