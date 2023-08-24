@@ -9,7 +9,7 @@ export default function useMyBookHook(status: SelectorBookType) {
       {
         getNextPageParam: (response) => response.nextPage,
         staleTime: 20 * 1000,
-        cacheTime: 5 * 60 * 1000,
+        cacheTime: 5 * 1000,
       }
     );
 

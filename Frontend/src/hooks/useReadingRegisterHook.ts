@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, QueryClient } from '@tanstack/react-query';
 import { readingBookRegisterAPI } from 'lib/api/book';
 import useToastHook from './useToastHook';
 import { useSetRecoilState } from 'recoil';
@@ -12,6 +12,8 @@ export default function useReadingRegisterHook() {
   const { setReadingBookState } = useReadingModalHook();
 
   const REACT_QUERY_KEY = 'USE_READING_BOOK_REGISTER_KEY';
+  const queryClient = new QueryClient();
+
   const { mutate, isLoading } = useMutation<
     BookRegisterResponseType,
     AxiosError | Error | null,
@@ -30,6 +32,7 @@ export default function useReadingRegisterHook() {
         price: 0,
         title: '',
       });
+      return queryClient.invalidateQueries([REACT_QUERY_KEY]);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {

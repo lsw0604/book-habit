@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, QueryClient } from '@tanstack/react-query';
 import { myBooksAlreadyAPI } from 'lib/api/book';
 import dateParse from 'date-fns/parseISO';
 import addHours from 'date-fns/addHours';
@@ -15,12 +15,15 @@ interface IMyBooksAlreadyResponse {
 
 export default function useAlreadyBookHook(isbn: string) {
   const REACT_QUERY_KEY = 'MY_BOOKS_ALREADY';
+  const queryClient = new QueryClient();
   const { data, isLoading, isFetching, refetch } =
     useQuery<IMyBooksAlreadyResponse>(
       [REACT_QUERY_KEY, isbn],
       () => myBooksAlreadyAPI(isbn),
       {
-        staleTime: 1000 * 5,
+        onSuccess: () => {
+          return queryClient.invalidateQueries([REACT_QUERY_KEY, isbn]);
+        },
       }
     );
 

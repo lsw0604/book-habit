@@ -11,18 +11,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 10px;
-
-  .loader {
-    margin: 10px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-  }
-
-  .observer {
-    margin-bottom: 20px;
-  }
 `;
 
 const Loading = styled.div`
@@ -79,6 +67,18 @@ const EmptyPage = styled.div`
     width: 100%;
     text-align: center;
   }
+`;
+const FetchLoader = styled.div`
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 100%;
+`;
+
+const Observer = styled.div`
+  margin-bottom: 20px;
 `;
 
 export default function Index() {
@@ -163,11 +163,11 @@ export default function Index() {
             </EmptyPage>
           )}
           {isFetching ? (
-            <div className="loader">
+            <FetchLoader>
               <Loader size={2} />
-            </div>
+            </FetchLoader>
           ) : !hasNextPage ? null : (
-            <div ref={lastPageRef} className="observer" />
+            <Observer ref={lastPageRef} className="observer" />
           )}
         </Wrapper>
       )}

@@ -16,7 +16,7 @@ const Container = styled.div`
 const Contents = styled.div`
   margin-top: 2rem;
   width: 100%;
-  height: calc(100vh - 14rem);
+  height: calc(100vh - 11rem);
   border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.1);
   display: flex;
@@ -29,8 +29,9 @@ export default function MyBooksPage() {
   const userState = useRecoilValue(userAtom);
   return (
     <Container>
-      <MyBooks />
-      {userState.isLogged ? null : (
+      {userState.isLogged ? (
+        <MyBooks />
+      ) : (
         <Contents>
           <span>로그인이 필요해요.</span>
         </Contents>
