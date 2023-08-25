@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface IProps {
+  id: number;
   title: string;
   isbn: string;
   image?: string;
@@ -88,10 +89,10 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default function Item({ isbn, image, status, title }: IProps) {
+export default function Item({ isbn, image, status, title, id }: IProps) {
   const navigate = useNavigate();
   return (
-    <Container onClick={() => navigate(`/my_books/${isbn}`)}>
+    <Container onClick={() => navigate(`/my_books/${title}/${id}`)}>
       <StatusWrapper>
         <TitleInfo>{title}</TitleInfo>
       </StatusWrapper>

@@ -40,9 +40,7 @@ export default function BottomSheetSkeleton({
           <p>
             <span>이미 등록된 책입니다.</span>
             <br />
-            <span>나의 서재에서</span>
-            <br />
-            <span>책 정보를 수정해주세요.</span>
+            <span>나의 서재에서 확인해주세요.</span>
           </p>
         )}
       </Stack>

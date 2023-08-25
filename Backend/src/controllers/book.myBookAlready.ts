@@ -3,7 +3,7 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { RowDataPacket } from 'mysql2';
 
-const NAMESPACE = 'BOOKS_ALREADY';
+const NAMESPACE = 'MY_BOOKS_ALREADY';
 
 interface IProps extends RowDataPacket {
   status: '다읽음' | '읽는중' | '읽고싶음';
@@ -31,6 +31,7 @@ export default async function myBookAlready(req: Request, res: Response, next: N
         'LIMIT 1';
       const VALUE = [id, isbn];
       const [RESULT] = await connection.query<IProps[]>(SQL, VALUE);
+      logging.debug(NAMESPACE, '[RESULT]', RESULT[0]);
       if (RESULT[0] === undefined) {
         connection.release();
         return res.status(200).json({ message: '아직 서재에 등록되지않은 소중한 책이에요.' });

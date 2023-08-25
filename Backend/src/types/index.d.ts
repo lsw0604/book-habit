@@ -72,6 +72,7 @@ interface IMyBooksInfo extends RowDataPacket {
 
 export interface IMyBooksResponse extends RowDataPacket {
   books_id: number;
+  id: number;
   isbn: string;
   status: string;
   image: string;
@@ -80,6 +81,16 @@ export interface IMyBooksResponse extends RowDataPacket {
   rating: number;
   page: number;
   created_at: Date;
+}
+
+export interface IMyBookInfoProps extends RowDataPacket {
+  status: '다읽음' | '읽는중' | '읽고싶음';
+  start_date: Date | null;
+  end_date: Date | null;
+  created_at: Date;
+  updated_at: Date | null;
+  page: number | null;
+  rating: number | null;
 }
 
 export interface IMyBooksCountResponse extends RowDataPacket {

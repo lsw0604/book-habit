@@ -65,6 +65,18 @@ type LogoutResponseType = {
   status: StatusType;
 };
 
+type KakaoCallbackResponseType = {
+  email: string;
+  id: number;
+  gender: GenderType;
+  age: number;
+  name: string;
+  provider: ProviderType;
+  message: string;
+  status: StatusType;
+  access_jwt: string;
+};
+
 type StatusType = 'success' | 'error' | 'warning' | 'info' | '';
 
 type GenderType = 'male' | 'female' | '';

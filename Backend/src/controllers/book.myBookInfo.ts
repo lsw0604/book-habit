@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { IMyBooksResponse } from '../types';
+import { IMyBookInfoProps } from '../types';
 
 const NAMESPACE = 'BOOKS_MY_BOOK_INFO';
 
@@ -9,19 +9,21 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
-  const { isbn } = req.params;
+  const { users_books_id, title } = req.params;
   try {
     const connection = await connectionPool.getConnection();
     try {
       const SQL =
-        'SELECT status, start_date, end_date, created_at, updated_at, page, rating, isbn, title ' +
+        'SELECT status, start_date, end_date, created_at, updated_at, page, rating ' +
         'FROM diary_status ds ' +
         'LEFT JOIN users_books ub ON ds.users_books_id = ub.id ' +
         'LEFT JOIN books bs ON ub.books_id = bs.id ' +
-        'WHERE users_id = ? AND isbn = ? ' +
+        'WHERE users_id = ? AND ub.id = ? AND title = ? ' +
         'ORDER BY created_at DESC';
-      const VALUE = [id, isbn];
-      const [RESULT] = await connection.query<IMyBooksResponse[]>(SQL, VALUE);
+      const VALUE = [id, users_books_id, title];
+      const [RESULT] = await connection.query<IMyBookInfoProps[]>(SQL, VALUE);
+
+      logging.debug(NAMESPACE, '[RESULT]', RESULT);
 
       connection.release();
       res.status(200).json({

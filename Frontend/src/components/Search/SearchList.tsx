@@ -13,6 +13,7 @@ const Container = styled.div`
 const Page = styled.div`
   margin-top: 1rem;
   display: grid;
+  gap: 1rem;
   :first-child {
     margin-top: 0px;
   }
@@ -47,7 +48,10 @@ const ResultWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 14rem);
+  height: calc(100vh - 11rem);
+  border-radius: 5px;
+  color: ${({ theme }) => theme.mode.typo_main};
+  background-color: rgba(0, 0, 0, 0.2);
 `;
 
 interface IProps {
@@ -113,7 +117,7 @@ export default function SearchList({
         </ResultWrapper>
       ) : (
         <ResultWrapper>
-          <Loader size={2} />
+          <Loader size={3} />
         </ResultWrapper>
       )}
       {isFetching ? (

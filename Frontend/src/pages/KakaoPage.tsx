@@ -1,6 +1,7 @@
+import styled from 'styled-components';
+
 import useKakaoCallbackHook from '@hooks/useKakaoCallbackHook';
 import Loader from 'components/common/Loader';
-import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
@@ -15,8 +16,15 @@ export default function KakaoPage() {
     'code'
   ) as string;
 
-  if (!code) return <Container>Code를 불러오지 못 했습니다.</Container>;
-
   const { isLoading } = useKakaoCallbackHook(code);
-  return <Container>{isLoading && <Loader size={2} />}</Container>;
+
+  if (!code) {
+    return <Container>Code를 불러오지 못 했습니다.</Container>;
+  }
+
+  if (isLoading) {
+    return <Container>{isLoading && <Loader size={2} />}</Container>;
+  }
+
+  return <Container>카카오 로그인 성공</Container>;
 }

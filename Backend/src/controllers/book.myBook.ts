@@ -36,13 +36,13 @@ export default async function myBook(req: Request, res: Response, next: NextFunc
 
         const SQL =
           'WITH CreatedAtTable AS ( ' +
-          'SELECT bs.id AS books_id, bs.title, bs.isbn, bs.image, ds.status, ds.start_date, ds.end_date, ds.rating, ds.page, ds.created_at, ROW_NUMBER() OVER (PARTITION BY ub.books_id ORDER BY ds.created_at DESC) AS rn ' +
+          'SELECT bs.id AS books_id, ub.id, bs.title, bs.isbn, bs.image, ds.status, ds.start_date, ds.end_date, ds.rating, ds.page, ds.created_at, ROW_NUMBER() OVER (PARTITION BY ub.books_id ORDER BY ds.created_at DESC) AS rn ' +
           'FROM users_books ub ' +
           'LEFT JOIN books bs ON ub.books_id = bs.id ' +
           'RIGHT JOIN diary_status ds ON ub.id = ds.users_books_id ' +
           'WHERE ub.users_id = ? ' +
           ') ' +
-          'SELECT books_id, title, isbn, image, status, start_date, end_date, rating, page, created_at ' +
+          'SELECT books_id, title, id, isbn, image, status, start_date, end_date, rating, page, created_at ' +
           'FROM CreatedAtTable ' +
           'WHERE rn = 1 ' +
           'LIMIT 10 OFFSET ?';
@@ -63,13 +63,13 @@ export default async function myBook(req: Request, res: Response, next: NextFunc
       }
       const COUNT_SQL =
         'WITH CreatedAtTableStatus AS ( ' +
-        'SELECT bs.id AS books_id, bs.title, bs.isbn, bs.image, ds.status, ds.start_date, ds.end_date, ds.rating, ds.page, ds.created_at, ROW_NUMBER() OVER (PARTITION BY ub.books_id ORDER BY ds.created_at DESC) AS rn ' +
+        'SELECT bs.id AS books_id, ub.id, bs.title, bs.isbn, bs.image, ds.status, ds.start_date, ds.end_date, ds.rating, ds.page, ds.created_at, ROW_NUMBER() OVER (PARTITION BY ub.books_id ORDER BY ds.created_at DESC) AS rn ' +
         'FROM users_books ub ' +
         'LEFT JOIN books bs ON ub.books_id = bs.id ' +
         'RIGHT JOIN diary_status ds ON ub.id = ds.users_books_id ' +
         'WHERE ub.users_id = ? ' +
         ') ' +
-        'SELECT books_id, title, isbn, image, status, start_date, end_date, rating, page, created_at ' +
+        'SELECT books_id, title, id, isbn, image, status, start_date, end_date, rating, page, created_at ' +
         'FROM CreatedAtTableStatus ' +
         'WHERE rn = 1 AND status = ?';
       const COUNT_VALUES = [id, status];
@@ -80,13 +80,13 @@ export default async function myBook(req: Request, res: Response, next: NextFunc
 
       const SQL =
         'WITH CreatedAtTableStatus AS ( ' +
-        'SELECT bs.id AS books_id, bs.title, bs.isbn, bs.image, ds.status, ds.start_date, ds.end_date, ds.rating, ds.page, ds.created_at, ROW_NUMBER() OVER (PARTITION BY ub.books_id ORDER BY ds.created_at DESC) AS rn ' +
+        'SELECT bs.id AS books_id, ub.id, bs.title, bs.isbn, bs.image, ds.status, ds.start_date, ds.end_date, ds.rating, ds.page, ds.created_at, ROW_NUMBER() OVER (PARTITION BY ub.books_id ORDER BY ds.created_at DESC) AS rn ' +
         'FROM users_books ub ' +
         'LEFT JOIN books bs ON ub.books_id = bs.id ' +
         'RIGHT JOIN diary_status ds ON ub.id = ds.users_books_id ' +
         'WHERE ub.users_id = ? ' +
         ') ' +
-        'SELECT books_id, title, isbn, image, status, start_date, end_date, rating, page, created_at ' +
+        'SELECT books_id, title, isbn, id, image, status, start_date, end_date, rating, page, created_at ' +
         'FROM CreatedAtTableStatus ' +
         'WHERE rn = 1 AND status = ? ' +
         'LIMIT 10 OFFSET ?';

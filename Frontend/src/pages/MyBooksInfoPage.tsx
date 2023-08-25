@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { myBooksInfoAPI } from 'lib/api/book';
 import { useParams } from 'react-router-dom';
 import addHours from 'date-fns/addHours';
@@ -15,50 +15,59 @@ const Container = styled.div`
 `;
 
 export default function MyBooksInfoPage() {
-  const { isbn } = useParams();
+  const { users_books_id, title } = useParams();
+
+  if (users_books_id === undefined || title === undefined) {
+    return <div>올바른 접근이 아닙니다.</div>;
+  }
+
+  const [data, setData] = useState<MyBookInfoResponseType[]>([]);
+
   const fetch = async () => {
-    const { books } = await myBooksInfoAPI(isbn as string);
+    const { books } = await myBooksInfoAPI(parseInt(users_books_id), title);
     const modify = books.map((book) => {
       const {
         created_at,
         end_date,
-        isbn,
         page,
         rating,
         start_date,
+        updated_at,
         status,
-        title,
       } = book;
       let modiStart;
       let modiEnd;
+      let updatedTime;
 
-      if (book.start_date) {
-        modiStart = addHours(dateParse(book.start_date), 9)
+      if (start_date) {
+        modiStart = addHours(dateParse(start_date), 9)
           .toISOString()
           .split('T')[0];
       }
-      if (book.end_date) {
-        modiEnd = addHours(dateParse(book.end_date), 9)
+      if (end_date) {
+        modiEnd = addHours(dateParse(end_date), 9).toISOString().split('T')[0];
+      }
+      if (updated_at) {
+        updatedTime = addHours(dateParse(updated_at), 9)
           .toISOString()
           .split('T')[0];
       }
 
       const modiObj: MyBookInfoResponseType = {
-        isbn,
         page,
         rating,
         status,
-        title,
         created_at: addHours(dateParse(created_at), 9)
           .toISOString()
           .split('T')[0],
+        updated_at: updatedTime ? updatedTime : updated_at,
         start_date: modiStart ? modiStart : start_date,
         end_date: modiEnd ? modiEnd : end_date,
       };
 
       return modiObj;
     });
-    console.log(modify);
+    setData(modify);
     return modify;
   };
 
@@ -68,7 +77,16 @@ export default function MyBooksInfoPage() {
 
   return (
     <Container>
-      <span>내 책정보</span>
+      <h1>{title}의 독서기록</h1>
+      {data &&
+        data.map((v, index) => (
+          <div key={index}>
+            {index + 1}번째 기록 &nbsp; 상태 : {v.status} &nbsp;
+            {v.start_date} 읽기 시작해서
+            {v.end_date} 다 읽고 &nbsp; {v.rating} 점을 줬다고 &nbsp;
+            {v.created_at} 이날 기록함
+          </div>
+        ))}
     </Container>
   );
 }

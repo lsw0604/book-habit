@@ -15,15 +15,15 @@ export const myBooksAPI = async (page: number, status: SelectorBookType) => {
   return data;
 };
 
-export const myBooksInfoAPI = async (isbn: string) => {
+export const myBooksInfoAPI = async (users_books_id: number, title: string) => {
   const { data } = await axios.get<{ books: MyBookInfoResponseType[] }>(
-    `/api/books/my_books/${isbn}`
+    `/api/books/my_books/${title}/${users_books_id}`
   );
   return data;
 };
 
 export const myBooksAlreadyAPI = async (isbn: string) => {
-  const { data } = await axios.get(`/api/books/my_books/already/${isbn}`);
+  const { data } = await axios.get(`/api/books/my_books_info/${isbn}`);
   return data;
 };
 

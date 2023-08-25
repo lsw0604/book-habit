@@ -13,8 +13,8 @@ const router = express.Router();
 
 router.get('/ranking', ranking);
 router.get('/my_books', access, myBooks);
-router.get('/my_books/:isbn', access, myBooksInfo);
-router.get('/my_books/already/:isbn', access, myBookAlready);
+router.get('/my_books/:title/:users_books_id', access, myBooksInfo);
+router.get('/my_books_info/:isbn', access, myBookAlready);
 
 router.post('/read', access, read);
 router.post('/reading', access, reading);

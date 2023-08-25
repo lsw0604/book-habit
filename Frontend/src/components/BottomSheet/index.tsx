@@ -99,6 +99,11 @@ export default function Index() {
   const { mutate: readToMutate, isLoading: readToLoading } =
     useReadToRegisterHook();
 
+  const { image, isbn, price, author, company, title } =
+    useRecoilValue(modalAtom);
+
+  const { filteringData, refetch, isLoading } = useAlreadyBookHook(isbn);
+
   const options: RadioGroupOptionType<string>[] = [
     {
       label: '읽은 책',
@@ -123,11 +128,6 @@ export default function Index() {
   const onChange = (value: string) => {
     setValue(value as ModalType);
   };
-
-  const { image, isbn, price, author, company, title } =
-    useRecoilValue(modalAtom);
-
-  const { filteringData, refetch, isLoading } = useAlreadyBookHook(isbn);
 
   const registerBody: BookRegisterType = {
     author: author.join(','),

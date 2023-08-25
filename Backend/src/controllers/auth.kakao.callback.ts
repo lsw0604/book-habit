@@ -61,12 +61,14 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
         const { id, email, name } = EXIST_RESULT[0];
         const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
+        logging.debug(NAMESPACE, '[DEBUG]', EXIST_RESULT[0]);
         res.cookie('refresh', refresh_jwt, {
           maxAge: 1000 * 60 * 60 * 24,
           httpOnly: true,
           path: '/',
         });
         return res.status(200).json({
+          ...EXIST_RESULT[0],
           access_jwt,
           message: '로그인에 성공 하셨습니다.',
           status: 'success',

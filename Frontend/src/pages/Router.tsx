@@ -31,7 +31,10 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                 <Route path="/" Component={Home} />
                 <Route path="/search" Component={Search} />
                 <Route path="/my_books" Component={MyBooks} />
-                <Route path="/my_books/:isbn" Component={MyBooksInfo} />
+                <Route
+                  path="/my_books/:title/:users_books_id"
+                  Component={MyBooksInfo}
+                />
                 <Route element={<PublicLayout />}>
                   <Route path="/login" Component={Login} />
                   <Route path="/login/kakao" Component={Kakao} />

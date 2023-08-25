@@ -83,16 +83,18 @@ type MyBookInfoResponse = {
   books: MyBookInfoResponseType[];
 };
 
-type MyBookInfoResponseType = Pick<BooksType, 'isbn' | 'title'> & {
+type MyBookInfoResponseType = {
   status: BookStateType;
   start_date: string | null;
   end_date: string | null;
   rating: number | null;
   page: number | null;
   created_at: string;
+  updated_at: string | null;
 };
 
 type MyBookType = Pick<BooksType, 'books_id' | 'isbn' | 'image' | 'title'> & {
+  id: number;
   status: BookStateType;
   start_date: Date | null;
   end_date: Date | null;
