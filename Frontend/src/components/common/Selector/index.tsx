@@ -11,6 +11,7 @@ import ErrorMessage from 'components/common/Message/ErrorMessage';
 import { IconClose, IconDownArrow } from '@style/icons';
 
 const Container = styled.div`
+  display: flex;
   position: relative;
   width: 100%;
   min-height: 40px;

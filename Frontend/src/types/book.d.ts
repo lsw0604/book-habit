@@ -92,7 +92,7 @@ type MyBookInfoResponseType = Pick<BooksType, 'isbn' | 'title'> & {
   created_at: string;
 };
 
-type MyBookType = Pick<BooksType, 'books_id' | 'isbn' | 'image'> & {
+type MyBookType = Pick<BooksType, 'books_id' | 'isbn' | 'image' | 'title'> & {
   status: BookStateType;
   start_date: Date | null;
   end_date: Date | null;

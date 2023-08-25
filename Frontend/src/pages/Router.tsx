@@ -42,9 +42,6 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
           </DefaultLayout>
         </section>
       </main>
-      <footer>
-        <div>footer</div>
-      </footer>
     </BrowserRouter>
   );
 }
