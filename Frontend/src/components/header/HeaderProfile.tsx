@@ -53,10 +53,14 @@ export default function HeaderProfile({ name }: IProps) {
       ref={hamburgerRef}
       onClick={handleHamburger}
     >
-      <Span>
-        {name}
-        <P>님 환영합니다.</P>
-      </Span>
+      {name !== null ? (
+        <Span>
+          {name}
+          <P>님 환영합니다.</P>
+        </Span>
+      ) : (
+        <P>개인정보를 등록해주세요.</P>
+      )}
       {isHamburger && <HeaderProfileDropdown />}
     </Container>
   );

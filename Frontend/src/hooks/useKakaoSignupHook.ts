@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { useEffect } from 'react';
 
 import { kakaoSignupAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
