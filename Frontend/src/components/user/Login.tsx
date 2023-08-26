@@ -10,6 +10,9 @@ import useLoginHook from '@hooks/useLoginHook';
 import useValidateHook from '@hooks/useValidateHook';
 import { customize } from '@style/colors';
 import Kakao from 'components/common/Button/Kakao';
+import { useSetRecoilState } from 'recoil';
+import { userAtom } from 'recoil/user';
+import useToastHook from '@hooks/useToastHook';
 
 const Container = styled.form`
   display: flex;
@@ -60,8 +63,11 @@ export default function Login() {
   const [useValidation, setUseValidation] = useState(false);
   const [eyeOpen, setEyeOpen] = useState(false);
 
+  const setUserState = useSetRecoilState(userAtom);
+  const { addToast } = useToastHook();
+
   const navigate = useNavigate();
-  const { isLoading, mutate } = useLoginHook();
+  const { isLoading, mutate, isSuccess, data, error, isError } = useLoginHook();
   const { validate } = useValidateHook({
     email,
     password,
@@ -92,6 +98,33 @@ export default function Login() {
       setUseValidation(false);
     };
   }, [email, password]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const {
+        id,
+        email,
+        access_jwt,
+        age,
+        gender,
+        message,
+        name,
+        provider,
+        status,
+      } = data;
+      window.localStorage.setItem('ACCESS', access_jwt);
+      setUserState({ age, id, email, gender, name, provider, isLogged: true });
+      addToast({ message, status });
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isError && error && error.response && error.response.status === 403) {
+      const message = error.response.data.message;
+      const status = error.response.data.status;
+      addToast({ message, status });
+    }
+  }, [isError, error]);
 
   return (
     <>
