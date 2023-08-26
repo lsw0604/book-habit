@@ -16,8 +16,12 @@ interface IMyBooksAlreadyResponse {
 export default function useAlreadyBookHook(isbn: string) {
   const REACT_QUERY_KEY = 'MY_BOOKS_ALREADY';
   const { data, isLoading, isFetching, refetch } =
-    useQuery<IMyBooksAlreadyResponse>([REACT_QUERY_KEY, isbn], () =>
-      myBooksAlreadyAPI(isbn)
+    useQuery<IMyBooksAlreadyResponse>(
+      [REACT_QUERY_KEY, isbn],
+      () => myBooksAlreadyAPI(isbn),
+      {
+        enabled: false,
+      }
     );
 
   const filteredString = ({

@@ -1,7 +1,7 @@
 import { Outlet, Navigate } from 'react-router-dom';
 
 interface IProps {
-  isRouteAccessible?: boolean;
+  isRouteAccessible: boolean;
   redirectUrl: string;
 }
 

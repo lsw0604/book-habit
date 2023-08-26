@@ -174,8 +174,10 @@ export default function Index() {
   };
 
   useEffect(() => {
-    refetch();
-  }, []);
+    if (isLogged) {
+      refetch();
+    }
+  }, [isLogged]);
 
   return (
     <Container
@@ -194,11 +196,11 @@ export default function Index() {
         <Heading>이 책은 어떤 책인가요 ?</Heading>
         {!isLoading ? (
           filteringData && <SubHeading>{filteringData.result}</SubHeading>
-        ) : (
+        ) : isLogged ? (
           <LoaderWrapper>
             <Loader size={2} />
           </LoaderWrapper>
-        )}
+        ) : null}
         <Stack>
           <RadioButton<string>
             label={title}
@@ -217,15 +219,17 @@ export default function Index() {
             {value === '읽고싶음' && <BottomSheetToRead />}
           </AnimatePresence>
         </Stack>
-        <Stack>
-          <Button
-            disabled={filteringData.disabled || !isLogged}
-            type="submit"
-            isLoading={readingLoading || readLoading || readToLoading}
-          >
-            추가하기
-          </Button>
-        </Stack>
+        {isLogged ? (
+          <Stack>
+            <Button
+              disabled={filteringData.disabled || !isLogged}
+              type="submit"
+              isLoading={readingLoading || readLoading || readToLoading}
+            >
+              추가하기
+            </Button>
+          </Stack>
+        ) : null}
       </Contents>
     </Container>
   );

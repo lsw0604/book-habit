@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { AxiosError } from 'axios';
 import { signUpAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
@@ -14,18 +15,15 @@ export default function useSignupHook() {
     SignUpResponseType,
     AxiosError | Error | null,
     SignUpRequestType
-  >([REACT_QUERY_KEY], signUpAPI, {
-    onSuccess: (data) => {
+  >([REACT_QUERY_KEY], signUpAPI);
+
+  useEffect(() => {
+    if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
       navigate('/');
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (error: any) => {
-      const { message, status } = error.response.data;
-      addToast({ message, status });
-    },
-  });
+    }
+  }, [isSuccess, data]);
 
   return { isLoading, mutate, data, isSuccess };
 }

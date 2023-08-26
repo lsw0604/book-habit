@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Header from '../components/header/Header';
+
 import Home from './HomePage';
 import Login from './LoginPage';
 import Kakao from './KakaoPage';
@@ -9,10 +10,10 @@ import KakaoRegister from './KakaoRegisterPage';
 import Register from './RegisterPage';
 import MyBooks from './MyBooksPage';
 import MyBooksInfo from './MyBooksInfoPage';
+
 import DefaultLayout from './layout/DefaultLayout';
-import PublicLayout from './layout/PublicLayout';
-import KakaoLayout from './layout/KakaoLayout';
-import KakaoRegisterLayout from './layout/KakaoRegisterLayout';
+import IsAuthLayout from './layout/IsAuthLayout';
+import IsKakaoAuthLayout from './layout/IsKakaoAuthLayout';
 
 export default function Router({ isLoading }: { isLoading: boolean }) {
   return (
@@ -24,10 +25,10 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
         <section>
           <DefaultLayout>
             <Routes>
-              <Route element={<KakaoRegisterLayout />}>
+              <Route element={<IsKakaoAuthLayout isKakaoRegister={true} />}>
                 <Route path="/register/kakao" Component={KakaoRegister} />
               </Route>
-              <Route element={<KakaoLayout />}>
+              <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
                 <Route path="/" Component={Home} />
                 <Route path="/search" Component={Search} />
                 <Route path="/my_books" Component={MyBooks} />
@@ -35,7 +36,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                   path="/my_books/:title/:users_books_id"
                   Component={MyBooksInfo}
                 />
-                <Route element={<PublicLayout />}>
+                <Route element={<IsAuthLayout />}>
                   <Route path="/login" Component={Login} />
                   <Route path="/login/kakao" Component={Kakao} />
                   <Route path="/register" Component={Register} />
