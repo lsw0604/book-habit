@@ -6,13 +6,15 @@ import {
   FormEvent,
 } from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 
+import { userAtom } from 'recoil/user';
 import Button from 'components/common/Button';
 import Input from 'components/common/Input';
-import { IconFemale, IconMale, IconNumber, IconPerson } from '@style/icons';
 import RadioGroup from 'components/common/Radio';
 import useKakaoSignupHook from '@hooks/useKakaoSignupHook';
-import { useNavigate } from 'react-router-dom';
+import useToastHook from '@hooks/useToastHook';
+import { IconFemale, IconMale, IconNumber, IconPerson } from '@style/icons';
 
 const Container = styled.form`
   display: flex;
@@ -53,9 +55,10 @@ export default function KakaoRegister() {
   const [age, setAge] = useState<number | ''>('');
 
   const [useValidation, setUseValidation] = useState(false);
-  const { mutate, isLoading, isSuccess } = useKakaoSignupHook();
+  const { mutate, isLoading, isSuccess, data } = useKakaoSignupHook();
+  const setUserState = useSetRecoilState(userAtom);
 
-  const navigate = useNavigate();
+  const { addToast } = useToastHook();
 
   const onChangeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -82,7 +85,6 @@ export default function KakaoRegister() {
     if (age && name && gender) {
       mutate({ age, gender, name });
     }
-    if (isSuccess) return navigate('/');
   };
 
   useEffect(() => {
@@ -90,6 +92,14 @@ export default function KakaoRegister() {
       setUseValidation(false);
     };
   }, []);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const { message, status, age, email, gender, id, name, provider } = data;
+      addToast({ message, status });
+      setUserState({ age, email, name, gender, id, provider, isLogged: true });
+    }
+  }, [isSuccess, data]);
 
   return (
     <Container onSubmit={onSubmit}>
