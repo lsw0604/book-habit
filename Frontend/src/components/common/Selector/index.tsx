@@ -226,10 +226,14 @@ export default function Index({
           </Value>
           {multiple ? (
             <ValueIndicator>
-              <Icon onClick={(event) => onClearHandler(event)}>
-                <IconClose />
-              </Icon>
-              <Divider divider={1} />
+              {value.length !== 0 && (
+                <>
+                  <Icon onClick={(event) => onClearHandler(event)}>
+                    <IconClose />
+                  </Icon>
+                  <Divider divider={1} />
+                </>
+              )}
               <Icon>
                 <IconDownArrow />
               </Icon>
