@@ -5,7 +5,7 @@ import RadioButton from 'components/common/Radio/RadioButton';
 import Button from 'components/common/Button';
 import { IconBook, IconBookMark } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
-import ReadBook from 'components/MyBookInfo/ReadBook';
+import ReadBook from 'components/MyBookInfo/Read';
 import ReadingBook from 'components/MyBookInfo/ReadingBook';
 import Skeleton from 'components/MyBookInfo/Skeleton';
 
