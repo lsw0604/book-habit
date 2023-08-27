@@ -18,11 +18,7 @@ const Stack = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function BottomSheetSkeleton({
-  disabled,
-}: {
-  disabled: boolean;
-}) {
+export default function Skeleton({ disabled }: { disabled: boolean }) {
   const { isLogged } = useRecoilValue(userAtom);
   return (
     <Container

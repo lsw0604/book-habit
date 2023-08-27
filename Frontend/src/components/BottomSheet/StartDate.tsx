@@ -30,26 +30,25 @@ const Heading = styled.span`
   line-height: 18px;
 `;
 
-export default function BottomSheetEndDate({
-  startDate,
+export default function StartDate({
   endDate,
   onChange,
+  startDate,
   errorMessage,
   isValid,
   useValidation,
-}: IBottomSheetEndDate) {
+}: IBottomSheetStartDate) {
   return (
     <>
-      <Heading>책 다 읽은 날</Heading>
+      <Heading>책 읽기 시작한 날</Heading>
       <Container>
         <DatePicker
           onChange={onChange}
-          selected={endDate}
-          selectsEnd
+          selected={startDate}
+          selectsStart
           startDate={startDate}
           endDate={endDate}
-          minDate={startDate}
-          maxDate={new Date()}
+          maxDate={endDate || new Date()}
           isClearable
         />
       </Container>

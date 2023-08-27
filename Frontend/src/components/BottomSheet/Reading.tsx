@@ -1,8 +1,9 @@
-import useReadingModalHook from '@hooks/useReadingModalHook';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import BottomSheetStartDate from './BottomSheetStartDate';
-import { useEffect } from 'react';
+
+import useReadingModalHook from '@hooks/useReadingModalHook';
+import StartDate from 'components/BottomSheet/StartDate';
 import Input from 'components/common/Input';
 import { IconNumber } from '@style/icons';
 
@@ -23,7 +24,7 @@ const Span = styled.span`
   flex-direction: column;
 `;
 
-export default function BottomSheetReading() {
+export default function Reading() {
   const {
     onChangeReadingBookPage,
     onChangeReadingBookStartDate,
@@ -59,7 +60,7 @@ export default function BottomSheetReading() {
       }}
     >
       <Stack>
-        <BottomSheetStartDate
+        <StartDate
           startDate={startDate}
           onChange={onChangeReadingBookStartDate}
           isValid={!startDate}

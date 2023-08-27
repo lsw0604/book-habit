@@ -16,7 +16,7 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
-export default function BottomSheetToRead() {
+export default function ToRead() {
   const {
     onChangeReadToBookRating,
     readToBookRating: value,

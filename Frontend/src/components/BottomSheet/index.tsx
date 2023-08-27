@@ -7,14 +7,14 @@ import { modalAtom } from 'recoil/modal';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
-import BottomSheetRead from 'components/BottomSheet/BottomSheetRead';
-import BottomSheetReading from 'components/BottomSheet/BottomSheetReading';
-import BottomSheetToRead from 'components/BottomSheet/BottomSheetToRead';
+import Read from 'components/BottomSheet/Read';
+import Reading from 'components/BottomSheet/Reading';
+import ToRead from 'components/BottomSheet/ToRead';
+import Skeleton from 'components/BottomSheet/Skeleton';
 import Button from 'components/common/Button';
 import useReadModalHook from '@hooks/useReadModalHook';
 import useReadingModalHook from '@hooks/useReadingModalHook';
 import useReadToModalHook from '@hooks/useReadToModalHook';
-import BottomSheetSkeleton from './BottomSheetSkeleton';
 import useReadingRegisterHook from '@hooks/useReadingRegisterHook';
 import useReadRegisterHook from '@hooks/useReadRegisterHook';
 import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
@@ -211,12 +211,10 @@ export default function Index() {
         </Stack>
         <Stack style={{ height: '100%' }}>
           <AnimatePresence>
-            {value === '' && (
-              <BottomSheetSkeleton disabled={filteringData.disabled} />
-            )}
-            {value === '다읽음' && <BottomSheetRead />}
-            {value === '읽는중' && <BottomSheetReading />}
-            {value === '읽고싶음' && <BottomSheetToRead />}
+            {value === '' && <Skeleton disabled={filteringData.disabled} />}
+            {value === '다읽음' && <Read />}
+            {value === '읽는중' && <Reading />}
+            {value === '읽고싶음' && <ToRead />}
           </AnimatePresence>
         </Stack>
         {isLogged ? (

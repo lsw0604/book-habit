@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
 import StarRating from 'components/StarRating/Rating';
-import BottomSheetStartDate from 'components/BottomSheet/BottomSheetStartDate';
-import BottomSheetEndDate from 'components/BottomSheet/BottomSheetEndDate';
+import BottomSheetStartDate from 'components/BottomSheet/StartDate';
+import BottomSheetEndDate from 'components/BottomSheet/EndDate';
 import useReadModalHook from '@hooks/useReadModalHook';
-import { useEffect } from 'react';
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -31,7 +31,7 @@ const Span = styled.span`
   flex-direction: column;
 `;
 
-export default function BottomSheetRead() {
+export default function Read() {
   const {
     onChangeReadBookRating,
     onChangeReadBookStartDate,
