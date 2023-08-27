@@ -6,6 +6,8 @@ import readTo from '../controllers/book.readTo';
 import myBooks from '../controllers/book.myBook';
 import myBooksInfo from '../controllers/book.myBookInfo';
 import myBookAlready from '../controllers/book.myBookAlready';
+import myBookRead from '../controllers/book.myBook.read';
+import myBookReading from '../controllers/book.myBook.reading';
 
 import access from '../controllers/auth.access';
 
@@ -19,5 +21,8 @@ router.get('/my_books_info/:isbn', access, myBookAlready);
 router.post('/read', access, read);
 router.post('/reading', access, reading);
 router.post('/read_to', access, readTo);
+
+router.post('/read_add', access, myBookRead);
+router.post('/reading_add', access, myBookReading);
 
 export = router;

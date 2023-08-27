@@ -22,6 +22,22 @@ export const myBooksInfoAPI = async (users_books_id: number, title: string) => {
   return data;
 };
 
+export const myBooksInfoAddReadAPI = async (body: MyBookInfoAddReadType) => {
+  console.log(body);
+  const { data } = await axios.post<BookRegisterResponseType>(
+    `/api/books/read_add`,
+    body
+  );
+  return data;
+};
+
+export const myBooksInfoAddReadingAPI = async (
+  body: MyBookInfoAddReadingType
+) => {
+  const { data } = await axios.post(`/api/books/reading_add`, body);
+  return data;
+};
+
 export const myBooksAlreadyAPI = async (isbn: string) => {
   const { data } = await axios.get(`/api/books/my_books_info/${isbn}`);
   return data;

@@ -47,6 +47,7 @@ export default function Reading() {
       onChangeReadingBookUseValidation(false);
     };
   }, [startDate, page]);
+
   return (
     <Container
       initial={{ opacity: 0, y: '100%' }}

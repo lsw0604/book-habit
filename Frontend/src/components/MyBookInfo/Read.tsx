@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 import StartDate from 'components/MyBookInfo/StartDate';
 import EndDate from 'components/MyBookInfo/EndDate';
 import useReadModalHook from '@hooks/useReadModalHook';
 import StarRating from 'components/StarRating/Rating';
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   flex: 1;
 `;
 
@@ -59,7 +60,17 @@ export default function Read() {
   }, [startDate, endDate, rating]);
 
   return (
-    <Container>
+    <Container
+      initial={{ opacity: 0, y: '100%' }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: '100%' }}
+      transition={{
+        type: 'spring',
+        damping: 20,
+        stiffness: 100,
+        duration: 0.3,
+      }}
+    >
       <Content>
         <Stack>
           <StartDate

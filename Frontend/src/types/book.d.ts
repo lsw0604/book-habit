@@ -54,6 +54,20 @@ type BookRegisterType = {
   price: number;
 };
 
+type MyBookInfoAddReadType = {
+  users_books_id: number;
+  status: BookStateType;
+  startDate: Date;
+  endDate: Date;
+  rating: number;
+};
+
+type MyBookInfoAddReadingType = {
+  status: BookStateType;
+  startDate: Date;
+  page: number;
+};
+
 type ReadingBookRegisterType = BookRegisterType & {
   page: number;
   startDate: Date;
