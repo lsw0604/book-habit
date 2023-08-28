@@ -37,6 +37,7 @@ export default async function readingBook(
 
   const { isbn, title, author, company, price, image, status, startDate, page } = req.body;
   if (req.user === undefined) return res.status(403);
+  if (status === '읽는중') return res.status(400);
   const { id } = req.user;
   try {
     const connection = await connectionPool.getConnection();
@@ -49,6 +50,7 @@ export default async function readingBook(
         BOOK_EXIST_SQL,
         BOOK_EXIST_VALUES
       );
+      logging.debug(NAMESPACE, '[BOOK_EXIST_RESULT]', BOOK_EXIST_RESULT[0]);
 
       if (BOOK_EXIST_RESULT[0] === undefined) {
         const BOOK_REGISTER_SQL =
@@ -58,6 +60,7 @@ export default async function readingBook(
           BOOK_REGISTER_SQL,
           BOOK_REGISTER_VALUES
         );
+        logging.debug(NAMESPACE, '[BOOK_REGISTER_RESULT]', BOOK_REGISTER_RESULT);
 
         const USER_BOOKS_SQL = 'INSERT INTO users_books (users_id, books_id) VALUES(?, ?)';
         const USER_BOOKS_VALUES = [id, BOOK_REGISTER_RESULT.insertId];
@@ -65,21 +68,34 @@ export default async function readingBook(
           USER_BOOKS_SQL,
           USER_BOOKS_VALUES
         );
+        logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_STATUS_SQL =
-          'INSERT INTO diary_status (status, users_books_id, start_date, page) VALUES (?, ?, ?, ?)';
-        const USER_BOOKS_STATUS_VALUES = [
-          status,
+        const USER_BOOKS_STATUS_START_SQL =
+          'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
+        const USER_BOOKS_STATUS_START_VALUES = [
+          '읽기시작함',
           USER_BOOKS_RESULT.insertId,
           new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
           page,
         ];
-        const [USER_BOOKS_STATUS_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_STATUS_SQL,
-          USER_BOOKS_STATUS_VALUES
+        const [USER_BOOKS_STATUS_START_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_STATUS_START_SQL,
+          USER_BOOKS_STATUS_START_VALUES
+        );
+        logging.debug(
+          NAMESPACE,
+          '[USER_BOOKS_STATUS_START_RESULT]',
+          USER_BOOKS_STATUS_START_RESULT
         );
 
-        logging.debug(NAMESPACE, '[FINISH]', USER_BOOKS_STATUS_RESULT);
+        const USER_BOOKS_STATUS_PAGE_SQL =
+          'INSERT INTO users_books_status_page (page, users_books_status_id) VALUES (?, ?)';
+        const USER_BOOKS_STATUS_PAGE_VALUES = [page, USER_BOOKS_STATUS_START_RESULT.insertId];
+        const [USER_BOOKS_STATUS_PAGE_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_STATUS_PAGE_SQL,
+          USER_BOOKS_STATUS_PAGE_VALUES
+        );
+        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_START_RESULT]', USER_BOOKS_STATUS_PAGE_RESULT);
 
         await connection.commit();
         connection.release();
@@ -91,21 +107,34 @@ export default async function readingBook(
           USER_BOOKS_SQL,
           USER_BOOKS_VALUES
         );
+        logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_STATUS_SQL =
-          'INSERT INTO diary_status (status, users_books_id, start_date, page) VALUES (?, ?, ?, ?)';
-        const USER_BOOKS_STATUS_VALUES = [
+        const USER_BOOKS_STATUS_START_SQL =
+          'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
+        const USER_BOOKS_STATUS_START_VALUES = [
           status,
           USER_BOOKS_RESULT.insertId,
           new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
-          page,
         ];
-        const [USER_BOOKS_STATUS_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_STATUS_SQL,
-          USER_BOOKS_STATUS_VALUES
+        const [USER_BOOKS_STATUS_START_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_STATUS_START_SQL,
+          USER_BOOKS_STATUS_START_VALUES
+        );
+        logging.debug(
+          NAMESPACE,
+          '[USER_BOOKS_STATUS_START_RESULT]',
+          USER_BOOKS_STATUS_START_RESULT
         );
 
-        logging.debug(NAMESPACE, '[FINISH]', USER_BOOKS_STATUS_RESULT);
+        const USER_BOOKS_STATUS_PAGE_SQL =
+          'INSERT INTO users_books_status_page (page, users_books_status_id) VALUES (?, ?)';
+        const USER_BOOKS_STATUS_PAGE_VALUES = [page, USER_BOOKS_STATUS_START_RESULT.insertId];
+        const [USER_BOOKS_STATUS_PAGE_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_STATUS_PAGE_SQL,
+          USER_BOOKS_STATUS_PAGE_VALUES
+        );
+        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_PAGE_RESULT]', USER_BOOKS_STATUS_PAGE_RESULT);
+
         await connection.commit();
         connection.release();
         res.status(200).json({ status: 'success', message: '읽는중인 책 등록에 성공했습니다.' });
