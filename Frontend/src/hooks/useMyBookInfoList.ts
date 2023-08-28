@@ -8,19 +8,22 @@ export default function useMyBookInfoList(
 ) {
   const REACT_QUERY_KEY = 'MY_BOOK_INFO_LIST';
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } = useQuery(
-    [REACT_QUERY_KEY, users_books_id, title, filtered],
-    () => myBooksInfoAPI(users_books_id, title),
-    {
-      select: ({ books }) => {
-        if (filtered.includes('전체보기') || filtered.length === 0) {
-          return books;
-        } else {
-          return books.filter((book) => filtered.includes(book.status));
-        }
-      },
-    }
-  );
+  const { data, isLoading, isFetching, isSuccess, isError, error, refetch } =
+    useQuery(
+      [REACT_QUERY_KEY, users_books_id, title],
+      () => myBooksInfoAPI(users_books_id, title),
+      {
+        select: ({ books }) => {
+          if (filtered.includes('전체보기')) {
+            return books;
+          } else if (filtered.length === 0) {
+            return [];
+          } else {
+            return books.filter((book) => filtered.includes(book.status));
+          }
+        },
+      }
+    );
 
   return {
     isSuccess,
@@ -29,5 +32,6 @@ export default function useMyBookInfoList(
     isError,
     error,
     isFetching,
+    refetch,
   };
 }

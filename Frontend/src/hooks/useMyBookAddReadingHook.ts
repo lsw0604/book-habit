@@ -5,10 +5,18 @@ import { useEffect } from 'react';
 import useToastHook from './useToastHook';
 import { myBooksInfoAddReadingAPI } from 'lib/api/book';
 import useReadingModalHook from './useReadingModalHook';
+import useMyBookInfoList from './useMyBookInfoList';
 
-export default function useMyBookAddReadingHook() {
+export default function useMyBookAddReadingHook(
+  users_books_id: string,
+  title: string
+) {
   const { addToast } = useToastHook();
   const { setReadingBookState } = useReadingModalHook();
+  const { refetch } = useMyBookInfoList(parseInt(users_books_id), title, [
+    '읽는중',
+    '전체보기',
+  ]);
 
   const REACT_QUERY_KEY = 'MY_BOOK_READING_BOOK_ADD_KEY';
   const queryClient = new QueryClient();
@@ -29,6 +37,7 @@ export default function useMyBookAddReadingHook() {
         useValidate: false,
       });
       queryClient.invalidateQueries([REACT_QUERY_KEY]);
+      refetch();
     }
   }, [isSuccess, data]);
 

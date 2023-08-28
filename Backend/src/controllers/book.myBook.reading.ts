@@ -45,7 +45,7 @@ export default async function myBookReading(
 
       await connection.commit();
       connection.release();
-      res.status(200).json({ status: 'success', message: '읽은책 등록에 성공했습니다.' });
+      res.status(200).json({ status: 'success', message: '읽고있는 책 등록에 성공했습니다.' });
     } catch (error: any) {
       await connection.rollback();
       connection.release();

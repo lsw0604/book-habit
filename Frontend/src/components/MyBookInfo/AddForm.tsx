@@ -50,8 +50,8 @@ const options: RadioGroupOptionType<string>[] = [
 ];
 
 export default function AddForm() {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
+  const { users_books_id, title } = useParams();
+  if (!users_books_id || !title) return <div>잘못된 접근입니다.</div>;
   const [status, setStatus] = useState<ModalType>('');
 
   const { readBookState, onChangeReadBookUseValidation, readBookFormValidate } =
@@ -63,9 +63,12 @@ export default function AddForm() {
   } = useReadingModalHook();
 
   const { isLoading: readingLoading, mutate: readingMutate } =
-    useMyBookAddReadingHook();
+    useMyBookAddReadingHook(users_books_id, title);
 
-  const { isLoading: readLoading, mutate: readMutate } = useMyBookAddReadHook();
+  const { isLoading: readLoading, mutate: readMutate } = useMyBookAddReadHook(
+    users_books_id,
+    title
+  );
 
   const onChange = (value: string) => {
     setStatus(value as ModalType);

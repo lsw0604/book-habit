@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { readToBookOptions, ratingList } from 'lib/staticData';
+import dateParse from 'date-fns/parseISO';
+import addHours from 'date-fns/addHours';
 
 interface IProps {
   status: BookStateType;
@@ -8,12 +10,13 @@ interface IProps {
   rating: number | null;
   page: number | null;
   created_at: string | null;
+  updated_at: string | null;
 }
 
 const Container = styled.div`
   display: flex;
   gap: 1rem;
-  padding-left: 1rem;
+  padding: 0 1rem;
 `;
 
 const Content = styled.div`
@@ -59,11 +62,25 @@ export default function Item({
   rating,
   page,
   created_at,
+  updated_at,
 }: IProps) {
-  if (status === '다읽음' && rating && created_at && start_date && end_date) {
-    const [created_year, created_month, created_day] = created_at.split('-');
-    const [start_year, start_month, start_day] = start_date.split('-');
-    const [end_year, end_month, end_day] = end_date.split('-');
+  const createdAt = created_at
+    ? addHours(dateParse(created_at), 9).toISOString().split('T')[0]
+    : created_at;
+  const startDate = start_date
+    ? addHours(dateParse(start_date), 9).toISOString().split('T')[0]
+    : start_date;
+  const endDate = end_date
+    ? addHours(dateParse(end_date), 9).toISOString().split('T')[0]
+    : end_date;
+  const updatedAt = updated_at
+    ? addHours(dateParse(updated_at), 9).toISOString().split('T')[0]
+    : updated_at;
+
+  if (status === '다읽음' && rating && createdAt && startDate && endDate) {
+    const [created_year, created_month, created_day] = createdAt.split('-');
+    const [start_year, start_month, start_day] = startDate.split('-');
+    const [end_year, end_month, end_day] = endDate.split('-');
 
     return (
       <>
@@ -75,19 +92,26 @@ export default function Item({
               {created_year}년 {created_month}월 {created_day}일
             </Date>
             <Description>"{ratingList[rating]}"</Description>
+            {end_year}년 {end_month}월 {end_day}일 다 읽었어요.
+          </Content>
+        </Container>
+        <Container>
+          <Line />
+          <Content>
+            <Heading>{status}</Heading>
             <Date>
-              {start_year}년 {start_month}월 {start_day} ~ {end_year}년{' '}
-              {end_month}월 {end_day}
+              {created_year}년 {created_month}월 {created_day}일
             </Date>
+            {start_year}년 {start_month}월 {start_day}일 읽기 시작해서{' '}
           </Content>
         </Container>
       </>
     );
   }
 
-  if (status === '읽는중' && page && created_at && start_date) {
-    const [year, month, day] = created_at.split('-');
-    const [start_year, start_month, start_day] = start_date.split('-');
+  if (status === '읽는중' && page && createdAt && startDate) {
+    const [year, month, day] = createdAt.split('-');
+    const [start_year, start_month, start_day] = startDate.split('-');
     return (
       <Container>
         <Line />
@@ -105,8 +129,8 @@ export default function Item({
     );
   }
 
-  if (status === '읽고싶음' && rating && created_at) {
-    const [year, month, day] = created_at.split('-');
+  if (status === '읽고싶음' && rating && createdAt) {
+    const [year, month, day] = createdAt.split('-');
     return (
       <Container>
         <Line />
@@ -123,11 +147,4 @@ export default function Item({
       </Container>
     );
   }
-
-  return (
-    <Container>
-      <Line />
-      <Content>{status}</Content>
-    </Container>
-  );
 }

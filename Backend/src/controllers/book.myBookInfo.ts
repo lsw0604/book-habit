@@ -32,7 +32,7 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);
       connection.release();
-      res.status(403).json({
+      res.status(400).json({
         code: error?.code,
         errno: error?.errno,
         message: error?.sqlMessage,

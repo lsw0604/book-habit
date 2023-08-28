@@ -22,7 +22,7 @@ export default function Index() {
   const { users_books_id, title } = useParams();
   if (users_books_id === undefined || title === undefined)
     return <div>잘못된 접근입니다.</div>;
-  const [value, setValue] = useState<string[]>(['전체보기']);
+  const [value, setValue] = useState<string[]>([]);
   const options = ['전체보기', '읽는중', '다읽음', '읽고싶음'];
 
   return (
