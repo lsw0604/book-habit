@@ -107,14 +107,10 @@ type MyBookInfoResponseType = {
   updated_at: string | null;
 };
 
-type MyBookType = Pick<BooksType, 'books_id' | 'isbn' | 'image' | 'title'> & {
+type MyBookType = Pick<BooksType, 'isbn' | 'image' | 'title'> & {
   id: number;
   status: BookStateType;
-  start_date: Date | null;
-  end_date: Date | null;
-  rating: number | null;
-  page: number | null;
-  created_at: Date;
+  created_at: string;
 };
 
 type BookStateType = '읽고싶음' | '다읽음' | '읽는중' | '';

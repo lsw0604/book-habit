@@ -93,10 +93,6 @@ export interface IMyBookInfoProps extends RowDataPacket {
   rating: number | null;
 }
 
-export interface IMyBooksCountResponse extends RowDataPacket {
-  books_id: number;
-}
-
 export type ResponseLoginType = {
   id: number;
   name: string;
@@ -105,6 +101,19 @@ export type ResponseLoginType = {
   age: number;
   provider: ProviderType;
 };
+
+export type MyBookListCountResponseType = {
+  count: number;
+} & RowDataPacket;
+
+export type MyBookListResponseType = {
+  id: number;
+  isbn: string;
+  title: string;
+  image: string | null;
+  status: '다읽음' | '읽는중' | '읽고싶음';
+  created_at: Date;
+} & RowDataPacket;
 
 type GenderType = 'male' | 'female';
 

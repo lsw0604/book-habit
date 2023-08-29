@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { myBooksAPI } from 'lib/api/book';
+import { myBookListAPI } from 'lib/api/myBook';
 
-export default function useMyBookHook(status: SelectorBookType) {
+export default function useMyBookListHook(status: SelectorBookType) {
   const { data, fetchNextPage, isLoading, isFetching, hasNextPage, refetch } =
     useInfiniteQuery<MyBookResponseType>(
       ['MY_BOOKS', status],
-      ({ pageParam = 1 }) => myBooksAPI(pageParam, status),
+      ({ pageParam = 1 }) => myBookListAPI(pageParam, status),
       {
         getNextPageParam: (response) => response.nextPage,
         staleTime: 20 * 1000,

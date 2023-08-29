@@ -7,9 +7,10 @@ const NAMESPACE = 'BOOKS_MY_BOOK_INFO';
 
 export default async function myBookInfo(req: Request, res: Response, next: NextFunction) {
   logging.info(NAMESPACE, '[START]');
-  if (req.user === undefined) return res.status(403);
+  if (req.user === undefined)
+    return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
   const { id } = req.user;
-  const { users_books_id, title } = req.params;
+  const { users_books_id } = req.params;
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -20,7 +21,7 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
         'LEFT JOIN books bs ON ub.books_id = bs.id ' +
         'WHERE users_id = ? AND ub.id = ? AND title = ? ' +
         'ORDER BY created_at DESC';
-      const VALUE = [id, users_books_id, title];
+      const VALUE = [id, users_books_id];
       const [RESULT] = await connection.query<IMyBookInfoProps[]>(SQL, VALUE);
 
       logging.debug(NAMESPACE, '[RESULT]', RESULT);

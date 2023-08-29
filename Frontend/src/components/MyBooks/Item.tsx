@@ -1,6 +1,8 @@
 import { IconImage } from '@style/icons';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import dateParse from 'date-fns/parseISO';
+import addHours from 'date-fns/addHours';
 
 interface IProps {
   id: number;
@@ -8,6 +10,7 @@ interface IProps {
   isbn: string;
   image?: string;
   status: BookStateType;
+  created_at: string;
 }
 
 const Container = styled.div`
@@ -30,18 +33,19 @@ const StatusWrapper = styled.div`
 const StatusInfo = styled.span`
   position: relative;
   width: 100%;
-  height: 2rem;
-  bottom: 2rem;
+  height: 3rem;
+  bottom: 3rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.spinner};
-  color: ${({ theme }) => theme.mode.sub};
+  color: ${({ theme }) => theme.mode.typo_sub};
   border-radius: 0 0 5px 5px;
 `;
 
 const TitleInfo = styled.span`
-  color: ${({ theme }) => theme.mode.sub};
+  color: ${({ theme }) => theme.mode.typo_sub};
   position: relative;
   width: 100%;
   height: auto;
@@ -89,8 +93,22 @@ const ImageWrapper = styled.div`
   }
 `;
 
-export default function Item({ isbn, image, status, title, id }: IProps) {
+export default function Item({
+  isbn,
+  image,
+  status,
+  title,
+  id,
+  created_at,
+}: IProps) {
   const navigate = useNavigate();
+  const [created_year, created_month, created_day] = addHours(
+    dateParse(created_at),
+    9
+  )
+    .toISOString()
+    .split('T')[0]
+    .split('-');
   return (
     <Container onClick={() => navigate(`/my_books/${title}/${id}`)}>
       <StatusWrapper>
@@ -106,7 +124,12 @@ export default function Item({ isbn, image, status, title, id }: IProps) {
         )}
       </ImageWrapper>
       <StatusWrapper>
-        <StatusInfo>{status}</StatusInfo>
+        <StatusInfo>
+          <span>{status}</span>
+          <span>
+            {created_year}년 {created_month}월 {created_day}일
+          </span>
+        </StatusInfo>
       </StatusWrapper>
     </Container>
   );

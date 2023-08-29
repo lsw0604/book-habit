@@ -37,7 +37,6 @@ export default async function readingBook(
 
   const { isbn, title, author, company, price, image, status, startDate, page } = req.body;
   if (req.user === undefined) return res.status(403);
-  if (status === '읽는중') return res.status(400);
   const { id } = req.user;
   try {
     const connection = await connectionPool.getConnection();
@@ -69,6 +68,15 @@ export default async function readingBook(
           USER_BOOKS_VALUES
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
+
+        const USER_BOOKS_INFO_SQL =
+          'INSERT INTO users_books_info (status, users_books_id) VALUES (?, ?)';
+        const USER_BOOKS_INFO_VALUES = [status, USER_BOOKS_RESULT.insertId];
+        const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_INFO_SQL,
+          USER_BOOKS_INFO_VALUES
+        );
+        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
 
         const USER_BOOKS_STATUS_START_SQL =
           'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
@@ -108,6 +116,15 @@ export default async function readingBook(
           USER_BOOKS_VALUES
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
+
+        const USER_BOOKS_INFO_SQL =
+          'INSERT INTO users_books_info (status, users_books_id) VALUES (?, ?)';
+        const USER_BOOKS_INFO_VALUES = [status, USER_BOOKS_RESULT.insertId];
+        const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_INFO_SQL,
+          USER_BOOKS_INFO_VALUES
+        );
+        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
 
         const USER_BOOKS_STATUS_START_SQL =
           'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';

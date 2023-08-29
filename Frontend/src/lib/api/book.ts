@@ -1,13 +1,6 @@
 import { axios } from './';
 import Axios from 'axios';
 
-export const rankingAPI = async (page: number, limit: number) => {
-  const { data } = await axios.get<ResponseBookType>(
-    `/api/books/ranking?page=${page}&limit=${limit}`
-  );
-  return data;
-};
-
 export const myBooksAPI = async (page: number, status: SelectorBookType) => {
   const { data } = await axios.get<MyBookResponseType>(
     `/api/books/my_books?page=${page}&status=${status}`

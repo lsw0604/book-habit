@@ -12,9 +12,12 @@ import { Strategy as JWTStrategy } from 'passport-jwt';
 
 import logging from './config/logging';
 import config from './config/config';
-import bookRoutes from './routes/book';
-import authRoutes from './routes/auth';
 import { dbConfig } from './config/database';
+
+import bookRouter from './routes/book';
+import authRouter from './routes/auth';
+import myBookRouter from './routes/myBook';
+
 import { localOptions, LocalVerify } from './strategy/LocalStrategy';
 import { AccessJWTStrategyOptions, AccessVerify } from './strategy/Access.Strategy';
 import { RefreshJWTStrategyOptions, RefreshVerify } from './strategy/Refresh.Strategy';
@@ -54,8 +57,9 @@ passport.use('local', new LocalStrategy(localOptions, LocalVerify));
 passport.use('access', new JWTStrategy(AccessJWTStrategyOptions, AccessVerify));
 passport.use('refresh', new JWTStrategy(RefreshJWTStrategyOptions, RefreshVerify));
 
-app.use('/api/books', bookRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/books', bookRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/my_book', myBookRouter);
 
 const httpSever = http.createServer(app);
 

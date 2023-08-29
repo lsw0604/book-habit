@@ -9,20 +9,20 @@ import kakao from '../controllers/auth.kakao.login';
 import KakaoCallback from '../controllers/auth.kakao.callback';
 import KakaoRegister from '../controllers/auth.kakao.register';
 
-const Router = express.Router();
+const authRouter = express.Router();
 
-Router.post('/register', register);
-Router.post('/login', local);
-Router.get('/logout', logout);
-Router.get('/access', access, (req, res) => {
+authRouter.post('/register', register);
+authRouter.post('/login', local);
+authRouter.get('/logout', logout);
+authRouter.get('/access', access, (req, res) => {
   res.status(200).json({ ...req.user, status: 'success', message: 'ACCESS_TOKEN_VERIFIED' });
 });
-Router.get('/refresh', refresh, (req, res) => {
+authRouter.get('/refresh', refresh, (req, res) => {
   res.status(200).json({ ...req.user, status: 'success', message: 'REFRESH_TOKEN_VERIFIED' });
 });
 
-Router.get('/kakao', kakao);
-Router.get('/kakao/callback', KakaoCallback);
-Router.post('/kakao/register', access, KakaoRegister);
+authRouter.get('/kakao', kakao);
+authRouter.get('/kakao/callback', KakaoCallback);
+authRouter.post('/kakao/register', access, KakaoRegister);
 
-export default Router;
+export default authRouter;

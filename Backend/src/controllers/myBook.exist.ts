@@ -13,7 +13,7 @@ interface IProps extends RowDataPacket {
   rating: number | null;
 }
 
-export default async function myBookAlready(req: Request, res: Response, next: NextFunction) {
+export default async function myBookExist(req: Request, res: Response, next: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
@@ -22,7 +22,7 @@ export default async function myBookAlready(req: Request, res: Response, next: N
     const connection = await connectionPool.getConnection();
     try {
       const SQL =
-        'SELECT status, start_date, end_date, page, rating ' +
+        'SELECT id ' +
         'FROM diary_status ds ' +
         'LEFT JOIN users_books ub ON ds.users_books_id = ub.id ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +

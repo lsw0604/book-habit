@@ -175,7 +175,7 @@ export default function Index() {
 
   useEffect(() => {
     if (isLogged) {
-      refetch();
+      // refetch();
     }
   }, [isLogged]);
 
@@ -220,7 +220,7 @@ export default function Index() {
         {isLogged ? (
           <Stack>
             <Button
-              disabled={filteringData.disabled || !isLogged}
+              // disabled={filteringData.disabled || !isLogged}
               type="submit"
               isLoading={readingLoading || readLoading || readToLoading}
             >

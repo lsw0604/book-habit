@@ -37,7 +37,7 @@ export default async function readBook(
   const { isbn, title, author, company, price, image, status, startDate, endDate, rating } =
     req.body;
   if (req.user === undefined) return res.status(403);
-  if (status === '다읽음') return res.status(400);
+
   const { id } = req.user;
   try {
     const connection = await connectionPool.getConnection();
