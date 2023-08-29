@@ -1,17 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { myBooksInfoAPI } from 'lib/api/book';
+import { myBookHistoryAPI } from 'lib/api/myBook';
 
-export default function useMyBookInfoList(
+export default function useMyBookHistoryHook(
   users_books_id: number,
-  title: string,
   filtered: string[]
 ) {
-  const REACT_QUERY_KEY = 'MY_BOOK_INFO_LIST';
+  const REACT_QUERY_KEY = 'MY_BOOK_HISTORY';
 
   const { data, isLoading, isFetching, isSuccess, isError, error, refetch } =
     useQuery(
-      [REACT_QUERY_KEY, users_books_id, title],
-      () => myBooksInfoAPI(users_books_id, title),
+      [REACT_QUERY_KEY, users_books_id],
+      () => myBookHistoryAPI(users_books_id),
       {
         select: ({ books }) => {
           if (filtered.includes('전체보기')) {

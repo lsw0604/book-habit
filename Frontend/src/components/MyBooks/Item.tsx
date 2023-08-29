@@ -110,7 +110,7 @@ export default function Item({
     .split('T')[0]
     .split('-');
   return (
-    <Container onClick={() => navigate(`/my_books/${title}/${id}`)}>
+    <Container onClick={() => navigate(`/my_books/${id}`)}>
       <StatusWrapper>
         <TitleInfo>{title}</TitleInfo>
       </StatusWrapper>

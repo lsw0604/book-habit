@@ -115,6 +115,18 @@ export type MyBookListResponseType = {
   created_at: Date;
 } & RowDataPacket;
 
+export type MyBookExistResponseType = {
+  status: '다읽음' | '읽는중' | '읽고싶음';
+} & RowDataPacket;
+
+export type MyBookHistoryType = {
+  status: '읽기시작함' | '다읽음' | '읽고싶음';
+  date: Date;
+  page: number | null;
+  created_at: Date;
+  updated_at: Date | null;
+} & RowDataPacket;
+
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';

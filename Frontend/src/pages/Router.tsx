@@ -33,7 +33,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                 <Route path="/search" Component={Search} />
                 <Route path="/my_books" Component={MyBooks} />
                 <Route
-                  path="/my_books/:title/:users_books_id"
+                  path="/my_books/:users_books_id"
                   Component={MyBooksInfo}
                 />
                 <Route element={<IsAuthLayout />}>

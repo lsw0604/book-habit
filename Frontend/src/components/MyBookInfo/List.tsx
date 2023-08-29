@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Item from 'components/MyBookInfo/Item';
-import useMyBookInfoList from '@hooks/useMyBookInfoList';
+import useMyBookHistoryHook from '@hooks/useMyBookHistoryHook';
 import Loader from 'components/common/Loader';
 import useToastHook from '@hooks/useToastHook';
 
@@ -25,16 +25,16 @@ const EmptyTag = styled.div`
 `;
 
 export default function List({ filter }: { filter: string[] }) {
-  const { users_books_id, title } = useParams();
+  const { users_books_id } = useParams();
   const { addToast } = useToastHook();
 
-  if (users_books_id === undefined || title === undefined) {
+  if (users_books_id === undefined) {
     return <div>올바른 접근이 아닙니다.</div>;
   }
 
   const { data, isError, error, isFetching, isLoading, isSuccess } =
-    useMyBookInfoList(parseInt(users_books_id), title, filter);
-
+    useMyBookHistoryHook(parseInt(users_books_id), filter);
+  console.log(data);
   return (
     <>
       {(isLoading || isFetching) && (

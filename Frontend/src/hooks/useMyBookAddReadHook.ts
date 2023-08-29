@@ -5,15 +5,12 @@ import { useEffect } from 'react';
 import useToastHook from './useToastHook';
 import useReadModalHook from './useReadModalHook';
 import { myBooksInfoAddReadAPI } from 'lib/api/book';
-import useMyBookInfoList from './useMyBookInfoList';
+import useMyBookHistoryHook from './useMyBookHistoryHook';
 
-export default function useMyBookAddReadHook(
-  users_books_id: string,
-  title: string
-) {
+export default function useMyBookAddReadHook(users_books_id: string) {
   const { addToast } = useToastHook();
   const { setReadBookState } = useReadModalHook();
-  const { refetch } = useMyBookInfoList(parseInt(users_books_id), title, [
+  const { refetch } = useMyBookHistoryHook(parseInt(users_books_id), [
     '다읽음',
     '전체보기',
   ]);

@@ -1,11 +1,11 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { IMyBookInfoProps } from '../types';
+import { MyBookHistoryType } from '../types';
 
 const NAMESPACE = 'BOOKS_MY_BOOK_INFO';
 
-export default async function myBookInfo(req: Request, res: Response, next: NextFunction) {
+export default async function myBookHistory(req: Request, res: Response, next: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
@@ -15,14 +15,14 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
     const connection = await connectionPool.getConnection();
     try {
       const SQL =
-        'SELECT status, start_date, end_date, created_at, updated_at, page, rating ' +
-        'FROM diary_status ds ' +
-        'LEFT JOIN users_books ub ON ds.users_books_id = ub.id ' +
-        'LEFT JOIN books bs ON ub.books_id = bs.id ' +
-        'WHERE users_id = ? AND ub.id = ? AND title = ? ' +
-        'ORDER BY created_at DESC';
+        'SELECT status, date, page, ubs.created_at, ubs.updated_at ' +
+        'FROM users_books ub ' +
+        'RIGHT JOIN users_books_status ubs ON ubs.users_books_id = ub.id ' +
+        'LEFT JOIN users_books_status_page ubsp ON ubsp.users_books_status_id = ubs.id ' +
+        'WHERE ub.users_id = ? AND ub.id = ? ' +
+        'ORDER BY date DESC';
       const VALUE = [id, users_books_id];
-      const [RESULT] = await connection.query<IMyBookInfoProps[]>(SQL, VALUE);
+      const [RESULT] = await connection.query<MyBookHistoryType[]>(SQL, VALUE);
 
       logging.debug(NAMESPACE, '[RESULT]', RESULT);
 

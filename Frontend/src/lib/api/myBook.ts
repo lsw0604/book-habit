@@ -7,8 +7,10 @@ export const myBookListAPI = async (page: number, status: SelectorBookType) => {
   return data;
 };
 
-export const myBookInfoAPI = async (users_books_id: number) => {
-  const { data } = await axios.get(`/api/my_book/info/${users_books_id}`);
+export const myBookHistoryAPI = async (users_books_id: number) => {
+  const { data } = await axios.get<{ books: MyBookHistoryResponseType[] }>(
+    `/api/my_book/history/${users_books_id}`
+  );
   return data;
 };
 

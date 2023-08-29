@@ -88,6 +88,14 @@ type BookRegisterResponseType = {
   status: 'success' | 'error';
 };
 
+type MyBookHistoryResponseType = {
+  status: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
+  date: string;
+  page: number | null;
+  created_at: string;
+  updated_at: string | null;
+};
+
 type MyBookResponseType = {
   nextPage?: number;
   books: MyBookType[];

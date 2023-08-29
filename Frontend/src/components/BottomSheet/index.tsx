@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, Suspense, lazy } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -7,9 +7,6 @@ import { modalAtom } from 'recoil/modal';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
-import Read from 'components/BottomSheet/Read';
-import Reading from 'components/BottomSheet/Reading';
-import ToRead from 'components/BottomSheet/ToRead';
 import Skeleton from 'components/BottomSheet/Skeleton';
 import Button from 'components/common/Button';
 import useReadModalHook from '@hooks/useReadModalHook';
@@ -19,8 +16,12 @@ import useReadingRegisterHook from '@hooks/useReadingRegisterHook';
 import useReadRegisterHook from '@hooks/useReadRegisterHook';
 import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
 import { userAtom } from 'recoil/user';
-import useAlreadyBookHook from '@hooks/useAlreadyBookHook';
+import useMyBookExistHook from '@hooks/useMyBookExistHook';
 import Loader from 'components/common/Loader';
+
+const Read = lazy(() => import('components/BottomSheet/Read'));
+const Reading = lazy(() => import('components/BottomSheet/Reading'));
+const ToRead = lazy(() => import('components/BottomSheet/ToRead'));
 
 const Container = styled(motion.form)`
   position: absolute;
@@ -102,7 +103,7 @@ export default function Index() {
   const { image, isbn, price, author, company, title } =
     useRecoilValue(modalAtom);
 
-  const { filteringData, refetch, isLoading } = useAlreadyBookHook(isbn);
+  const { filteringData, refetch, isLoading } = useMyBookExistHook(isbn);
 
   const options: RadioGroupOptionType<string>[] = [
     {
@@ -175,7 +176,7 @@ export default function Index() {
 
   useEffect(() => {
     if (isLogged) {
-      // refetch();
+      refetch();
     }
   }, [isLogged]);
 
@@ -194,12 +195,14 @@ export default function Index() {
     >
       <Contents>
         <Heading>이 책은 어떤 책인가요 ?</Heading>
-        {!isLoading ? (
-          filteringData && <SubHeading>{filteringData.result}</SubHeading>
-        ) : isLogged ? (
-          <LoaderWrapper>
-            <Loader size={2} />
-          </LoaderWrapper>
+        {isLogged ? (
+          !isLoading ? (
+            filteringData && <SubHeading>{filteringData.result}</SubHeading>
+          ) : (
+            <LoaderWrapper>
+              <Loader size={2} />
+            </LoaderWrapper>
+          )
         ) : null}
         <Stack>
           <RadioButton<string>
@@ -209,25 +212,25 @@ export default function Index() {
             onChange={onChange}
           />
         </Stack>
-        <Stack style={{ height: '100%' }}>
-          <AnimatePresence>
-            {value === '' && <Skeleton disabled={filteringData.disabled} />}
-            {value === '다읽음' && <Read />}
-            {value === '읽는중' && <Reading />}
-            {value === '읽고싶음' && <ToRead />}
-          </AnimatePresence>
-        </Stack>
-        {isLogged ? (
-          <Stack>
-            <Button
-              // disabled={filteringData.disabled || !isLogged}
-              type="submit"
-              isLoading={readingLoading || readLoading || readToLoading}
-            >
-              추가하기
-            </Button>
+        <Suspense fallback={<Loader />}>
+          <Stack style={{ height: '100%' }}>
+            <AnimatePresence>
+              {value === '' && <Skeleton disabled={filteringData.disabled} />}
+              {value === '다읽음' && <Read />}
+              {value === '읽는중' && <Reading />}
+              {value === '읽고싶음' && <ToRead />}
+            </AnimatePresence>
           </Stack>
-        ) : null}
+        </Suspense>
+        <Stack>
+          <Button
+            disabled={filteringData.disabled || !isLogged}
+            type="submit"
+            isLoading={readingLoading || readLoading || readToLoading}
+          >
+            {isLogged ? '추가하기' : '로그인을 해주세요.'}
+          </Button>
+        </Stack>
       </Contents>
     </Container>
   );

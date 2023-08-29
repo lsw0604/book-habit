@@ -13,15 +13,14 @@ const Container = styled.div`
 `;
 
 export default function MyBooksInfoPage() {
-  const { users_books_id, title } = useParams();
+  const { users_books_id } = useParams();
 
-  if (users_books_id === undefined || title === undefined) {
+  if (users_books_id === undefined) {
     return <div>올바른 접근이 아닙니다.</div>;
   }
 
   return (
     <Container>
-      <h1>{title}의 독서기록</h1>
       <MyBookInfo />
     </Container>
   );

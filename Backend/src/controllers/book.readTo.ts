@@ -2,6 +2,8 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import dateParse from 'date-fns/parseISO';
+import addHours from 'date-fns/addHours';
 
 interface IRequest<T> extends Request {
   body: T;
@@ -68,7 +70,7 @@ export default async function readToBook(
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
         const USER_BOOKS_INFO_SQL =
-          'INSERT INTO users_books_info (rating, status, users_books_id) VALUES (?, ?, ?)';
+          'INSERT INTO users_books_info (rating, status, users_books_id) VALUES(?, ?, ?)';
         const USER_BOOKS_INFO_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
         const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_INFO_SQL,
@@ -76,8 +78,12 @@ export default async function readToBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
 
-        const USER_BOOKS_STATUS_SQL = `INSERT INTO users_books_status (status, users_books_id)`;
-        const USER_BOOKS_STATUS_VALUES = [status, USER_BOOKS_RESULT.insertId];
+        const USER_BOOKS_STATUS_SQL = `INSERT INTO users_books_status (status, users_books_id, date) VALUES(?, ?, ?)`;
+        const USER_BOOKS_STATUS_VALUES = [
+          status,
+          USER_BOOKS_RESULT.insertId,
+          dateParse(addHours(new Date(), 9).toISOString().split('T')[0]),
+        ];
         const [USER_BOOKS_STATUS_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_STATUS_SQL,
           USER_BOOKS_STATUS_VALUES
@@ -105,8 +111,13 @@ export default async function readToBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
 
-        const USER_BOOKS_STATUS_SQL = 'INSERT INTO users_books_status (status, users_books_id)';
-        const USER_BOOKS_STATUS_VALUES = [status, USER_BOOKS_RESULT.insertId];
+        const USER_BOOKS_STATUS_SQL =
+          'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
+        const USER_BOOKS_STATUS_VALUES = [
+          status,
+          USER_BOOKS_RESULT.insertId,
+          dateParse(addHours(new Date(), 9).toISOString().split('T')[0]),
+        ];
         const [USER_BOOKS_STATUS_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_STATUS_SQL,
           USER_BOOKS_STATUS_VALUES
