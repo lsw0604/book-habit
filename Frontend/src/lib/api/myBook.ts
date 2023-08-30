@@ -19,6 +19,13 @@ export const myBookExistAPI = async (isbn: string) => {
   return data;
 };
 
+export const myBookHistoryRegisterAPI = async (
+  body: MyBookHistoryRegisterType
+) => {
+  const { data } = await axios.post(`/api/my_book/register`, body);
+  return data;
+};
+
 export const readMyBookRegisterAPI = async (body: MyBookInfoAddReadType) => {
   const { data } = await axios.post(`/api/my_book/read`, body);
   return data;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { readToBookOptions, ratingList } from 'lib/staticData';
 import dateParse from 'date-fns/parseISO';
 import addHours from 'date-fns/addHours';
 

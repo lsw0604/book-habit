@@ -167,12 +167,13 @@ export default function Index({
 
   const onClearHandler = (event: ReactMouseEvent) => {
     event.stopPropagation();
-    setIsOpen(false);
     initSelectOption();
+    setIsOpen(false);
     return multiple ? onChange([]) : onChange(undefined);
   };
 
-  const handleOptions = () => {
+  const handleOptions = (event: ReactMouseEvent) => {
+    event.stopPropagation();
     setIsOpen((prev) => !prev);
   };
 
@@ -234,12 +235,12 @@ export default function Index({
                   <Divider divider={1} />
                 </>
               )}
-              <Icon>
+              <Icon onClick={handleOptions}>
                 <IconDownArrow />
               </Icon>
             </ValueIndicator>
           ) : (
-            <Icon>
+            <Icon onClick={handleOptions}>
               <IconDownArrow />
             </Icon>
           )}

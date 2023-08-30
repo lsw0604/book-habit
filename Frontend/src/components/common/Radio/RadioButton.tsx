@@ -88,6 +88,7 @@ const InfoLabelWrapper = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
 `;
 
 const InfoDescription = styled.span`
@@ -125,7 +126,7 @@ const RadioButton = <T extends string | number>({
               <Label isChecked={option.value === value} key={index}>
                 <Input
                   type="radio"
-                  id={`radio-${index}`}
+                  id={`radio-${option.value}`}
                   checked={value === option.value}
                   onChange={() => {
                     onChange && onChange(option.value);
@@ -133,7 +134,7 @@ const RadioButton = <T extends string | number>({
                 />
                 <InfoLabel
                   isDescription={!!option.description}
-                  htmlFor={`radio-${index}`}
+                  htmlFor={`radio-${option.value}`}
                 >
                   <InfoLabelWrapper>
                     {option.icon && <Icon>{option.icon}</Icon>}

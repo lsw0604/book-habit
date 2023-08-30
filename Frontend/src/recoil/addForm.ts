@@ -3,10 +3,12 @@ import { v1 } from 'uuid';
 
 const ADD_FORM_ATOM_KEY = `ADD_FORM_ATOM_KEY/${v1()}`;
 
-export const addFormAtom = atom({
+export const addFormAtom = atom<addFormAtomType>({
   key: ADD_FORM_ATOM_KEY,
   default: {
-    date: Date,
-    page: 0,
+    date: null,
+    status: '',
+    useValidation: false,
+    page: '',
   },
 });

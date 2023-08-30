@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Item from 'components/MyBookInfo/Item';
 import useMyBookHistoryHook from '@hooks/useMyBookHistoryHook';
 import Loader from 'components/common/Loader';
-import useToastHook from '@hooks/useToastHook';
 
 const Container = styled.div`
   width: 100%;
@@ -26,15 +25,16 @@ const EmptyTag = styled.div`
 
 export default function List({ filter }: { filter: string[] }) {
   const { users_books_id } = useParams();
-  const { addToast } = useToastHook();
 
   if (users_books_id === undefined) {
     return <div>올바른 접근이 아닙니다.</div>;
   }
 
-  const { data, isError, error, isFetching, isLoading, isSuccess } =
-    useMyBookHistoryHook(parseInt(users_books_id), filter);
-  console.log(data);
+  const { data, isFetching, isLoading, isSuccess } = useMyBookHistoryHook(
+    parseInt(users_books_id),
+    filter
+  );
+
   return (
     <>
       {(isLoading || isFetching) && (

@@ -1,12 +1,16 @@
 import styled from 'styled-components';
 import { useState, FormEvent } from 'react';
+import { useParams } from 'react-router-dom';
 
 import RadioButton from 'components/common/Radio/RadioButton';
 import Button from 'components/common/Button';
-import { IconBook } from '@style/icons';
-import { RadioGroupOptionType } from 'types/style';
 import Skeleton from 'components/MyBookInfo/Skeleton';
-import { useParams } from 'react-router-dom';
+import { IconPencil, IconStar } from '@style/icons';
+import { RadioGroupOptionType } from 'types/style';
+import HistoryAdd from './HistoryAdd';
+import RatingAdd from './RatingAdd';
+import useMyBookAddFormHistoryHook from '@hooks/useMyBookAddFormHistoryHook';
+import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 
 const Container = styled.form`
   display: flex;
@@ -17,60 +21,89 @@ const Container = styled.form`
 const Stack = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 8px;
 `;
 
 const Content = styled.div`
   width: 100%;
   display: flex;
+  flex: 1;
   margin-bottom: 8px;
-  min-height: 10rem;
+  min-height: 8rem;
 `;
 
 const options: RadioGroupOptionType<string>[] = [
   {
-    label: '시작한 날',
-    value: '시작',
-    icon: <IconBook />,
-    description: '책을 읽기 시작했어요.',
+    label: '책기록하기',
+    value: '기록',
+    icon: <IconPencil />,
+    description: '내 책에 대한 기록을 남겨요.',
   },
   {
-    label: '읽은 날',
-    value: '중간',
-    icon: <IconBook />,
-    description: '책을 읽은 날이에요.',
-  },
-  {
-    label: '다 읽은 날',
-    value: '끝남',
-    icon: <IconBook />,
-    description: '책을 다 읽었어요.',
+    label: '평점매기기',
+    value: '평점',
+    icon: <IconStar />,
+    description: '내 책에 평점을 매겨요.',
   },
 ];
 
 export default function AddForm() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const [status, setStatus] = useState<'' | '시작' | '중간' | '끝남'>('');
+  const [status, setStatus] = useState<'' | '기록' | '평점'>('');
+  const {
+    addFormHistoryDate,
+    addFormHistoryStatus,
+    addFormHistoryPage,
+    useMyBookAddFormHistoryValidate,
+    onChangeAddFormHistoryUseValidation,
+  } = useMyBookAddFormHistoryHook();
 
   const onChange = (value: string) => {
-    setStatus(value as '' | '시작' | '중간' | '끝남');
+    setStatus(value as '' | '기록' | '평점');
   };
+
+  const body =
+    addFormHistoryStatus === '읽는중'
+      ? {
+          status: addFormHistoryStatus,
+          date: addFormHistoryDate,
+          users_books_id: parseInt(users_books_id),
+          page: addFormHistoryPage,
+        }
+      : {
+          status: addFormHistoryStatus,
+          date: addFormHistoryDate,
+          users_books_id: parseInt(users_books_id),
+        };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (status === '기록') {
+      onChangeAddFormHistoryUseValidation(true);
+      if (useMyBookAddFormHistoryValidate) {
+        const response = await myBookHistoryRegisterAPI(
+          body as MyBookHistoryRegisterType
+        );
+        console.log(response);
+      }
+    }
   };
 
   return (
     <Container onSubmit={onSubmit}>
       <Stack>
         <RadioButton<string>
+          label="추가하고 싶은 상태 유형을 골라주세요."
           value={status}
           options={options}
           onChange={onChange}
         />
       </Stack>
-      <Content>{status === '' ? <Skeleton /> : <div>AddForm</div>}</Content>
+      <Content>
+        {status === '' && <Skeleton />}
+        {status === '기록' && <HistoryAdd />}
+        {status === '평점' && <RatingAdd />}
+      </Content>
       <Stack>
         <Button type="submit">기록하기</Button>
       </Stack>

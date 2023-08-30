@@ -54,6 +54,13 @@ type BookRegisterType = {
   price: number;
 };
 
+type MyBookHistoryRegisterType = {
+  status: '읽기시작함' | '읽는중' | '다읽음';
+  date: Date;
+  users_books_id: number;
+  page?: number;
+};
+
 type MyBookInfoAddReadType = {
   users_books_id: number;
   status: BookStateType;

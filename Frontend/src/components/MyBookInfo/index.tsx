@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import Selector from 'components/common/Selector';
 import List from 'components/MyBookInfo/List';
+import Rating from 'components/MyBookInfo/Rating';
 import AddForm from 'components/MyBookInfo/AddForm';
 import Accordion from 'components/common/Accordion';
 
@@ -35,8 +36,11 @@ export default function Index() {
           options={options}
         />
       </Stack>
-      <Accordion label="펼쳐보기">
+      <Accordion label="기록보기">
         <List filter={value} />
+      </Accordion>
+      <Accordion label="평점보기">
+        <Rating />
       </Accordion>
       <Accordion label="추가하기">
         <AddForm />
