@@ -9,7 +9,7 @@ import { IconPencil, IconStar } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import HistoryAdd from 'components/MyBookInfo/HistoryAdd';
 import RatingAdd from 'components/MyBookInfo/RatingAdd';
-import useMyBookRegisterHook from '@hooks/useMyBookRegisterHook';
+import useMyBookAddFormHistoryRegisterHook from '@hooks/useMyBookAddFormHistoryRegisterHook';
 import useMyBookAddFormHistoryHook from '@hooks/useMyBookAddFormHistoryHook';
 
 const Container = styled.form`
@@ -58,9 +58,8 @@ export default function AddForm() {
     onChangeAddFormHistoryUseValidation,
   } = useMyBookAddFormHistoryHook();
 
-  const { isLoading, mutate: historyMutate } = useMyBookRegisterHook(
-    parseInt(users_books_id)
-  );
+  const { isLoading, mutate: historyMutate } =
+    useMyBookAddFormHistoryRegisterHook(parseInt(users_books_id));
 
   const onChange = (value: string) => {
     setStatus(value as '' | '기록' | '평점');

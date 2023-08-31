@@ -7,14 +7,13 @@ import Loader from 'components/common/Loader';
 
 const Container = styled.div`
   width: 100%;
-  padding: 1rem 0;
-  max-height: 17rem;
+  max-height: 16rem;
   overflow: scroll;
 `;
 
 const EmptyTag = styled.div`
   width: 100%;
-  height: 15rem;
+  height: 16rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +24,7 @@ const EmptyTag = styled.div`
 
 const LoadingContainer = styled.div`
   width: 100%;
-  height: 15rem;
+  height: 16rem;
   display: flex;
   justify-content: center;
   align-items: center;

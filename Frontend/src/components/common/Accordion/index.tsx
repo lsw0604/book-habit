@@ -32,11 +32,9 @@ export default function Index({ children, label }: IProps) {
   };
   return (
     <>
-      <Container>
+      <Container onClick={onOpenHandler}>
         <div>{label}</div>
-        <Icon onClick={onOpenHandler}>
-          {open ? <IconUpArrow /> : <IconDownArrow />}
-        </Icon>
+        <Icon>{open ? <IconUpArrow /> : <IconDownArrow />}</Icon>
       </Container>
       {open ? children : null}
     </>

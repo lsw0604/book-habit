@@ -6,8 +6,10 @@ import useToastHook from './useToastHook';
 import useMyBookAddFormHistoryHook from './useMyBookAddFormHistoryHook';
 import useMyBookHistoryHook from './useMyBookHistoryHook';
 
-export default function useMyBookRegisterHook(users_books_id: number) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_REGISTER_KEY';
+export default function useMyBookAddFormHistoryRegisterHook(
+  users_books_id: number
+) {
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_ADD_FORM_HISTORY_REGISTER_KEY';
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();

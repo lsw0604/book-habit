@@ -1,29 +1,9 @@
 import { axios } from './';
 import Axios from 'axios';
 
-export const myBooksInfoAPI = async (users_books_id: number) => {
-  const { data } = await axios.get<{ books: MyBookInfoResponseType[] }>(
-    `/api/my_books/${users_books_id}`
-  );
-  return data;
-};
-
-export const myBooksInfoAddReadAPI = async (body: MyBookInfoAddReadType) => {
-  console.log(body);
-  const { data } = await axios.post<BookRegisterResponseType>(
-    `/api/books/read_add`,
-    body
-  );
-  return data;
-};
-
-export const myBooksInfoAddReadingAPI = async (
-  body: MyBookInfoAddReadingType
-) => {
-  const { data } = await axios.post(`/api/books/reading_add`, body);
-  return data;
-};
-
+/**
+ * * 책 검색하는 API
+ */
 export const booksSearchAPI = async (body: string, page: number) => {
   const { data } = await Axios.get(
     `https://dapi.kakao.com/v3/search/book?query=${encodeURI(
@@ -38,16 +18,25 @@ export const booksSearchAPI = async (body: string, page: number) => {
   return data;
 };
 
+/**
+ * * 읽은 책 등록하는 API
+ */
 export const readBookRegisterAPI = async (body: ReadBookRegisterType) => {
   const { data } = await axios.post(`/api/books/read`, body);
   return data;
 };
 
+/**
+ * * 읽고 있는 책 등록하는 API
+ */
 export const readingBookRegisterAPI = async (body: ReadingBookRegisterType) => {
   const { data } = await axios.post(`/api/books/reading`, body);
   return data;
 };
 
+/**
+ * * 읽고 싶은 책 등록하는 API
+ */
 export const readToBookRegisterAPI = async (body: ReadToBookRegisterType) => {
   const { data } = await axios.post(`/api/books/read_to`, body);
   return data;

@@ -127,6 +127,11 @@ export type MyBookHistoryType = {
   updated_at: Date | null;
 } & RowDataPacket;
 
+export type MyBookInfoType = {
+  image: string;
+  title: string;
+} & RowDataPacket;
+
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';

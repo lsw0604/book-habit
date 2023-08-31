@@ -11,7 +11,7 @@ declare module 'styled-components' {
       'sm' | 'n' | 'md' | 'lg' | 'xl' | 'xxl' | 'inner' | 'none',
       string
     >;
-    colors: Record<'main' | 'sub' | 'spinner', string>;
+    colors: Record<'main' | 'sub' | 'spinner' | 'footer', string>;
   }
 }
 

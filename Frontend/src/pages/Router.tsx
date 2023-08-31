@@ -14,6 +14,7 @@ import MyBooksInfo from './MyBooksInfoPage';
 import DefaultLayout from './layout/DefaultLayout';
 import IsAuthLayout from './layout/IsAuthLayout';
 import IsKakaoAuthLayout from './layout/IsKakaoAuthLayout';
+import Footer from 'components/common/Footer';
 
 export default function Router({ isLoading }: { isLoading: boolean }) {
   return (
@@ -46,6 +47,9 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
           </DefaultLayout>
         </section>
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </BrowserRouter>
   );
 }
