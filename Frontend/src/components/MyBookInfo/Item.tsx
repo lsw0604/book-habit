@@ -100,8 +100,10 @@ export default function Item({
           <Date>
             {year}년 {month}월 {day}일
           </Date>
-          <Heading>{status}</Heading>
-          {page && <Description>{page} 페이지 읽었어요.</Description>}
+          <Heading>{page && `${page}페이지 읽었어요.`}</Heading>
+          <Description>
+            {created_year}년 {created_month}월 {created_day}일 기록했어요.
+          </Description>
         </Content>
       </Container>
     );

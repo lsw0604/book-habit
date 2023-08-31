@@ -3,7 +3,7 @@ import { myBookHistoryAPI } from 'lib/api/myBook';
 
 export default function useMyBookHistoryHook(
   users_books_id: number,
-  filtered: string[]
+  filtered?: string[]
 ) {
   const REACT_QUERY_KEY = 'MY_BOOK_HISTORY';
 
@@ -13,12 +13,14 @@ export default function useMyBookHistoryHook(
       () => myBookHistoryAPI(users_books_id),
       {
         select: ({ books }) => {
-          if (filtered.includes('전체보기')) {
+          if (filtered && filtered.includes('전체보기')) {
             return books;
-          } else if (filtered.length === 0) {
+          } else if (filtered && filtered.length === 0) {
             return [];
           } else {
-            return books.filter((book) => filtered.includes(book.status));
+            return books.filter(
+              (book) => filtered && filtered.includes(book.status)
+            );
           }
         },
       }

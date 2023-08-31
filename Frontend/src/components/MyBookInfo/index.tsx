@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 import Selector from 'components/common/Selector';
 import List from 'components/MyBookInfo/List';
@@ -20,8 +19,6 @@ const Stack = styled.div`
 `;
 
 export default function Index() {
-  const { users_books_id } = useParams();
-  if (users_books_id === undefined) return <div>잘못된 접근입니다.</div>;
   const [value, setValue] = useState<string[]>([]);
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
 

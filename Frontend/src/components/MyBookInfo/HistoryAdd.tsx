@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import dateParse from 'date-fns/parseISO';
+import addHours from 'date-fns/addHours';
 
 import Input from 'components/common/Input';
 import RadioButton from 'components/common/Radio/RadioButton';
@@ -7,6 +9,8 @@ import { IconBook } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookAddFormHistoryHook from '@hooks/useMyBookAddFormHistoryHook';
+import useMyBookHistoryHook from '@hooks/useMyBookHistoryHook';
+import { useParams } from 'react-router-dom';
 
 const Container = styled.div`
   flex: 1;
@@ -22,6 +26,7 @@ const Stack = styled.div<{ isStatus?: boolean }>`
     isStatus
       ? css`
           display: flex;
+          gap: 12px;
         `
       : null}
 `;
@@ -45,7 +50,7 @@ const options: RadioGroupOptionType<string>[] = [
     description: '책을 읽은 날이에요.',
   },
   {
-    label: '다 읽은 날',
+    label: '다 끝난날',
     value: '다읽음',
     icon: <IconBook />,
     description: '책을 다 읽었어요.',
@@ -53,6 +58,8 @@ const options: RadioGroupOptionType<string>[] = [
 ];
 
 export default function HistoryAdd() {
+  const { users_books_id } = useParams();
+  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const {
     addFormHistoryDate,
     addFormHistoryStatus,
@@ -63,6 +70,24 @@ export default function HistoryAdd() {
     onChangeAddFormHistoryPage,
     setAddFormHistoryState,
   } = useMyBookAddFormHistoryHook();
+
+  const { data: readToData } = useMyBookHistoryHook(parseInt(users_books_id), [
+    '읽고싶음',
+  ]);
+  const { data: readStartData } = useMyBookHistoryHook(
+    parseInt(users_books_id),
+    ['읽기시작함']
+  );
+  const { data: readData } = useMyBookHistoryHook(parseInt(users_books_id), [
+    '다읽음',
+  ]);
+
+  const getStartDate = (data?: MyBookHistoryResponseType[]) => {
+    if (data && data.length !== 0) {
+      return addHours(dateParse(data[0].date), 9);
+    }
+    return null;
+  };
 
   useEffect(() => {
     setAddFormHistoryState({
@@ -89,9 +114,20 @@ export default function HistoryAdd() {
         <Stack isStatus={addFormHistoryStatus === '읽는중'}>
           <Stack>
             <DateSelector
+              startDate={
+                getStartDate(readStartData)
+                  ? getStartDate(readStartData)
+                  : getStartDate(readToData)
+              }
               onChange={(e) => onChangeAddFormHistoryDate(e)}
               date={addFormHistoryDate}
-              endDate={new Date()}
+              endDate={
+                readData
+                  ? readData.length !== 0
+                    ? addHours(dateParse(readData[0].date), 9)
+                    : new Date()
+                  : new Date()
+              }
               errorMessage="날짜를 입력해주세요."
               isValid={addFormHistoryDate === null}
               useValidation={addFormHistoryUseValidation}

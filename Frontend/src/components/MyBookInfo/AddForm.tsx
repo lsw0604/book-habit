@@ -7,10 +7,10 @@ import Button from 'components/common/Button';
 import Skeleton from 'components/MyBookInfo/Skeleton';
 import { IconPencil, IconStar } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
-import HistoryAdd from './HistoryAdd';
-import RatingAdd from './RatingAdd';
+import HistoryAdd from 'components/MyBookInfo/HistoryAdd';
+import RatingAdd from 'components/MyBookInfo/RatingAdd';
+import useMyBookRegisterHook from '@hooks/useMyBookRegisterHook';
 import useMyBookAddFormHistoryHook from '@hooks/useMyBookAddFormHistoryHook';
-import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 
 const Container = styled.form`
   display: flex;
@@ -58,6 +58,10 @@ export default function AddForm() {
     onChangeAddFormHistoryUseValidation,
   } = useMyBookAddFormHistoryHook();
 
+  const { isLoading, mutate: historyMutate } = useMyBookRegisterHook(
+    parseInt(users_books_id)
+  );
+
   const onChange = (value: string) => {
     setStatus(value as '' | '기록' | '평점');
   };
@@ -81,10 +85,7 @@ export default function AddForm() {
     if (status === '기록') {
       onChangeAddFormHistoryUseValidation(true);
       if (useMyBookAddFormHistoryValidate) {
-        const response = await myBookHistoryRegisterAPI(
-          body as MyBookHistoryRegisterType
-        );
-        console.log(response);
+        return historyMutate(body as MyBookHistoryRegisterType);
       }
     }
   };
@@ -105,7 +106,9 @@ export default function AddForm() {
         {status === '평점' && <RatingAdd />}
       </Content>
       <Stack>
-        <Button type="submit">기록하기</Button>
+        <Button type="submit" isLoading={isLoading}>
+          등록하기
+        </Button>
       </Stack>
     </Container>
   );

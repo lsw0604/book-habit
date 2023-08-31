@@ -92,7 +92,7 @@ type ReadToBookRegisterType = BookRegisterType & {
 
 type BookRegisterResponseType = {
   message: string;
-  status: 'success' | 'error';
+  status: StatusType;
 };
 
 type MyBookHistoryResponseType = {

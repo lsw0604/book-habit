@@ -4,6 +4,7 @@ import DatePicker from 'components/common/DatePicker';
 import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 interface IProps {
+  startDate?: Date | null;
   endDate?: Date | null;
   onChange: (date: Date | null) => void;
   date: Date | null;
@@ -42,6 +43,7 @@ const Heading = styled.span`
 
 export default function DateSelector({
   endDate,
+  startDate,
   onChange,
   date,
   errorMessage,
@@ -53,6 +55,7 @@ export default function DateSelector({
       <Heading>날짜</Heading>
       <Container>
         <DatePicker
+          minDate={startDate}
           onChange={onChange}
           selected={date}
           maxDate={endDate || new Date()}
