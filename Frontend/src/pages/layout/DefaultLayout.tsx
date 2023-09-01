@@ -7,7 +7,8 @@ const Layout = styled.div`
   min-height: 100vh;
   width: 100%;
   height: 100%;
-  padding: 4rem 1rem 0rem 1rem;
+  padding: 4rem 1rem;
+  display: flex;
 `;
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {

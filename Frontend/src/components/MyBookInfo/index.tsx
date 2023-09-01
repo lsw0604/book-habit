@@ -1,15 +1,16 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import Selector from 'components/common/Selector';
-import List from 'components/MyBookInfo/List';
 import Rating from 'components/MyBookInfo/Rating';
-import AddForm from 'components/MyBookInfo/AddForm';
 import Accordion from 'components/common/Accordion';
 import { useParams } from 'react-router-dom';
 import useMyBookInfoHook from '@hooks/useMyBookInfoHook';
 import Loader from 'components/common/Loader';
 import Divider from 'components/common/Divider';
+
+const List = lazy(() => import('components/MyBookInfo/List'));
+const AddForm = lazy(() => import('components/MyBookInfo/AddForm'));
 
 const Container = styled.div`
   width: 100%;
@@ -30,7 +31,6 @@ const LoaderContainer = styled.div`
 
 const InfoContainer = styled.div`
   display: flex;
-  flex-direction: column;
   gap: 8px;
   display: flex;
   justify-content: center;
@@ -39,7 +39,7 @@ const InfoContainer = styled.div`
     overflow: hidden;
     border-radius: 5px;
     width: 100%;
-    max-width: 360px;
+    max-width: 120px;
     img {
       width: 100%;
       height: auto;
@@ -79,11 +79,12 @@ export default function Index() {
         </LoaderContainer>
       ) : (
         <InfoContainer>
-          <div className="info-wrapper">
-            <Title>{data?.result.title}</Title>
-          </div>
           <div className="image-wrapper">
             <img src={data?.result.image} alt={data?.result.title} />
+          </div>
+          <div className="info-wrapper">
+            <Title>{data?.result.title}</Title>
+            <div>description</div>
           </div>
         </InfoContainer>
       )}
@@ -98,13 +99,29 @@ export default function Index() {
         />
       </Stack>
       <Accordion label="기록보기">
-        <List filter={value} />
+        <Suspense
+          fallback={
+            <LoaderContainer style={{ height: '16rem' }}>
+              <Loader />
+            </LoaderContainer>
+          }
+        >
+          <List filter={value} />
+        </Suspense>
       </Accordion>
       <Accordion label="평점보기">
         <Rating />
       </Accordion>
       <Accordion label="추가하기">
-        <AddForm />
+        <Suspense
+          fallback={
+            <LoaderContainer style={{ height: '17rem' }}>
+              <Loader />
+            </LoaderContainer>
+          }
+        >
+          <AddForm />
+        </Suspense>
       </Accordion>
     </Container>
   );

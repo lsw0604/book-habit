@@ -3,7 +3,6 @@ import { useState, FormEvent, useEffect, Suspense, lazy } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { modalAtom } from 'recoil/modal';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
@@ -18,6 +17,7 @@ import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
 import { userAtom } from 'recoil/user';
 import useMyBookExistHook from '@hooks/useMyBookExistHook';
 import Loader from 'components/common/Loader';
+import { bottomSheetAtom } from 'recoil/bottomSheet';
 
 const Read = lazy(() => import('components/BottomSheet/Read'));
 const Reading = lazy(() => import('components/BottomSheet/Reading'));
@@ -81,6 +81,9 @@ export default function Index() {
   const [value, setValue] = useState<ModalType>('');
   const { isLogged } = useRecoilValue(userAtom);
 
+  const { authors, contents, image, isbn, price, publisher, url, title } =
+    useRecoilValue(bottomSheetAtom);
+
   const { readBookState, onChangeReadBookUseValidation, readBookFormValidate } =
     useReadModalHook();
   const {
@@ -99,9 +102,6 @@ export default function Index() {
   const { mutate: readMutate, isLoading: readLoading } = useReadRegisterHook();
   const { mutate: readToMutate, isLoading: readToLoading } =
     useReadToRegisterHook();
-
-  const { image, isbn, price, author, company, title } =
-    useRecoilValue(modalAtom);
 
   const { filteringData, refetch, isLoading } = useMyBookExistHook(isbn);
 
@@ -131,14 +131,17 @@ export default function Index() {
   };
 
   const registerBody: BookRegisterType = {
-    author: author.join(','),
-    company,
+    authors: authors.join(','),
+    publisher,
     image,
     isbn,
     price,
     status: value,
     title,
+    contents,
+    url,
   };
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (value === '다읽음') {

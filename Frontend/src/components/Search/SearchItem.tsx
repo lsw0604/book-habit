@@ -4,6 +4,7 @@ import { IconImage } from '@style/icons';
 import SearchItemHeader from 'components/Search/SearchItemHeader';
 import { useSetRecoilState } from 'recoil';
 import { modalAtom } from 'recoil/modal';
+import { bottomSheetAtom } from 'recoil/bottomSheet';
 
 const Container = styled.button`
   background-color: ${({ theme }) => theme.mode.sub};
@@ -75,24 +76,29 @@ export default function SearchItem({
   title,
   translators,
   search,
+  contents,
+  url,
 }: KakaoSearchResponseDocumentType & { search: string }) {
   const date = datetime.toString().split('-');
 
   const ISBN = isbn.split(' ');
 
   const modalSetState = useSetRecoilState(modalAtom);
+  const bottomSheetSetState = useSetRecoilState(bottomSheetAtom);
 
   return (
     <Container
       onClick={() => {
-        modalSetState({
-          isOpen: true,
-          title,
-          isbn: ISBN[1],
-          author: authors,
-          company: publisher,
+        modalSetState({ isOpen: true });
+        bottomSheetSetState({
+          image: thumbnail ? thumbnail : '',
+          authors,
+          publisher,
+          contents,
+          isbn: ISBN[0],
           price,
-          image: thumbnail,
+          url,
+          title,
         });
       }}
     >

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Header from '../components/header/Header';
+import Header from 'components/header/Header';
+import BottomNavigation from 'components/BottomNavigation';
 
 import Home from './HomePage';
 import Login from './LoginPage';
@@ -14,7 +15,6 @@ import MyBooksInfo from './MyBooksInfoPage';
 import DefaultLayout from './layout/DefaultLayout';
 import IsAuthLayout from './layout/IsAuthLayout';
 import IsKakaoAuthLayout from './layout/IsKakaoAuthLayout';
-import Footer from 'components/common/Footer';
 
 export default function Router({ isLoading }: { isLoading: boolean }) {
   return (
@@ -48,7 +48,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
         </section>
       </main>
       <footer>
-        <Footer />
+        <BottomNavigation />
       </footer>
     </BrowserRouter>
   );

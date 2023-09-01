@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import MyBookInfo from 'components/MyBookInfo';
 
@@ -13,11 +13,9 @@ const Container = styled.div`
 `;
 
 export default function MyBooksInfoPage() {
-  const { users_books_id } = useParams();
-
-  if (users_books_id === undefined) {
-    return <div>올바른 접근이 아닙니다.</div>;
-  }
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Container>
