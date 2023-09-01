@@ -6,33 +6,20 @@ interface IMyBooksAlreadyResponse {
   message?: string;
 }
 
-export default function useExistBookHook(isbn: string) {
+export default function useMyBookExist(isbn: string) {
   const REACT_QUERY_KEY = 'MY_BOOKS_EXIST';
-  const { data, isLoading, isFetching, refetch } =
+  const { data, isLoading, isFetching, isSuccess } =
     useQuery<IMyBooksAlreadyResponse>(
       [REACT_QUERY_KEY, isbn],
       () => myBookExistAPI(isbn),
       {
-        enabled: false,
+        staleTime: 5 * 1000,
+        cacheTime: 3 * 1000,
       }
     );
-
-  const filteringData =
-    data && data.message
-      ? {
-          result: data.message,
-          disabled: false,
-        }
-      : {
-          result:
-            data && ` 현재 나의 서재에 ${data.status}상태로 저장됐습니다.`,
-          disabled: true,
-        };
-
   return {
-    filteringData,
+    data,
     isLoading,
     isFetching,
-    refetch,
   };
 }

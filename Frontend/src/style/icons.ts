@@ -1,3 +1,4 @@
+export { ReactComponent as ContactFingerImage } from '../assets/icons/contactFinger.svg';
 export { ReactComponent as IconBeach } from '../assets/icons/iconBeach.svg';
 export { ReactComponent as IconBook } from '../assets/icons/iconBook.svg';
 export { ReactComponent as IconCheck } from '../assets/icons/iconCheck.svg';

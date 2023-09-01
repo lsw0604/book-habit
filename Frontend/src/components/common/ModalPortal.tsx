@@ -43,17 +43,7 @@ const ModalPortal = ({ children }: IProps) => {
     }
   }, []);
 
-  const onModalClose = () => {
-    setModalState({
-      isOpen: false,
-      isbn: '',
-      title: '',
-      author: [],
-      company: '',
-      image: '',
-      price: 0,
-    });
-  };
+  const onModalClose = () => setModalState({ isOpen: false });
 
   if (ref.current && mounted && modalState.isOpen) {
     return createPortal(

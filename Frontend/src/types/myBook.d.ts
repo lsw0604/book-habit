@@ -1,0 +1,3 @@
+type MyBookAtomType = {
+  isExist: boolean;
+};

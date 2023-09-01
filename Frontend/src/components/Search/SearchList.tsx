@@ -7,7 +7,8 @@ import SearchItem from 'components/Search/SearchItem';
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: 39rem;
+  overflow: scroll;
 `;
 
 const Page = styled.div`

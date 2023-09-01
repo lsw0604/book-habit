@@ -8,6 +8,9 @@ import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
 import Skeleton from 'components/BottomSheet/Skeleton';
 import Button from 'components/common/Button';
+import Loader from 'components/common/Loader';
+import BookStatus from 'components/BottomSheet/BookStatus';
+
 import useReadModalHook from '@hooks/useReadModalHook';
 import useReadingModalHook from '@hooks/useReadingModalHook';
 import useReadToModalHook from '@hooks/useReadToModalHook';
@@ -16,7 +19,6 @@ import useReadRegisterHook from '@hooks/useReadRegisterHook';
 import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
 import { userAtom } from 'recoil/user';
 import useMyBookExistHook from '@hooks/useMyBookExistHook';
-import Loader from 'components/common/Loader';
 import { bottomSheetAtom } from 'recoil/bottomSheet';
 
 const Read = lazy(() => import('components/BottomSheet/Read'));
@@ -54,28 +56,13 @@ const Heading = styled.h1`
   text-align: center;
 `;
 
-const SubHeading = styled.span`
-  margin-left: 10px;
-  margin-bottom: 8px;
-  display: block;
-  color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 14px;
-  line-height: 18px;
-`;
-
-const LoaderWrapper = styled.div`
-  width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Stack = styled.div`
   position: relative;
   width: 100%;
   margin-bottom: 8px;
 `;
+
+const LoaderWrapper = styled.div``;
 
 export default function Index() {
   const [value, setValue] = useState<ModalType>('');
@@ -102,8 +89,6 @@ export default function Index() {
   const { mutate: readMutate, isLoading: readLoading } = useReadRegisterHook();
   const { mutate: readToMutate, isLoading: readToLoading } =
     useReadToRegisterHook();
-
-  const { filteringData, refetch, isLoading } = useMyBookExistHook(isbn);
 
   const options: RadioGroupOptionType<string>[] = [
     {
@@ -177,12 +162,6 @@ export default function Index() {
     }
   };
 
-  useEffect(() => {
-    if (isLogged) {
-      refetch();
-    }
-  }, [isLogged]);
-
   return (
     <Container
       onSubmit={onSubmit}
@@ -198,15 +177,7 @@ export default function Index() {
     >
       <Contents>
         <Heading>이 책은 어떤 책인가요 ?</Heading>
-        {isLogged ? (
-          !isLoading ? (
-            filteringData && <SubHeading>{filteringData.result}</SubHeading>
-          ) : (
-            <LoaderWrapper>
-              <Loader size={2} />
-            </LoaderWrapper>
-          )
-        ) : null}
+        <BookStatus />
         <Stack>
           <RadioButton<string>
             label={title}
@@ -216,9 +187,9 @@ export default function Index() {
           />
         </Stack>
         <Suspense fallback={<Loader />}>
-          <Stack style={{ height: '100%' }}>
+          <Stack style={{ flex: '1' }}>
             <AnimatePresence>
-              {value === '' && <Skeleton disabled={filteringData.disabled} />}
+              {value === '' && <Skeleton />}
               {value === '다읽음' && <Read />}
               {value === '읽는중' && <Reading />}
               {value === '읽고싶음' && <ToRead />}
@@ -227,11 +198,11 @@ export default function Index() {
         </Suspense>
         <Stack>
           <Button
-            disabled={filteringData.disabled || !isLogged}
+            disabled={!isLogged}
             type="submit"
             isLoading={readingLoading || readLoading || readToLoading}
           >
-            {isLogged ? '추가하기' : '로그인을 해주세요.'}
+            추가하기
           </Button>
         </Stack>
       </Contents>

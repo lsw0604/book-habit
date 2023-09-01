@@ -5,7 +5,7 @@ import GlobalStyle from './style/globalStyle';
 import Router from 'pages/Router';
 import Toast from 'components/common/Toast';
 import ModalPortal from 'components/common/ModalPortal';
-import BottomSheet from 'components/BottomSheet';
+import BottomSheet from 'components/common/BottomSheet';
 import useThemeHook from '@hooks/useThemeHook';
 import useAccessHook from '@hooks/useAccessHook';
 
