@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
-import useReadingModalHook from '@hooks/useReadingModalHook';
-import StartDate from 'components/BottomSheet/StartDate';
+import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
+import StartDate from 'components/BookRegister/StartDate';
 import Input from 'components/common/Input';
 import { IconNumber } from '@style/icons';
 
@@ -26,25 +26,31 @@ const Span = styled.span`
 
 export default function Reading() {
   const {
-    onChangeReadingBookPage,
-    onChangeReadingBookStartDate,
-    onChangeReadingBookUseValidation,
-    readingBookPage: page,
-    readingBookStartDate: startDate,
-    readingBookUseValidation: useValidation,
-    readingBookStatus,
-    setReadingBookState,
-  } = useReadingModalHook();
+    onChangeBookRegisterModalStartDate: onChangeStartDate,
+    onChangeBookRegisterModalPage: onChangePage,
+    onChangeBookRegisterModalUseValidation: onChangeUseValidation,
+    setBookRegisterModalState,
+    bookRegisterModalPage: page,
+    bookRegisterModalStartDate: startDate,
+    bookRegisterModalUseValidation: useValidation,
+    readingStatus,
+  } = useBookRegisterModalHook();
 
   useEffect(() => {
     return () => {
-      setReadingBookState({ page: 0, startDate: null, useValidate: false });
+      setBookRegisterModalState({
+        page: 0,
+        startDate: null,
+        endDate: null,
+        rating: 0,
+        useValidate: false,
+      });
     };
   }, []);
 
   useEffect(() => {
     return () => {
-      onChangeReadingBookUseValidation(false);
+      onChangeUseValidation(false);
     };
   }, [startDate, page]);
 
@@ -63,7 +69,7 @@ export default function Reading() {
       <Stack>
         <StartDate
           startDate={startDate}
-          onChange={onChangeReadingBookStartDate}
+          onChange={onChangeStartDate}
           isValid={!startDate}
           useValidation={useValidation}
           errorMessage="읽기 시작한 날짜를 입력해주세요."
@@ -78,14 +84,14 @@ export default function Reading() {
           isValid={!page}
           useValidation={useValidation}
           value={page}
-          onChange={onChangeReadingBookPage}
+          onChange={onChangePage}
         />
       </Stack>
       {startDate && page !== 0 && (
         <Stack>
           <Span>
-            {readingBookStatus &&
-              readingBookStatus.map((value, index) => (
+            {readingStatus &&
+              readingStatus.map((value, index) => (
                 <span style={{ textAlign: 'center' }} key={index}>
                   {value}
                 </span>

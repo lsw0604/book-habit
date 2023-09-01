@@ -12,6 +12,7 @@ interface IProps<T> {
   isValid?: boolean;
   useValidation?: boolean;
   errorMessage?: string;
+  disabled?: boolean;
 }
 
 const Container = styled.div`
@@ -109,6 +110,7 @@ const RadioButton = <T extends string | number>({
   isValid,
   useValidation,
   errorMessage,
+  disabled,
 }: IProps<T>) => {
   return (
     <>
@@ -131,6 +133,7 @@ const RadioButton = <T extends string | number>({
                   onChange={() => {
                     onChange && onChange(option.value);
                   }}
+                  disabled={disabled}
                 />
                 <InfoLabel
                   isDescription={!!option.description}

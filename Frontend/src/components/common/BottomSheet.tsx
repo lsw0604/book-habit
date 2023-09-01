@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import NeedLogin from 'components/common/NeedLogin';
+import MyBookRegister from 'components/BookRegister';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 
@@ -33,7 +34,7 @@ export default function BottomSheet() {
         duration: 0.3,
       }}
     >
-      {isLogged ? <>로그인 불필요</> : <NeedLogin />}
+      {isLogged ? <MyBookRegister /> : <NeedLogin />}
     </Container>
   );
 }

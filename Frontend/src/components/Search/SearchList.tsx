@@ -45,14 +45,15 @@ const Observer = styled.div`
 `;
 
 const ResultWrapper = styled.div`
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 11rem);
+  height: calc(100vh - 14rem);
   border-radius: 5px;
   color: ${({ theme }) => theme.mode.typo_main};
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.09);
 `;
 
 interface IProps {

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 
 import StarRating from 'components/StarRating/Rating';
-import StartDate from 'components/BottomSheet/StartDate';
-import EndDate from 'components/BottomSheet/EndDate';
-import useReadModalHook from '@hooks/useReadModalHook';
+import StartDate from 'components/BookRegister/StartDate';
+import EndDate from 'components/BookRegister/EndDate';
+import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -33,24 +33,25 @@ const Span = styled.span`
 
 export default function Read() {
   const {
-    onChangeReadBookRating,
-    onChangeReadBookStartDate,
-    onChangeReadBookEndDate,
-    onChangeReadBookUseValidation,
-    readBookEndDate: endDate,
-    readBookRating: rating,
-    readBookStartDate: startDate,
-    readBookUseValidation: useValidation,
-    readBookStatus,
-    setReadBookState,
-  } = useReadModalHook();
+    onChangeBookRegisterModalStartDate: onChangeStartDate,
+    onChangeBookRegisterModalEndDate: onChangeEndDate,
+    onChangeBookRegisterModalRating: onChangeRating,
+    onChangeBookRegisterModalUseValidation: onChangeUseValidation,
+    setBookRegisterModalState: setState,
+    bookRegisterModalStartDate: startDate,
+    bookRegisterModalEndDate: endDate,
+    bookRegisterModalRating: rating,
+    bookRegisterModalUseValidation: useValidation,
+    readStatus,
+  } = useBookRegisterModalHook();
 
   useEffect(() => {
     return () => {
-      setReadBookState({
+      setState({
         startDate: null,
         endDate: null,
         rating: 0,
+        page: 0,
         useValidate: false,
       });
     };
@@ -58,7 +59,7 @@ export default function Read() {
 
   useEffect(() => {
     return () => {
-      onChangeReadBookUseValidation(false);
+      onChangeUseValidation(false);
     };
   }, [startDate, endDate, rating]);
 
@@ -79,7 +80,7 @@ export default function Read() {
           <StartDate
             startDate={startDate}
             endDate={endDate}
-            onChange={onChangeReadBookStartDate}
+            onChange={onChangeStartDate}
             isValid={!startDate}
             useValidation={useValidation}
             errorMessage="날짜를 입력해주세요."
@@ -89,7 +90,7 @@ export default function Read() {
           <EndDate
             startDate={startDate}
             endDate={endDate}
-            onChange={onChangeReadBookEndDate}
+            onChange={onChangeEndDate}
             isValid={!endDate}
             useValidation={useValidation}
             errorMessage="날짜를 입력해주세요."
@@ -99,8 +100,8 @@ export default function Read() {
       <Stack>
         <StarRating
           label="다른 사람들에게 이 정도 추천해요."
-          rating={rating}
-          onChange={onChangeReadBookRating}
+          rating={rating as number}
+          onChange={onChangeRating}
           isValid={rating === 0}
           useValidation={useValidation}
           errorMessage="다른 사람들에게 어느정도 추천하는지 입력해주세요."
@@ -109,8 +110,8 @@ export default function Read() {
       {startDate && endDate && rating !== 0 && (
         <Stack>
           <Span>
-            {readBookStatus &&
-              readBookStatus.map((value, index) => (
+            {readStatus &&
+              readStatus.map((value, index) => (
                 <span style={{ textAlign: 'center' }} key={index}>
                   {value}
                 </span>

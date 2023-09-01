@@ -95,7 +95,7 @@ export default function SearchItem({
           authors,
           publisher,
           contents,
-          isbn: ISBN[0],
+          isbn: ISBN[1],
           price,
           url,
           title,

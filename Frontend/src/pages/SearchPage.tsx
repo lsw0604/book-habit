@@ -9,7 +9,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1.5rem 0;
+  padding: 1rem 0;
 `;
 
 const Content = styled.div`

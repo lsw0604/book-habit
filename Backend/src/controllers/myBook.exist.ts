@@ -27,7 +27,7 @@ export default async function myBookExist(req: Request, res: Response, next: Nex
       logging.debug(NAMESPACE, '[RESULT]', RESULT);
       if (RESULT[0] === undefined) {
         connection.release();
-        return res.status(200).json({ message: '아직 서재에 등록되지않은 소중한 책이에요.' });
+        return res.status(200).json({ status: '미등록' });
       }
       connection.release();
       return res.status(200).json({ status: RESULT[0].status });

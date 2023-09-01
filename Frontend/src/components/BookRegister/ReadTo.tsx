@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { readToBookOptions } from 'lib/staticData';
-import useReadToModalHook from '@hooks/useReadToModalHook';
+import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -18,24 +18,30 @@ const Stack = styled.div`
 
 export default function ToRead() {
   const {
-    onChangeReadToBookRating,
-    readToBookRating: value,
-    setReadToBookState,
-    onChangeReadToBookUseValidation,
-    readToBookUseValidation: useValidation,
-  } = useReadToModalHook();
+    onChangeBookRegisterModalRating: onChangeRating,
+    bookRegisterModalUseValidation: useValidation,
+    bookRegisterModalRating: rating,
+    setBookRegisterModalState,
+    onChangeBookRegisterModalUseValidation: onChangeUseValidation,
+  } = useBookRegisterModalHook();
 
   useEffect(() => {
     return () => {
-      setReadToBookState({ rating: 0, useValidate: false });
+      setBookRegisterModalState({
+        rating: 0,
+        useValidate: false,
+        startDate: null,
+        endDate: null,
+        page: 0,
+      });
     };
   }, []);
 
   useEffect(() => {
     return () => {
-      onChangeReadToBookUseValidation(false);
+      onChangeUseValidation(false);
     };
-  }, [value]);
+  }, [rating]);
 
   return (
     <Container
@@ -52,11 +58,11 @@ export default function ToRead() {
       <Stack>
         <Radio<number>
           label="이 만큼 읽고 싶어요."
-          onChange={onChangeReadToBookRating}
+          onChange={onChangeRating}
           options={readToBookOptions}
-          value={value}
+          value={rating as number}
           errorMessage="얼만큼 읽고 싶은지 선택해주세요."
-          isValid={value === 0}
+          isValid={rating === 0}
           useValidation={useValidation}
         />
       </Stack>

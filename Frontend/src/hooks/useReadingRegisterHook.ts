@@ -6,12 +6,12 @@ import { AxiosError } from 'axios';
 import { readingBookRegisterAPI } from 'lib/api/book';
 import useToastHook from './useToastHook';
 import { modalAtom } from 'recoil/modal';
-import useReadingModalHook from './useReadingModalHook';
+import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 export default function useReadingRegisterHook() {
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
-  const { setReadingBookState } = useReadingModalHook();
+  const { setBookRegisterModalState } = useBookRegisterModalHook();
 
   const REACT_QUERY_KEY = 'USE_READING_BOOK_REGISTER_KEY';
   const queryClient = new QueryClient();
@@ -26,16 +26,14 @@ export default function useReadingRegisterHook() {
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
-      setReadingBookState({ page: 0, startDate: null, useValidate: false });
-      setModalState({
-        author: [],
-        company: '',
-        image: '',
-        isbn: '',
-        isOpen: false,
-        price: 0,
-        title: '',
+      setBookRegisterModalState({
+        page: 0,
+        startDate: null,
+        useValidate: false,
+        endDate: null,
+        rating: 0,
       });
+      setModalState({ isOpen: false });
       queryClient.invalidateQueries([REACT_QUERY_KEY]);
     }
   }, [isSuccess, data]);

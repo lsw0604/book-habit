@@ -32,7 +32,9 @@ export const myBookHistoryAPI = async (users_books_id: number) => {
  * * 내 서재에 등록된 책인지 확인하는 API
  */
 export const myBookExistAPI = async (isbn: string) => {
-  const { data } = await axios.get(`/api/my_book/exist/${isbn}`);
+  const { data } = await axios.get<MyBookExistResponseType>(
+    `/api/my_book/exist/${isbn}`
+  );
   return data;
 };
 
