@@ -47,7 +47,7 @@ export default function Skeleton() {
       <Stack>
         {disabledHandler(data?.status)
           ? '어떤 책인지 선택해주세요.'
-          : '이미 등록한 책입니다.'}
+          : '이미 등록된 책입니다.'}
       </Stack>
     </Container>
   );

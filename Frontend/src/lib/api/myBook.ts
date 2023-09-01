@@ -14,7 +14,9 @@ export const myBookListAPI = async (page: number, status: SelectorBookType) => {
  * * 내 서재에 등록된 책 정보를 보는 API
  */
 export const myBookInfoAPI = async (users_books_id: number) => {
-  const { data } = await axios.get(`/api/my_book/info/${users_books_id}`);
+  const { data } = await axios.get<MyBookInfoResponseType>(
+    `/api/my_book/info/${users_books_id}`
+  );
   return data;
 };
 

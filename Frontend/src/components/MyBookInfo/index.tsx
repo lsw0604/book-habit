@@ -30,29 +30,30 @@ const LoaderContainer = styled.div`
 `;
 
 const InfoContainer = styled.div`
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 120px calc(100% - 128px);
   gap: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .image-wrapper {
-    overflow: hidden;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 120px;
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: fill;
-    }
-  }
-
-  .info-wrapper {
-    color: ${({ theme }) => theme.mode.typo_main};
-    font-size: 1.5rem;
-    width: 100%;
-  }
   margin-bottom: 8px;
+`;
+
+const ImageWrapper = styled.div`
+  overflow: hidden;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 120px;
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: fill;
+  }
+`;
+
+const DetailContainer = styled.div`
+  display: block;
+  flex-direction: column;
+  gap: 1rem;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 const Title = styled.div`
   padding: 0 1rem;
@@ -61,6 +62,21 @@ const Title = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  margin-bottom: 8px;
+`;
+
+const Description = styled.span`
+  display: block;
+  font-size: 13px;
+`;
+
+const A = styled.a`
+  font-size: 10px;
+  width: auto;
+  color: inherit;
+  &:visited {
+    color: ${({ theme }) => theme.mode.typo_main};
+  }
 `;
 
 export default function Index() {
@@ -79,13 +95,16 @@ export default function Index() {
         </LoaderContainer>
       ) : (
         <InfoContainer>
-          <div className="image-wrapper">
-            <img src={data?.result.image} alt={data?.result.title} />
-          </div>
-          <div className="info-wrapper">
-            <Title>{data?.result.title}</Title>
-            <div>description</div>
-          </div>
+          <ImageWrapper>
+            <img src={data?.result?.image} alt={data?.result.title} />
+          </ImageWrapper>
+          <DetailContainer>
+            <Title>제목 : {data?.result.title}</Title>
+            <Description>{data?.result.contents}&nbsp;</Description>
+            <A href={data?.result.url} target="_blank" rel="noreferrer">
+              더보기...
+            </A>
+          </DetailContainer>
         </InfoContainer>
       )}
       <Divider divider={18} />

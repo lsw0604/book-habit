@@ -128,8 +128,10 @@ export type MyBookHistoryType = {
 } & RowDataPacket;
 
 export type MyBookInfoType = {
-  image: string;
+  image: string | null;
   title: string;
+  url: string;
+  contents: string;
 } & RowDataPacket;
 
 type GenderType = 'male' | 'female';
