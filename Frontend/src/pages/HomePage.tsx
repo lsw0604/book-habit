@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Calendar from 'components/common/Calendar';
 
 const Container = styled.div`
   width: 100%;
@@ -8,11 +7,7 @@ const Container = styled.div`
 `;
 
 const HomePage = () => {
-  return (
-    <Container>
-      <Calendar />
-    </Container>
-  );
+  return <Container></Container>;
 };
 
 export default HomePage;

@@ -69,9 +69,9 @@ type BookRegisterResponseType = {
 type MyBookHistoryResponseType = {
   status: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
   date: string;
-  page: number | null;
+  page?: number;
   created_at: string;
-  updated_at: string | null;
+  updated_at?: string;
 };
 
 type MyBookResponseType = {

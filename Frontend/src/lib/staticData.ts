@@ -37,3 +37,6 @@ export const readToBookOptions: RadioGroupOptionType<number>[] = [
     description: '1 ~ 5 사이로 점수 매긴다면 5 정도에요.',
   },
 ];
+
+export const weekendArray: ('월' | '화' | '수' | '목' | '금' | '토' | '일')[] =
+  ['일', '월', '화', '수', '목', '금', '토'];

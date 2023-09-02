@@ -9,11 +9,12 @@ const Container = styled.div`
   width: 100%;
   max-height: 16rem;
   overflow: scroll;
+  scroll-behavior: row;
 `;
 
 const EmptyTag = styled.div`
   width: 100%;
-  height: 16rem;
+  height: 6rem;
   display: flex;
   justify-content: center;
   align-items: center;
