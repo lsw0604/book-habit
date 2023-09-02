@@ -17,7 +17,7 @@ const Container = styled.div`
   padding: 0 10px;
 `;
 
-const Icon = styled.i`
+const Icon = styled.div`
   width: 1rem;
   svg {
     width: 1rem;

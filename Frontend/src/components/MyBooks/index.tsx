@@ -6,6 +6,7 @@ import List from 'components/MyBooks/List';
 
 const Container = styled.div`
   width: 100%;
+  height: calc(100vh - 11rem);
 `;
 
 export default function Index() {

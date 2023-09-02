@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 
 const Container = styled.div`
   width: 100%;
-  height: auto;
+  height: calc(100vh - 11rem);
   flex: 1;
   flex-direction: column;
   justify-content: center;
@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 const Contents = styled.div`
-  margin-top: 2rem;
+  margin-top: 1rem;
   width: 100%;
   height: calc(100vh - 11rem);
   border-radius: 5px;

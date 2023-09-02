@@ -17,9 +17,15 @@ export default function useReadRegisterHook() {
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     BookRegisterResponseType,
-    AxiosError,
+    AxiosError<{ message: string; status: string }>,
     ReadBookRegisterType
-  >([REACT_QUERY_KEY], readBookRegisterAPI);
+  >([REACT_QUERY_KEY], readBookRegisterAPI, {
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['MY_BOOKS', '전체보기'],
+      });
+    },
+  });
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -33,13 +39,15 @@ export default function useReadRegisterHook() {
         useValidate: false,
       });
       setModalState({ isOpen: false });
-      queryClient.invalidateQueries([REACT_QUERY_KEY]);
     }
   }, [isSuccess, data]);
 
   useEffect(() => {
     if (isError && error && error.response && error.response.status === 403) {
-      addToast({ message: '로그인이 필요합니다.', status: 'error' });
+      addToast({
+        message: error.response.data.message,
+        status: error.response.data.status,
+      });
     }
   }, [isError, error]);
 

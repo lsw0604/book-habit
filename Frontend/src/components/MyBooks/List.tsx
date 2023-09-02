@@ -14,6 +14,8 @@ const Container = styled.div`
   margin-top: 1rem;
   display: grid;
   gap: 1rem;
+  height: calc(100vh - 15rem);
+  overflow: scroll;
 `;
 
 const LoaderContainer = styled.div`

@@ -14,8 +14,8 @@ const Container = styled.button<{ text: boolean }>`
   padding: 0.125rem;
   color: ${({ theme }) => theme.mode.typo_sub};
   border: none;
-  width: 2rem;
-  height: 2rem;
+  width: 32px;
+  height: 32px;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -42,9 +42,9 @@ const Span = styled.span`
 `;
 
 const IconWrapper = styled.div`
-  height: 1.125rem;
-  width: 1.125rem;
+  height: 18px;
   svg {
+    height: 18px;
     fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;

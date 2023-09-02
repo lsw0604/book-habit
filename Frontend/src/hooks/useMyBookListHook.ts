@@ -8,6 +8,9 @@ export default function useMyBookListHook(status: SelectorBookType) {
       ({ pageParam = 1 }) => myBookListAPI(pageParam, status),
       {
         getNextPageParam: (response) => response.nextPage,
+        refetchOnMount: true,
+        staleTime: 10 * 60 * 1000,
+        cacheTime: 10 * 60 * 1000,
       }
     );
 
