@@ -1,11 +1,19 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { modalAtom } from 'recoil/modal';
+import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
 
 interface IProps {
   title: string;
   icon: JSX.Element;
+  url: string;
+  isAuth?: boolean;
 }
 
-const Container = styled.div`
+const Container = styled.button`
+  border: none;
+  outline: none;
   width: 100%;
   height: 100%;
   display: flex;
@@ -16,15 +24,41 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.main};
 `;
 
-const Icon = styled.div``;
+const Icon = styled.div<{ isOn: boolean }>`
+  svg {
+    fill: ${({ isOn }) =>
+      isOn
+        ? ({ theme }) => theme.colors.spinner
+        : ({ theme }) => theme.mode.typo_main};
+    width: 1rem;
+  }
+`;
 
-const Title = styled.div``;
+const Title = styled.div<{ isOn: boolean }>`
+  color: ${({ isOn }) =>
+    isOn
+      ? ({ theme }) => theme.colors.spinner
+      : ({ theme }) => theme.mode.typo_main};
+`;
 
-export default function NavBtn({ title, icon }: IProps) {
+export default function NavBtn({ title, icon, url, isAuth }: IProps) {
+  const { pathname } = useLocation();
+  const setModalState = useSetRecoilState(modalAtom);
+  const { isLogged } = useRecoilValue(userAtom);
+  const isOn: boolean = pathname === url;
+  const navigate = useNavigate();
+
+  const onChangeUrl = (url: string) => {
+    if (isAuth) {
+      return isLogged ? navigate(url) : setModalState({ isOpen: true });
+    }
+    return navigate(url);
+  };
+
   return (
-    <Container>
-      <Icon>{icon}</Icon>
-      <Title>{title}</Title>
+    <Container onClick={() => onChangeUrl(url)}>
+      <Icon isOn={isOn}>{icon}</Icon>
+      <Title isOn={isOn}>{title}</Title>
     </Container>
   );
 }

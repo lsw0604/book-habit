@@ -1,12 +1,18 @@
 import { useRecoilValue } from 'recoil';
-import GuardLayout from './GuardLayout';
 
+import GuardLayout from './GuardLayout';
 import { userAtom } from 'recoil/user';
 
-export default function IsAuthLayout() {
+interface IProps {
+  isAuth: boolean;
+}
+
+export default function IsAuthLayout({ isAuth }: IProps) {
   const userState = useRecoilValue(userAtom);
 
-  return (
+  return isAuth ? (
+    <GuardLayout isRouteAccessible={userState.isLogged} redirectUrl="/" />
+  ) : (
     <GuardLayout isRouteAccessible={!userState.isLogged} redirectUrl="/" />
   );
 }

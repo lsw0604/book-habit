@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import NavBtn from 'components/BottomNavigation/NavBtn';
-import { IconHome } from '@style/icons';
+import { IconBook, IconHome, IconSearch } from '@style/icons';
 
 const Container = styled.nav`
   height: 4rem;
@@ -33,11 +33,19 @@ export default function Index() {
     <Container>
       <Buttons>
         <Wrapper>
-          <NavBtn title="다른사람" icon={<IconHome />} />
+          <NavBtn title="HOME" icon={<IconHome />} url="/" />
         </Wrapper>
-        <Wrapper>Search</Wrapper>
-        <Wrapper>MyBooks</Wrapper>
-        <Wrapper>Profile</Wrapper>
+        <Wrapper>
+          <NavBtn title="검색하기" icon={<IconSearch />} url="/search" />
+        </Wrapper>
+        <Wrapper>
+          <NavBtn
+            isAuth
+            title="내 서재로 가기"
+            icon={<IconBook />}
+            url="/my_books"
+          />
+        </Wrapper>
       </Buttons>
     </Container>
   );

@@ -32,12 +32,14 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
               <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
                 <Route path="/" Component={Home} />
                 <Route path="/search" Component={Search} />
-                <Route path="/my_books" Component={MyBooks} />
-                <Route
-                  path="/my_books/:users_books_id"
-                  Component={MyBooksInfo}
-                />
-                <Route element={<IsAuthLayout />}>
+                <Route element={<IsAuthLayout isAuth={true} />}>
+                  <Route path="/my_books" Component={MyBooks} />
+                  <Route
+                    path="/my_books/:users_books_id"
+                    Component={MyBooksInfo}
+                  />
+                </Route>
+                <Route element={<IsAuthLayout isAuth={false} />}>
                   <Route path="/login" Component={Login} />
                   <Route path="/login/kakao" Component={Kakao} />
                   <Route path="/register" Component={Register} />

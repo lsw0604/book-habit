@@ -50,12 +50,9 @@ export default function NeedLogin() {
             alignItems: 'center',
           }}
         >
-          <Title>로그인이 필요한 기능이에요.</Title>
+          <Title>로그인이 필요해에요.</Title>
           <Description>로그인을 하시고 서비스를 이용해주세요.</Description>
-          <Description>
-            만약 아이디가 없다면 회원가입도 엄청 쉬워요.
-          </Description>
-          <Description>카카오톡으로 간편하게 로그인가능해요.</Description>
+          <Description>만약 아이디가 없다면 회원가입을 해주세요.</Description>
         </Stack>
         <Stack>
           <a href="/login">
