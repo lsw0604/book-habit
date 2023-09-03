@@ -1,4 +1,5 @@
 import useMyBookInfoHook from '@hooks/useMyBookInfoHook';
+import { IconImage } from '@style/icons';
 import Loader from 'components/common/Loader';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -19,14 +20,28 @@ const LoaderWrapper = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
   border-radius: 5px;
-  width: 100%;
-  max-width: 120px;
+  margin: 0;
+  padding: 0;
+  min-width: 120px;
+  height: 174px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   img {
+    border-radius: 5px;
+    object-fit: fill;
     width: 100%;
     height: auto;
-    object-fit: fill;
+  }
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+    fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;
 
@@ -71,7 +86,11 @@ export default function Info() {
     <Container>
       <ImageWrapper>
         {!isLoading ? (
-          <img src={data?.result.image} alt={data?.result.title} />
+          data?.result.image ? (
+            <img src={data?.result.image} alt={data?.result.title} />
+          ) : (
+            <IconImage />
+          )
         ) : (
           <LoaderWrapper>
             <Loader />

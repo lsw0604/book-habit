@@ -14,57 +14,28 @@ interface IProps {
 }
 
 const Container = styled.div`
-  height: 100%;
-  width: 100%;
+  background-color: ${({ theme }) => theme.mode.sub};
   border: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const StatusWrapper = styled.div`
-  content: '';
-  margin: 0;
-  padding: 0;
-  height: 0;
-  width: 100%;
-`;
-
-const StatusInfo = styled.span`
-  position: relative;
-  width: 100%;
-  height: 3rem;
-  bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.spinner};
-  color: ${({ theme }) => theme.mode.typo_sub};
-  border-radius: 0 0 5px 5px;
-`;
-
-const TitleInfo = styled.span`
-  color: ${({ theme }) => theme.mode.typo_sub};
-  position: relative;
   width: 100%;
   height: auto;
-  min-height: 2rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 8px;
-  background-color: ${({ theme }) => theme.colors.spinner};
-  border-radius: 5px 5px 0 0;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
-const IconWrapper = styled.div`
+const Header = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Contents = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 `;
 
 const ImageWrapper = styled.div`
@@ -72,25 +43,49 @@ const ImageWrapper = styled.div`
   border: none;
   border-radius: 5px;
   margin: 0;
-  width: 100%;
-  height: 100%;
   padding: 0;
+  min-width: 120px;
+  height: 174px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+
   img {
     border-radius: 5px;
     object-fit: fill;
     width: 100%;
-    height: 100%;
-    display: block;
+    height: auto;
   }
+
   svg {
     width: 2rem;
     height: 2rem;
     fill: ${({ theme }) => theme.mode.typo_sub};
   }
+`;
+
+const Span = styled.span`
+  width: 100%;
+  display: inline-flex;
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
+
+const Title = styled.p`
+  font-size: 20px;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
+const Status = styled.p`
+  color: ${({ theme }) => theme.colors.main};
+  font-size: 12px;
+`;
+
+const DateTime = styled.p`
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 12px;
 `;
 
 export default function Item({
@@ -111,26 +106,24 @@ export default function Item({
     .split('-');
   return (
     <Container onClick={() => navigate(`/my_books/${id}`)}>
-      <StatusWrapper>
-        <TitleInfo>{title}</TitleInfo>
-      </StatusWrapper>
-      <ImageWrapper>
-        {image !== '' ? (
-          <img src={image} alt={isbn} />
-        ) : (
-          <IconWrapper>
-            <IconImage />
-          </IconWrapper>
-        )}
-      </ImageWrapper>
-      <StatusWrapper>
-        <StatusInfo>
-          <span>{status}</span>
-          <span>
-            {created_year}년 {created_month}월 {created_day}일
-          </span>
-        </StatusInfo>
-      </StatusWrapper>
+      <Header>
+        <ImageWrapper>
+          {image ? <img alt={isbn} src={image} /> : <IconImage />}
+        </ImageWrapper>
+      </Header>
+      <Contents>
+        <Span>
+          <Title>{title}</Title>
+        </Span>
+        <Span>
+          <Status>{status}</Status>
+        </Span>
+      </Contents>
+      <Span>
+        <DateTime>
+          {created_year}년 {created_month}월 {created_day}일
+        </DateTime>
+      </Span>
     </Container>
   );
 }

@@ -9,10 +9,10 @@ const Container = styled.div`
   width: 100%;
   height: calc(100vh - 14rem);
   overflow: scroll;
-  padding: 1rem;
 `;
 
 const Page = styled.div`
+  padding: 0 1rem;
   margin-top: 1rem;
   display: grid;
   gap: 1rem;
@@ -23,11 +23,11 @@ const Page = styled.div`
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 1rem;
   }
-  @media screen and (min-width: 814px) {
+  @media screen and (min-width: 514px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
-  @media screen and (min-width: 1614px) {
+  @media screen and (min-width: 714px) {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1rem;
   }
@@ -115,13 +115,17 @@ export default function SearchList({
           </Page>
         ))
       ) : isLoading ? (
-        <ResultWrapper>
-          <span>책 제목을 검색해주세요.</span>
-        </ResultWrapper>
+        <Page>
+          <ResultWrapper>
+            <span>책 제목을 검색해주세요.</span>
+          </ResultWrapper>
+        </Page>
       ) : (
-        <ResultWrapper>
-          <Loader size={3} />
-        </ResultWrapper>
+        <Page>
+          <ResultWrapper>
+            <Loader size={3} />
+          </ResultWrapper>
+        </Page>
       )}
       {isFetching ? (
         <FetchLoader>

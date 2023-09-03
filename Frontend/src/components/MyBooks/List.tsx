@@ -12,9 +12,8 @@ interface IProps {
 
 const Container = styled.div`
   margin-top: 1rem;
-  display: grid;
-  gap: 1rem;
   height: calc(100vh - 15rem);
+  padding: 1rem;
   overflow: scroll;
 `;
 
@@ -31,9 +30,20 @@ const Page = styled.div`
   width: 100%;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(2, 1fr);
-  @media screen and (min-width: 1014px) {
-    grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 1rem;
+  &:last-child {
+    margin-bottom: 0px;
+  }
+  @media screen and (min-width: 390px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media screen and (min-width: 514px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media screen and (min-width: 714px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1rem;
   }
 `;

@@ -14,6 +14,7 @@ interface IProps {
 const Container = styled.form`
   width: 100%;
   display: flex;
+  padding: 0 1rem;
 `;
 
 const IconWrapper = styled.div`
