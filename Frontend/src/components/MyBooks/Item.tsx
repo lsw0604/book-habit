@@ -34,6 +34,7 @@ const Header = styled.div`
 const Contents = styled.div`
   width: 100%;
   height: 100%;
+  gap: 8px;
   display: flex;
   flex-direction: column;
 `;

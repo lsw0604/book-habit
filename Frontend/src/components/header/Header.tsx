@@ -16,6 +16,7 @@ const Container = styled.nav`
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
+  background-color: ${({ theme }) => theme.mode.nav};
   z-index: 9998;
 `;
 

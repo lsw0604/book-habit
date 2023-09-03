@@ -11,10 +11,9 @@ const Container = styled.div`
   overflow: scroll;
 `;
 
-const Page = styled.div`
+const Page = styled.div<{ dataExist: boolean }>`
   padding: 0 1rem;
-  margin-top: 1rem;
-  display: grid;
+  display: ${({ dataExist }) => (dataExist ? 'grid' : null)};
   gap: 1rem;
   :first-child {
     margin-top: 0px;
@@ -51,7 +50,7 @@ const ResultWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: calc(100vh - 14rem);
+  height: calc(100vh - 15rem);
   border-radius: 5px;
   color: ${({ theme }) => theme.mode.typo_main};
   background-color: rgba(0, 0, 0, 0.09);
@@ -102,7 +101,7 @@ export default function SearchList({
     <Container>
       {data && data?.pages.length > 0 ? (
         data?.pages.map((page, i) => (
-          <Page key={i}>
+          <Page key={i} dataExist={page.documents.length !== 0}>
             {page.documents.length !== 0 ? (
               page.documents.map((document) => (
                 <SearchItem key={document.isbn} search={search} {...document} />
@@ -115,17 +114,17 @@ export default function SearchList({
           </Page>
         ))
       ) : isLoading ? (
-        <Page>
+        <div style={{ padding: '0 1rem' }}>
           <ResultWrapper>
             <span>책 제목을 검색해주세요.</span>
           </ResultWrapper>
-        </Page>
+        </div>
       ) : (
-        <Page>
+        <div style={{ padding: '0 1rem' }}>
           <ResultWrapper>
             <Loader size={3} />
           </ResultWrapper>
-        </Page>
+        </div>
       )}
       {isFetching ? (
         <FetchLoader>

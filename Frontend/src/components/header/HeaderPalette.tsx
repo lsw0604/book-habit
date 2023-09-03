@@ -40,7 +40,7 @@ export default function HeaderPalette() {
   return (
     <>
       <Container ref={paletteRef}>
-        <Icon icon={<IconPalette />} onClick={handlePalette}>
+        <Icon mode="nav" icon={<IconPalette />} onClick={handlePalette}>
           Palette Settings
         </Icon>
         {isOpened && <HeaderPaletteDropdown />}

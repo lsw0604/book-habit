@@ -31,13 +31,13 @@ const Page = styled.div`
   display: grid;
   gap: 1rem;
   margin-bottom: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
   &:last-child {
     margin-bottom: 0px;
   }
-  @media screen and (min-width: 390px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
+
   @media screen and (min-width: 514px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;

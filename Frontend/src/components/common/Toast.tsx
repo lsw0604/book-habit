@@ -61,7 +61,7 @@ export default function Toast() {
             )}
             <Span>{toast.message}</Span>
             <Icon
-              text
+              mode="text"
               onClick={() => deleteToast({ id: toast.id })}
               icon={<IconClose />}
             >

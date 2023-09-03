@@ -29,7 +29,7 @@ export default function SearchInput({ search, onChange, onSubmit }: IProps) {
   return (
     <Container onSubmit={onSubmit}>
       <Input
-        style={{ borderRadius: '5rem', padding: '0rem 2rem' }}
+        style={{ borderRadius: '5rem', padding: '0 2rem 0 1rem' }}
         value={search}
         onChange={onChange}
       />

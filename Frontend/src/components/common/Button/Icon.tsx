@@ -1,16 +1,41 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
   children: ReactNode;
-  text?: boolean;
+  mode?: 'text' | 'nav';
 }
 
-const Container = styled.button<{ text: boolean }>`
+const backgroundColorHandler = (mode?: 'text' | 'nav') => {
+  switch (mode) {
+    case 'text':
+      return css`
+        background-color: ${({ theme }) => theme.mode.main};
+        &:hover {
+          background-color: ${({ theme }) => theme.mode.sub};
+        }
+      `;
+    case 'nav':
+      return css`
+        background-color: ${({ theme }) => theme.mode.nav};
+        &:hover {
+          background-color: ${({ theme }) => theme.mode.nav};
+        }
+      `;
+    default:
+      return css`
+        background-color: ${({ theme }) => theme.mode.sub};
+        &:hover {
+          background-color: ${({ theme }) => theme.mode.main};
+        }
+      `;
+  }
+};
+
+const Container = styled.button<{ mode?: 'text' | 'nav' }>`
   border-radius: 9999px;
-  background-color: ${({ text }) =>
-    text ? ({ theme }) => theme.mode.main : ({ theme }) => theme.mode.sub};
+  ${({ mode }) => backgroundColorHandler(mode)};
   padding: 0.125rem;
   color: ${({ theme }) => theme.mode.typo_sub};
   border: none;
@@ -22,10 +47,6 @@ const Container = styled.button<{ text: boolean }>`
   cursor: pointer;
   &:focus {
     outline: none;
-  }
-  &:hover {
-    background-color: ${({ text }) =>
-      text ? ({ theme }) => theme.mode.sub : ({ theme }) => theme.mode.main};
   }
 `;
 
@@ -49,9 +70,9 @@ const IconWrapper = styled.div`
   }
 `;
 
-export default function Icon({ text, icon, children, ...props }: IProps) {
+export default function Icon({ mode, icon, children, ...props }: IProps) {
   return (
-    <Container text={!!text} {...props}>
+    <Container mode={mode} {...props}>
       {icon && <IconWrapper>{icon}</IconWrapper>}
       <Span>{children}</Span>
     </Container>
