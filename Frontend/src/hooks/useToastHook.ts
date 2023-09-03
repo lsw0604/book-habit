@@ -9,7 +9,7 @@ export default function useToastHook() {
   const addToast = useRecoilCallback(
     ({ set }) =>
       ({ message, status }) => {
-        const newToast = { id: parseInt(v1()), status, message };
+        const newToast = { id: v1(), status, message };
         set(toastAtom, (prev) => [newToast, ...prev]);
       },
     []

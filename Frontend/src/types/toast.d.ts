@@ -1,5 +1,5 @@
 type ToastType = {
-  id: number;
+  id: string;
   message: string;
   status: 'error' | 'info' | 'success' | 'warning' | '';
 };
