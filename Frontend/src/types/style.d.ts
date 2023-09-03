@@ -3,6 +3,7 @@ declare module 'styled-components' {
     mode: {
       main: string;
       sub: string;
+      nav: string;
       typo_main: string;
       typo_sub: string;
       typo_white: string;

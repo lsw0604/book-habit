@@ -1,6 +1,7 @@
 import { useRecoilValue, useRecoilCallback } from 'recoil';
 import { useEffect } from 'react';
 import { toastAtom } from 'recoil/toast';
+import { v1 } from 'uuid';
 
 export default function useToastHook() {
   const toastState = useRecoilValue(toastAtom);
@@ -8,7 +9,7 @@ export default function useToastHook() {
   const addToast = useRecoilCallback(
     ({ set }) =>
       ({ message, status }) => {
-        const newToast = { id: Date.now(), status, message };
+        const newToast = { id: parseInt(v1()), status, message };
         set(toastAtom, (prev) => [newToast, ...prev]);
       },
     []

@@ -9,6 +9,7 @@ const Container = styled.div`
   width: 100%;
   height: calc(100vh - 14rem);
   overflow: scroll;
+  padding: 1rem;
 `;
 
 const Page = styled.div`

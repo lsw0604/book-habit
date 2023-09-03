@@ -9,6 +9,7 @@ import Loader from 'components/common/Loader';
 import Divider from 'components/common/Divider';
 import useMyBookInfoHook from '@hooks/useMyBookInfoHook';
 
+const Info = lazy(() => import('components/MyBookInfo/Info'));
 const List = lazy(() => import('components/MyBookInfo/List'));
 const AddForm = lazy(() => import('components/MyBookInfo/AddForm'));
 
@@ -29,85 +30,22 @@ const LoaderContainer = styled.div`
   align-items: center;
 `;
 
-const InfoContainer = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: 120px calc(100% - 128px);
-  gap: 8px;
-  margin-bottom: 8px;
-`;
-
-const ImageWrapper = styled.div`
-  overflow: hidden;
-  border-radius: 5px;
-  width: 100%;
-  max-width: 120px;
-  img {
-    width: 100%;
-    height: auto;
-    object-fit: fill;
-  }
-`;
-
-const DetailContainer = styled.div`
-  display: block;
-  flex-direction: column;
-  gap: 1rem;
-  color: ${({ theme }) => theme.mode.typo_main};
-`;
-const Title = styled.div`
-  padding: 0 1rem;
-  width: 100%;
-  text-align: center;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  margin-bottom: 8px;
-`;
-
-const Description = styled.span`
-  display: block;
-  font-size: 13px;
-`;
-
-const A = styled.a`
-  font-size: 10px;
-  width: auto;
-  color: inherit;
-  &:visited {
-    color: ${({ theme }) => theme.mode.typo_main};
-  }
-`;
-
 export default function Index() {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [value, setValue] = useState<string[]>([]);
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
 
-  const { data, isLoading } = useMyBookInfoHook(parseInt(users_books_id));
-
   return (
     <Container>
-      {isLoading ? (
-        <LoaderContainer>
-          <Loader />
-        </LoaderContainer>
-      ) : (
-        <InfoContainer>
-          <ImageWrapper>
-            <img src={data?.result?.image} alt={data?.result.title} />
-          </ImageWrapper>
-          <DetailContainer>
-            <Title>제목 : {data?.result.title}</Title>
-            <Description>{data?.result.contents}&nbsp;</Description>
-            <A href={data?.result.url} target="_blank" rel="noreferrer">
-              더보기...
-            </A>
-          </DetailContainer>
-        </InfoContainer>
-      )}
-      <Divider divider={18} />
+      <Suspense
+        fallback={
+          <LoaderContainer style={{ height: '16rem' }}>
+            <Loader />
+          </LoaderContainer>
+        }
+      >
+        <Info />
+      </Suspense>
+      <Divider divider={2} />
       <Stack>
         <Selector
           label="책 상태를 골라주세요."

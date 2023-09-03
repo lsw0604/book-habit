@@ -10,9 +10,16 @@ const Container = styled.button`
   background-color: ${({ theme }) => theme.mode.sub};
   border: none;
   width: 100%;
-  height: 160px;
-  display: flex;
+  height: auto;
+  display: grid;
   gap: 1rem;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+`;
+const Header = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const ImageWrapper = styled.div`
@@ -21,8 +28,8 @@ const ImageWrapper = styled.div`
   border-radius: 5px;
   margin: 0;
   padding: 0;
-  min-height: 160px;
-  min-width: 100px;
+  min-width: 120px;
+  height: 174px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,8 +37,8 @@ const ImageWrapper = styled.div`
   img {
     border-radius: 5px;
     object-fit: fill;
-    width: 100px;
-    height: 160px;
+    width: 100%;
+    height: auto;
   }
 
   svg {
@@ -102,9 +109,11 @@ export default function SearchItem({
         });
       }}
     >
-      <ImageWrapper>
-        {thumbnail ? <img alt={isbn} src={thumbnail} /> : <IconImage />}
-      </ImageWrapper>
+      <Header>
+        <ImageWrapper>
+          {thumbnail ? <img alt={isbn} src={thumbnail} /> : <IconImage />}
+        </ImageWrapper>
+      </Header>
       <InfoWrapper>
         <SearchItemHeader title={title} query={search} />
         <Span>

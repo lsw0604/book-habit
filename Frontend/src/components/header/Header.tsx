@@ -15,10 +15,8 @@ const Container = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.mode.main};
   padding: 0 2rem;
   z-index: 9998;
-  box-shadow: ${({ theme }) => theme.shadow.n};
 `;
 
 const Wrapper = styled.div`

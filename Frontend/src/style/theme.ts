@@ -4,6 +4,7 @@ import { ColorType } from 'types/style';
 export const light = {
   main: customize.slate['100'],
   sub: customize.slate['50'],
+  nav: customize.slate['200'],
   typo_main: customize.slate['900'],
   typo_sub: customize.slate['500'],
   typo_white: customize.slate['50'],
@@ -12,6 +13,7 @@ export const light = {
 export const dark = {
   main: customize.slate['700'],
   sub: customize.slate['600'],
+  nav: customize.slate['500'],
   typo_main: customize.slate['50'],
   typo_sub: customize.slate['300'],
   typo_white: customize.slate['50'],
