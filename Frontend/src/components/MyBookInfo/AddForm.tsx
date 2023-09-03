@@ -10,7 +10,8 @@ import { RadioGroupOptionType } from 'types/style';
 import HistoryAdd from 'components/MyBookInfo/HistoryAdd';
 import RatingAdd from 'components/MyBookInfo/RatingAdd';
 import useMyBookAddFormHistoryRegisterHook from '@hooks/useMyBookAddFormHistoryRegisterHook';
-import useMyBookAddFormHistoryHook from '@hooks/useMyBookAddFormHistoryHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import { myBookRatingRegisterAPI } from 'lib/api/myBook';
 
 const Container = styled.form`
   display: flex;
@@ -51,12 +52,14 @@ export default function AddForm() {
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [status, setStatus] = useState<'' | '기록' | '평점'>('');
   const {
-    addFormHistoryDate,
-    addFormHistoryStatus,
-    addFormHistoryPage,
-    useMyBookAddFormHistoryValidate,
-    onChangeAddFormHistoryUseValidation,
-  } = useMyBookAddFormHistoryHook();
+    addFormDate,
+    addFormStatus,
+    addFormPage,
+    addFromRating,
+    useMyBookAddFormHistoryValidation,
+    useMyBookAddFromRatingValidation,
+    onChangeAddFormUseValidation,
+  } = useMyBookAddFormHook();
 
   const { isLoading, mutate: historyMutate } =
     useMyBookAddFormHistoryRegisterHook(parseInt(users_books_id));
@@ -65,26 +68,37 @@ export default function AddForm() {
     setStatus(value as '' | '기록' | '평점');
   };
 
-  const body =
-    addFormHistoryStatus === '읽는중'
-      ? {
-          status: addFormHistoryStatus,
-          date: addFormHistoryDate,
-          users_books_id: parseInt(users_books_id),
-          page: addFormHistoryPage,
-        }
-      : {
-          status: addFormHistoryStatus,
-          date: addFormHistoryDate,
-          users_books_id: parseInt(users_books_id),
-        };
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (status === '기록') {
-      onChangeAddFormHistoryUseValidation(true);
-      if (useMyBookAddFormHistoryValidate) {
+      onChangeAddFormUseValidation(true);
+      if (useMyBookAddFormHistoryValidation) {
+        const body =
+          addFormStatus === '읽는중'
+            ? {
+                status: addFormStatus,
+                date: addFormDate,
+                users_books_id: parseInt(users_books_id),
+                page: addFormPage,
+              }
+            : {
+                status: addFormStatus,
+                date: addFormDate,
+                users_books_id: parseInt(users_books_id),
+              };
         return historyMutate(body as MyBookHistoryRegisterType);
+      }
+    }
+
+    if (status === '평점') {
+      onChangeAddFormUseValidation(true);
+      if (useMyBookAddFromRatingValidation) {
+        const body = {
+          status: addFormStatus,
+          rating: addFromRating,
+          users_books_id: parseInt(users_books_id),
+        };
+        await myBookRatingRegisterAPI(body as MyBookRatingRegisterType);
       }
     }
   };

@@ -9,7 +9,7 @@ import RadioButton from 'components/common/Radio/RadioButton';
 import { IconBook } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
-import useMyBookAddFormHistoryHook from '@hooks/useMyBookAddFormHistoryHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useMyBookHistoryHook from '@hooks/useMyBookHistoryHook';
 
 const Container = styled.div`
@@ -61,26 +61,23 @@ export default function HistoryAdd() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const {
-    addFormHistoryDate,
-    addFormHistoryStatus,
-    addFormHistoryUseValidation,
-    addFormHistoryPage,
-    onChangeAddFormHistoryDate,
-    onChangeAddFormHistoryStatus,
-    onChangeAddFormHistoryPage,
-    setAddFormHistoryState,
-  } = useMyBookAddFormHistoryHook();
+    addFormDate,
+    addFormStatus,
+    addFormUseValidation,
+    addFormPage,
+    onChangeAddFormDate,
+    onChangeAddFormStatus,
+    onChangeAddFormPage,
+    setAddFormState,
+  } = useMyBookAddFormHook();
 
-  const { data: readToData } = useMyBookHistoryHook(parseInt(users_books_id), [
-    '읽고싶음',
+  const userBookId = parseInt(users_books_id);
+
+  const { data: readToData } = useMyBookHistoryHook(userBookId, ['읽고싶음']);
+  const { data: readStartData } = useMyBookHistoryHook(userBookId, [
+    '읽기시작함',
   ]);
-  const { data: readStartData } = useMyBookHistoryHook(
-    parseInt(users_books_id),
-    ['읽기시작함']
-  );
-  const { data: readData } = useMyBookHistoryHook(parseInt(users_books_id), [
-    '다읽음',
-  ]);
+  const { data: readData } = useMyBookHistoryHook(userBookId, ['다읽음']);
 
   const getStartDate = (data?: MyBookHistoryResponseType[]) => {
     if (data && data.length !== 0) {
@@ -90,11 +87,12 @@ export default function HistoryAdd() {
   };
 
   useEffect(() => {
-    setAddFormHistoryState({
+    setAddFormState({
       date: null,
       status: '',
       useValidation: false,
       page: '',
+      rating: 0,
     });
   }, []);
 
@@ -103,15 +101,15 @@ export default function HistoryAdd() {
       <Stack>
         <RadioButton<string>
           options={options}
-          value={addFormHistoryStatus}
-          onChange={onChangeAddFormHistoryStatus}
+          value={addFormStatus}
+          onChange={onChangeAddFormStatus}
           errorMessage="상태를 선택해주세요."
-          isValid={addFormHistoryStatus === ''}
-          useValidation={addFormHistoryUseValidation}
+          isValid={addFormStatus === ''}
+          useValidation={addFormUseValidation}
         />
       </Stack>
       <Content>
-        <Stack isStatus={addFormHistoryStatus === '읽는중'}>
+        <Stack isStatus={addFormStatus === '읽는중'}>
           <Stack>
             <DateSelector
               startDate={
@@ -119,8 +117,8 @@ export default function HistoryAdd() {
                   ? getStartDate(readStartData)
                   : getStartDate(readToData)
               }
-              onChange={(e) => onChangeAddFormHistoryDate(e)}
-              date={addFormHistoryDate}
+              onChange={(e) => onChangeAddFormDate(e)}
+              date={addFormDate}
               endDate={
                 readData
                   ? readData.length !== 0
@@ -129,20 +127,20 @@ export default function HistoryAdd() {
                   : new Date()
               }
               errorMessage="날짜를 입력해주세요."
-              isValid={addFormHistoryDate === null}
-              useValidation={addFormHistoryUseValidation}
+              isValid={addFormDate === null}
+              useValidation={addFormUseValidation}
             />
           </Stack>
-          {addFormHistoryStatus === '읽는중' && (
+          {addFormStatus === '읽는중' && (
             <Stack>
               <Input
                 type="number"
                 label="이정도 읽었어요."
                 errorMessage="페이지를 입력해주세요."
-                value={addFormHistoryPage}
-                onChange={onChangeAddFormHistoryPage}
-                useValidation={addFormHistoryUseValidation}
-                isValid={addFormHistoryPage === 0 || addFormHistoryPage === ''}
+                value={addFormPage}
+                onChange={onChangeAddFormPage}
+                useValidation={addFormUseValidation}
+                isValid={addFormPage === 0 || addFormPage === ''}
               />
             </Stack>
           )}

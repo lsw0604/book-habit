@@ -3,4 +3,5 @@ type addFormAtomType = {
   status: string;
   useValidation: boolean;
   page: number | '';
+  rating: number;
 };

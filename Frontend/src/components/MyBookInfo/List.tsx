@@ -7,7 +7,7 @@ import Loader from 'components/common/Loader';
 
 const Container = styled.div`
   width: 100%;
-  max-height: 16rem;
+  max-height: 14rem;
   overflow: scroll;
   scroll-behavior: row;
 `;

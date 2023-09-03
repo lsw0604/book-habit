@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
 import useToastHook from './useToastHook';
-import useMyBookAddFormHistoryHook from './useMyBookAddFormHistoryHook';
+import useMyBookAddFormHook from './useMyBookAddFormHook';
 import useMyBookHistoryHook from './useMyBookHistoryHook';
 
 export default function useMyBookAddFormHistoryRegisterHook(
@@ -13,7 +13,7 @@ export default function useMyBookAddFormHistoryRegisterHook(
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();
-  const { setAddFormHistoryState } = useMyBookAddFormHistoryHook();
+  const { setAddFormState } = useMyBookAddFormHook();
   const { refetch } = useMyBookHistoryHook(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
@@ -26,11 +26,12 @@ export default function useMyBookAddFormHistoryRegisterHook(
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
-      setAddFormHistoryState({
+      setAddFormState({
         date: null,
         page: '',
         status: '',
         useValidation: false,
+        rating: 0,
       });
       refetch();
       queryClient.invalidateQueries([REACT_QUERY_KEY]);

@@ -49,3 +49,13 @@ export const myBookHistoryRegisterAPI = async (
   const { data } = await axios.post(`/api/my_book/register`, body);
   return data;
 };
+
+/**
+ * * 내 서재에 등록된 책을 평가하는 API
+ */
+export const myBookRatingRegisterAPI = async (
+  body: MyBookRatingRegisterType
+) => {
+  const { data } = await axios.post(`/api/my_book/rating`, body);
+  return data;
+};

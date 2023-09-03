@@ -10,5 +10,6 @@ export const addFormAtom = atom<addFormAtomType>({
     status: '',
     useValidation: false,
     page: '',
+    rating: 0,
   },
 });

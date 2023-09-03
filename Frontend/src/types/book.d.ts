@@ -32,6 +32,13 @@ type MyBookHistoryRegisterType = {
   page?: number;
 };
 
+type MyBookRatingRegisterType = Omit<
+  MyBookHistoryRegisterType,
+  'page' | 'date'
+> & {
+  rating: number;
+};
+
 type MyBookInfoAddReadType = {
   users_books_id: number;
   status: BookStateType;

@@ -6,6 +6,7 @@ import myBookExist from '../controllers/myBook.exist';
 import myBookInfo from '../controllers/myBook.info';
 
 import myBookRegister from '../controllers/myBook.register';
+import myBookRating from '../controllers/myBook.rating';
 
 import access from '../controllers/auth.access';
 
@@ -17,5 +18,6 @@ myBookRouter.get('/exist/:isbn', access, myBookExist);
 myBookRouter.get('/info/:users_books_id', access, myBookInfo);
 
 myBookRouter.post('/register', access, myBookRegister);
+myBookRouter.post('/rating', access, myBookRating);
 
 export default myBookRouter;

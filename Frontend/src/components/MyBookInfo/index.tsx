@@ -13,7 +13,8 @@ const AddForm = lazy(() => import('components/MyBookInfo/AddForm'));
 
 const Container = styled.div`
   width: 100%;
-  height: auto;
+  height: calc(100vh - 11rem);
+  overflow: scroll;
 `;
 
 const Stack = styled.div`
@@ -26,6 +27,11 @@ const LoaderContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const Contents = styled.div`
+  height: 29rem;
+  overflow: scroll;
 `;
 
 export default function Index() {
@@ -44,40 +50,42 @@ export default function Index() {
         <Info />
       </Suspense>
       <Divider divider={2} />
-      <Stack>
-        <Selector
-          label="책 상태를 골라주세요."
-          value={value}
-          multiple
-          onChange={(e) => setValue(e)}
-          options={options}
-        />
-      </Stack>
-      <Accordion label="기록보기">
-        <Suspense
-          fallback={
-            <LoaderContainer style={{ height: '16rem' }}>
-              <Loader />
-            </LoaderContainer>
-          }
-        >
-          <List filter={value} />
-        </Suspense>
-      </Accordion>
-      <Accordion label="평점보기">
-        <Rating />
-      </Accordion>
-      <Accordion label="추가하기">
-        <Suspense
-          fallback={
-            <LoaderContainer style={{ height: '17rem' }}>
-              <Loader />
-            </LoaderContainer>
-          }
-        >
-          <AddForm />
-        </Suspense>
-      </Accordion>
+      <Contents>
+        <Accordion label="기록보기">
+          <Stack>
+            <Selector
+              label="책 상태를 골라주세요."
+              value={value}
+              multiple
+              onChange={(e) => setValue(e)}
+              options={options}
+            />
+          </Stack>
+          <Suspense
+            fallback={
+              <LoaderContainer style={{ height: '16rem' }}>
+                <Loader />
+              </LoaderContainer>
+            }
+          >
+            <List filter={value} />
+          </Suspense>
+        </Accordion>
+        <Accordion label="평점보기">
+          <Rating />
+        </Accordion>
+        <Accordion label="추가하기">
+          <Suspense
+            fallback={
+              <LoaderContainer style={{ height: '17rem' }}>
+                <Loader />
+              </LoaderContainer>
+            }
+          >
+            <AddForm />
+          </Suspense>
+        </Accordion>
+      </Contents>
     </Container>
   );
 }
