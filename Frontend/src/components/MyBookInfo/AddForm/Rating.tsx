@@ -38,9 +38,9 @@ export default function Rating() {
   const {
     addFormStatus,
     addFromRating,
+    addFormUseValidation,
     onChangeAddFormStatus,
     onChangeAddFormRating,
-    useMyBookAddFromRatingValidation,
   } = useMyBookAddFormHook();
 
   return (
@@ -52,11 +52,17 @@ export default function Rating() {
           onChange={onChangeAddFormStatus}
           errorMessage="상태를 선택해주세요."
           isValid={addFormStatus === ''}
-          useValidation={useMyBookAddFromRatingValidation}
+          useValidation={addFormUseValidation}
         />
       </Stack>
       <Stack>
-        <StarRating rating={addFromRating} onChange={onChangeAddFormRating} />
+        <StarRating
+          rating={addFromRating}
+          onChange={onChangeAddFormRating}
+          errorMessage="평점을 매겨 주세요."
+          isValid={addFromRating === 0}
+          useValidation={addFormUseValidation}
+        />
       </Stack>
     </Container>
   );

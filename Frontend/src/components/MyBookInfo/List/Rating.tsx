@@ -6,7 +6,7 @@ import Item from 'components/MyBookInfo/Item/Rating';
 
 const Container = styled.div`
   width: 100%;
-  max-height: 14rem;
+  max-height: 8rem;
   overflow: scroll;
   scroll-behavior: row;
 `;
