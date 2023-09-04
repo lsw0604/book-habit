@@ -127,6 +127,12 @@ export type MyBookHistoryType = {
   updated_at: Date | null;
 } & RowDataPacket;
 
+export type MyBookRatingType = {
+  status: '읽기전' | '다읽음' | '읽는중';
+  created_at: Date;
+  rating: number;
+} & RowDataPacket;
+
 export type MyBookInfoType = {
   image: string | null;
   title: string;

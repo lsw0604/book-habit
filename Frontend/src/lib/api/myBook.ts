@@ -31,6 +31,15 @@ export const myBookHistoryAPI = async (users_books_id: number) => {
 };
 
 /**
+ * * 내 서재에 등록된 책 평점 보는 API
+ */
+
+export const myBookRatingAPI = async (users_books_id: number) => {
+  const { data } = await axios.get(`/api/my_book/rating/${users_books_id}`);
+  return data;
+};
+
+/**
  * * 내 서재에 등록된 책인지 확인하는 API
  */
 export const myBookExistAPI = async (isbn: string) => {

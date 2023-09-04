@@ -14,3 +14,11 @@ type MyBookInfoResponseType = {
     contents: string;
   };
 };
+
+type MyBookRatingResponseType = {
+  result: {
+    status: '다읽음' | '읽는중' | '읽기전';
+    created_at: string;
+    rating: number;
+  }[];
+};
