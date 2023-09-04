@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import { Suspense, lazy, useState } from 'react';
 
 import Selector from 'components/common/Selector';
-import Rating from 'components/MyBookInfo/Rating';
 import Accordion from 'components/common/Accordion';
 import Loader from 'components/common/Loader';
 import Divider from 'components/common/Divider';
 
 const Info = lazy(() => import('components/MyBookInfo/Info'));
-const List = lazy(() => import('components/MyBookInfo/List'));
+const Rating = lazy(() => import('components/MyBookInfo/List/Rating'));
+const History = lazy(() => import('components/MyBookInfo/List/History'));
 const AddForm = lazy(() => import('components/MyBookInfo/AddForm'));
 
 const Container = styled.div`
@@ -30,7 +30,7 @@ const LoaderContainer = styled.div`
 `;
 
 const Contents = styled.div`
-  height: 29rem;
+  height: 28rem;
   overflow: scroll;
 `;
 
@@ -63,16 +63,18 @@ export default function Index() {
           </Stack>
           <Suspense
             fallback={
-              <LoaderContainer style={{ height: '16rem' }}>
+              <LoaderContainer style={{ height: '12rem' }}>
                 <Loader />
               </LoaderContainer>
             }
           >
-            <List filter={value} />
+            <History filter={value} />
           </Suspense>
         </Accordion>
         <Accordion label="평점보기">
-          <Rating />
+          <Suspense fallback={<Loader />}>
+            <Rating />
+          </Suspense>
         </Accordion>
         <Accordion label="추가하기">
           <Suspense

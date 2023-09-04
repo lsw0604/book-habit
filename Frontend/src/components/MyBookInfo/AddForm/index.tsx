@@ -5,10 +5,11 @@ import { useParams } from 'react-router-dom';
 import RadioButton from 'components/common/Radio/RadioButton';
 import Button from 'components/common/Button';
 import Skeleton from 'components/MyBookInfo/Skeleton';
-import { IconPencil, IconStar } from '@style/icons';
+import HistoryAdd from 'components/MyBookInfo/AddForm/History';
+import RatingAdd from 'components/MyBookInfo/AddForm/Rating';
+
 import { RadioGroupOptionType } from 'types/style';
-import HistoryAdd from 'components/MyBookInfo/HistoryAdd';
-import RatingAdd from 'components/MyBookInfo/RatingAdd';
+import { IconPencil, IconStar } from '@style/icons';
 import useMyBookAddFormHistoryRegisterHook from '@hooks/useMyBookAddFormHistoryRegisterHook';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useMyBookAddFormRatingRegisterHook from '@hooks/useMyBookAddFormRatingRegisterHook';
@@ -47,7 +48,7 @@ const options: RadioGroupOptionType<string>[] = [
   },
 ];
 
-export default function AddForm() {
+export default function Index() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [status, setStatus] = useState<'' | '기록' | '평점'>('');

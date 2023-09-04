@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import dateParse from 'date-fns/parseISO';
 import addHours from 'date-fns/addHours';
 
-import End from 'components/MyBookInfo/Item/End';
-import Reading from 'components/MyBookInfo/Item/Reading';
-import Start from 'components/MyBookInfo/Item/Start';
-import ReadTo from 'components/MyBookInfo/Item/ReadTo';
+import End from 'components/MyBookInfo/Item/History/End';
+import Reading from 'components/MyBookInfo/Item/History/Reading';
+import Start from 'components/MyBookInfo/Item/History/Start';
+import ReadTo from 'components/MyBookInfo/Item/History/ReadTo';
 
 const Container = styled.div`
   display: flex;
@@ -54,29 +54,6 @@ export default function Index({
     .toISOString()
     .split('T')[0]
     .split('-');
-
-  // if (status === '읽고싶음') {
-  //   return (
-  //     <Container>
-  //       <Line />
-  //       <Content>
-  //         <Date>
-  //           {year}년 {month}월 {day}일
-  //         </Date>
-  //         <Heading>읽고 싶어요.</Heading>
-  //         <Description>
-  //           {created_year}년 {created_month}월 {created_day}일 기록했어요.
-  //         </Description>
-  //         {updatedArray && (
-  //           <Description>
-  //             또 {updatedArray[0]}년 {updatedArray[1]}월 {updatedArray[2]}일
-  //             수정했고요.
-  //           </Description>
-  //         )}
-  //       </Content>
-  //     </Container>
-  //   );
-  // }
 
   return (
     <Container>

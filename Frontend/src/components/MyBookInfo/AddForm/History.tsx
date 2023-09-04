@@ -57,7 +57,7 @@ const options: RadioGroupOptionType<string>[] = [
   },
 ];
 
-export default function HistoryAdd() {
+export default function History() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const {

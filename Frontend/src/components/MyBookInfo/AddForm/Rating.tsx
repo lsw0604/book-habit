@@ -34,7 +34,7 @@ const options: RadioGroupOptionType<string>[] = [
   },
 ];
 
-export default function RatingAdd() {
+export default function Rating() {
   const {
     addFormStatus,
     addFromRating,

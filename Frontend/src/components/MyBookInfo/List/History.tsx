@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Item from 'components/MyBookInfo/Item';
+import Item from 'components/MyBookInfo/Item/History';
 import useMyBookHistoryHook from '@hooks/useMyBookHistoryHook';
 import Loader from 'components/common/Loader';
 
@@ -31,7 +31,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function List({ filter }: { filter: string[] }) {
+export default function History({ filter }: { filter: string[] }) {
   const { users_books_id } = useParams();
 
   if (users_books_id === undefined) {
