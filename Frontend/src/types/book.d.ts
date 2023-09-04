@@ -32,10 +32,11 @@ type MyBookHistoryRegisterType = {
   page?: number;
 };
 
-type MyBookRatingRegisterType = Omit<
+type MyBookRatingRegisterType = Pick<
   MyBookHistoryRegisterType,
-  'page' | 'date'
+  'users_books_id'
 > & {
+  status: '읽기전' | '다읽음' | '읽는중';
   rating: number;
 };
 

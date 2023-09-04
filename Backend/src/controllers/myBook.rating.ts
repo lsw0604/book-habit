@@ -1,29 +1,50 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookHistoryType } from '../types';
+import { ResultSetHeader } from 'mysql2';
 
-const NAMESPACE = 'BOOKS_MY_BOOK_INFO';
+interface IRequest<T> extends Request {
+  body: T;
+}
 
-export default async function myBookRating(req: Request, res: Response, next: NextFunction) {
+interface IRequestBody {
+  status: '읽는중' | '다읽음' | '읽기전';
+  rating: string;
+  users_books_id: string;
+}
+
+export default async function myBookRating(
+  req: IRequest<IRequestBody>,
+  res: Response,
+  next: NextFunction
+) {
+  const NAMESPACE = 'MY_BOOK_RATING';
   logging.info(NAMESPACE, '[START]');
-  if (req.user === undefined)
-    return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
-  const { id } = req.user;
-  const { users_books_id } = req.params;
+
+  const { status, rating, users_books_id } = req.body;
   try {
     const connection = await connectionPool.getConnection();
     try {
-      logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
-      logging.debug(NAMESPACE, '[REQ.BODY]', id);
-      logging.debug(NAMESPACE, '[REQ.BODY]', users_books_id);
+      await connection.beginTransaction();
 
+      const MY_BOOK_RATING_SQL =
+        'INSERT INTO users_books_info (status, rating, users_books_id) VALUES (?, ?, ?)';
+      const MY_BOOK_RATING_VALUE = [status, parseInt(rating), parseInt(users_books_id)];
+      const [MY_BOOK_RATING_RESULT] = await connection.query<ResultSetHeader>(
+        MY_BOOK_RATING_SQL,
+        MY_BOOK_RATING_VALUE
+      );
+      logging.debug(NAMESPACE, '[MY_BOOK_RATING_RESULT]', MY_BOOK_RATING_RESULT);
+
+      await connection.commit();
       connection.release();
       res.status(200).json({
-        test: 'test',
+        status: 'success',
+        message: '평점 등록에 성공하셨습니다.',
       });
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);
+      await connection.rollback();
       connection.release();
       res.status(400).json({
         code: error?.code,

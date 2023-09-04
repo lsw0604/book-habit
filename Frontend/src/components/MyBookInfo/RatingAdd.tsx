@@ -16,15 +16,10 @@ const Stack = styled.div`
   width: 100%;
 `;
 
-const Content = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
 const options: RadioGroupOptionType<string>[] = [
   {
     label: '읽기전',
-    value: '읽기시작함',
+    value: '읽기전',
     description: '이 정도 기대하고있어요',
   },
   {

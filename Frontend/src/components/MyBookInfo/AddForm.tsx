@@ -11,7 +11,7 @@ import HistoryAdd from 'components/MyBookInfo/HistoryAdd';
 import RatingAdd from 'components/MyBookInfo/RatingAdd';
 import useMyBookAddFormHistoryRegisterHook from '@hooks/useMyBookAddFormHistoryRegisterHook';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
-import { myBookRatingRegisterAPI } from 'lib/api/myBook';
+import useMyBookAddFormRatingRegisterHook from '@hooks/useMyBookAddFormRatingRegisterHook';
 
 const Container = styled.form`
   display: flex;
@@ -61,8 +61,10 @@ export default function AddForm() {
     onChangeAddFormUseValidation,
   } = useMyBookAddFormHook();
 
-  const { isLoading, mutate: historyMutate } =
+  const { isLoading: isHistoryRegisterLoading, mutate: historyMutate } =
     useMyBookAddFormHistoryRegisterHook(parseInt(users_books_id));
+  const { isLoading: isRatingRegisterLoading, mutate: ratingMutate } =
+    useMyBookAddFormRatingRegisterHook();
 
   const onChange = (value: string) => {
     setStatus(value as '' | '기록' | '평점');
@@ -98,7 +100,7 @@ export default function AddForm() {
           rating: addFromRating,
           users_books_id: parseInt(users_books_id),
         };
-        await myBookRatingRegisterAPI(body as MyBookRatingRegisterType);
+        return ratingMutate(body as MyBookRatingRegisterType);
       }
     }
   };
@@ -119,7 +121,10 @@ export default function AddForm() {
         {status === '평점' && <RatingAdd />}
       </Content>
       <Stack>
-        <Button type="submit" isLoading={isLoading}>
+        <Button
+          type="submit"
+          isLoading={isHistoryRegisterLoading || isRatingRegisterLoading}
+        >
           등록하기
         </Button>
       </Stack>

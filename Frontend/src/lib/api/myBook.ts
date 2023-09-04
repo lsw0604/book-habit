@@ -51,7 +51,7 @@ export const myBookHistoryRegisterAPI = async (
 };
 
 /**
- * * 내 서재에 등록된 책을 평가하는 API
+ * * 내 서재에 등록된 책에 평점을 등록하는 API
  */
 export const myBookRatingRegisterAPI = async (
   body: MyBookRatingRegisterType

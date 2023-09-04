@@ -24,7 +24,7 @@ export default async function myBookRegister(
   res: Response,
   next: NextFunction
 ) {
-  const NAMESPACE = 'READ_BOOK_MY_BOOK_REGISTER';
+  const NAMESPACE = 'MY_BOOK_REGISTER';
   logging.debug(NAMESPACE, '[START]');
 
   const { status, date, page, users_books_id } = req.body;
