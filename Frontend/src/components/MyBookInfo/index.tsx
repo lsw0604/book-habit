@@ -9,7 +9,7 @@ import Divider from 'components/common/Divider';
 const Info = lazy(() => import('components/MyBookInfo/Info'));
 const Rating = lazy(() => import('components/MyBookInfo/List/Rating'));
 const History = lazy(() => import('components/MyBookInfo/List/History'));
-const AddForm = lazy(() => import('components/MyBookInfo/AddForm'));
+const AddForm = lazy(() => import('components/MyBookInfo/AddForm/index'));
 
 const Container = styled.div`
   width: 100%;

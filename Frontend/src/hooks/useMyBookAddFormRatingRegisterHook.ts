@@ -4,10 +4,14 @@ import useMyBookAddFormHook from './useMyBookAddFormHook';
 import { myBookRatingRegisterAPI } from 'lib/api/myBook';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
+import useMyBookRatingHook from './useMyBookRatingHook';
 
-export default function useMyBookAddFormRatingRegisterHook() {
+export default function useMyBookAddFormRatingRegisterHook(
+  users_books_id: number
+) {
   const REACT_QUERY_KEY = 'USE_MY_BOOK_ADD_FORM_RATING_REGISTER_KEY';
   const queryClient = new QueryClient();
+  const { refetch } = useMyBookRatingHook(users_books_id);
 
   const { addToast } = useToastHook();
   const { setAddFormState } = useMyBookAddFormHook();
@@ -15,7 +19,12 @@ export default function useMyBookAddFormRatingRegisterHook() {
     BookRegisterResponseType,
     AxiosError,
     MyBookRatingRegisterType
-  >([REACT_QUERY_KEY], myBookRatingRegisterAPI);
+  >([REACT_QUERY_KEY], myBookRatingRegisterAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['MY_BOOK_RATING']);
+      refetch();
+    },
+  });
 
   useEffect(() => {
     if (isSuccess && data) {

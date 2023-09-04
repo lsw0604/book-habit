@@ -33,10 +33,12 @@ const LoadingContainer = styled.div`
 export default function Rating() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const { data, isLoading } = useMyBookRatingHook(parseInt(users_books_id));
+  const { data, isLoading, isFetching } = useMyBookRatingHook(
+    parseInt(users_books_id)
+  );
   return (
     <Container>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <LoadingContainer>
           <Loader />
         </LoadingContainer>
