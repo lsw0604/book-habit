@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 import StarRating from 'components/StarRating/Rating';
 import Icon from 'components/common/Button/Icon';
-import { IconPencil, IconTrashCan } from '@style/icons';
+import { IconTrashCan } from '@style/icons';
 import useMyBookRatingDeleteHook from '@hooks/useMyBookRatingDeleteHook';
 import { useParams } from 'react-router-dom';
 
@@ -33,14 +33,6 @@ const DateWrapper = styled.div`
 const StatusWrapper = styled.span`
   color: ${({ theme }) => theme.mode.typo_sub};
   font-size: 12px;
-`;
-
-const RatingWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const ButtonWrapper = styled.div`
-  display: inline-flex;
 `;
 
 export default function Index({ created_at, rating, status, id }: IProps) {

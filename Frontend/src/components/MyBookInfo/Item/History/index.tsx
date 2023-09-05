@@ -6,18 +6,22 @@ import End from 'components/MyBookInfo/Item/History/End';
 import Reading from 'components/MyBookInfo/Item/History/Reading';
 import Start from 'components/MyBookInfo/Item/History/Start';
 import ReadTo from 'components/MyBookInfo/Item/History/ReadTo';
+import Icon from 'components/common/Button/Icon';
+import { IconTrashCan } from '@style/icons';
 
 const Container = styled.div`
-  display: flex;
-  gap: 1rem;
+  display: inline-flex;
+  gap: 8px;
   padding: 0;
+  width: 100%;
 `;
 
 const DateContent = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 34px;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 10px;
 `;
 
 const Content = styled.div`
@@ -25,7 +29,7 @@ const Content = styled.div`
   width: 100%;
   border-radius: 5px;
   padding: 10px;
-  margin: 10px 0;
+  margin: 1px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -37,10 +41,10 @@ const Line = styled.div`
   background-color: ${({ theme }) => theme.colors.main};
 `;
 
-const Date = styled.span`
-  color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 10px;
-  width: 100%;
+const IconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default function Index({
@@ -58,9 +62,7 @@ export default function Index({
   return (
     <Container>
       <DateContent>
-        <Date>{year}년</Date>
-        <Date>{month}월</Date>
-        <Date>{day}일</Date>
+        {year}년{month}월{day}일
       </DateContent>
       <Line />
       <Content>
@@ -81,6 +83,9 @@ export default function Index({
           <ReadTo created_at={created_at} updated_at={updated_at} />
         )}
       </Content>
+      <IconWrapper>
+        <Icon icon={<IconTrashCan />}>Delete</Icon>
+      </IconWrapper>
     </Container>
   );
 }

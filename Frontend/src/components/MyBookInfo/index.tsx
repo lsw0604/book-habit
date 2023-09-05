@@ -96,6 +96,7 @@ export default function Index() {
             <AddForm />
           </Suspense>
         </Accordion>
+        <Divider divider={20} />
         <Button
           icon={<IconTrashCan />}
           isLoading={isLoading}

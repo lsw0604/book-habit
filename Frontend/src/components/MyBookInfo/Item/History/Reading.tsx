@@ -18,8 +18,8 @@ const DateContent = styled.div`
 
 const Date = styled.span`
   color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 10px;
-  line-height: 14px;
+  font-size: 8px;
+  line-height: 12px;
   width: 100%;
 `;
 
