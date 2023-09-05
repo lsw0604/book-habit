@@ -1,11 +1,14 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookExistResponseType } from '../types';
+import { RowDataPacket } from 'mysql2';
 
-const NAMESPACE = 'MY_BOOK_EXIST';
+type MyBookExistType = {
+  count: number;
+} & RowDataPacket;
 
 export default async function myBookExist(req: Request, res: Response, next: NextFunction) {
+  const NAMESPACE = 'MY_BOOK_EXIST';
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
@@ -15,22 +18,20 @@ export default async function myBookExist(req: Request, res: Response, next: Nex
     const connection = await connectionPool.getConnection();
     try {
       const SQL =
-        'SELECT status ' +
+        'SELECT COUNT(*) AS count ' +
         'FROM users_books ub ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-        'RIGHT JOIN users_books_info ubi ON ubi.users_books_id = ub.id ' +
-        'WHERE users_id = ? AND isbn = ? ' +
-        'ORDER BY ubi.created_at DESC ' +
-        'LIMIT 1';
-      const VALUE = [id, isbn];
-      const [RESULT] = await connection.query<MyBookExistResponseType[]>(SQL, VALUE);
+        'WHERE isbn = ? AND ub.users_id = ?';
+
+      const VALUE = [isbn, id];
+      const [RESULT] = await connection.query<MyBookExistType[]>(SQL, VALUE);
       logging.debug(NAMESPACE, '[RESULT]', RESULT);
-      if (RESULT[0] === undefined) {
+      if (RESULT[0].count === 0) {
         connection.release();
         return res.status(200).json({ status: '미등록' });
       }
       connection.release();
-      return res.status(200).json({ status: RESULT[0].status });
+      return res.status(200).json({ status: '등록' });
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);
       connection.release();

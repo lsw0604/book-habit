@@ -33,21 +33,9 @@ export default function BookStatus() {
   const { isbn } = useRecoilValue(bottomSheetAtom);
   const { isLoading, data, isFetching } = useMyBookExist(isbn);
 
-  const filteringData = (
-    status?: '다읽음' | '읽는중' | '읽고싶음' | '미등록'
-  ) => {
-    switch (status) {
-      case '다읽음':
-        return '이 책은 다 읽은 책으로 서재에 등록된 책입니다.';
-      case '읽고싶음':
-        return '이 책은 읽고 싶은 책으로 서재에 등록된 책입니다.';
-      case '읽는중':
-        return '이 책은 읽는 중인 책으로 서재에 등록된 책입니다.';
-      case '미등록':
-        return '이 책은 서재에 등록되지 않은 책입니다.';
-      default:
-        return null;
-    }
+  const filteringData = (status?: '등록' | '미등록') => {
+    if (status === '등록') return '서재에 등록된 책입니다.';
+    if (status === '미등록') return '아직 서재에 등록되지 않은 책입니다.';
   };
 
   return (

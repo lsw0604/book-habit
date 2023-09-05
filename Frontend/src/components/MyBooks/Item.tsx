@@ -1,8 +1,6 @@
 import { IconImage } from '@style/icons';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import dateParse from 'date-fns/parseISO';
-import addHours from 'date-fns/addHours';
 import dayjs from 'dayjs';
 
 interface IProps {

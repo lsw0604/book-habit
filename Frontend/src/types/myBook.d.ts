@@ -3,7 +3,7 @@ type MyBookAtomType = {
 };
 
 type MyBookExistResponseType = {
-  status: '다읽음' | '읽는중' | '읽고싶음' | '미등록';
+  status: '등록' | '미등록';
 };
 
 type MyBookInfoResponseType = {

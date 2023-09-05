@@ -103,9 +103,7 @@ export default function Index() {
     setValue(value as ModalType);
   };
 
-  const disabledHandler = (
-    status?: '다읽음' | '읽는중' | '읽고싶음' | '미등록'
-  ) => {
+  const disabledHandler = (status?: '등록' | '미등록') => {
     if (status === '미등록') {
       return false;
     }
