@@ -2,6 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
+import { MyBookRatingExistType } from '../types';
 
 interface IRequest<T> extends Request {
   body: T;
@@ -26,6 +27,21 @@ export default async function myBookRating(
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
+
+      const MY_BOOK_RATING_EXIST_SQL = `SELECT status FROM users_books_info WHERE status = ? AND users_books_id = ?`;
+      const MY_BOOK_RATING_EXIST_VALUE = [status, users_books_id];
+      const [MY_BOOK_RATING_EXIST_RESULT] = await connection.query<MyBookRatingExistType[]>(
+        MY_BOOK_RATING_EXIST_SQL,
+        MY_BOOK_RATING_EXIST_VALUE
+      );
+      logging.debug(NAMESPACE, '[MY_BOOK_RATING_EXIST_RESULT]', MY_BOOK_RATING_EXIST_RESULT);
+
+      if (MY_BOOK_RATING_EXIST_RESULT.length !== 0) {
+        connection.release();
+        return res
+          .status(200)
+          .json({ status: 'info', message: `${status}(은)는 이미 등록된 상태입니다.` });
+      }
 
       const MY_BOOK_RATING_SQL =
         'INSERT INTO users_books_info (status, rating, users_books_id) VALUES (?, ?, ?)';

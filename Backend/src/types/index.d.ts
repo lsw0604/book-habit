@@ -140,6 +140,10 @@ export type MyBookInfoType = {
   contents: string;
 } & RowDataPacket;
 
+export type MyBookRatingExistType = {
+  status: '읽기전' | '다읽음' | '읽는중';
+} & RowDataPacket;
+
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';

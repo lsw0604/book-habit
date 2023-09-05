@@ -20,9 +20,11 @@ export default function useMyBookAddFormRatingRegisterHook(
     AxiosError,
     MyBookRatingRegisterType
   >([REACT_QUERY_KEY], myBookRatingRegisterAPI, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['MY_BOOK_RATING']);
-      refetch();
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        queryClient.invalidateQueries(['MY_BOOK_RATING']);
+        refetch();
+      }
     },
   });
 
@@ -46,6 +48,7 @@ export default function useMyBookAddFormRatingRegisterHook(
       addToast({ message: '로그인이 필요합니다.', status: 'error' });
     }
   }, [isError, error]);
+
   return {
     isLoading,
     mutate,
