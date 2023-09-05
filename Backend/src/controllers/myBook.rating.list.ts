@@ -13,9 +13,9 @@ export default async function myBookRatingList(req: Request, res: Response, next
     const connection = await connectionPool.getConnection();
     try {
       const SQL =
-        'SELECT status, ubi.created_at, rating ' +
-        'FROM users_books_info ubi ' +
-        'WHERE ubi.users_books_id = ?';
+        'SELECT status, created_at, rating, id ' +
+        'FROM users_books_info ' +
+        'WHERE users_books_id = ?';
       const VALUE = [parseInt(users_books_id)];
       const [RESULT] = await connection.query<MyBookRatingType[]>(SQL, VALUE);
 

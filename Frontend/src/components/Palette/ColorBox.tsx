@@ -1,9 +1,10 @@
+import { useState, useCallback } from 'react';
+import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+
 import useThemeHook from '@hooks/useThemeHook';
 import { customize } from '@style/colors';
-import { useState, useCallback } from 'react';
-import { useRecoilState } from 'recoil';
 import { colorAtom } from 'recoil/theme';
-import styled from 'styled-components';
 import { ColorType } from 'types/style';
 
 const Container = styled.div`
@@ -33,7 +34,7 @@ const ColorButton = styled.button<{
   align-items: center;
 `;
 
-export default function HeaderPaletteColorBox() {
+export default function ColorBox() {
   const [color, setColor] = useRecoilState(colorAtom);
   const [colors, setColors] = useState<ColorType[]>([
     'lime',

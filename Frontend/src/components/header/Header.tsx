@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import { userAtom } from 'recoil/user';
-import HeaderAuth from './HeaderAuth';
-import HeaderPalette from './HeaderPalette';
-import HeaderProfile from './HeaderProfile';
+import HeaderAuth from 'components/header/HeaderAuth';
+import HeaderProfile from 'components/header/HeaderProfile';
 import Loader from 'components/common/Loader';
 
 const Container = styled.nav`
@@ -27,7 +26,7 @@ const Wrapper = styled.div`
   gap: 20px;
 `;
 
-const Logo = styled.div`
+const LogoWrapper = styled.div`
   cursor: pointer;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
@@ -41,13 +40,12 @@ const LoaderWrapper = styled.div`
 
 export default function Index({ isLoading }: { isLoading: boolean }) {
   const navigate = useNavigate();
-  const userState = useRecoilValue(userAtom);
+  const { isLogged } = useRecoilValue(userAtom);
 
   return (
     <Container>
-      <Logo onClick={() => navigate('/')}>Logo</Logo>
-      <Wrapper>
-        <HeaderPalette />
+      <LogoWrapper onClick={() => navigate('/')}></LogoWrapper>
+      {/* <Wrapper>
         {userState.isLogged ? (
           !isLoading ? (
             <HeaderProfile name={userState.name} />
@@ -58,6 +56,19 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
           )
         ) : !isLoading ? (
           <HeaderAuth />
+        ) : (
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
+        )}
+      </Wrapper> */}
+      <Wrapper>
+        {!isLoading ? (
+          isLogged ? (
+            <HeaderProfile />
+          ) : (
+            <HeaderAuth />
+          )
         ) : (
           <LoaderWrapper>
             <Loader />

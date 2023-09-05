@@ -94,7 +94,7 @@ type MyBookInfoResponse = {
 type MyBookType = Pick<BooksType, 'isbn' | 'image' | 'title'> & {
   id: number;
   status: BookStateType;
-  created_at: string;
+  date: string;
 };
 
 type BookStateType = '읽고싶음' | '다읽음' | '읽는중' | '';

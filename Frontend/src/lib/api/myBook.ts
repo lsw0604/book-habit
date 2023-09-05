@@ -31,7 +31,7 @@ export const myBookHistoryAPI = async (users_books_id: number) => {
 };
 
 /**
- * * 내 서재에 등록된 책 평점 보는 API
+ * * 내 서재에 등록된 책 평점들을 보는 API
  */
 
 export const myBookRatingAPI = async (users_books_id: number) => {
@@ -66,5 +66,15 @@ export const myBookRatingRegisterAPI = async (
   body: MyBookRatingRegisterType
 ) => {
   const { data } = await axios.post(`/api/my_book/rating`, body);
+  return data;
+};
+
+/**
+ * * 내 서재에 등록된 평점을 삭제하는 API
+ */
+export const myBookRatingDeleteAPI = async (users_books_info_id: number) => {
+  const { data } = await axios.delete(
+    `/api/my_book/delete/rating/${users_books_info_id}`
+  );
   return data;
 };

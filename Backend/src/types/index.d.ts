@@ -128,6 +128,7 @@ export type MyBookHistoryType = {
 } & RowDataPacket;
 
 export type MyBookRatingType = {
+  id: number;
   status: '읽기전' | '다읽음' | '읽는중';
   created_at: Date;
   rating: number;

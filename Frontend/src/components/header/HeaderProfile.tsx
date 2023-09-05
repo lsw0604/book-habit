@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import HeaderProfileDropdown from './HeaderProfileDropdown';
+import { useRecoilValue } from 'recoil';
 
-interface IProps {
-  name: string | null;
-}
+import HeaderProfileDropdown from './HeaderProfileDropdown';
+import { userAtom } from 'recoil/user';
 
 const Container = styled.div<{ isHamburger: boolean }>`
   display: flex;
@@ -24,7 +23,8 @@ const P = styled.p`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function HeaderProfile({ name }: IProps) {
+export default function HeaderProfile() {
+  const { name } = useRecoilValue(userAtom);
   const [isHamburger, setIsHamburger] = useState<boolean>(false);
   const hamburgerRef = useRef<HTMLDivElement>(null);
 

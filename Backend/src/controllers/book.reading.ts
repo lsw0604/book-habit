@@ -70,15 +70,6 @@ export default async function readingBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_INFO_SQL =
-          'INSERT INTO users_books_info (status, users_books_id) VALUES (?, ?)';
-        const USER_BOOKS_INFO_VALUES = [status, USER_BOOKS_RESULT.insertId];
-        const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_INFO_SQL,
-          USER_BOOKS_INFO_VALUES
-        );
-        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
-
         const USER_BOOKS_STATUS_START_SQL =
           'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
         const USER_BOOKS_STATUS_START_VALUES = [
@@ -117,15 +108,6 @@ export default async function readingBook(
           USER_BOOKS_VALUES
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
-
-        const USER_BOOKS_INFO_SQL =
-          'INSERT INTO users_books_info (status, users_books_id) VALUES (?, ?)';
-        const USER_BOOKS_INFO_VALUES = [status, USER_BOOKS_RESULT.insertId];
-        const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_INFO_SQL,
-          USER_BOOKS_INFO_VALUES
-        );
-        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
 
         const USER_BOOKS_STATUS_START_SQL =
           'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';

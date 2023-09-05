@@ -4,7 +4,7 @@ import { myBookListAPI } from 'lib/api/myBook';
 export default function useMyBookListHook(status: SelectorBookType) {
   const { data, fetchNextPage, isLoading, isFetching, hasNextPage, refetch } =
     useInfiniteQuery<MyBookResponseType>(
-      ['MY_BOOKS', status],
+      ['MY_BOOK_LIST', status],
       ({ pageParam = 1 }) => myBookListAPI(pageParam, status),
       {
         getNextPageParam: (response) => response.nextPage,

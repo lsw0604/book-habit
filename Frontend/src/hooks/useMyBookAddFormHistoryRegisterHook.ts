@@ -20,7 +20,14 @@ export default function useMyBookAddFormHistoryRegisterHook(
     BookRegisterResponseType,
     AxiosError,
     MyBookHistoryRegisterType
-  >([REACT_QUERY_KEY], myBookHistoryRegisterAPI);
+  >([REACT_QUERY_KEY], myBookHistoryRegisterAPI, {
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
+        refetch();
+      }
+    },
+  });
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -33,8 +40,6 @@ export default function useMyBookAddFormHistoryRegisterHook(
         useValidation: false,
         rating: 0,
       });
-      refetch();
-      queryClient.invalidateQueries([REACT_QUERY_KEY]);
     }
   }, [isSuccess, data]);
 

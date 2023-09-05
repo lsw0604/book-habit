@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Toggle from 'components/common/Toggle';
-import HeaderPaletteColorBox from 'components/header/HeaderPaletteColorBox';
+import HeaderPaletteColorBox from 'components/Palette/ColorBox';
 import { ColorType } from 'types/style';
 import { customize } from '@style/colors';
 import { IconCloudyParty, IconSunny } from '@style/icons';
@@ -9,8 +9,8 @@ import useThemeHook from '@hooks/useThemeHook';
 
 const Container = styled.div`
   position: absolute;
+  bottom: 5rem;
   z-index: 9999;
-  top: 3.5rem;
   display: flex;
   padding: 0.1rem;
   margin-top: 0.8rem;
@@ -61,7 +61,7 @@ const ColorButton = styled.div<{ btnColor: ColorType }>`
   align-items: center;
 `;
 
-export default function HeaderPaletteDropdown() {
+export default function Index() {
   const { isOn, toggleHandler, color } = useThemeHook();
 
   return (

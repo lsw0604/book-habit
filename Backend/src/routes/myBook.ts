@@ -8,6 +8,7 @@ import myBookInfo from '../controllers/myBook.info';
 
 import myBookRegister from '../controllers/myBook.history.register';
 import myBookRating from '../controllers/myBook.rating.register';
+import myBookRatingDelete from '../controllers/myBook.rating.delete';
 
 import access from '../controllers/auth.access';
 
@@ -21,5 +22,9 @@ myBookRouter.get('/info/:users_books_id', access, myBookInfo);
 
 myBookRouter.post('/register', access, myBookRegister);
 myBookRouter.post('/rating', access, myBookRating);
+
+myBookRouter.delete('/delete/rating/:users_books_info_id', access, myBookRatingDelete);
+
+myBookRouter.put('/update/rating/:users_books_info_id', access);
 
 export default myBookRouter;

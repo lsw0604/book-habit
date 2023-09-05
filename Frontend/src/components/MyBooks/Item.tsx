@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import dateParse from 'date-fns/parseISO';
 import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 interface IProps {
   id: number;
@@ -10,7 +11,7 @@ interface IProps {
   isbn: string;
   image?: string;
   status: BookStateType;
-  created_at: string;
+  date: string;
 }
 
 const Container = styled.div`
@@ -89,22 +90,14 @@ const DateTime = styled.p`
   font-size: 12px;
 `;
 
-export default function Item({
-  isbn,
-  image,
-  status,
-  title,
-  id,
-  created_at,
-}: IProps) {
+export default function Item({ isbn, image, status, title, id, date }: IProps) {
   const navigate = useNavigate();
-  const [created_year, created_month, created_day] = addHours(
-    dateParse(created_at),
-    9
-  )
+  const [created_year, created_month, created_day] = dayjs(date)
+    .add(9, 'hour')
     .toISOString()
     .split('T')[0]
     .split('-');
+
   return (
     <Container onClick={() => navigate(`/my_books/${id}`)}>
       <Header>

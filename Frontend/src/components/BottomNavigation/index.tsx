@@ -1,6 +1,10 @@
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+
+import PaletteBtn from './PaletteBtn';
 import NavBtn from 'components/BottomNavigation/NavBtn';
-import { IconBook, IconHome, IconSearch } from '@style/icons';
+import { IconBook, IconHome, IconPerson, IconSearch } from '@style/icons';
+import { userAtom } from 'recoil/user';
 
 const Container = styled.nav`
   height: 4rem;
@@ -13,7 +17,6 @@ const Container = styled.nav`
   bottom: 0;
   border-radius: 5px 10px 0 0;
   background-color: ${({ theme }) => theme.mode.nav};
-  overflow: hidden;
 `;
 
 const Buttons = styled.ul`
@@ -29,6 +32,7 @@ const Wrapper = styled.li`
 `;
 
 export default function Index() {
+  const { id } = useRecoilValue(userAtom);
   return (
     <Container>
       <Buttons>
@@ -39,11 +43,17 @@ export default function Index() {
           <NavBtn title="검색하기" icon={<IconSearch />} url="/search" />
         </Wrapper>
         <Wrapper>
+          <PaletteBtn />
+        </Wrapper>
+        <Wrapper>
+          <NavBtn isAuth title="내 서재" icon={<IconBook />} url="/my_books" />
+        </Wrapper>
+        <Wrapper>
           <NavBtn
             isAuth
-            title="내 서재로 가기"
-            icon={<IconBook />}
-            url="/my_books"
+            title="내 프로필"
+            icon={<IconPerson />}
+            url={`/profile/${id}`}
           />
         </Wrapper>
       </Buttons>

@@ -6,11 +6,13 @@ import { useSetRecoilState } from 'recoil';
 import { modalAtom } from 'recoil/modal';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { AxiosError } from 'axios';
+import useMyBookListHook from './useMyBookListHook';
 
 export default function useReadRegisterHook() {
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
   const { setBookRegisterModalState } = useBookRegisterModalHook();
+  const { refetch } = useMyBookListHook('전체보기');
 
   const REACT_QUERY_KEY = 'USE_READ_BOOK_REGISTER_KEY';
   const queryClient = new QueryClient();
@@ -21,9 +23,10 @@ export default function useReadRegisterHook() {
     ReadBookRegisterType
   >([REACT_QUERY_KEY], readBookRegisterAPI, {
     onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: ['MY_BOOKS', '전체보기'],
+      queryClient.invalidateQueries({
+        queryKey: ['MY_BOOK_LIST'],
       });
+      refetch();
     },
   });
 

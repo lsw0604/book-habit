@@ -18,16 +18,15 @@ export default async function myBookList(req: Request, res: Response, next: Next
 
       if (status === '전체보기') {
         const COUNT_TOTAL_SQL =
+          'WITH LatestStatus AS ( ' +
+          'SELECT ubs.users_books_id AS users_books_id, ubs.status, ubs.date, ROW_NUMBER() OVER (PARTITION BY ubs.users_books_id ORDER BY ubs.date DESC) AS rn ' +
+          'FROM users_books_status ubs ' +
+          ') ' +
           'SELECT COUNT(*) AS count ' +
           'FROM users_books ub ' +
           'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-          'RIGHT JOIN users_books_info ubi ON ubi.users_books_id = ub.id ' +
-          'INNER JOIN ( ' +
-          'SELECT users_books_id, MAX(created_at) AS max_created_at ' +
-          'FROM users_books_info ' +
-          'GROUP BY users_books_id ' +
-          ') latest_created ON ubi.users_books_id = latest_created.users_books_id AND ubi.created_at = latest_created.max_created_at ' +
-          'WHERE users_id = ?';
+          'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +
+          'WHERE ub.users_id = ?';
         const COUNT_TOTAL_VALUES = [id];
         const [COUNT_TOTAL_RESULT] = await connection.query<MyBookListCountResponseType[]>(
           COUNT_TOTAL_SQL,
@@ -42,16 +41,15 @@ export default async function myBookList(req: Request, res: Response, next: Next
         const totalPage = Math.ceil(totalBookCount / 10);
 
         const TOTAL_LIST_SQL =
-          'SELECT ub.id, isbn, title, image, ubi.status, ubi.created_at ' +
+          'WITH LatestStatus AS ( ' +
+          'SELECT ubs.users_books_id AS users_books_id, ubs.status, ubs.date, ROW_NUMBER() OVER (PARTITION BY ubs.users_books_id ORDER BY ubs.date DESC) AS rn ' +
+          'FROM users_books_status ubs ' +
+          ') ' +
+          'SELECT ls.users_books_id AS id, bs.title, bs.image, bs.isbn, ls.date, ls.status ' +
           'FROM users_books ub ' +
           'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-          'RIGHT JOIN users_books_info ubi ON ubi.users_books_id = ub.id ' +
-          'INNER JOIN ( ' +
-          'SELECT users_books_id, MAX(created_at) AS max_created_at ' +
-          'FROM users_books_info ' +
-          'GROUP BY users_books_id ' +
-          ') latest_created ON ubi.users_books_id = latest_created.users_books_id AND ubi.created_at = latest_created.max_created_at ' +
-          'WHERE users_id = ? ' +
+          'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +
+          'WHERE ub.users_id = ? ' +
           'LIMIT 10 OFFSET ?';
         const TOTAL_LIST_VALUES = [id, startPage];
         const [TOTAL_LIST_RESULT] = await connection.query<MyBookListResponseType[]>(
@@ -71,16 +69,16 @@ export default async function myBookList(req: Request, res: Response, next: Next
         });
       }
       const COUNT_STATUS_SQL =
-        'SELECT COUNT(*) AS count ' +
+        'SELECT COUNT(*) as count ' +
         'FROM users_books ub ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-        'RIGHT JOIN users_books_info ubi ON ubi.users_books_id = ub.id ' +
+        'RIGHT JOIN users_books_status ubs ON ubs.users_books_id = ub.id ' +
         'INNER JOIN ( ' +
-        'SELECT users_books_id, MAX(created_at) AS max_created_at ' +
-        'FROM users_books_info ' +
+        'SELECT MAX(date) AS max_date ' +
+        'FROM users_books_status ubs ' +
         'GROUP BY users_books_id ' +
-        ') latest_created ON ubi.users_books_id = latest_created.users_books_id AND ubi.created_at = latest_created.max_created_at ' +
-        'WHERE users_id = ? AND status = ?';
+        ') latest_date ON ubs.date = latest_date.max_date ' +
+        'WHERE ub.users_id = ? AND status = ?';
       const COUNT_STATUS_VALUES = [id, status];
       const [COUNT_STATUS_RESULT] = await connection.query<MyBookListCountResponseType[]>(
         COUNT_STATUS_SQL,
@@ -95,16 +93,15 @@ export default async function myBookList(req: Request, res: Response, next: Next
       const totalPage = Math.ceil(totalBookCount / 10);
 
       const STATUS_LIST_SQL =
-        'SELECT ub.id, isbn, title, image, ubi.status, ubi.created_at ' +
+        'WITH LatestStatus AS ( ' +
+        'SELECT ubs.users_books_id AS users_books_id, ubs.status, ubs.date, ROW_NUMBER() OVER (PARTITION BY ubs.users_books_id ORDER BY ubs.date DESC) AS rn ' +
+        'FROM users_books_status ubs ' +
+        ') ' +
+        'SELECT ls.users_books_id AS id, bs.title, bs.image, bs.isbn, ls.date, ls.status ' +
         'FROM users_books ub ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-        'RIGHT JOIN users_books_info ubi ON ubi.users_books_id = ub.id ' +
-        'INNER JOIN ( ' +
-        'SELECT users_books_id, MAX(created_at) AS max_created_at ' +
-        'FROM users_books_info ' +
-        'GROUP BY users_books_id ' +
-        ') latest_created ON ubi.users_books_id = latest_created.users_books_id AND ubi.created_at = latest_created.max_created_at ' +
-        'WHERE users_id = ? AND status = ? ' +
+        'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +
+        'WHERE ub.users_id = ? AND status = ? ' +
         'LIMIT 10 OFFSET ?';
       const STATUS_LIST_VALUES = [id, status, startPage];
       const [STATUS_LIST_RESULT] = await connection.query<MyBookListResponseType[]>(

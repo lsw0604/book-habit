@@ -34,11 +34,8 @@ const Icon = styled.div<{ isOn: boolean }>`
   }
 `;
 
-const Title = styled.div<{ isOn: boolean }>`
-  color: ${({ isOn }) =>
-    isOn
-      ? ({ theme }) => theme.colors.spinner
-      : ({ theme }) => theme.mode.typo_main};
+const Title = styled.div`
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 export default function NavBtn({ title, icon, url, isAuth }: IProps) {
@@ -58,7 +55,7 @@ export default function NavBtn({ title, icon, url, isAuth }: IProps) {
   return (
     <Container onClick={() => onChangeUrl(url)}>
       <Icon isOn={isOn}>{icon}</Icon>
-      <Title isOn={isOn}>{title}</Title>
+      <Title>{title}</Title>
     </Container>
   );
 }

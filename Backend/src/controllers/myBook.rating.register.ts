@@ -14,7 +14,7 @@ interface IRequestBody {
   users_books_id: string;
 }
 
-export default async function myBookRating(
+export default async function myBookRatingRegister(
   req: IRequest<IRequestBody>,
   res: Response,
   next: NextFunction

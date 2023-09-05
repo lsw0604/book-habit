@@ -10,7 +10,9 @@
     "baseUrl": "./src",
     "paths": {
       "@style/*": ["./style/*"],
-      "@hooks/*": ["./hooks/*"]
+      "@hooks/*": ["./hooks/*"],
+      "@assets/*": ["./assets/*"],
+      "@pages/*": ["./pages/*"]
     },
 
     /* Bundler mode */

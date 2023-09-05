@@ -17,8 +17,14 @@ type MyBookInfoResponseType = {
 
 type MyBookRatingResponseType = {
   result: {
+    id: number;
     status: '다읽음' | '읽는중' | '읽기전';
     created_at: string;
     rating: number;
   }[];
+};
+
+type MyBookRatingDeleteResponseType = {
+  status: string;
+  message: string;
 };

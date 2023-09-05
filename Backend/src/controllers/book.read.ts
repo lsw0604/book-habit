@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 interface IRequest<T> extends Request {
   body: T;
@@ -50,13 +50,15 @@ export default async function readBook(
     contents,
     url,
   } = req.body;
-  if (req.user === undefined) return res.status(403);
+  if (req.user === undefined)
+    return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
 
   const { id } = req.user;
   try {
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
+      logging.info(NAMESPACE, '[START]', req.body);
 
       const BOOK_EXIST_SQL = 'SELECT isbn, id FROM books WHERE isbn = ?';
       const BOOK_EXIST_VALUES = [isbn];
@@ -98,7 +100,7 @@ export default async function readBook(
         const USER_BOOKS_STATUS_START_VALUES = [
           '읽기시작함',
           USER_BOOKS_RESULT.insertId,
-          new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
+          dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USER_BOOKS_STATUS_START_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_STATUS_START_SQL,
@@ -115,7 +117,7 @@ export default async function readBook(
         const USER_BOOKS_STATUS_END_VALUES = [
           '다읽음',
           USER_BOOKS_RESULT.insertId,
-          new Date(addHours(new Date(endDate), 9).toISOString().split('T')[0]),
+          dayjs(endDate).add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USER_BOOKS_STATUS_END_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_STATUS_END_SQL,
@@ -149,7 +151,7 @@ export default async function readBook(
         const USER_BOOKS_STATUS_START_VALUES = [
           '읽기시작함',
           USER_BOOKS_RESULT.insertId,
-          new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
+          dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USER_BOOKS_STATUS_START_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_STATUS_START_SQL,
@@ -166,7 +168,7 @@ export default async function readBook(
         const USER_BOOKS_STATUS_END_VALUES = [
           '다읽음',
           USER_BOOKS_RESULT.insertId,
-          new Date(addHours(new Date(endDate), 9).toDateString().split('T')[0]),
+          dayjs(endDate).add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USER_BOOKS_STATUS_END_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_STATUS_END_SQL,
