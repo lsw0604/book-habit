@@ -78,3 +78,13 @@ export const myBookRatingDeleteAPI = async (users_books_info_id: number) => {
   );
   return data;
 };
+
+/**
+ * * 내 서재에 등록된 책을 삭제하는 API
+ */
+export const myBookListDeleteAPI = async (users_books_id: number) => {
+  const { data } = await axios.delete(
+    `/api/my_book/list/delete/${users_books_id}`
+  );
+  return data;
+};

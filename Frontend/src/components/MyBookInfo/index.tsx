@@ -5,6 +5,10 @@ import Selector from 'components/common/Selector';
 import Accordion from 'components/common/Accordion';
 import Loader from 'components/common/Loader';
 import Divider from 'components/common/Divider';
+import Button from 'components/common/Button';
+import { IconTrashCan } from '@style/icons';
+import { useParams } from 'react-router-dom';
+import useMyBookListDeleteHook from '@hooks/useMyBookListDeleteHook';
 
 const Info = lazy(() => import('components/MyBookInfo/Info'));
 const Rating = lazy(() => import('components/MyBookInfo/List/Rating'));
@@ -35,8 +39,13 @@ const Contents = styled.div`
 `;
 
 export default function Index() {
+  const { users_books_id } = useParams();
+  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [value, setValue] = useState<string[]>([]);
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
+  const { mutate, isLoading } = useMyBookListDeleteHook(
+    parseInt(users_books_id)
+  );
 
   return (
     <Container>
@@ -87,6 +96,13 @@ export default function Index() {
             <AddForm />
           </Suspense>
         </Accordion>
+        <Button
+          icon={<IconTrashCan />}
+          isLoading={isLoading}
+          onClick={() => mutate(parseInt(users_books_id))}
+        >
+          삭제하기
+        </Button>
       </Contents>
     </Container>
   );
