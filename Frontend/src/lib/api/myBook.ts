@@ -1,5 +1,7 @@
 import { axios } from './';
 
+// READ
+
 /**
  * * 내 서재 리스트 불러오는 API
  */
@@ -49,6 +51,8 @@ export const myBookExistAPI = async (isbn: string) => {
   return data;
 };
 
+// CREATE
+
 /**
  * * 내 서재에 기록을 등록하는 API
  */
@@ -68,6 +72,8 @@ export const myBookRatingRegisterAPI = async (
   const { data } = await axios.post(`/api/my_book/rating`, body);
   return data;
 };
+
+// DELETE
 
 /**
  * * 내 서재에 등록된 평점을 삭제하는 API
