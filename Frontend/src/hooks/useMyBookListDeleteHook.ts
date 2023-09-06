@@ -6,11 +6,6 @@ import { useEffect } from 'react';
 import useToastHook from './useToastHook';
 import { useNavigate } from 'react-router-dom';
 
-interface IData {
-  message: string;
-  status: string;
-}
-
 export default function useMyBookListDeleteHook(users_books_id: number) {
   const REACT_QUERY_KEY = 'MY_BOOK_LIST_DELETE';
   const queryClient = new QueryClient();
@@ -18,9 +13,9 @@ export default function useMyBookListDeleteHook(users_books_id: number) {
   const { addToast } = useToastHook();
   const { refetch } = useMyBookListHook('전체보기');
   const { mutate, isLoading, isSuccess, isError, error, data } = useMutation<
-    IData,
+    MyBookListDeleteResponseType,
     AxiosError,
-    number
+    MyBookListDeleteRequestType
   >(
     [REACT_QUERY_KEY, users_books_id],
     () => myBookListDeleteAPI(users_books_id),

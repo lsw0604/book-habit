@@ -120,7 +120,8 @@ export type MyBookExistResponseType = {
 } & RowDataPacket;
 
 export type MyBookHistoryType = {
-  status: '읽기시작함' | '다읽음' | '읽고싶음';
+  id: number;
+  status: '읽기시작함' | '다읽음' | '읽고싶음' | '읽는중';
   date: Date;
   page: number | null;
   created_at: Date;

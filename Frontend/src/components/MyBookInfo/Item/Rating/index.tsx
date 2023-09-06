@@ -7,13 +7,6 @@ import { IconTrashCan } from '@style/icons';
 import useMyBookRatingDeleteHook from '@hooks/useMyBookRatingDeleteHook';
 import { useParams } from 'react-router-dom';
 
-interface IProps {
-  id: number;
-  created_at: string;
-  status: '읽기전' | '다읽음' | '읽는중';
-  rating: number;
-}
-
 const Container = styled.div`
   display: inline-flex;
   width: 100%;
@@ -35,7 +28,12 @@ const StatusWrapper = styled.span`
   font-size: 12px;
 `;
 
-export default function Index({ created_at, rating, status, id }: IProps) {
+export default function Index({
+  created_at,
+  rating,
+  status,
+  id,
+}: MyBookRatingItemType) {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const { mutate } = useMyBookRatingDeleteHook(parseInt(users_books_id), id);

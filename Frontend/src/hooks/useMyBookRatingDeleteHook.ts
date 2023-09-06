@@ -16,7 +16,7 @@ export default function useMyBookRatingDeleteHook(
   const { mutate, isSuccess, data, isError, error, isLoading } = useMutation<
     MyBookRatingDeleteResponseType,
     AxiosError,
-    number
+    MyBookRatingDeleteRequestType
   >(
     [REACT_QUERY_KEY, users_books_info_id],
     () => myBookRatingDeleteAPI(users_books_info_id),

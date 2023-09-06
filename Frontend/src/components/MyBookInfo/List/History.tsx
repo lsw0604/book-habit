@@ -50,7 +50,7 @@ export default function History({ filter }: { filter: string[] }) {
           <Loader size={2} />
         </LoadingContainer>
       ) : isSuccess && data && data.length !== 0 ? (
-        data.map((value, index) => <Item key={index} {...value} />)
+        data.map((value) => <Item key={value.id} {...value} />)
       ) : filter.length === 0 ? (
         <EmptyTag>태그를 선택해 주세요.</EmptyTag>
       ) : (

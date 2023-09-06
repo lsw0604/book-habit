@@ -16,9 +16,9 @@ export default function useMyBookAddFormRatingRegisterHook(
   const { addToast } = useToastHook();
   const { setAddFormState } = useMyBookAddFormHook();
   const { mutate, isSuccess, data, isError, error, isLoading } = useMutation<
-    BookRegisterResponseType,
+    MyBookAddFormRatingRegisterResponseType,
     AxiosError,
-    MyBookRatingRegisterType
+    MyBookAddFormRatingRegisterRequestType
   >([REACT_QUERY_KEY], myBookRatingRegisterAPI, {
     onSuccess: (data) => {
       if (data.status === 'success') {

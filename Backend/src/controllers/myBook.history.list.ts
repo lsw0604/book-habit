@@ -13,21 +13,28 @@ export default async function myBookHistoryList(req: Request, res: Response, nex
   try {
     const connection = await connectionPool.getConnection();
     try {
-      const SQL =
-        'SELECT status, date, page, ubs.created_at, ubs.updated_at ' +
+      const BOOKS_MY_BOOK_HISTORY_LIST_SQL =
+        'SELECT ubs.id, status, date, page, ubs.created_at, ubs.updated_at ' +
         'FROM users_books ub ' +
         'RIGHT JOIN users_books_status ubs ON ubs.users_books_id = ub.id ' +
         'LEFT JOIN users_books_status_page ubsp ON ubsp.users_books_status_id = ubs.id ' +
         'WHERE ub.users_id = ? AND ub.id = ? ' +
         'ORDER BY date DESC';
-      const VALUE = [id, users_books_id];
-      const [RESULT] = await connection.query<MyBookHistoryType[]>(SQL, VALUE);
+      const BOOKS_MY_BOOK_HISTORY_LIST_VALUE = [id, users_books_id];
+      const [BOOKS_MY_BOOK_HISTORY_LIST_RESULT] = await connection.query<MyBookHistoryType[]>(
+        BOOKS_MY_BOOK_HISTORY_LIST_SQL,
+        BOOKS_MY_BOOK_HISTORY_LIST_VALUE
+      );
 
-      logging.debug(NAMESPACE, '[RESULT]', RESULT);
+      logging.debug(
+        NAMESPACE,
+        '[BOOKS_MY_BOOK_HISTORY_LIST_RESULT]',
+        BOOKS_MY_BOOK_HISTORY_LIST_RESULT
+      );
 
       connection.release();
       res.status(200).json({
-        books: RESULT,
+        books: BOOKS_MY_BOOK_HISTORY_LIST_RESULT,
       });
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);

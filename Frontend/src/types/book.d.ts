@@ -75,11 +75,12 @@ type BookRegisterResponseType = {
 };
 
 type MyBookHistoryResponseType = {
+  id: number;
   status: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
   date: string;
-  page?: number;
+  page: number | null;
   created_at: string;
-  updated_at?: string;
+  updated_at: string | null;
 };
 
 type MyBookResponseType = {

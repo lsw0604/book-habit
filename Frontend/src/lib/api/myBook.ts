@@ -6,7 +6,7 @@ import { axios } from './';
  * * 내 서재 리스트 불러오는 API
  */
 export const myBookListAPI = async (page: number, status: SelectorBookType) => {
-  const { data } = await axios.get(
+  const { data } = await axios.get<MyBookListResponseType>(
     `/api/my_book/list?page=${page}&status=${status}`
   );
   return data;
@@ -15,7 +15,7 @@ export const myBookListAPI = async (page: number, status: SelectorBookType) => {
 /**
  * * 내 서재에 등록된 책 정보를 보는 API
  */
-export const myBookInfoAPI = async (users_books_id: number) => {
+export const myBookInfoAPI = async (users_books_id: MyBookInfoRequestType) => {
   const { data } = await axios.get<MyBookInfoResponseType>(
     `/api/my_book/info/${users_books_id}`
   );
@@ -25,8 +25,10 @@ export const myBookInfoAPI = async (users_books_id: number) => {
 /**
  * * 내 서재에 등록된 책 기록 보는 API
  */
-export const myBookHistoryAPI = async (users_books_id: number) => {
-  const { data } = await axios.get<{ books: MyBookHistoryResponseType[] }>(
+export const myBookHistoryAPI = async (
+  users_books_id: MyBookHistoryListRequestType
+) => {
+  const { data } = await axios.get<MyBookHistoryListResponseType>(
     `/api/my_book/history/${users_books_id}`
   );
   return data;
@@ -36,15 +38,19 @@ export const myBookHistoryAPI = async (users_books_id: number) => {
  * * 내 서재에 등록된 책 평점들을 보는 API
  */
 
-export const myBookRatingAPI = async (users_books_id: number) => {
-  const { data } = await axios.get(`/api/my_book/rating/${users_books_id}`);
+export const myBookRatingAPI = async (
+  users_books_id: MyBookRatingRequestType
+) => {
+  const { data } = await axios.get<MyBookRatingResponseType>(
+    `/api/my_book/rating/${users_books_id}`
+  );
   return data;
 };
 
 /**
  * * 내 서재에 등록된 책인지 확인하는 API
  */
-export const myBookExistAPI = async (isbn: string) => {
+export const myBookExistAPI = async (isbn: MyBookExistRequestType) => {
   const { data } = await axios.get<MyBookExistResponseType>(
     `/api/my_book/exist/${isbn}`
   );
@@ -57,9 +63,12 @@ export const myBookExistAPI = async (isbn: string) => {
  * * 내 서재에 기록을 등록하는 API
  */
 export const myBookHistoryRegisterAPI = async (
-  body: MyBookHistoryRegisterType
+  body: MyBookAddFormHistoryRegisterRequestType
 ) => {
-  const { data } = await axios.post(`/api/my_book/register`, body);
+  const { data } = await axios.post<MyBookAddFormHistoryRegisterResponseType>(
+    `/api/my_book/register`,
+    body
+  );
   return data;
 };
 
@@ -67,9 +76,12 @@ export const myBookHistoryRegisterAPI = async (
  * * 내 서재에 등록된 책에 평점을 등록하는 API
  */
 export const myBookRatingRegisterAPI = async (
-  body: MyBookRatingRegisterType
+  body: MyBookAddFormRatingRegisterRequestType
 ) => {
-  const { data } = await axios.post(`/api/my_book/rating`, body);
+  const { data } = await axios.post<MyBookAddFormRatingRegisterResponseType>(
+    `/api/my_book/rating`,
+    body
+  );
   return data;
 };
 
@@ -78,8 +90,10 @@ export const myBookRatingRegisterAPI = async (
 /**
  * * 내 서재에 등록된 평점을 삭제하는 API
  */
-export const myBookRatingDeleteAPI = async (users_books_info_id: number) => {
-  const { data } = await axios.delete(
+export const myBookRatingDeleteAPI = async (
+  users_books_info_id: MyBookRatingDeleteRequestType
+) => {
+  const { data } = await axios.delete<MyBookRatingDeleteResponseType>(
     `/api/my_book/delete/rating/${users_books_info_id}`
   );
   return data;
@@ -88,8 +102,10 @@ export const myBookRatingDeleteAPI = async (users_books_info_id: number) => {
 /**
  * * 내 서재에 등록된 책을 삭제하는 API
  */
-export const myBookListDeleteAPI = async (users_books_id: number) => {
-  const { data } = await axios.delete(
+export const myBookListDeleteAPI = async (
+  users_books_id: MyBookListDeleteRequestType
+) => {
+  const { data } = await axios.delete<MyBookListDeleteResponseType>(
     `/api/my_book/list/delete/${users_books_id}`
   );
   return data;

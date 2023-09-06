@@ -6,7 +6,12 @@ import { v1 } from 'uuid';
 export default function useToastHook() {
   const toastState = useRecoilValue(toastAtom);
 
-  const addToast = useRecoilCallback(
+  const addToast = useRecoilCallback<
+    [
+      { message: string; status: 'error' | 'info' | 'success' | 'warning' | '' }
+    ],
+    void
+  >(
     ({ set }) =>
       ({ message, status }) => {
         const newToast = { id: v1(), status, message };

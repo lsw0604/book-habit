@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 interface IProps {
   created_at: string;
-  updated_at?: string;
+  updated_at: string | null;
   page: number;
 }
 

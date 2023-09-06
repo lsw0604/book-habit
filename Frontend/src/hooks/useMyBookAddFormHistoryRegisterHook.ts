@@ -17,9 +17,9 @@ export default function useMyBookAddFormHistoryRegisterHook(
   const { refetch } = useMyBookHistoryHook(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
-    BookRegisterResponseType,
+    MyBookAddFormHistoryRegisterResponseType,
     AxiosError,
-    MyBookHistoryRegisterType
+    MyBookAddFormHistoryRegisterRequestType
   >([REACT_QUERY_KEY], myBookHistoryRegisterAPI, {
     onSuccess: (data) => {
       if (data.status === 'success') {

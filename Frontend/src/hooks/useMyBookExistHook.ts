@@ -4,27 +4,20 @@ import { myBookExistAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
 import useToastHook from './useToastHook';
 
-export default function useMyBookExist(isbn: string) {
+export default function useMyBookExist(isbn: MyBookExistRequestType) {
   const REACT_QUERY_KEY = 'MY_BOOKS_EXIST';
   const { data, isLoading, isFetching, isError, error, isSuccess, refetch } =
-    useQuery<
-      MyBookExistResponseType,
-      AxiosError<{ status: 'string'; message: 'string' }>
-    >([REACT_QUERY_KEY, isbn], () => myBookExistAPI(isbn));
+    useQuery<MyBookExistResponseType, AxiosError>([REACT_QUERY_KEY, isbn], () =>
+      myBookExistAPI(isbn)
+    );
 
   const { addToast } = useToastHook();
 
   useEffect(() => {
-    if (
-      isError &&
-      error &&
-      error.response &&
-      error.response.status === 403 &&
-      error.response.data
-    ) {
+    if (isError && error) {
       addToast({
-        message: error.response.data.message,
-        status: error.response.data.status,
+        message: 'MY BOOK EXIST를 불러오는데 실패했습니다.',
+        status: 'error',
       });
     }
   }, [isError, error]);

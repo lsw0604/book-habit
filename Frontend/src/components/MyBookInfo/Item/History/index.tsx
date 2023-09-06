@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import dateParse from 'date-fns/parseISO';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 import End from 'components/MyBookInfo/Item/History/End';
 import Reading from 'components/MyBookInfo/Item/History/Reading';
@@ -48,13 +47,15 @@ const IconWrapper = styled.div`
 `;
 
 export default function Index({
+  id,
   status,
   page,
   date,
   created_at,
   updated_at,
-}: MyBookHistoryResponseType) {
-  const [year, month, day] = addHours(dateParse(date), 9)
+}: MyBookHistoryItemType) {
+  const [year, month, day] = dayjs(date)
+    .add(9, 'hour')
     .toISOString()
     .split('T')[0]
     .split('-');
@@ -84,7 +85,9 @@ export default function Index({
         )}
       </Content>
       <IconWrapper>
-        <Icon icon={<IconTrashCan />}>Delete</Icon>
+        <Icon icon={<IconTrashCan />} onClick={() => console.log(id)}>
+          Delete
+        </Icon>
       </IconWrapper>
     </Container>
   );
