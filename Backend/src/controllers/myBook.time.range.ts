@@ -19,14 +19,22 @@ export default async function myBookTimeRange(req: Request, res: Response, next:
     try {
       const SQL =
         'SELECT ' +
-        'MAX(CASE WHEN status = ? THEN date ELSE NULL END) AS endDate, ' +
-        'GREATEST( ' +
-        'MAX(CASE WHEN status = ? THEN date ELSE NULL END), ' +
-        'MAX(CASE WHEN status = ? THEN date ELSE NULL END) ' +
-        ') AS startDate ' +
+        "MAX(CASE WHEN status = '다읽음' THEN date ELSE NULL END) AS endDate, " +
+        'CASE ' +
+        "WHEN MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) IS NULL " +
+        "AND MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) IS NOT NULL " +
+        "THEN MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) " +
+        "WHEN MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) IS NOT NULL " +
+        "AND MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) IS NULL " +
+        "THEN MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) " +
+        'ELSE GREATEST( ' +
+        "MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END), " +
+        "MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) " +
+        ') ' +
+        'END AS startDate ' +
         'FROM users_books_status ' +
         'WHERE users_books_id = ?';
-      const VALUE = ['다읽음', '읽고싶음', '읽기시작함', users_books_id];
+      const VALUE = [parseInt(users_books_id)];
       const [RESULT] = await connection.query<IProps[]>(SQL, VALUE);
       logging.debug(NAMESPACE, '[RESULT]', RESULT);
 

@@ -1,7 +1,3 @@
-type MyBookAtomType = {
-  isExist: boolean;
-};
-
 type RegisterResponse = {
   message: string;
   status: 'error' | 'info' | 'success' | 'warning' | '';

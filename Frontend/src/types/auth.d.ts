@@ -77,6 +77,16 @@ type KakaoCallbackResponseType = {
   access_jwt: string;
 };
 
+type UserAtomType = {
+  id: number;
+  email: string;
+  name: string | '';
+  isLogged: boolean;
+  age: number;
+  gender: 'male' | 'female' | '';
+  provider: 'local' | 'kakao' | '';
+};
+
 type StatusType = 'success' | 'error' | 'warning' | 'info' | '';
 
 type GenderType = 'male' | 'female' | '';

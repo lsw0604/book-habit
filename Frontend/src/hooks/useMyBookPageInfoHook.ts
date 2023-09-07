@@ -21,6 +21,8 @@ export default function useMyBookPageInfoHook(
   };
   const { addToast } = useToastHook();
 
+  const isNullFilter = filtered === null ? [] : filtered;
+
   const [
     {
       data: myBookInfoData,
@@ -63,16 +65,16 @@ export default function useMyBookPageInfoHook(
         cacheTime: 3 * 60 * 1000,
       },
       {
-        queryKey: [REACT_QUERY_KEY.history, users_books_id, filtered],
+        queryKey: [REACT_QUERY_KEY.history, users_books_id, isNullFilter],
         queryFn: () => myBookHistoryAPI(users_books_id),
         select: ({ books }: MyBookHistoryListResponseType) => {
-          if (filtered && filtered.includes('전체보기')) {
+          if (isNullFilter && isNullFilter.includes('전체보기')) {
             return books;
-          } else if (filtered && filtered.length === 0) {
+          } else if (isNullFilter && isNullFilter.length === 0) {
             return [];
           } else {
             return books.filter(
-              (book) => filtered && filtered.includes(book.status)
+              (book) => isNullFilter && isNullFilter.includes(book.status)
             );
           }
         },
