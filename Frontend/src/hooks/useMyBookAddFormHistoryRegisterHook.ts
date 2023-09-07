@@ -4,7 +4,7 @@ import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
 import useToastHook from './useToastHook';
 import useMyBookAddFormHook from './useMyBookAddFormHook';
-import useMyBookHistoryHook from './useMyBookHistoryHook';
+import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
 
 export default function useMyBookAddFormHistoryRegisterHook(
   users_books_id: number
@@ -14,7 +14,7 @@ export default function useMyBookAddFormHistoryRegisterHook(
 
   const { addToast } = useToastHook();
   const { setAddFormState } = useMyBookAddFormHook();
-  const { refetch } = useMyBookHistoryHook(users_books_id);
+  const { myBookHistoryRefetch } = useMyBookPageInfoHook(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     MyBookAddFormHistoryRegisterResponseType,
@@ -24,7 +24,7 @@ export default function useMyBookAddFormHistoryRegisterHook(
     onSuccess: (data) => {
       if (data.status === 'success') {
         queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
-        refetch();
+        myBookHistoryRefetch();
       }
     },
   });

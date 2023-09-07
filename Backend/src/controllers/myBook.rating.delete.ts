@@ -1,7 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ResultSetHeader } from 'mysql2';
 
 export default async function myBookRatingDelete(req: Request, res: Response, next: NextFunction) {
   const NAMESPACE = 'MY_BOOK_RATING_DELETE';

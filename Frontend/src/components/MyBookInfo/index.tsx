@@ -1,13 +1,12 @@
-import styled from 'styled-components';
 import { Suspense, lazy, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 import Selector from 'components/common/Selector';
 import Accordion from 'components/common/Accordion';
 import Loader from 'components/common/Loader';
-import Divider from 'components/common/Divider';
 import Button from 'components/common/Button';
 import { IconTrashCan } from '@style/icons';
-import { useParams } from 'react-router-dom';
 import useMyBookListDeleteHook from '@hooks/useMyBookListDeleteHook';
 
 const Info = lazy(() => import('components/MyBookInfo/Info'));
@@ -34,8 +33,11 @@ const LoaderContainer = styled.div`
 `;
 
 const Contents = styled.div`
-  height: 28rem;
+  height: 25rem;
   overflow: scroll;
+  @media screen and (min-width: 1024px) {
+    height: 31rem;
+  }
 `;
 
 export default function Index() {
@@ -58,7 +60,15 @@ export default function Index() {
       >
         <Info />
       </Suspense>
-      <Divider divider={2} />
+      <Stack>
+        <Button
+          icon={<IconTrashCan />}
+          isLoading={isLoading}
+          onClick={() => mutate(parseInt(users_books_id))}
+        >
+          삭제하기
+        </Button>
+      </Stack>
       <Contents>
         <Accordion label="기록보기">
           <Stack>
@@ -96,14 +106,6 @@ export default function Index() {
             <AddForm />
           </Suspense>
         </Accordion>
-        <Divider divider={20} />
-        <Button
-          icon={<IconTrashCan />}
-          isLoading={isLoading}
-          onClick={() => mutate(parseInt(users_books_id))}
-        >
-          삭제하기
-        </Button>
       </Contents>
     </Container>
   );

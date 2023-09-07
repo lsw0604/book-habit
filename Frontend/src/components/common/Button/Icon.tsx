@@ -1,9 +1,11 @@
 import styled, { css } from 'styled-components';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import Loader from '../Loader';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;
   children: ReactNode;
+  isLoading?: boolean;
   mode?: 'text' | 'nav';
 }
 
@@ -70,10 +72,16 @@ const IconWrapper = styled.div`
   }
 `;
 
-export default function Icon({ mode, icon, children, ...props }: IProps) {
+export default function Icon({
+  isLoading,
+  mode,
+  icon,
+  children,
+  ...props
+}: IProps) {
   return (
     <Container mode={mode} {...props}>
-      {icon && <IconWrapper>{icon}</IconWrapper>}
+      {!isLoading ? icon && <IconWrapper>{icon}</IconWrapper> : <Loader />}
       <Span>{children}</Span>
     </Container>
   );

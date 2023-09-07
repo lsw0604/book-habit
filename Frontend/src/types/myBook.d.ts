@@ -7,6 +7,14 @@ type RegisterResponse = {
   status: 'error' | 'info' | 'success' | 'warning' | '';
 };
 
+// MyBookTimeRange와 관련된 타입들
+type MyBookTimeRangeResponseType = {
+  startDate?: string;
+  endDate?: string;
+};
+
+type MyBookTimeRangeRequestType = number;
+
 // MyBookExist과 관련된 타입들
 type MyBookExistResponseType = {
   status: '등록' | '미등록';
@@ -25,6 +33,10 @@ type MyBookRatingItemType = {
   rating: number;
 };
 type MyBookRatingRequestType = number;
+
+// useMyBookHistoryDelete와 관련된 타입들
+type MyBookHistoryDeleteResponseType = RegisterResponse;
+type MyBookHistoryDeleteRequestType = number;
 
 // MyBookRatingDelete와 관련된 타입들
 type MyBookRatingDeleteResponseType = RegisterResponse;

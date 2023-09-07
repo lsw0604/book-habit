@@ -57,6 +57,18 @@ export const myBookExistAPI = async (isbn: MyBookExistRequestType) => {
   return data;
 };
 
+/**
+ * * 내 서재에 등록된 책의 시간 범위 확인하는 API
+ */
+export const myBookTimeRangeAPI = async (
+  users_books_id: MyBookTimeRangeRequestType
+) => {
+  const { data } = await axios.get<MyBookTimeRangeResponseType>(
+    `/api/my_book/time_range/${users_books_id}`
+  );
+  return data;
+};
+
 // CREATE
 
 /**
@@ -116,7 +128,7 @@ export const myBookListDeleteAPI = async (
  */
 export const myBookHistoryDeleteAPI = async (users_books_status_id: number) => {
   const { data } = await axios.delete(
-    `/api/my_book/history/delete/${users_books_status_id}`
+    `/api/my_book/delete/history/${users_books_status_id}`
   );
   return data;
 };

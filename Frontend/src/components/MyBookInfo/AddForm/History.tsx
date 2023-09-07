@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useParams } from 'react-router-dom';
-import dateParse from 'date-fns/parseISO';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 import Input from 'components/common/Input';
 import RadioButton from 'components/common/Radio/RadioButton';
@@ -10,7 +9,7 @@ import { IconBook } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
-import useMyBookHistoryHook from '@hooks/useMyBookHistoryHook';
+import useMyBookTimeRangeHook from '@hooks/useMyBookTimeRangeHook';
 
 const Container = styled.div`
   flex: 1;
@@ -73,18 +72,7 @@ export default function History() {
 
   const userBookId = parseInt(users_books_id);
 
-  const { data: readToData } = useMyBookHistoryHook(userBookId, ['읽고싶음']);
-  const { data: readStartData } = useMyBookHistoryHook(userBookId, [
-    '읽기시작함',
-  ]);
-  const { data: readData } = useMyBookHistoryHook(userBookId, ['다읽음']);
-
-  const getStartDate = (data?: MyBookHistoryResponseType[]) => {
-    if (data && data.length !== 0) {
-      return addHours(dateParse(data[0].date), 9);
-    }
-    return null;
-  };
+  const { data } = useMyBookTimeRangeHook(userBookId);
 
   useEffect(() => {
     setAddFormState({
@@ -113,17 +101,26 @@ export default function History() {
           <Stack>
             <DateSelector
               startDate={
-                getStartDate(readStartData)
-                  ? getStartDate(readStartData)
-                  : getStartDate(readToData)
+                data &&
+                new Date(
+                  dayjs(data.startDate)
+                    .add(9, 'hour')
+                    .add(1, 'day')
+                    .toISOString()
+                    .split('T')[0]
+                )
               }
               onChange={(e) => onChangeAddFormDate(e)}
               date={addFormDate}
               endDate={
-                readData
-                  ? readData.length !== 0
-                    ? addHours(dateParse(readData[0].date), 9)
-                    : new Date()
+                data
+                  ? new Date(
+                      dayjs(data.endDate)
+                        .add(9, 'hour')
+                        .add(-1, 'day')
+                        .toISOString()
+                        .split('T')[0]
+                    )
                   : new Date()
               }
               errorMessage="날짜를 입력해주세요."

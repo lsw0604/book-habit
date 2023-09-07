@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { myBookInfoAPI } from 'lib/api/myBook';
-import useToastHook from './useToastHook';
+import useToastHook from '@hooks/useToastHook';
 
 export default function useMyBookInfoHook(users_books_id: number) {
   const REACT_QUERY_KEY = 'MY_BOOK_INFO';

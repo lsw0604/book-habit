@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+import { useParams } from 'react-router-dom';
 
 import End from 'components/MyBookInfo/Item/History/End';
 import Reading from 'components/MyBookInfo/Item/History/Reading';
@@ -7,6 +8,7 @@ import Start from 'components/MyBookInfo/Item/History/Start';
 import ReadTo from 'components/MyBookInfo/Item/History/ReadTo';
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
+import useMyBookHistoryDeleteHook from '@hooks/useMyBookHistoryDeleteHook';
 
 const Container = styled.div`
   display: inline-flex;
@@ -54,6 +56,12 @@ export default function Index({
   created_at,
   updated_at,
 }: MyBookHistoryItemType) {
+  const { users_books_id } = useParams();
+  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
+  const { mutate, isLoading } = useMyBookHistoryDeleteHook(
+    id,
+    parseInt(users_books_id)
+  );
   const [year, month, day] = dayjs(date)
     .add(9, 'hour')
     .toISOString()
@@ -85,7 +93,11 @@ export default function Index({
         )}
       </Content>
       <IconWrapper>
-        <Icon icon={<IconTrashCan />} onClick={() => console.log(id)}>
+        <Icon
+          isLoading={isLoading}
+          icon={<IconTrashCan />}
+          onClick={() => mutate(id)}
+        >
           Delete
         </Icon>
       </IconWrapper>

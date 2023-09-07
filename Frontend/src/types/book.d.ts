@@ -25,35 +25,6 @@ type BookRegisterType = {
   url: string;
 };
 
-type MyBookHistoryRegisterType = {
-  status: '읽기시작함' | '읽는중' | '다읽음';
-  date: Date;
-  users_books_id: number;
-  page?: number;
-};
-
-type MyBookRatingRegisterType = Pick<
-  MyBookHistoryRegisterType,
-  'users_books_id'
-> & {
-  status: '읽기전' | '다읽음' | '읽는중';
-  rating: number;
-};
-
-type MyBookInfoAddReadType = {
-  users_books_id: number;
-  status: BookStateType;
-  startDate: Date;
-  endDate: Date;
-  rating: number;
-};
-
-type MyBookInfoAddReadingType = {
-  status: BookStateType;
-  startDate: Date;
-  page: number;
-};
-
 type ReadingBookRegisterType = BookRegisterType & {
   page: number;
   startDate: Date;
@@ -72,30 +43,6 @@ type ReadToBookRegisterType = BookRegisterType & {
 type BookRegisterResponseType = {
   message: string;
   status: StatusType;
-};
-
-type MyBookHistoryResponseType = {
-  id: number;
-  status: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
-  date: string;
-  page: number | null;
-  created_at: string;
-  updated_at: string | null;
-};
-
-type MyBookResponseType = {
-  nextPage?: number;
-  books: MyBookType[];
-};
-
-type MyBookInfoResponse = {
-  books: MyBookInfoResponseType[];
-};
-
-type MyBookType = Pick<BooksType, 'isbn' | 'image' | 'title'> & {
-  id: number;
-  status: BookStateType;
-  date: string;
 };
 
 type BookStateType = '읽고싶음' | '다읽음' | '읽는중' | '';
