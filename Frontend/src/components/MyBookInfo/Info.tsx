@@ -1,8 +1,9 @@
-import useMyBookInfoHook from '@hooks/useMyBookInfoHook';
-import { IconImage } from '@style/icons';
-import Loader from 'components/common/Loader';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { IconImage } from '@style/icons';
+import Loader from 'components/common/Loader';
+import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
 
 const Container = styled.div`
   width: 100%;
@@ -80,14 +81,19 @@ export default function Info() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접급입니다.</div>;
 
-  const { data, isLoading } = useMyBookInfoHook(parseInt(users_books_id));
+  const { myBookInfoData, myBookInfoIsLoading } = useMyBookPageInfoHook(
+    parseInt(users_books_id)
+  );
 
   return (
     <Container>
       <ImageWrapper>
-        {!isLoading ? (
-          data?.result.image ? (
-            <img src={data?.result.image} alt={data?.result.title} />
+        {!myBookInfoIsLoading ? (
+          myBookInfoData?.result.image ? (
+            <img
+              src={myBookInfoData?.result.image}
+              alt={myBookInfoData?.result.title}
+            />
           ) : (
             <IconImage />
           )
@@ -98,11 +104,15 @@ export default function Info() {
         )}
       </ImageWrapper>
       <DetailContainer>
-        {!isLoading ? (
+        {!myBookInfoIsLoading ? (
           <>
-            <Title>제목 : {data?.result.title}</Title>
-            <Description>{data?.result.contents}&nbsp;</Description>
-            <A href={data?.result.url} target="_blank" rel="noreferrer">
+            <Title>제목 : {myBookInfoData?.result.title}</Title>
+            <Description>{myBookInfoData?.result.contents}&nbsp;</Description>
+            <A
+              href={myBookInfoData?.result.url}
+              target="_blank"
+              rel="noreferrer"
+            >
               더보기...
             </A>
           </>

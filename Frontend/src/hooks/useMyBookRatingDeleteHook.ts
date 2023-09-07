@@ -1,9 +1,10 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { myBookRatingDeleteAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
-import useToastHook from './useToastHook';
-import useMyBookRatingHook from './useMyBookRatingHook';
+import { AxiosError } from 'axios';
+
+import { myBookRatingDeleteAPI } from 'lib/api/myBook';
+import useToastHook from '@hooks/useToastHook';
+import useMyBookPageInfoHook from './useMyBookPageInfoHook';
 
 export default function useMyBookRatingDeleteHook(
   users_books_id: number,
@@ -11,7 +12,7 @@ export default function useMyBookRatingDeleteHook(
 ) {
   const queryClient = new QueryClient();
   const REACT_QUERY_KEY = 'MY_BOOK_RATING_DELETE';
-  const { refetch } = useMyBookRatingHook(users_books_id);
+  const { myBookRatingRefetch } = useMyBookPageInfoHook(users_books_id);
 
   const { mutate, isSuccess, data, isError, error, isLoading } = useMutation<
     MyBookRatingDeleteResponseType,
@@ -23,7 +24,7 @@ export default function useMyBookRatingDeleteHook(
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['MY_BOOK_RATING']);
-        refetch();
+        myBookRatingRefetch();
       },
     }
   );

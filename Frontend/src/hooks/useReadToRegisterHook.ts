@@ -43,8 +43,11 @@ export default function useReadToRegisterHook() {
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error && error.response && error.response.status === 403) {
-      addToast({ message: '로그인이 필요합니다.', status: 'error' });
+    if (isError && error) {
+      addToast({
+        message: '읽고싶은 책 등록에 실패했습니다.',
+        status: 'error',
+      });
     }
   }, [isError, error]);
 

@@ -7,6 +7,7 @@ import {
   myBookTimeRangeAPI,
 } from 'lib/api/myBook';
 import useToastHook from './useToastHook';
+import dayjs from 'dayjs';
 
 export default function useMyBookPageInfoHook(
   users_books_id: number,
@@ -45,6 +46,14 @@ export default function useMyBookPageInfoHook(
       error: myBookRatingError,
       refetch: myBookRatingRefetch,
     },
+    {
+      data: myBookTimeData,
+      isLoading: myBookTimeIsLoading,
+      isError: myBookTimeIsError,
+      error: myBookTimeError,
+      refetch: myBookTimeRefetch,
+      isFetching: myBookTimeIsFetching,
+    },
   ] = useQueries({
     queries: [
       {
@@ -77,6 +86,20 @@ export default function useMyBookPageInfoHook(
       {
         queryKey: [REACT_QUERY_KEY.time, users_books_id],
         queryFn: () => myBookTimeRangeAPI(users_books_id),
+        select: ({ startDate, endDate }: MyBookTimeRangeResponseType) => {
+          return {
+            startDate: dayjs(startDate)
+              .add(9, 'hour')
+              .add(1, 'day')
+              .toISOString()
+              .split('T')[0],
+            endDate: dayjs(endDate)
+              .add(9, 'hour')
+              .add(-1, 'day')
+              .toISOString()
+              .split('T')[0],
+          };
+        },
       },
     ],
   });
@@ -108,6 +131,15 @@ export default function useMyBookPageInfoHook(
     }
   }, [myBookInfoIsError, myBookInfoError]);
 
+  useEffect(() => {
+    if (myBookTimeIsError && myBookTimeError) {
+      addToast({
+        message: 'TIME_RANGE를 불러오는데 실패했습니다.',
+        status: 'error',
+      });
+    }
+  }, [myBookTimeIsError, myBookTimeError]);
+
   return {
     myBookInfoData,
     myBookInfoIsLoading,
@@ -127,5 +159,11 @@ export default function useMyBookPageInfoHook(
     myBookRatingIsError,
     myBookRatingError,
     myBookRatingRefetch,
+    myBookTimeData,
+    myBookTimeIsLoading,
+    myBookTimeIsError,
+    myBookTimeError,
+    myBookTimeRefetch,
+    myBookTimeIsFetching,
   };
 }

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useParams } from 'react-router-dom';
-import dayjs from 'dayjs';
 
 import Input from 'components/common/Input';
 import RadioButton from 'components/common/Radio/RadioButton';
@@ -9,7 +8,7 @@ import { IconBook } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
-import useMyBookTimeRangeHook from '@hooks/useMyBookTimeRangeHook';
+import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
 
 const Container = styled.div`
   flex: 1;
@@ -72,7 +71,7 @@ export default function History() {
 
   const userBookId = parseInt(users_books_id);
 
-  const { data } = useMyBookTimeRangeHook(userBookId);
+  const { myBookTimeData } = useMyBookPageInfoHook(userBookId);
 
   useEffect(() => {
     setAddFormState({
@@ -100,28 +99,13 @@ export default function History() {
         <Stack isStatus={addFormStatus === '읽는중'}>
           <Stack>
             <DateSelector
-              startDate={
-                data &&
-                new Date(
-                  dayjs(data.startDate)
-                    .add(9, 'hour')
-                    .add(1, 'day')
-                    .toISOString()
-                    .split('T')[0]
-                )
-              }
+              startDate={myBookTimeData && new Date(myBookTimeData?.startDate)}
               onChange={(e) => onChangeAddFormDate(e)}
               date={addFormDate}
               endDate={
-                data
-                  ? new Date(
-                      dayjs(data.endDate)
-                        .add(9, 'hour')
-                        .add(-1, 'day')
-                        .toISOString()
-                        .split('T')[0]
-                    )
-                  : new Date()
+                myBookTimeData?.endDate
+                  ? new Date(myBookTimeData.endDate)
+                  : null
               }
               errorMessage="날짜를 입력해주세요."
               isValid={addFormDate === null}
