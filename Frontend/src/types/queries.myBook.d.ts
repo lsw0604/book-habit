@@ -55,6 +55,14 @@ type MyBookHistoryMutationRequestType = {
 type MyBookListDeleteMutationResponseType = MutationResponse;
 type MyBookListDeleteMutationRequestType = number;
 
+// useMyBookCommentMutation의 타입들
+
+type MyBookCommentMutationResponseType = MutationResponse;
+type MyBookCommentMutationRequestType = {
+  comment: string;
+  users_books_id: number;
+};
+
 // useMyBookPageQueries의 타입들
 
 // myBook INFO

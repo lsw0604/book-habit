@@ -29,7 +29,7 @@ myBookRouter.get('/time_range/:users_books_id', access, myBookTimeRange);
 
 myBookRouter.post('/register', access, myBookRegister);
 myBookRouter.post('/rating', access, myBookRating);
-myBookRouter.post('/comments/register', access, myBookCommentRegister);
+myBookRouter.post('/comments', access, myBookCommentRegister);
 
 myBookRouter.delete('/delete/history/:users_books_history_id', access, myBookHistoryDelete);
 myBookRouter.delete('/delete/rating/:users_books_rating_id', access, myBookRatingDelete);

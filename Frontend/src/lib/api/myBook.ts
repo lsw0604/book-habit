@@ -99,16 +99,29 @@ export const myBookRatingRegisterAPI = async (
   return data;
 };
 
+/**
+ * * 내 서제에 등록된 책에 한줄평을 등록하는 API
+ */
+export const myBookCommentsRegisterAPI = async (
+  body: MyBookCommentMutationRequestType
+) => {
+  const { data } = await axios.post<MyBookCommentMutationResponseType>(
+    `/api/my_book/comments`,
+    body
+  );
+  return data;
+};
+
 // DELETE
 
 /**
  * * 내 서재에 등록된 평점을 삭제하는 API
  */
 export const myBookRatingDeleteAPI = async (
-  users_books_info_id: MyBookRatingDeleteMutationRequestType
+  users_books_rating_id: MyBookRatingDeleteMutationRequestType
 ) => {
   const { data } = await axios.delete<MyBookRatingDeleteMutationResponseType>(
-    `/api/my_book/delete/rating/${users_books_info_id}`
+    `/api/my_book/delete/rating/${users_books_rating_id}`
   );
   return data;
 };
@@ -128,9 +141,11 @@ export const myBookListDeleteAPI = async (
 /**
  * * 내 서재에 등록된 기록을 삭제하는 API
  */
-export const myBookHistoryDeleteAPI = async (users_books_status_id: number) => {
+export const myBookHistoryDeleteAPI = async (
+  users_books_history_id: number
+) => {
   const { data } = await axios.delete(
-    `/api/my_book/delete/history/${users_books_status_id}`
+    `/api/my_book/delete/history/${users_books_history_id}`
   );
   return data;
 };

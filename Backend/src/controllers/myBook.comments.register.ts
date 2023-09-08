@@ -8,7 +8,8 @@ interface IRequest<T> extends Request {
 }
 
 interface IComment {
-  comments: string;
+  comment: string;
+  users_books_id: number;
 }
 
 export default async function myBookCommentsRegister(
@@ -19,8 +20,7 @@ export default async function myBookCommentsRegister(
   const NAMESPACE = 'MY_BOOK_REGISTER';
   logging.debug(NAMESPACE, '[START]');
 
-  const { comments } = req.body;
-  const { users_books_id } = req.params;
+  const { comment, users_books_id } = req.body;
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
@@ -31,8 +31,8 @@ export default async function myBookCommentsRegister(
       await connection.beginTransaction();
 
       const MY_BOOK_COMMENT_REGISTER_SQL =
-        'INSERT INTO users_books_comments (users_id, comments, users_books_id) VALUES(?, ?, ?)';
-      const MY_BOOK_COMMENT_REGISTER_VALUE = [id, comments, users_books_id];
+        'INSERT INTO users_books_comments (comment, users_books_id) VALUES(?, ?)';
+      const MY_BOOK_COMMENT_REGISTER_VALUE = [comment, users_books_id];
       const [MY_BOOK_COMMENT_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_COMMENT_REGISTER_SQL,
         MY_BOOK_COMMENT_REGISTER_VALUE
@@ -52,7 +52,7 @@ export default async function myBookCommentsRegister(
       );
       logging.debug(NAMESPACE, '[MY_BOOK_COMMENT_REGISTER_RESULT]', USERS_COMMENTS_REGISTER_RESULT);
 
-      await connection.rollback();
+      await connection.commit();
       connection.release();
       res.status(200).json({ status: 'success', message: `한줄평 등록에 성공했습니다.` });
     } catch (error: any) {
