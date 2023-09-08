@@ -6,16 +6,24 @@ import SearchList from './SearchList';
 import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
 
 const Container = styled.div`
+  flex: 1;
   width: 100%;
-  height: 100%;
-  display: flex;
   flex-direction: column;
+  display: flex;
   gap: 1rem;
+  padding: 1rem 0;
 `;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Contents = styled.div`
+  width: 100%;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,7 +49,7 @@ export default function Index() {
       <Wrapper>
         <SearchInput onChange={onChange} search={search} onSubmit={onSubmit} />
       </Wrapper>
-      <Wrapper>
+      <Contents>
         <SearchList
           search={search}
           data={data}
@@ -50,7 +58,7 @@ export default function Index() {
           isFetching={isFetching}
           isLoading={isLoading}
         />
-      </Wrapper>
+      </Contents>
     </Container>
   );
 }

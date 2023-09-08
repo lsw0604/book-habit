@@ -26,7 +26,7 @@ const Page = styled.div<{ dataExist: boolean }>`
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
-  @media screen and (min-width: 714px) {
+  @media screen and (min-width: 824px) {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1rem;
   }

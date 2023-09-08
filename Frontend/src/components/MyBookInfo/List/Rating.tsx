@@ -10,6 +10,7 @@ const Container = styled.div`
   max-height: 8rem;
   overflow: scroll;
   scroll-behavior: row;
+  padding: 0 1rem;
 `;
 
 const EmptyTag = styled.div`

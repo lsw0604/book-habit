@@ -3,11 +3,9 @@ import styled from 'styled-components';
 
 const Layout = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
-  min-width: 100vw;
-  min-height: 100vh;
-  width: 100%;
-  height: 100%;
-  padding: 4rem 1rem;
+  width: 100vw;
+  height: 100vh;
+  padding: 4rem 0rem;
   display: flex;
 `;
 

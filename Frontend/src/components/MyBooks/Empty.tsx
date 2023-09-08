@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
+  flex: 1;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  height: calc(100vh - 15rem);
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

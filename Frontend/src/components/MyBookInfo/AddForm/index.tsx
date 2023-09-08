@@ -18,6 +18,7 @@ const Container = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 0 1rem;
 `;
 
 const Stack = styled.div`

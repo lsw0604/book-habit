@@ -11,6 +11,7 @@ const Container = styled.div`
   grid-template-columns: 120px calc(100% - 128px);
   gap: 8px;
   margin-bottom: 1rem;
+  padding: 0 1rem;
 `;
 
 const LoaderWrapper = styled.div`

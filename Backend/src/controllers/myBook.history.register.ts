@@ -19,7 +19,7 @@ interface IReadRequest {
   page?: number;
 }
 
-export default async function myBookRegister(
+export default async function myBookHistoryRegister(
   req: IRequest<IReadRequest>,
   res: Response,
   next: NextFunction

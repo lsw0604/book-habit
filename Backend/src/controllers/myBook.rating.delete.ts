@@ -6,7 +6,7 @@ import { connectionPool } from '../config/database';
 
 export default async function myBookRatingDelete(req: Request, res: Response, next: NextFunction) {
   const NAMESPACE = 'MY_BOOK_RATING_DELETE';
-  const { users_books_info_id } = req.params;
+  const { users_books_rating_id } = req.params;
   logging.info(NAMESPACE, '[START]');
   try {
     const connection = await connectionPool.getConnection();
@@ -14,7 +14,7 @@ export default async function myBookRatingDelete(req: Request, res: Response, ne
       await connection.beginTransaction();
 
       const MY_BOOK_RATING_DELETE_SQL = 'DELETE FROM users_books_rating WHERE id = ?';
-      const MY_BOOK_RATING_DELETE_VALUE = [users_books_info_id];
+      const MY_BOOK_RATING_DELETE_VALUE = [users_books_rating_id];
       const [MY_BOOK_RATING_DELETE_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_RATING_DELETE_SQL,
         MY_BOOK_RATING_DELETE_VALUE
@@ -32,6 +32,7 @@ export default async function myBookRatingDelete(req: Request, res: Response, ne
       await connection.rollback();
       connection.release();
       res.status(400).json({
+        status: 'error',
         code: error?.code,
         errno: error?.errno,
         message: error?.sqlMessage,
@@ -40,8 +41,8 @@ export default async function myBookRatingDelete(req: Request, res: Response, ne
     }
   } catch (error: any) {
     logging.error(NAMESPACE, error.message, error);
-
     return res.status(500).json({
+      status: 'error',
       code: error?.code,
       errno: error?.errno,
       message: error?.sqlMessage,

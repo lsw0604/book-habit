@@ -9,6 +9,7 @@ import Info from 'components/MyBookInfo/Info';
 import Rating from 'components/MyBookInfo/List/Rating';
 import History from 'components/MyBookInfo/List/History';
 import AddForm from 'components/MyBookInfo/AddForm';
+import Comments from 'components/MyBookInfo/Comments';
 
 import { IconTrashCan } from '@style/icons';
 import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
@@ -69,6 +70,9 @@ export default function Index() {
         </Accordion>
         <Accordion label="평점보기">
           <Rating />
+        </Accordion>
+        <Accordion label="한줄평">
+          <Comments />
         </Accordion>
         <Accordion label="추가하기">
           <AddForm />

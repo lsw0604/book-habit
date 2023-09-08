@@ -12,9 +12,10 @@ interface IProps {
 
 const Container = styled.div`
   margin-top: 1rem;
-  height: calc(100vh - 15rem);
+  height: auto;
   padding: 1rem;
   overflow: scroll;
+  display: flex;
 `;
 
 const LoaderContainer = styled.div`
