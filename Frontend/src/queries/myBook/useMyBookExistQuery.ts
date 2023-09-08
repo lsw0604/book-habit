@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { myBookExistAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
-import useToastHook from './useToastHook';
+import useToastHook from '@hooks/useToastHook';
 
-export default function useMyBookExist(isbn: MyBookExistRequestType) {
-  const REACT_QUERY_KEY = 'MY_BOOKS_EXIST';
+export default function useMyBookExistQuery(isbn: MyBookExistQueryRequestType) {
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_EXIST_QUERY';
   const { data, isLoading, isFetching, isError, error, isSuccess, refetch } =
-    useQuery<MyBookExistResponseType, AxiosError>([REACT_QUERY_KEY, isbn], () =>
-      myBookExistAPI(isbn)
+    useQuery<MyBookExistQueryResponseType, AxiosError>(
+      [REACT_QUERY_KEY, isbn],
+      () => myBookExistAPI(isbn)
     );
 
   const { addToast } = useToastHook();

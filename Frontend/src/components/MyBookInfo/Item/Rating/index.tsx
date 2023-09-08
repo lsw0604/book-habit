@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import StarRating from 'components/StarRating/Rating';
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
-import useMyBookRatingDeleteHook from '@hooks/useMyBookRatingDeleteHook';
+import useMyBookRatingDeleteMutation from '@queries/myBook/useMyBookRatingDeleteMutation';
 import { useParams } from 'react-router-dom';
 
 const Container = styled.div`
@@ -33,10 +33,13 @@ export default function Index({
   rating,
   status,
   id,
-}: MyBookRatingItemType) {
+}: MyBookPageQueriesRatingItemType) {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const { mutate } = useMyBookRatingDeleteHook(parseInt(users_books_id), id);
+  const { mutate } = useMyBookRatingDeleteMutation(
+    parseInt(users_books_id),
+    id
+  );
   const [year, month, day] = dayjs(created_at)
     .add(9, 'hour')
     .toISOString()

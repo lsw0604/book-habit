@@ -12,25 +12,8 @@ export default async function myBookHistoryDelete(req: Request, res: Response, n
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
-      const MY_BOOK_HISTORY_DELETE_PAGE_SQL =
-        'DELETE FROM users_books_status_page ' +
-        'WHERE users_books_status_id IN ( ' +
-        'SELECT id ' +
-        'FROM users_books_status ' +
-        'WHERE id = ? ' +
-        ')';
-      const MY_BOOK_HISTORY_DELETE_PAGE_VALUE = [users_books_status_id];
-      const [MY_BOOK_HISTORY_DELETE_PAGE_RESULT] = await connection.query<ResultSetHeader>(
-        MY_BOOK_HISTORY_DELETE_PAGE_SQL,
-        MY_BOOK_HISTORY_DELETE_PAGE_VALUE
-      );
-      logging.debug(
-        NAMESPACE,
-        '[MY_BOOK_HISTORY_DELETE_PAGE_RESULT]',
-        MY_BOOK_HISTORY_DELETE_PAGE_RESULT
-      );
 
-      const MY_BOOK_HISTORY_DELETE_SQL = 'DELETE FROM users_books_status ' + 'WHERE id = ?';
+      const MY_BOOK_HISTORY_DELETE_SQL = 'DELETE FROM users_books_history ' + 'WHERE id = ?';
       const MY_BOOK_HISTORY_DELETE_VALUE = [users_books_status_id];
       const [MY_BOOK_HISTORY_DELETE_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_HISTORY_DELETE_SQL,

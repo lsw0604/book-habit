@@ -2,24 +2,22 @@ import { QueryClient, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
-import useToastHook from './useToastHook';
-import useMyBookAddFormHook from './useMyBookAddFormHook';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useToastHook from '@hooks/useToastHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
-export default function useMyBookAddFormHistoryRegisterHook(
-  users_books_id: number
-) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_ADD_FORM_HISTORY_REGISTER_KEY';
+export default function useMyBookHistoryMutation(users_books_id: number) {
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_MUTATION';
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();
-  const { setAddFormState } = useMyBookAddFormHook();
-  const { myBookHistoryRefetch } = useMyBookPageInfoHook(users_books_id);
+  const { onChangeAddFormStateInitial } = useMyBookAddFormHook();
+  const { myBookHistoryRefetch } = useMyBookPageQueries(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
-    MyBookAddFormHistoryRegisterResponseType,
+    MyBookHistoryMutationResponseType,
     AxiosError,
-    MyBookAddFormHistoryRegisterRequestType
+    MyBookHistoryMutationRequestType
   >([REACT_QUERY_KEY], myBookHistoryRegisterAPI, {
     onSuccess: (data) => {
       if (data.status === 'success') {
@@ -33,19 +31,16 @@ export default function useMyBookAddFormHistoryRegisterHook(
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
-      setAddFormState({
-        date: null,
-        page: '',
-        status: '',
-        useValidation: false,
-        rating: 0,
-      });
+      onChangeAddFormStateInitial();
     }
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error && error.response && error.response.status === 403) {
-      addToast({ message: '로그인이 필요합니다.', status: 'error' });
+    if (isError && error) {
+      addToast({
+        message: '내 서재에 있는 책에 기록 등록에 실패했습니다.',
+        status: 'error',
+      });
     }
   }, [isError, error]);
 

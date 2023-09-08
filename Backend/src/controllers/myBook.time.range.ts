@@ -32,7 +32,7 @@ export default async function myBookTimeRange(req: Request, res: Response, next:
         "MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) " +
         ') ' +
         'END AS startDate ' +
-        'FROM users_books_status ' +
+        'FROM users_books_history ' +
         'WHERE users_books_id = ?';
       const VALUE = [parseInt(users_books_id)];
       const [RESULT] = await connection.query<IProps[]>(SQL, VALUE);

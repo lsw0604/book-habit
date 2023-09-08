@@ -12,39 +12,21 @@ export default async function myBookList(req: Request, res: Response, next: Next
     try {
       await connection.beginTransaction();
 
-      const MY_BOOK_STATUS_PAGE_DELETE_SQL =
-        'DELETE FROM users_books_status_page ' +
-        'WHERE users_books_status_id IN ( ' +
-        'SELECT id ' +
-        'FROM users_books_status ' +
-        'WHERE users_books_id = ? ' +
-        ')';
-      const MY_BOOK_STATUS_PAGE_DELETE_VALUE = [parseInt(users_books_id)];
-      const [MY_BOOK_STATUS_PAGE_DELETE_RESULT] = await connection.query<ResultSetHeader>(
-        MY_BOOK_STATUS_PAGE_DELETE_SQL,
-        MY_BOOK_STATUS_PAGE_DELETE_VALUE
+      const MY_BOOK_HISTORY_DELETE_SQL = 'DELETE FROM users_books_history WHERE users_books_id = ?';
+      const MY_BOOK_HISTORY_DELETE_VALUE = [parseInt(users_books_id)];
+      const [MY_BOOK_HISTORY_DELETE_RESULT] = await connection.query<ResultSetHeader>(
+        MY_BOOK_HISTORY_DELETE_SQL,
+        MY_BOOK_HISTORY_DELETE_VALUE
       );
-      logging.debug(
-        NAMESPACE,
-        '[MY_BOOK_STATUS_PAGE_DELETE_RESULT]',
-        MY_BOOK_STATUS_PAGE_DELETE_RESULT
-      );
+      logging.debug(NAMESPACE, '[MY_BOOK_STATUS_DELETE_RESULT]', MY_BOOK_HISTORY_DELETE_RESULT);
 
-      const MY_BOOK_STATUS_DELETE_SQL = 'DELETE FROM users_books_status WHERE users_books_id = ?';
-      const MY_BOOK_STATUS_DELETE_VALUE = [parseInt(users_books_id)];
-      const [MY_BOOK_STATUS_DELETE_RESULT] = await connection.query<ResultSetHeader>(
-        MY_BOOK_STATUS_DELETE_SQL,
-        MY_BOOK_STATUS_DELETE_VALUE
+      const MY_BOOK_RATING_DELETE_SQL = 'DELETE FROM users_books_rating WHERE users_books_id = ?';
+      const MY_BOOK_RATING_DELETE_VALUE = [parseInt(users_books_id)];
+      const [MY_BOOK_RATING_DELETE_RESULT] = await connection.query<ResultSetHeader>(
+        MY_BOOK_RATING_DELETE_SQL,
+        MY_BOOK_RATING_DELETE_VALUE
       );
-      logging.debug(NAMESPACE, '[MY_BOOK_STATUS_DELETE_RESULT]', MY_BOOK_STATUS_DELETE_RESULT);
-
-      const MY_BOOK_INFO_DELETE_SQL = 'DELETE FROM users_books_info WHERE users_books_id = ?';
-      const MY_BOOK_INFO_DELETE_VALUE = [parseInt(users_books_id)];
-      const [MY_BOOK_INFO_DELETE_RESULT] = await connection.query<ResultSetHeader>(
-        MY_BOOK_INFO_DELETE_SQL,
-        MY_BOOK_INFO_DELETE_VALUE
-      );
-      logging.debug(NAMESPACE, '[MY_BOOK_INFO_DELETE_RESULT]', MY_BOOK_INFO_DELETE_RESULT);
+      logging.debug(NAMESPACE, '[MY_BOOK_INFO_DELETE_RESULT]', MY_BOOK_RATING_DELETE_RESULT);
 
       const MY_BOOK_DELETE_SQL = 'DELETE FROM users_books WHERE id = ?';
       const MY_BOOK_DELETE_VALUE = [parseInt(users_books_id)];

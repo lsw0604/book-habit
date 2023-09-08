@@ -1,0 +1,32 @@
+// useKakaoCallbackQuery의 타입들
+
+type KakaoCallbackQueryResponseType = {
+  id: number;
+  name?: string;
+  gender?: GenderType;
+  age?: number;
+  email: string;
+  provider: ProviderType;
+  access_jwt: string;
+  message: string;
+  status: StatusType;
+};
+
+// useKakaoSignUpMutation의 타입들
+
+type KakaoSignUpMutationResponseType = {
+  id: number;
+  email: string;
+  name: string;
+  gender: GenderType;
+  provider: ProviderType;
+  age: number;
+  message: string;
+  status: StatusType;
+};
+
+type KakaoSignUpMutationRequestType = {
+  name: string;
+  gender: GenderType;
+  age: number;
+};

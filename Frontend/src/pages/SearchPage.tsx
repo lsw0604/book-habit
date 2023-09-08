@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import SearchBox from 'components/Search/SearchBox';
+import Search from 'components/Search';
 
 const Container = styled.div`
   width: 100%;
@@ -24,7 +24,7 @@ const HomePage = () => {
   return (
     <Container>
       <Content>
-        <SearchBox />
+        <Search />
       </Content>
     </Container>
   );

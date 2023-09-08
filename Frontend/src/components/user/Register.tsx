@@ -21,7 +21,7 @@ import {
 } from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
-import useSignupHook from '@hooks/useSignupHook';
+import useLocalSignUpMutation from '@queries/local/useLocalSignUpMutation';
 import RadioGroup from 'components/common/Radio';
 import { customize } from '@style/colors';
 import { RadioGroupOptionType } from 'types/style';
@@ -124,7 +124,7 @@ export default function Register() {
   }, []);
 
   const navigate = useNavigate();
-  const { mutate, isLoading } = useSignupHook();
+  const { mutate, isLoading } = useLocalSignUpMutation();
   const { addToast } = useToastHook();
 
   const registerGenderOptions: RadioGroupOptionType<'male' | 'female' | ''>[] =

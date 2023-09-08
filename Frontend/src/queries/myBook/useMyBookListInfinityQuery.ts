@@ -3,10 +3,11 @@ import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
 import { myBookListAPI } from 'lib/api/myBook';
-import useToastHook from './useToastHook';
+import useToastHook from '@hooks/useToastHook';
 
-export default function useMyBookListHook(status: SelectorBookType) {
+export default function useMyBookListInfinityQuery(status: SelectorBookType) {
   const { addToast } = useToastHook();
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_LIST_INFINITY_QUERY';
   const {
     data,
     fetchNextPage,
@@ -16,8 +17,8 @@ export default function useMyBookListHook(status: SelectorBookType) {
     refetch,
     isError,
     error,
-  } = useInfiniteQuery<MyBookListResponseType, AxiosError>(
-    ['MY_BOOK_LIST', status],
+  } = useInfiniteQuery<MyBookListInfinityQueryResponseType, AxiosError>(
+    [REACT_QUERY_KEY, status],
     ({ pageParam = 1 }) => myBookListAPI(pageParam, status),
     {
       getNextPageParam: (response) => response.nextPage,

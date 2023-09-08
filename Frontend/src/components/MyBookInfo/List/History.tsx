@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Item from 'components/MyBookInfo/Item/History';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import Loader from 'components/common/Loader';
 
 const Container = styled.div`
@@ -43,7 +43,7 @@ export default function History({ filter }: { filter: string[] }) {
     myBookHistoryIsLoading,
     myBookHistoryIsFetching,
     myBookHistoryIsSuccess,
-  } = useMyBookPageInfoHook(parseInt(users_books_id), filter);
+  } = useMyBookPageQueries(parseInt(users_books_id), filter);
 
   return (
     <Container>

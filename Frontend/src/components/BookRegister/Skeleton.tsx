@@ -1,8 +1,9 @@
-import useMyBookExist from '@hooks/useMyBookExistHook';
+import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useRecoilValue } from 'recoil';
+
 import { bottomSheetAtom } from 'recoil/bottomSheet';
-import styled from 'styled-components';
+import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -21,12 +22,10 @@ const Stack = styled.div`
 
 export default function Skeleton() {
   const { isbn } = useRecoilValue(bottomSheetAtom);
-  const { data } = useMyBookExist(isbn);
+  const { data } = useMyBookExistQuery(isbn);
 
-  const disabledHandler = (
-    status?: '다읽음' | '읽는중' | '읽고싶음' | '미등록'
-  ) => {
-    if (status === '미등록') {
+  const disabledHandler = (status?: '미등록' | '등록') => {
+    if (status === '등록') {
       return true;
     }
     return false;
@@ -46,8 +45,8 @@ export default function Skeleton() {
     >
       <Stack>
         {disabledHandler(data?.status)
-          ? '어떤 책인지 선택해주세요.'
-          : '이미 등록된 책입니다.'}
+          ? '이미 등록된 책입니다.'
+          : '어떤 책인지 선택해주세요.'}
       </Stack>
     </Container>
   );

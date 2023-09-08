@@ -43,6 +43,16 @@ export default function useMyBookAddFormHook() {
     }));
   };
 
+  const onChangeAddFormStateInitial = () => {
+    setAddFormState({
+      date: null,
+      page: '',
+      status: '',
+      useValidation: false,
+      rating: 0,
+    });
+  };
+
   const addFormDate = addFormState.date;
   const addFormStatus = addFormState.status;
   const addFormUseValidation = addFormState.useValidation;
@@ -61,6 +71,7 @@ export default function useMyBookAddFormHook() {
     onChangeAddFormPage,
     setAddFormState,
     onChangeAddFormRating,
+    onChangeAddFormStateInitial,
     addFormDate,
     addFormStatus,
     addFormPage,

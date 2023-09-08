@@ -28,7 +28,7 @@ export default async function myBookRatingRegister(
     try {
       await connection.beginTransaction();
 
-      const MY_BOOK_RATING_EXIST_SQL = `SELECT status FROM users_books_info WHERE status = ? AND users_books_id = ?`;
+      const MY_BOOK_RATING_EXIST_SQL = `SELECT status FROM users_books_rating WHERE status = ? AND users_books_id = ?`;
       const MY_BOOK_RATING_EXIST_VALUE = [status, users_books_id];
       const [MY_BOOK_RATING_EXIST_RESULT] = await connection.query<MyBookRatingExistType[]>(
         MY_BOOK_RATING_EXIST_SQL,
@@ -44,7 +44,7 @@ export default async function myBookRatingRegister(
       }
 
       const MY_BOOK_RATING_SQL =
-        'INSERT INTO users_books_info (status, rating, users_books_id) VALUES (?, ?, ?)';
+        'INSERT INTO users_books_rating (status, rating, users_books_id) VALUES (?, ?, ?)';
       const MY_BOOK_RATING_VALUE = [status, parseInt(rating), parseInt(users_books_id)];
       const [MY_BOOK_RATING_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_RATING_SQL,

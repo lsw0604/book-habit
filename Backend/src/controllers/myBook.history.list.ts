@@ -14,10 +14,9 @@ export default async function myBookHistoryList(req: Request, res: Response, nex
     const connection = await connectionPool.getConnection();
     try {
       const BOOKS_MY_BOOK_HISTORY_LIST_SQL =
-        'SELECT ubs.id, status, date, page, ubs.created_at, ubs.updated_at ' +
+        'SELECT ubh.id, status, date, page, ubh.created_at, ubh.updated_at ' +
         'FROM users_books ub ' +
-        'RIGHT JOIN users_books_status ubs ON ubs.users_books_id = ub.id ' +
-        'LEFT JOIN users_books_status_page ubsp ON ubsp.users_books_status_id = ubs.id ' +
+        'RIGHT JOIN users_books_history ubh ON ubh.users_books_id = ub.id ' +
         'WHERE ub.users_id = ? AND ub.id = ? ' +
         'ORDER BY date DESC';
       const BOOKS_MY_BOOK_HISTORY_LIST_VALUE = [id, users_books_id];

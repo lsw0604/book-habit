@@ -80,11 +80,11 @@ type KakaoCallbackResponseType = {
 type UserAtomType = {
   id: number;
   email: string;
-  name: string | '';
+  name?: string | '';
   isLogged: boolean;
-  age: number;
-  gender: 'male' | 'female' | '';
-  provider: 'local' | 'kakao' | '';
+  age?: number;
+  gender?: GenderType;
+  provider: ProviderType;
 };
 
 type StatusType = 'success' | 'error' | 'warning' | 'info' | '';

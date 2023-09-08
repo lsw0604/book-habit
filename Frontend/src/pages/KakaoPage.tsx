@@ -1,11 +1,7 @@
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
-import { useEffect } from 'react';
 
-import useKakaoCallbackHook from '@hooks/useKakaoCallbackHook';
+import useKakaoCallbackQuery from '@queries/kakao/useKakaoCallbackQuery';
 import Loader from 'components/common/Loader';
-import { userAtom } from 'recoil/user';
-import useToastHook from '@hooks/useToastHook';
 
 const Container = styled.div`
   width: 100%;
@@ -19,30 +15,8 @@ export default function KakaoPage() {
   const code = new URLSearchParams(window.location.search).get(
     'code'
   ) as string;
-  const setUserState = useSetRecoilState(userAtom);
-  const { addToast } = useToastHook();
 
-  const { isLoading, isSuccess, data, isError } = useKakaoCallbackHook(code);
-
-  useEffect(() => {
-    if (isSuccess) {
-      const {
-        email,
-        id,
-        gender,
-        age,
-        name,
-        provider,
-        message,
-        status,
-        access_jwt,
-      } = data;
-
-      window.localStorage.setItem('ACCESS', access_jwt);
-      setUserState({ email, id, gender, age, name, isLogged: true, provider });
-      addToast({ message, status });
-    }
-  }, [isSuccess, isLoading]);
+  const { isLoading, isError } = useKakaoCallbackQuery(code);
 
   if (!code) {
     return <Container>Code를 불러오지 못 했습니다.</Container>;

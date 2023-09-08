@@ -12,7 +12,8 @@
       "@style/*": ["./style/*"],
       "@hooks/*": ["./hooks/*"],
       "@assets/*": ["./assets/*"],
-      "@pages/*": ["./pages/*"]
+      "@pages/*": ["./pages/*"],
+      "@queries/*": ["./queries/*"]
     },
 
     /* Bundler mode */

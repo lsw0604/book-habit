@@ -5,21 +5,19 @@ import { useEffect } from 'react';
 import { myBookRatingRegisterAPI } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
-export default function useMyBookAddFormRatingRegisterHook(
-  users_books_id: number
-) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_ADD_FORM_RATING_REGISTER_KEY';
+export default function useMyBookRatingMutation(users_books_id: number) {
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_RATING_MUTATION';
   const queryClient = new QueryClient();
-  const { myBookRatingRefetch } = useMyBookPageInfoHook(users_books_id);
+  const { myBookRatingRefetch } = useMyBookPageQueries(users_books_id);
 
   const { addToast } = useToastHook();
   const { setAddFormState } = useMyBookAddFormHook();
   const { mutate, isSuccess, data, isError, error, isLoading } = useMutation<
-    MyBookAddFormRatingRegisterResponseType,
+    MyBookRatingMutationResponseType,
     AxiosError,
-    MyBookAddFormRatingRegisterRequestType
+    MyBookRatingMutationRequestType
   >([REACT_QUERY_KEY], myBookRatingRegisterAPI, {
     onSuccess: (data) => {
       if (data.status === 'success') {

@@ -3,7 +3,7 @@ import { useState, useCallback, ChangeEvent, FormEvent } from 'react';
 
 import SearchInput from './SearchInput';
 import SearchList from './SearchList';
-import useSearchHook from '@hooks/useSearchHook';
+import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
 
 const Container = styled.div`
   width: 100%;
@@ -21,11 +21,11 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-export default function SearchBox() {
+export default function Index() {
   const [search, setSearch] = useState<string>('');
 
   const { refetch, data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useSearchHook(search);
+    useBookSearchInfinityQuery(search);
 
   const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);

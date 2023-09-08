@@ -2,11 +2,11 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { booksSearchAPI } from 'lib/api/book';
 
-export default function useSearchHook(keyword: string) {
-  const NAMESPACE = 'BOOK_SEARCH';
+export default function useBookSearchInfinityQuery(keyword: string) {
+  const NAMESPACE = 'USE_BOOK_SEARCH_INFINITY_QUERY';
 
   const { data, fetchNextPage, isLoading, isFetching, hasNextPage, refetch } =
-    useInfiniteQuery<KakaoSearchResponseType>(
+    useInfiniteQuery<BookSearchInfinityQueryResponseType>(
       [NAMESPACE, keyword],
       ({ pageParam = 1 }) => {
         return keyword.trim() === ''
@@ -26,6 +26,7 @@ export default function useSearchHook(keyword: string) {
         cacheTime: 5 * 60 * 1000,
       }
     );
+
   return {
     data,
     fetchNextPage,

@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
-import useMyBookListHook from '@hooks/useMyBookListHook';
+import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 import Item from 'components/MyBooks/Item';
 import Loader from 'components/common/Loader';
 import Empty from 'components/MyBooks/Empty';
@@ -63,7 +63,7 @@ const Observer = styled.div`
 
 export default function List({ status }: IProps) {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useMyBookListHook(status as SelectorBookType);
+    useMyBookListInfinityQuery(status as SelectorBookType);
   const lastPageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

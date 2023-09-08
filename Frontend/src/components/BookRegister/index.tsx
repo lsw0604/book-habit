@@ -11,10 +11,10 @@ import Button from 'components/common/Button';
 import Loader from 'components/common/Loader';
 import BookStatus from 'components/BookRegister/BookStatus';
 
-import useReadingRegisterHook from '@hooks/useReadingRegisterHook';
-import useReadRegisterHook from '@hooks/useReadRegisterHook';
-import useReadToRegisterHook from '@hooks/useReadToRegisterHook';
-import useMyBookExistHook from '@hooks/useMyBookExistHook';
+import useReadingBookMutation from '@queries/book/useReadingBookMutation';
+import useReadBookMutation from '@queries/book/useReadBookMutation';
+import useReadToBookMutation from '@queries/book/useReadToBookMutation';
+import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 import { bottomSheetAtom } from 'recoil/bottomSheet';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
@@ -59,7 +59,7 @@ export default function Index() {
   const { authors, contents, image, isbn, price, publisher, url, title } =
     useRecoilValue(bottomSheetAtom);
 
-  const { data } = useMyBookExistHook(isbn);
+  const { data } = useMyBookExistQuery(isbn);
 
   const {
     bookRegisterModalEndDate: endDate,
@@ -73,10 +73,10 @@ export default function Index() {
   } = useBookRegisterModalHook();
 
   const { mutate: readingMutate, isLoading: readingLoading } =
-    useReadingRegisterHook();
-  const { mutate: readMutate, isLoading: readLoading } = useReadRegisterHook();
+    useReadingBookMutation();
+  const { mutate: readMutate, isLoading: readLoading } = useReadBookMutation();
   const { mutate: readToMutate, isLoading: readToLoading } =
-    useReadToRegisterHook();
+    useReadToBookMutation();
 
   const options: RadioGroupOptionType<string>[] = [
     {
@@ -104,10 +104,10 @@ export default function Index() {
   };
 
   const disabledHandler = (status?: '등록' | '미등록') => {
-    if (status === '미등록') {
-      return false;
+    if (status === '등록') {
+      return true;
     }
-    return true;
+    return false;
   };
 
   const registerBody: BookRegisterType = {

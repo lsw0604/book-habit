@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
 
 import { accessAPI } from 'lib/api/auth';
-import { userAtom } from 'recoil/user';
+import useUserStateHook from '@hooks/useUserStateHook';
 
 export default function useAccessHook() {
-  const userSetState = useSetRecoilState(userAtom);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setUserState, onChangeUserStateInitial } = useUserStateHook();
 
   const fetch = async () => {
     try {
@@ -14,7 +13,7 @@ export default function useAccessHook() {
       const { age, email, gender, id, name, message, status, provider } =
         await accessAPI();
       if (message === 'ACCESS_TOKEN_VERIFIED' && status === 'success') {
-        userSetState({
+        setUserState({
           age,
           email,
           gender,
@@ -27,15 +26,7 @@ export default function useAccessHook() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      userSetState({
-        age: 0,
-        email: '',
-        gender: '',
-        id: 0,
-        isLogged: false,
-        name: '',
-        provider: '',
-      });
+      onChangeUserStateInitial();
       setIsLoading(false);
     }
   };

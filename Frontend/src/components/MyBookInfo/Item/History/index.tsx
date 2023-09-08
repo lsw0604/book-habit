@@ -8,7 +8,7 @@ import Start from 'components/MyBookInfo/Item/History/Start';
 import ReadTo from 'components/MyBookInfo/Item/History/ReadTo';
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
-import useMyBookHistoryDeleteHook from '@hooks/useMyBookHistoryDeleteHook';
+import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
 
 const Container = styled.div`
   display: inline-flex;
@@ -55,10 +55,10 @@ export default function Index({
   date,
   created_at,
   updated_at,
-}: MyBookHistoryItemType) {
+}: MyBookPageQueriesHistoryItemType) {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const { mutate, isLoading } = useMyBookHistoryDeleteHook(
+  const { mutate, isLoading } = useMyBookHistoryDeleteMutation(
     id,
     parseInt(users_books_id)
   );

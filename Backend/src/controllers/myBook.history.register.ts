@@ -39,11 +39,12 @@ export default async function myBookRegister(
 
       if (status === '읽는중') {
         const MY_BOOK_HISTORY_REGISTER_SQL =
-          'INSERT INTO users_books_status (date, status, users_books_id) VALUES (?, ?, ?)';
+          'INSERT INTO users_books_history (date, status, users_books_id, page) VALUES (?, ?, ?, ?)';
         const MY_BOOK_HISTORY_REGISTER_VALUES = [
           new Date(addHours(new Date(date), 9).toISOString().split('T')[0]),
           status,
           users_books_id,
+          page,
         ];
         const [MY_BOOK_HISTORY_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
           MY_BOOK_HISTORY_REGISTER_SQL,
@@ -55,22 +56,6 @@ export default async function myBookRegister(
           MY_BOOK_HISTORY_REGISTER_RESULT
         );
 
-        const MY_BOOK_HISTORY_REGISTER_PAGE_SQL =
-          'INSERT INTO users_books_status_page (users_books_status_id, page) VALUES (?, ?)';
-        const MY_BOOK_HISTORY_REGISTER_PAGE_VALUES = [
-          MY_BOOK_HISTORY_REGISTER_RESULT.insertId,
-          page,
-        ];
-        const [MY_BOOK_HISTORY_REGISTER_PAGE_RESULT] = await connection.query<ResultSetHeader>(
-          MY_BOOK_HISTORY_REGISTER_PAGE_SQL,
-          MY_BOOK_HISTORY_REGISTER_PAGE_VALUES
-        );
-        logging.debug(
-          NAMESPACE,
-          '[MY_BOOK_HISTORY_REGISTER_PAGE_RESULT]',
-          MY_BOOK_HISTORY_REGISTER_PAGE_RESULT
-        );
-
         await connection.commit();
         connection.release();
         return res
@@ -80,7 +65,7 @@ export default async function myBookRegister(
         const EXIST_MY_BOOK_HISTORY_SQL =
           'SELECT status ' +
           'FROM users_books ub ' +
-          'RIGHT JOIN users_books_status ubs ON ubs.users_books_id = ub.id ' +
+          'RIGHT JOIN users_books_history ubh ON ubh.users_books_id = ub.id ' +
           'WHERE users_books_id = ? AND status = ? AND users_id = ?';
         const EXIST_MY_BOOK_HISTORY_VALUES = [users_books_id, status, id];
         const [EXIST_MY_BOOK_HISTORY_RESULT] = await connection.query<IProps[]>(
@@ -98,7 +83,7 @@ export default async function myBookRegister(
         }
 
         const MY_BOOK_HISTORY_REGISTER_SQL =
-          'INSERT INTO users_books_status (status, date, users_books_id) VALUES (?, ? , ?)';
+          'INSERT INTO users_books_history (status, date, users_books_id) VALUES (?, ? , ?)';
         const MY_BOOK_HISTORY_REGISTER_VALUES = [
           status,
           new Date(addHours(new Date(date), 9).toISOString().split('T')[0]),

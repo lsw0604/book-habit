@@ -4,26 +4,28 @@ import { AxiosError } from 'axios';
 
 import { myBookRatingDeleteAPI } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
-import useMyBookPageInfoHook from './useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
-export default function useMyBookRatingDeleteHook(
+export default function useMyBookRatingDeleteMutation(
   users_books_id: number,
-  users_books_info_id: number
+  users_books_rating_id: number
 ) {
   const queryClient = new QueryClient();
-  const REACT_QUERY_KEY = 'MY_BOOK_RATING_DELETE';
-  const { myBookRatingRefetch } = useMyBookPageInfoHook(users_books_id);
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_RATING_DELETE_MUTATION';
+  const { myBookRatingRefetch } = useMyBookPageQueries(users_books_id);
 
   const { mutate, isSuccess, data, isError, error, isLoading } = useMutation<
-    MyBookRatingDeleteResponseType,
+    MyBookRatingDeleteMutationResponseType,
     AxiosError,
-    MyBookRatingDeleteRequestType
+    MyBookRatingDeleteMutationRequestType
   >(
-    [REACT_QUERY_KEY, users_books_info_id],
-    () => myBookRatingDeleteAPI(users_books_info_id),
+    [REACT_QUERY_KEY, users_books_rating_id],
+    () => myBookRatingDeleteAPI(users_books_rating_id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['MY_BOOK_RATING']);
+        queryClient.invalidateQueries({
+          queryKey: ['MY_BOOK_RATING'],
+        });
         myBookRatingRefetch();
       },
     }

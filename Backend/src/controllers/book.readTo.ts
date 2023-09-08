@@ -69,26 +69,26 @@ export default async function readToBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_INFO_SQL =
-          'INSERT INTO users_books_info (rating, status, users_books_id) VALUES(?, ?, ?)';
-        const USER_BOOKS_INFO_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
-        const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_INFO_SQL,
-          USER_BOOKS_INFO_VALUES
+        const USER_BOOKS_RATING_SQL =
+          'INSERT INTO users_books_rating (rating, status, users_books_id) VALUES(?, ?, ?)';
+        const USER_BOOKS_RATING_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
+        const [USER_BOOKS_RATING_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_RATING_SQL,
+          USER_BOOKS_RATING_VALUES
         );
-        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
+        logging.debug(NAMESPACE, '[USER_BOOKS_RATING_RESULT]', USER_BOOKS_RATING_RESULT);
 
-        const USER_BOOKS_STATUS_SQL = `INSERT INTO users_books_status (status, users_books_id, date) VALUES(?, ?, ?)`;
-        const USER_BOOKS_STATUS_VALUES = [
+        const USER_BOOKS_HISTORY_SQL = `INSERT INTO users_books_history (status, users_books_id, date) VALUES(?, ?, ?)`;
+        const USER_BOOKS_HISTORY_VALUES = [
           status,
           USER_BOOKS_RESULT.insertId,
           dateParse(addHours(new Date(), 9).toISOString().split('T')[0]),
         ];
-        const [USER_BOOKS_STATUS_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_STATUS_SQL,
-          USER_BOOKS_STATUS_VALUES
+        const [USER_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_HISTORY_SQL,
+          USER_BOOKS_HISTORY_VALUES
         );
-        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_RESULT]', USER_BOOKS_STATUS_RESULT);
+        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_RESULT]', USER_BOOKS_HISTORY_RESULT);
 
         await connection.commit();
         connection.release();
@@ -102,27 +102,27 @@ export default async function readToBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_INFO_SQL =
-          'INSERT INTO users_books_info (rating, status, users_books_id) VALUES (?, ?, ?)';
-        const USER_BOOKS_INFO_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
-        const [USER_BOOKS_INFO_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_INFO_SQL,
-          USER_BOOKS_INFO_VALUES
+        const USER_BOOKS_RATING_SQL =
+          'INSERT INTO users_books_rating (rating, status, users_books_id) VALUES (?, ?, ?)';
+        const USER_BOOKS_RATING_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
+        const [USER_BOOKS_RATING_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_RATING_SQL,
+          USER_BOOKS_RATING_VALUES
         );
-        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_INFO_RESULT);
+        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_RATING_RESULT);
 
-        const USER_BOOKS_STATUS_SQL =
-          'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
-        const USER_BOOKS_STATUS_VALUES = [
+        const USER_BOOKS_HISTORY_SQL =
+          'INSERT INTO users_books_history (status, users_books_id, date) VALUES (?, ?, ?)';
+        const USER_BOOKS_HISTORY_VALUES = [
           status,
           USER_BOOKS_RESULT.insertId,
           dateParse(addHours(new Date(), 9).toISOString().split('T')[0]),
         ];
-        const [USER_BOOKS_STATUS_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_STATUS_SQL,
-          USER_BOOKS_STATUS_VALUES
+        const [USER_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
+          USER_BOOKS_HISTORY_SQL,
+          USER_BOOKS_HISTORY_VALUES
         );
-        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_RESULT]', USER_BOOKS_STATUS_RESULT);
+        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_RESULT]', USER_BOOKS_HISTORY_RESULT);
         await connection.commit();
         connection.release();
         res.status(200).json({ status: 'success', message: '읽고 싶은 책 등록에 성공했습니다.' });

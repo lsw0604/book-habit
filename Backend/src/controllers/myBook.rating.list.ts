@@ -14,7 +14,7 @@ export default async function myBookRatingList(req: Request, res: Response, next
     try {
       const SQL =
         'SELECT status, created_at, rating, id ' +
-        'FROM users_books_info ' +
+        'FROM users_books_rating ' +
         'WHERE users_books_id = ?';
       const VALUE = [parseInt(users_books_id)];
       const [RESULT] = await connection.query<MyBookRatingType[]>(SQL, VALUE);

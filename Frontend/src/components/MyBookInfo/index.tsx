@@ -1,18 +1,17 @@
-import { Suspense, lazy, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Selector from 'components/common/Selector';
 import Accordion from 'components/common/Accordion';
-import Loader from 'components/common/Loader';
 import Button from 'components/common/Button';
-import { IconTrashCan } from '@style/icons';
-import useMyBookListDeleteHook from '@hooks/useMyBookListDeleteHook';
+import Info from 'components/MyBookInfo/Info';
+import Rating from 'components/MyBookInfo/List/Rating';
+import History from 'components/MyBookInfo/List/History';
+import AddForm from 'components/MyBookInfo/AddForm';
 
-const Info = lazy(() => import('components/MyBookInfo/Info'));
-const Rating = lazy(() => import('components/MyBookInfo/List/Rating'));
-const History = lazy(() => import('components/MyBookInfo/List/History'));
-const AddForm = lazy(() => import('components/MyBookInfo/AddForm/index'));
+import { IconTrashCan } from '@style/icons';
+import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
 
 const Container = styled.div`
   width: 100%;
@@ -24,12 +23,6 @@ const Stack = styled.div`
   width: 100%;
   padding: 10px;
   display: grid;
-`;
-
-const LoaderContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 const Contents = styled.div`
@@ -45,21 +38,13 @@ export default function Index() {
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [value, setValue] = useState<string[]>([]);
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
-  const { mutate, isLoading } = useMyBookListDeleteHook(
+  const { mutate, isLoading } = useMyBookListDeleteMutation(
     parseInt(users_books_id)
   );
 
   return (
     <Container>
-      <Suspense
-        fallback={
-          <LoaderContainer style={{ height: '16rem' }}>
-            <Loader />
-          </LoaderContainer>
-        }
-      >
-        <Info />
-      </Suspense>
+      <Info />
       <Stack>
         <Button
           icon={<IconTrashCan />}
@@ -80,31 +65,13 @@ export default function Index() {
               options={options}
             />
           </Stack>
-          <Suspense
-            fallback={
-              <LoaderContainer style={{ height: '12rem' }}>
-                <Loader />
-              </LoaderContainer>
-            }
-          >
-            <History filter={value} />
-          </Suspense>
+          <History filter={value} />
         </Accordion>
         <Accordion label="평점보기">
-          <Suspense fallback={<Loader />}>
-            <Rating />
-          </Suspense>
+          <Rating />
         </Accordion>
         <Accordion label="추가하기">
-          <Suspense
-            fallback={
-              <LoaderContainer style={{ height: '17rem' }}>
-                <Loader />
-              </LoaderContainer>
-            }
-          >
-            <AddForm />
-          </Suspense>
+          <AddForm />
         </Accordion>
       </Contents>
     </Container>

@@ -3,15 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
-interface IProps {
-  id: number;
-  title: string;
-  isbn: string;
-  image?: string;
-  status: BookStateType;
-  date: string;
-}
-
 const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   border: none;
@@ -88,7 +79,14 @@ const DateTime = styled.p`
   font-size: 12px;
 `;
 
-export default function Item({ isbn, image, status, title, id, date }: IProps) {
+export default function Item({
+  isbn,
+  image,
+  status,
+  title,
+  id,
+  date,
+}: MyBookListInfinityQueryItemType) {
   const navigate = useNavigate();
   const [created_year, created_month, created_day] = dayjs(date)
     .add(9, 'hour')

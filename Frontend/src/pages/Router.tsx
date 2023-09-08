@@ -1,20 +1,29 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import styled from 'styled-components';
 
 import Header from 'components/header/Header';
+import Loader from 'components/common/Loader';
 import BottomNavigation from 'components/BottomNavigation';
+import DefaultLayout from '@pages/layout/DefaultLayout';
+import IsAuthLayout from '@pages/layout/IsAuthLayout';
+import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 
-import Home from './HomePage';
-import Login from './LoginPage';
-import Kakao from './KakaoPage';
-import Search from './SearchPage';
-import KakaoRegister from './KakaoRegisterPage';
-import Register from './RegisterPage';
-import MyBooks from './MyBooksPage';
-import MyBooksInfo from './MyBooksInfoPage';
+const Home = lazy(() => import('@pages/HomePage'));
+const MyBooksInfo = lazy(() => import('@pages/MyBooksInfoPage'));
+const MyBooks = lazy(() => import('@pages/MyBooksPage'));
+const Kakao = lazy(() => import('@pages/KakaoPage'));
+const KakaoRegister = lazy(() => import('@pages/KakaoRegisterPage'));
+const Register = lazy(() => import('@pages/RegisterPage'));
+const Login = lazy(() => import('@pages/LoginPage'));
+const Search = lazy(() => import('@pages/SearchPage'));
 
-import DefaultLayout from './layout/DefaultLayout';
-import IsAuthLayout from './layout/IsAuthLayout';
-import IsKakaoAuthLayout from './layout/IsKakaoAuthLayout';
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
 
 export default function Router({ isLoading }: { isLoading: boolean }) {
   return (
@@ -25,27 +34,35 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
       <main>
         <section>
           <DefaultLayout>
-            <Routes>
-              <Route element={<IsKakaoAuthLayout isKakaoRegister={true} />}>
-                <Route path="/register/kakao" Component={KakaoRegister} />
-              </Route>
-              <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
-                <Route path="/" Component={Home} />
-                <Route path="/search" Component={Search} />
-                <Route element={<IsAuthLayout isAuth={true} />}>
-                  <Route path="/my_books" Component={MyBooks} />
-                  <Route
-                    path="/my_books/:users_books_id"
-                    Component={MyBooksInfo}
-                  />
+            <Suspense
+              fallback={
+                <LoadingWrapper>
+                  <Loader size={2} />
+                </LoadingWrapper>
+              }
+            >
+              <Routes>
+                <Route element={<IsKakaoAuthLayout isKakaoRegister={true} />}>
+                  <Route path="/register/kakao" Component={KakaoRegister} />
                 </Route>
-                <Route element={<IsAuthLayout isAuth={false} />}>
-                  <Route path="/login" Component={Login} />
-                  <Route path="/login/kakao" Component={Kakao} />
-                  <Route path="/register" Component={Register} />
+                <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
+                  <Route path="/" Component={Home} />
+                  <Route path="/search" Component={Search} />
+                  <Route element={<IsAuthLayout isAuth={true} />}>
+                    <Route path="/my_books" Component={MyBooks} />
+                    <Route
+                      path="/my_books/:users_books_id"
+                      Component={MyBooksInfo}
+                    />
+                  </Route>
+                  <Route element={<IsAuthLayout isAuth={false} />}>
+                    <Route path="/login" Component={Login} />
+                    <Route path="/login/kakao" Component={Kakao} />
+                    <Route path="/register" Component={Register} />
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
+              </Routes>
+            </Suspense>
           </DefaultLayout>
         </section>
       </main>

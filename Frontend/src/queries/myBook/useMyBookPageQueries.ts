@@ -6,15 +6,15 @@ import {
   myBookRatingAPI,
   myBookTimeRangeAPI,
 } from 'lib/api/myBook';
-import useToastHook from './useToastHook';
+import useToastHook from '@hooks/useToastHook';
 import dayjs from 'dayjs';
 
-export default function useMyBookPageInfoHook(
+export default function useMyBookPageQueries(
   users_books_id: number,
   filtered?: string[]
 ) {
   const REACT_QUERY_KEY = {
-    info: 'MY_BOOK_PAGE_INFO',
+    info: 'MY_BOOK_INFO',
     history: 'MY_BOOK_HISTORY',
     rating: 'MY_BOOK_RATING',
     time: 'MY_BOOK_TIME',
@@ -67,7 +67,7 @@ export default function useMyBookPageInfoHook(
       {
         queryKey: [REACT_QUERY_KEY.history, users_books_id, isNullFilter],
         queryFn: () => myBookHistoryAPI(users_books_id),
-        select: ({ books }: MyBookHistoryListResponseType) => {
+        select: ({ books }: MyBookPageQueriesHistoryListResponseType) => {
           if (isNullFilter && isNullFilter.includes('전체보기')) {
             return books;
           } else if (isNullFilter && isNullFilter.length === 0) {
@@ -88,7 +88,10 @@ export default function useMyBookPageInfoHook(
       {
         queryKey: [REACT_QUERY_KEY.time, users_books_id],
         queryFn: () => myBookTimeRangeAPI(users_books_id),
-        select: ({ startDate, endDate }: MyBookTimeRangeResponseType) => {
+        select: ({
+          startDate,
+          endDate,
+        }: MyBookPageQueriesTimeRangeResponseType) => {
           return {
             startDate: dayjs(startDate)
               .add(9, 'hour')
@@ -136,7 +139,7 @@ export default function useMyBookPageInfoHook(
   useEffect(() => {
     if (myBookTimeIsError && myBookTimeError) {
       addToast({
-        message: 'TIME_RANGE를 불러오는데 실패했습니다.',
+        message: 'MY BOOK TIME를 불러오는데 실패했습니다.',
         status: 'error',
       });
     }

@@ -3,27 +3,29 @@ import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
 import useToastHook from '@hooks/useToastHook';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { myBookHistoryDeleteAPI } from 'lib/api/myBook';
 
-export default function useMyBookHistoryDeleteHook(
-  users_books_status_id: number,
+export default function useMyBookHistoryDeleteMutation(
+  users_books_history_id: number,
   users_books_id: number
 ) {
   const queryClient = new QueryClient();
-  const REACT_QUERY_KEY = 'MY_BOOK_HISTORY_DELETE';
-  const { myBookHistoryRefetch } = useMyBookPageInfoHook(users_books_id);
+  const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_DELETE_MUTATION';
+  const { myBookHistoryRefetch } = useMyBookPageQueries(users_books_id);
 
   const { mutate, isSuccess, data, isError, error, isLoading } = useMutation<
-    MyBookHistoryDeleteResponseType,
+    MyBookHistoryDeleteMutationResponseType,
     AxiosError,
-    MyBookHistoryDeleteRequestType
+    MyBookHistoryDeleteMutationRequestType
   >(
-    [REACT_QUERY_KEY, users_books_status_id],
-    () => myBookHistoryDeleteAPI(users_books_status_id),
+    [REACT_QUERY_KEY, users_books_history_id],
+    () => myBookHistoryDeleteAPI(users_books_history_id),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
+        queryClient.invalidateQueries({
+          queryKey: ['USE_MY_BOOK_LIST_INFINITY_QUERY'],
+        });
         myBookHistoryRefetch();
       },
     }

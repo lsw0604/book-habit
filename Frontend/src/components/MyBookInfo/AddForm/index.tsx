@@ -11,8 +11,8 @@ import RatingAdd from 'components/MyBookInfo/AddForm/Rating';
 import { RadioGroupOptionType } from 'types/style';
 import { IconPencil, IconStar } from '@style/icons';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
-import useMyBookAddFormHistoryRegisterHook from '@hooks/useMyBookAddFormHistoryRegisterHook';
-import useMyBookAddFormRatingRegisterHook from '@hooks/useMyBookAddFormRatingRegisterHook';
+import useMyBookHistoryMutation from '@queries/myBook/useMyBookHistoryMutation';
+import useMyBookRatingMutation from '@queries/myBook/useMyBookRatingMutation';
 
 const Container = styled.form`
   display: flex;
@@ -63,9 +63,9 @@ export default function Index() {
   } = useMyBookAddFormHook();
 
   const { isLoading: isHistoryRegisterLoading, mutate: historyMutate } =
-    useMyBookAddFormHistoryRegisterHook(parseInt(users_books_id));
+    useMyBookHistoryMutation(parseInt(users_books_id));
   const { isLoading: isRatingRegisterLoading, mutate: ratingMutate } =
-    useMyBookAddFormRatingRegisterHook(parseInt(users_books_id));
+    useMyBookRatingMutation(parseInt(users_books_id));
 
   const onChange = (value: string) => {
     setStatus(value as '' | '기록' | '평점');
@@ -89,7 +89,7 @@ export default function Index() {
                 date: addFormDate,
                 users_books_id: parseInt(users_books_id),
               };
-        return historyMutate(body as MyBookHistoryRegisterType);
+        return historyMutate(body as MyBookHistoryMutationRequestType);
       }
     }
 
@@ -101,7 +101,7 @@ export default function Index() {
           rating: addFromRating,
           users_books_id: parseInt(users_books_id),
         };
-        return ratingMutate(body as MyBookRatingRegisterType);
+        return ratingMutate(body as MyBookRatingMutationRequestType);
       }
     }
   };

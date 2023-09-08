@@ -1,28 +1,32 @@
 import { useMutation, QueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { readToBookRegisterAPI } from 'lib/api/book';
-import useToastHook from '@hooks/useToastHook';
 import { useSetRecoilState } from 'recoil';
+import { AxiosError } from 'axios';
+import { useEffect } from 'react';
+
+import useToastHook from '@hooks/useToastHook';
 import { modalAtom } from 'recoil/modal';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
-import { AxiosError } from 'axios';
-import useMyBookListHook from './useMyBookListHook';
+import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
+import { readBookRegisterAPI } from 'lib/api/book';
 
-export default function useReadToRegisterHook() {
+export default function useReadBookMutation() {
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
   const { setBookRegisterModalState } = useBookRegisterModalHook();
-  const { refetch } = useMyBookListHook('전체보기');
+  const { refetch } = useMyBookListInfinityQuery('전체보기');
 
+  const REACT_QUERY_KEY = 'USE_READ_BOOK_MUTATION';
   const queryClient = new QueryClient();
-  const REACT_QUERY_KEY = 'USE_READ_TO_BOOK_REGISTER_KEY';
+
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
-    BookRegisterResponseType,
-    AxiosError,
-    ReadToBookRegisterType
-  >([REACT_QUERY_KEY], readToBookRegisterAPI, {
+    ReadBookMutationResponseType,
+    AxiosError<{ message: string; status: string }>,
+    ReadBookNutationRequestType
+  >([REACT_QUERY_KEY], readBookRegisterAPI, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['MY_BOOK_LIST'] });
+      queryClient.invalidateQueries({
+        queryKey: ['USE_MY_BOOK_LIST_INFINITY_QUERY'],
+      });
       refetch();
     },
   });
@@ -32,11 +36,11 @@ export default function useReadToRegisterHook() {
       const { message, status } = data;
       addToast({ message, status });
       setBookRegisterModalState({
-        rating: 0,
-        useValidate: false,
         startDate: null,
         endDate: null,
+        rating: 0,
         page: 0,
+        useValidate: false,
       });
       setModalState({ isOpen: false });
     }
@@ -45,7 +49,7 @@ export default function useReadToRegisterHook() {
   useEffect(() => {
     if (isError && error) {
       addToast({
-        message: '읽고싶은 책 등록에 실패했습니다.',
+        message: '읽은책 등록에 실패했습니다.',
         status: 'error',
       });
     }

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import useMyBookExist from '@hooks/useMyBookExistHook';
+import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 import { bottomSheetAtom } from 'recoil/bottomSheet';
 import Loader from 'components/common/Loader';
 
@@ -31,7 +31,7 @@ const LoaderWrapper = styled.div`
 
 export default function BookStatus() {
   const { isbn } = useRecoilValue(bottomSheetAtom);
-  const { isLoading, data, isFetching } = useMyBookExist(isbn);
+  const { isLoading, data, isFetching } = useMyBookExistQuery(isbn);
 
   const filteringData = (status?: '등록' | '미등록') => {
     if (status === '등록') return '서재에 등록된 책입니다.';

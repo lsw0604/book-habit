@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Loader from 'components/common/Loader';
 import Item from 'components/MyBookInfo/Item/Rating';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
   width: 100%;
@@ -35,7 +35,7 @@ export default function Rating() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const { myBookRatingData, myBookRatingIsLoading, myBookRatingIsFetching } =
-    useMyBookPageInfoHook(parseInt(users_books_id));
+    useMyBookPageQueries(parseInt(users_books_id));
   return (
     <Container>
       {myBookRatingIsLoading || myBookRatingIsFetching ? (

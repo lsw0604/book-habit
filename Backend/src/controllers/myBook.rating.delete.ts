@@ -13,7 +13,7 @@ export default async function myBookRatingDelete(req: Request, res: Response, ne
     try {
       await connection.beginTransaction();
 
-      const MY_BOOK_RATING_DELETE_SQL = 'DELETE FROM users_books_info WHERE id = ?';
+      const MY_BOOK_RATING_DELETE_SQL = 'DELETE FROM users_books_rating WHERE id = ?';
       const MY_BOOK_RATING_DELETE_VALUE = [users_books_info_id];
       const [MY_BOOK_RATING_DELETE_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_RATING_DELETE_SQL,

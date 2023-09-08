@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { IconImage } from '@style/icons';
 import Loader from 'components/common/Loader';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
   width: 100%;
@@ -81,7 +81,7 @@ export default function Info() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접급입니다.</div>;
 
-  const { myBookInfoData, myBookInfoIsLoading } = useMyBookPageInfoHook(
+  const { myBookInfoData, myBookInfoIsLoading } = useMyBookPageQueries(
     parseInt(users_books_id)
   );
 

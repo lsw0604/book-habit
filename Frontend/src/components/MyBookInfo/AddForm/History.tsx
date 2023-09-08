@@ -8,7 +8,7 @@ import { IconBook } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
-import useMyBookPageInfoHook from '@hooks/useMyBookPageInfoHook';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
   flex: 1;
@@ -71,7 +71,7 @@ export default function History() {
 
   const userBookId = parseInt(users_books_id);
 
-  const { myBookTimeData } = useMyBookPageInfoHook(userBookId);
+  const { myBookTimeData } = useMyBookPageQueries(userBookId);
 
   useEffect(() => {
     setAddFormState({

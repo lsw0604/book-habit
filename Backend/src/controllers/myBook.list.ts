@@ -19,8 +19,8 @@ export default async function myBookList(req: Request, res: Response, next: Next
       if (status === '전체보기') {
         const COUNT_TOTAL_SQL =
           'WITH LatestStatus AS ( ' +
-          'SELECT ubs.users_books_id AS users_books_id, ubs.status, ubs.date, ROW_NUMBER() OVER (PARTITION BY ubs.users_books_id ORDER BY ubs.date DESC) AS rn ' +
-          'FROM users_books_status ubs ' +
+          'SELECT ubh.users_books_id AS users_books_id, ubh.status, ubh.date, ROW_NUMBER() OVER (PARTITION BY ubh.users_books_id ORDER BY ubh.date DESC) AS rn ' +
+          'FROM users_books_history ubh ' +
           ') ' +
           'SELECT COUNT(*) AS count ' +
           'FROM users_books ub ' +
@@ -42,8 +42,8 @@ export default async function myBookList(req: Request, res: Response, next: Next
 
         const TOTAL_LIST_SQL =
           'WITH LatestStatus AS ( ' +
-          'SELECT ubs.users_books_id AS users_books_id, ubs.status, ubs.date, ROW_NUMBER() OVER (PARTITION BY ubs.users_books_id ORDER BY ubs.date DESC) AS rn ' +
-          'FROM users_books_status ubs ' +
+          'SELECT ubh.users_books_id AS users_books_id, ubh.status, ubh.date, ROW_NUMBER() OVER (PARTITION BY ubh.users_books_id ORDER BY ubh.date DESC) AS rn ' +
+          'FROM users_books_history ubh ' +
           ') ' +
           'SELECT ls.users_books_id AS id, bs.title, bs.image, bs.isbn, ls.date, ls.status ' +
           'FROM users_books ub ' +
@@ -72,12 +72,12 @@ export default async function myBookList(req: Request, res: Response, next: Next
         'SELECT COUNT(*) as count ' +
         'FROM users_books ub ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
-        'RIGHT JOIN users_books_status ubs ON ubs.users_books_id = ub.id ' +
+        'RIGHT JOIN users_books_history ubh ON ubh.users_books_id = ub.id ' +
         'INNER JOIN ( ' +
         'SELECT MAX(date) AS max_date ' +
-        'FROM users_books_status ubs ' +
+        'FROM users_books_history ubh ' +
         'GROUP BY users_books_id ' +
-        ') latest_date ON ubs.date = latest_date.max_date ' +
+        ') latest_date ON ubh.date = latest_date.max_date ' +
         'WHERE ub.users_id = ? AND status = ?';
       const COUNT_STATUS_VALUES = [id, status];
       const [COUNT_STATUS_RESULT] = await connection.query<MyBookListCountResponseType[]>(
@@ -94,8 +94,8 @@ export default async function myBookList(req: Request, res: Response, next: Next
 
       const STATUS_LIST_SQL =
         'WITH LatestStatus AS ( ' +
-        'SELECT ubs.users_books_id AS users_books_id, ubs.status, ubs.date, ROW_NUMBER() OVER (PARTITION BY ubs.users_books_id ORDER BY ubs.date DESC) AS rn ' +
-        'FROM users_books_status ubs ' +
+        'SELECT ubh.users_books_id AS users_books_id, ubh.status, ubh.date, ROW_NUMBER() OVER (PARTITION BY ubh.users_books_id ORDER BY ubh.date DESC) AS rn ' +
+        'FROM users_books_history ubh ' +
         ') ' +
         'SELECT ls.users_books_id AS id, bs.title, bs.image, bs.isbn, ls.date, ls.status ' +
         'FROM users_books ub ' +
