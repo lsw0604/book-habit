@@ -33,7 +33,7 @@ export default function ReadTo({ created_at, updated_at }: IProps) {
     : null;
   return (
     <Container>
-      이 날 찜했어요.
+      찜했어요.
       <DateContent>
         {updated_at ? <Date>{updated_date}</Date> : <Date>{created_date}</Date>}
       </DateContent>

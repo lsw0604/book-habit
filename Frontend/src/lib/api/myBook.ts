@@ -3,7 +3,7 @@ import { axios } from './';
 // READ
 
 /**
- * * 내 서재 리스트 불러오는 API
+ * * 내 서재에 등록된 책 목록을 불러오는 API
  */
 export const myBookListAPI = async (page: number, status: SelectorBookType) => {
   const { data } = await axios.get<MyBookListInfinityQueryResponseType>(
@@ -13,38 +13,50 @@ export const myBookListAPI = async (page: number, status: SelectorBookType) => {
 };
 
 /**
- * * 내 서재에 등록된 책 정보를 보는 API
- */
-export const myBookInfoAPI = async (
-  users_books_id: MyBookPageQueriesInfoRequestType
-) => {
-  const { data } = await axios.get<MyBookPageQueriesInfoResponseType>(
-    `/api/my_book/info/${users_books_id}`
-  );
-  return data;
-};
-
-/**
- * * 내 서재에 등록된 책 기록 보는 API
+ * * 내 서재에 등록된 책의 독서기록을 불러오는 API
  */
 export const myBookHistoryAPI = async (
   users_books_id: MyBookPageQueriesHistoryListRequestType
 ) => {
   const { data } = await axios.get<MyBookPageQueriesHistoryListResponseType>(
-    `/api/my_book/history/${users_books_id}`
+    `/api/my_book/history/list/${users_books_id}`
   );
   return data;
 };
 
 /**
- * * 내 서재에 등록된 책 평점들을 보는 API
+ * * 내 서재에 등록된 책의 평점을 불러오는 API
  */
 
 export const myBookRatingAPI = async (
   users_books_id: MyBookPageQueriesRatingListRequestType
 ) => {
   const { data } = await axios.get<MyBookPageQueriesRatingListResponseType>(
-    `/api/my_book/rating/${users_books_id}`
+    `/api/my_book/rating/list/${users_books_id}`
+  );
+  return data;
+};
+
+/**
+ * * 내 서재에 등록된 책의 한줄평을 불러오는 API
+ */
+export const myBookCommentsAPI = async (
+  users_books_id: MyBookPageQueriesCommentRequestType
+) => {
+  const { data } = await axios.get<MyBookPageQueriesCommentResponseType>(
+    `/api/my_book/comments/list/${users_books_id}`
+  );
+  return data;
+};
+
+/**
+ * * 내 서재에 등록된 책의 정보를 불러오는 API
+ */
+export const myBookInfoAPI = async (
+  users_books_id: MyBookPageQueriesInfoRequestType
+) => {
+  const { data } = await axios.get<MyBookPageQueriesInfoResponseType>(
+    `/api/my_book/info/${users_books_id}`
   );
   return data;
 };
@@ -60,7 +72,7 @@ export const myBookExistAPI = async (isbn: MyBookExistQueryRequestType) => {
 };
 
 /**
- * * 내 서재에 등록된 책의 시간 범위 확인하는 API
+ * * 내 서재에 등록된 책의 시간 범위를 확인하는 API
  */
 export const myBookTimeRangeAPI = async (
   users_books_id: MyBookPageQueriesTimeRangeRequestType
@@ -74,13 +86,13 @@ export const myBookTimeRangeAPI = async (
 // CREATE
 
 /**
- * * 내 서재에 기록을 등록하는 API
+ * * 내 서재에 등록된 책에 독서기록을 등록하는 API
  */
 export const myBookHistoryRegisterAPI = async (
   body: MyBookHistoryMutationRequestType
 ) => {
   const { data } = await axios.post<MyBookHistoryMutationResponseType>(
-    `/api/my_book/register`,
+    `/api/my_book/history/register`,
     body
   );
   return data;
@@ -93,7 +105,7 @@ export const myBookRatingRegisterAPI = async (
   body: MyBookRatingMutationRequestType
 ) => {
   const { data } = await axios.post<MyBookRatingMutationResponseType>(
-    `/api/my_book/rating`,
+    `/api/my_book/rating/register`,
     body
   );
   return data;
@@ -106,7 +118,7 @@ export const myBookCommentsRegisterAPI = async (
   body: MyBookCommentMutationRequestType
 ) => {
   const { data } = await axios.post<MyBookCommentMutationResponseType>(
-    `/api/my_book/comments`,
+    `/api/my_book/comments/register`,
     body
   );
   return data;
@@ -115,13 +127,35 @@ export const myBookCommentsRegisterAPI = async (
 // DELETE
 
 /**
- * * 내 서재에 등록된 평점을 삭제하는 API
+ * * 내 서재에 등록된 책의 평점을 삭제하는 API
  */
 export const myBookRatingDeleteAPI = async (
   users_books_rating_id: MyBookRatingDeleteMutationRequestType
 ) => {
   const { data } = await axios.delete<MyBookRatingDeleteMutationResponseType>(
     `/api/my_book/delete/rating/${users_books_rating_id}`
+  );
+  return data;
+};
+
+/**
+ * * 내 서재에 등록된 책의 독서기록을 삭제하는 API
+ */
+export const myBookHistoryDeleteAPI = async (
+  users_books_history_id: number
+) => {
+  const { data } = await axios.delete(
+    `/api/my_book/delete/history/${users_books_history_id}`
+  );
+  return data;
+};
+
+/**
+ * * 내 서재에 등록된 책의 한줄평을 삭제하는 API
+ */
+export const myBookCommentDeleteAPI = async (comment_id: number) => {
+  const { data } = await axios.delete(
+    `/api/my_book/comment/delete/${comment_id}`
   );
   return data;
 };
@@ -134,18 +168,6 @@ export const myBookListDeleteAPI = async (
 ) => {
   const { data } = await axios.delete<MyBookListDeleteMutationResponseType>(
     `/api/my_book/list/delete/${users_books_id}`
-  );
-  return data;
-};
-
-/**
- * * 내 서재에 등록된 기록을 삭제하는 API
- */
-export const myBookHistoryDeleteAPI = async (
-  users_books_history_id: number
-) => {
-  const { data } = await axios.delete(
-    `/api/my_book/delete/history/${users_books_history_id}`
   );
   return data;
 };

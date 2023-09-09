@@ -145,6 +145,13 @@ export type MyBookRatingExistType = {
   status: '읽기전' | '다읽음' | '읽는중';
 } & RowDataPacket;
 
+export type MyBookCommentsListType = {
+  comment_id: number;
+  comment: string;
+  created_at: Date;
+  updated_at: Date | null;
+} & RowDataPacket;
+
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';

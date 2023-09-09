@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import {
+  myBookCommentsAPI,
   myBookHistoryAPI,
   myBookInfoAPI,
   myBookRatingAPI,
@@ -18,10 +19,9 @@ export default function useMyBookPageQueries(
     history: 'MY_BOOK_HISTORY',
     rating: 'MY_BOOK_RATING',
     time: 'MY_BOOK_TIME',
+    comments: 'MY_BOOK_COMMENTS',
   };
   const { addToast } = useToastHook();
-
-  const isNullFilter = filtered === null ? [] : filtered;
 
   const [
     {
@@ -56,6 +56,14 @@ export default function useMyBookPageQueries(
       refetch: myBookTimeRefetch,
       isFetching: myBookTimeIsFetching,
     },
+    {
+      data: myBookCommentsData,
+      isLoading: myBookCommentsIsLoading,
+      isError: myBookCommentsIsError,
+      error: myBookCommentsError,
+      refetch: myBookCommentsRefetch,
+      isFetching: myBookCommentsIsFetching,
+    },
   ] = useQueries({
     queries: [
       {
@@ -65,21 +73,18 @@ export default function useMyBookPageQueries(
         cacheTime: 3 * 60 * 1000,
       },
       {
-        queryKey: [REACT_QUERY_KEY.history, users_books_id, isNullFilter],
+        queryKey: [REACT_QUERY_KEY.history, users_books_id],
         queryFn: () => myBookHistoryAPI(users_books_id),
         select: ({ books }: MyBookPageQueriesHistoryListResponseType) => {
-          if (isNullFilter && isNullFilter.includes('전체보기')) {
-            return books;
-          } else if (isNullFilter && isNullFilter.length === 0) {
+          if (!filtered) {
             return [];
+          } else if (filtered.includes('전체보기')) {
+            return books;
           } else {
-            return books.filter(
-              (book) => isNullFilter && isNullFilter.includes(book.status)
-            );
+            return books.filter((book) => filtered.includes(book.status));
           }
         },
-        staleTime: 5 * 1000,
-        cacheTime: 6 * 1000,
+        staleTime: Infinity,
       },
       {
         queryKey: [REACT_QUERY_KEY.rating, users_books_id],
@@ -93,17 +98,43 @@ export default function useMyBookPageQueries(
           endDate,
         }: MyBookPageQueriesTimeRangeResponseType) => {
           return {
-            startDate: dayjs(startDate)
-              .add(9, 'hour')
-              .add(1, 'day')
-              .toISOString()
-              .split('T')[0],
-            endDate: dayjs(endDate)
-              .add(9, 'hour')
-              .add(-1, 'day')
-              .toISOString()
-              .split('T')[0],
+            startDate: endDate
+              ? dayjs(startDate)
+                  .add(9, 'hour')
+                  .add(1, 'day')
+                  .toISOString()
+                  .split('T')[0]
+              : dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
+            endDate: endDate
+              ? dayjs(endDate)
+                  .add(9, 'hour')
+                  .add(-1, 'day')
+                  .toISOString()
+                  .split('T')[0]
+              : new Date(),
           };
+        },
+      },
+      {
+        queryKey: [REACT_QUERY_KEY.comments, users_books_id],
+        queryFn: () => myBookCommentsAPI(users_books_id),
+        select: ({ comments }: MyBookPageQueriesCommentResponseType) => {
+          return comments.map((comment) => {
+            return {
+              comment_id: comment.comment_id,
+              comment: comment.comment,
+              created_at: dayjs(comment.created_at)
+                .add(9, 'hour')
+                .toISOString()
+                .split('T')[0],
+              updated_at: comment.updated_at
+                ? dayjs(comment.updated_at)
+                    .add(9, 'hour')
+                    .toISOString()
+                    .split('T')[0]
+                : undefined,
+            };
+          });
         },
       },
     ],
@@ -145,6 +176,15 @@ export default function useMyBookPageQueries(
     }
   }, [myBookTimeIsError, myBookTimeError]);
 
+  useEffect(() => {
+    if (myBookCommentsIsError && myBookCommentsError) {
+      addToast({
+        message: 'MY BOOK COMMENTS를 불러오는데 실패했습니다.',
+        status: 'error',
+      });
+    }
+  }, [myBookCommentsIsError, myBookCommentsError]);
+
   return {
     myBookInfoData,
     myBookInfoIsLoading,
@@ -170,5 +210,11 @@ export default function useMyBookPageQueries(
     myBookTimeError,
     myBookTimeRefetch,
     myBookTimeIsFetching,
+    myBookCommentsData,
+    myBookCommentsError,
+    myBookCommentsIsError,
+    myBookCommentsIsFetching,
+    myBookCommentsIsLoading,
+    myBookCommentsRefetch,
   };
 }

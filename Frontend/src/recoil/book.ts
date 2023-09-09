@@ -1,17 +1,18 @@
 import { atom } from 'recoil';
+import { v1 } from 'uuid';
 
-const BOOK_ATOM_KEY = 'BOOK_ATOM_KEY';
+const BOOK_ATOM_KEY = `BOOK_ATOM_KEY/${v1()}`;
 
-type BookAtomType = {
-  title: string;
-  author: string;
-  company: string;
-  published_date: string;
-  image: string;
-  rank: number;
-};
-
-export const bookAtom = atom<BookAtomType[]>({
+export const bookAtom = atom<BookAtomType>({
   key: BOOK_ATOM_KEY,
-  default: [],
+  default: {
+    image: '',
+    isbn: '',
+    price: 0,
+    publisher: '',
+    authors: [],
+    contents: '',
+    url: '',
+    title: '',
+  },
 });

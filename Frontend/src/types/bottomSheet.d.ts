@@ -1,4 +1,4 @@
-type BottomSheetAtomType = {
+type bookAtomType = {
   image: string;
   isbn: string;
   price: number;

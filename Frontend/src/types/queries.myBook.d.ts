@@ -117,3 +117,17 @@ type MyBookPageQueriesTimeRangeResponseType = {
 };
 
 type MyBookPageQueriesTimeRangeRequestType = number;
+
+// myBook Comments
+
+type MyBookPageQueriesCommentResponseType = {
+  comments: MyBookPageQueriesCommentListType;
+};
+type MyBookPageQueriesCommentListType = MyBookPageQueriesCommentItemType[];
+type MyBookPageQueriesCommentItemType = {
+  comment_id: number;
+  comment: string;
+  created_at: string;
+  updated_at?: string;
+};
+type MyBookPageQueriesCommentRequestType = number;

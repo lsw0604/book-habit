@@ -4,20 +4,19 @@ import styled from 'styled-components';
 
 import Selector from 'components/common/Selector';
 import Accordion from 'components/common/Accordion';
-import Button from 'components/common/Button';
 import Info from 'components/MyBookInfo/Info';
 import Rating from 'components/MyBookInfo/List/Rating';
 import History from 'components/MyBookInfo/List/History';
 import AddForm from 'components/MyBookInfo/AddForm';
-import Comments from 'components/MyBookInfo/Comments';
-
-import { IconTrashCan } from '@style/icons';
-import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
+import Comments from 'components/MyBookInfo/List/Comment';
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 11rem);
+  height: calc(100vh - 10rem);
   overflow: scroll;
+  @media screen and (min-width: 714px) {
+    display: flex;
+  }
 `;
 
 const Stack = styled.div`
@@ -26,11 +25,16 @@ const Stack = styled.div`
   display: grid;
 `;
 
+const Header = styled.div`
+  flex: 1;
+`;
+
 const Contents = styled.div`
-  height: 25rem;
+  height: 69%;
   overflow: scroll;
-  @media screen and (min-width: 1024px) {
-    height: 31rem;
+  @media screen and (min-width: 714px) {
+    height: 100%;
+    flex: 3;
   }
 `;
 
@@ -39,22 +43,12 @@ export default function Index() {
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [value, setValue] = useState<string[]>([]);
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
-  const { mutate, isLoading } = useMyBookListDeleteMutation(
-    parseInt(users_books_id)
-  );
 
   return (
     <Container>
-      <Info />
-      <Stack>
-        <Button
-          icon={<IconTrashCan />}
-          isLoading={isLoading}
-          onClick={() => mutate(parseInt(users_books_id))}
-        >
-          삭제하기
-        </Button>
-      </Stack>
+      <Header>
+        <Info />
+      </Header>
       <Contents>
         <Accordion label="기록보기">
           <Stack>

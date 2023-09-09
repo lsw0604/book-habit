@@ -71,28 +71,30 @@ export default function NeedLogin() {
     <Container>
       <Header>
         <Logo />
-        <Stack>
+        <div>
           <Title>
             <span>다다익독</span>은
           </Title>
           <Title>
             <span>로그인</span>이 필요해요.
           </Title>
-        </Stack>
+        </div>
       </Header>
       <Content>
-        <Description>
-          로그인을 하시고 <span>다다익독</span>을 이용하시면
-        </Description>
-        <Description>
-          <span>다다익독</span>의 서비스를 더 풍족하게 이용하실 수 있어요.
-        </Description>
-        <Description>
-          아이디가 없으시다면 <span>회원가입</span>을 해주세요.
-        </Description>
-        <Description>
-          <span>카카오톡</span>으로도 간단하게 회원가입 가능해요.
-        </Description>
+        <div>
+          <Description>
+            로그인을 하시고 <span>다다익독</span>을 이용하시면
+          </Description>
+          <Description>
+            <span>다다익독</span>의 서비스를 더 풍족하게 이용하실 수 있어요.
+          </Description>
+          <Description>
+            아이디가 없으시다면 <span>회원가입</span>을 해주세요.
+          </Description>
+          <Description>
+            <span>카카오톡</span>으로도 간단하게 회원가입 가능해요.
+          </Description>
+        </div>
       </Content>
       <Divider divider={10} />
       <Footer>
