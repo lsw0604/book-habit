@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
 import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
-import { bottomSheetAtom } from 'recoil/bottomSheet';
+import { bookAtom } from 'recoil/book';
 import Loader from 'components/common/Loader';
 
 const Container = styled.div`
@@ -30,7 +30,7 @@ const LoaderWrapper = styled.div`
 `;
 
 export default function BookStatus() {
-  const { isbn } = useRecoilValue(bottomSheetAtom);
+  const { isbn } = useRecoilValue(bookAtom);
   const { isLoading, data, isFetching } = useMyBookExistQuery(isbn);
 
   const filteringData = (status?: '등록' | '미등록') => {

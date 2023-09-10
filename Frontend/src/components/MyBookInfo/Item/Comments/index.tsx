@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { IconTrashCan } from '@style/icons';
 import Icon from 'components/common/Button/Icon';
+import { useRef } from 'react';
+import useObserverHook from '@hooks/useObserverHook';
 
 const Container = styled.div`
   display: inline-flex;
@@ -39,20 +41,27 @@ export default function Index({
 }: MyBookPageQueriesCommentItemType) {
   const [year, month, day] = created_at.split('-');
   const updatedAt = updated_at ? updated_at.split('-') : undefined;
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  const { isVisible } = useObserverHook(itemRef);
   const onHandler = () => {
     console.log(comment_id);
   };
   return (
-    <Container>
-      <DateWrapper>
-        {updatedAt
-          ? `${updatedAt[0]}년 ${updatedAt[1]}월 ${updatedAt[2]}일`
-          : `${year}년 ${month}월 ${day}일`}
-      </DateWrapper>
-      <Comment>{comment}</Comment>
-      <Icon onClick={onHandler} icon={<IconTrashCan />}>
-        Delete
-      </Icon>
+    <Container ref={itemRef}>
+      {isVisible ? (
+        <>
+          <DateWrapper>
+            {updatedAt
+              ? `${updatedAt[0]}년 ${updatedAt[1]}월 ${updatedAt[2]}일`
+              : `${year}년 ${month}월 ${day}일`}
+          </DateWrapper>
+          <Comment>{comment}</Comment>
+          <Icon onClick={onHandler} icon={<IconTrashCan />}>
+            Delete
+          </Icon>{' '}
+        </>
+      ) : null}
     </Container>
   );
 }

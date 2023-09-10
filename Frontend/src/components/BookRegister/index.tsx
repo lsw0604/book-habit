@@ -15,7 +15,7 @@ import useReadingBookMutation from '@queries/book/useReadingBookMutation';
 import useReadBookMutation from '@queries/book/useReadBookMutation';
 import useReadToBookMutation from '@queries/book/useReadToBookMutation';
 import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
-import { bottomSheetAtom } from 'recoil/bottomSheet';
+import { bookAtom } from 'recoil/book';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Read = lazy(() => import('components/BookRegister/Read'));
@@ -57,7 +57,7 @@ export default function Index() {
   const [value, setValue] = useState<ModalType>('');
 
   const { authors, contents, image, isbn, price, publisher, url, title } =
-    useRecoilValue(bottomSheetAtom);
+    useRecoilValue(bookAtom);
 
   const { data } = useMyBookExistQuery(isbn);
 

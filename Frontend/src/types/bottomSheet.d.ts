@@ -1,4 +1,4 @@
-type bookAtomType = {
+type BookAtomType = {
   image: string;
   isbn: string;
   price: number;
