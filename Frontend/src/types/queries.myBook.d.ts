@@ -9,6 +9,10 @@ type MyBookExistQueryResponseType = {
 };
 type MyBookExistQueryRequestType = string;
 
+// useMyBookCommentDeleteMutation의 타입들
+type MyBookCommentDeleteMutationResponseType = MutationResponse;
+type MyBOokCommentDeleteMutationRequestType = number;
+
 // useMyBookHistoryDeleteMutation의 타입들
 type MyBookHistoryDeleteMutationResponseType = MutationResponse;
 type MyBookHistoryDeleteMutationRequestType = number;

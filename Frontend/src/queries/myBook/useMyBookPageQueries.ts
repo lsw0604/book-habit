@@ -93,27 +93,6 @@ export default function useMyBookPageQueries(
       {
         queryKey: [REACT_QUERY_KEY.time, users_books_id],
         queryFn: () => myBookTimeRangeAPI(users_books_id),
-        select: ({
-          startDate,
-          endDate,
-        }: MyBookPageQueriesTimeRangeResponseType) => {
-          return {
-            startDate: endDate
-              ? dayjs(startDate)
-                  .add(9, 'hour')
-                  .add(1, 'day')
-                  .toISOString()
-                  .split('T')[0]
-              : dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
-            endDate: endDate
-              ? dayjs(endDate)
-                  .add(9, 'hour')
-                  .add(-1, 'day')
-                  .toISOString()
-                  .split('T')[0]
-              : new Date(),
-          };
-        },
       },
       {
         queryKey: [REACT_QUERY_KEY.comments, users_books_id],

@@ -13,7 +13,7 @@ export default async function myBookHistoryDelete(req: Request, res: Response, n
     try {
       await connection.beginTransaction();
 
-      const MY_BOOK_HISTORY_DELETE_SQL = 'DELETE FROM users_books_history ' + 'WHERE id = ?';
+      const MY_BOOK_HISTORY_DELETE_SQL = 'DELETE FROM users_books_history WHERE id = ?';
       const MY_BOOK_HISTORY_DELETE_VALUE = [users_books_history_id];
       const [MY_BOOK_HISTORY_DELETE_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_HISTORY_DELETE_SQL,

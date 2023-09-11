@@ -11,7 +11,6 @@ const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  border: 2px solid red;
 `;
 
 export default function Comment() {

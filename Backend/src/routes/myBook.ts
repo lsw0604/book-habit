@@ -14,6 +14,7 @@ import myBookCommentRegister from '../controllers/myBook.comments.register';
 
 import myBookListDelete from '../controllers/myBook.list.delete';
 import myBookRatingDelete from '../controllers/myBook.rating.delete';
+import myBookCommentDelete from '../controllers/myBook.comments.delete';
 import myBookHistoryDelete from '../controllers/myBook.history.delete';
 
 import access from '../controllers/auth.access';
@@ -51,7 +52,7 @@ myBookRouter.post('/comments/register', access, myBookCommentRegister);
 // DELETE
 myBookRouter.delete('/history/delete/:users_books_history_id', access, myBookHistoryDelete);
 myBookRouter.delete('/rating/delete/:users_books_rating_id', access, myBookRatingDelete);
-myBookRouter.delete('/comment/delete/:comment_id', access);
+myBookRouter.delete('/comment/delete/:comment_id', access, myBookCommentDelete);
 myBookRouter.delete(`/list/delete/:users_books_id`, access, myBookListDelete);
 // UPDATE
 myBookRouter.put('/update/rating/:users_books_info_id', access);

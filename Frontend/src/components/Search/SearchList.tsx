@@ -1,6 +1,6 @@
 import { InfiniteData } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Loader from 'components/common/Loader';
 import SearchItem from 'components/Search/SearchItem';
@@ -49,6 +49,8 @@ interface IProps {
   isFetching: boolean;
   search: string;
   isLoading: boolean;
+  initialLoadComplete: boolean;
+  setInitialLoadComplete: (ctx: boolean) => void;
 }
 
 export default function SearchList({
@@ -58,10 +60,10 @@ export default function SearchList({
   isFetching,
   search,
   isLoading,
+  initialLoadComplete,
+  setInitialLoadComplete,
 }: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
-  const [initialLoadComplete, setInitialLoadComplete] =
-    useState<boolean>(false);
 
   useEffect(() => {
     const observerOptions = {
@@ -73,6 +75,7 @@ export default function SearchList({
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && hasNextPage && !isFetching) {
         fetchNextPage();
+        observer.disconnect();
       }
     }, observerOptions);
 
@@ -82,7 +85,9 @@ export default function SearchList({
     setInitialLoadComplete(true);
 
     return () => {
-      observer.disconnect();
+      if (lastSearchRef.current) {
+        observer.unobserve(lastSearchRef.current);
+      }
     };
   }, [fetchNextPage, hasNextPage, isFetching, initialLoadComplete]);
 

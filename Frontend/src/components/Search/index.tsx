@@ -38,6 +38,8 @@ const SpanWrapper = styled.div`
 
 export default function Index() {
   const [search, setSearch] = useState<string>('');
+  const [initialLoadComplete, setInitialLoadComplete] =
+    useState<boolean>(false);
 
   const { refetch, data, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useBookSearchInfinityQuery(search);
@@ -48,6 +50,7 @@ export default function Index() {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setInitialLoadComplete(false);
     refetch();
   };
 
@@ -59,6 +62,8 @@ export default function Index() {
       <Contents>
         {data && data?.pages.length > 0 ? (
           <SearchList
+            initialLoadComplete={initialLoadComplete}
+            setInitialLoadComplete={setInitialLoadComplete}
             search={search}
             data={data}
             isLoading={isLoading}

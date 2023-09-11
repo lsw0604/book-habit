@@ -1,5 +1,6 @@
 type ModalAtomType = {
   isOpen: boolean;
+  type?: 'isLogin' | 'search' | 'modify';
 };
 
 type ReadBookAtomType = {

@@ -6,13 +6,15 @@ import { modalAtom } from 'recoil/modal';
 import { bookAtom } from 'recoil/book';
 import ImageWrapper from 'components/common/ImageWrapper';
 import { useRef } from 'react';
+import { IconImage } from '@style/icons';
 import useObserverHook from '@hooks/useObserverHook';
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   border: none;
   width: 100%;
-  height: 100%;
+  min-height: 350px;
+  height: auto;
   display: grid;
   gap: 1rem;
   padding: 1rem;
@@ -75,7 +77,7 @@ export default function SearchItem({
   const { isVisible } = useObserverHook(itemRef);
 
   const onClick = () => {
-    modalSetState({ isOpen: true });
+    modalSetState({ isOpen: true, type: 'search' });
     bottomSheetSetState({
       image: thumbnail ? thumbnail : '',
       authors,
@@ -93,7 +95,12 @@ export default function SearchItem({
       {isVisible ? (
         <>
           <Header>
-            <ImageWrapper width={120} height={174} src={thumbnail} alt={isbn} />
+            <ImageWrapper
+              src={thumbnail}
+              alt={title}
+              width={120}
+              height={174}
+            />
           </Header>
           <InfoWrapper>
             <SearchItemHeader title={title} query={search} />

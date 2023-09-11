@@ -7,5 +7,6 @@ export const modalAtom = atom<ModalAtomType>({
   key: MODAL_ATOM_KEY,
   default: {
     isOpen: false,
+    type: undefined,
   },
 });
