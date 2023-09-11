@@ -7,7 +7,7 @@ import SearchItem from 'components/Search/SearchItem';
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 14rem);
+  height: 100%;
   overflow: scroll;
 `;
 
@@ -45,23 +45,25 @@ const Observer = styled.div`
 `;
 
 const ResultWrapper = styled.div`
+  width: 100%;
+  height: 100%;
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: calc(100vh - 15rem);
   border-radius: 5px;
+  padding: 1rem;
   color: ${({ theme }) => theme.mode.typo_main};
-  background-color: rgba(0, 0, 0, 0.09);
+  /* background-color: rgba(0, 0, 0, 0.08); */
 `;
+
+const Span = styled.span``;
 
 interface IProps {
   data: InfiniteData<KakaoSearchResponseType> | undefined;
   fetchNextPage: () => void;
   hasNextPage: boolean | undefined;
   isFetching: boolean;
-  isLoading: boolean;
   search: string;
 }
 
@@ -70,7 +72,6 @@ export default function SearchList({
   fetchNextPage,
   hasNextPage,
   isFetching,
-  isLoading,
   search,
 }: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
@@ -98,41 +99,24 @@ export default function SearchList({
   }, [fetchNextPage, hasNextPage, isFetching]);
 
   return (
-    <Container>
-      {data && data?.pages.length > 0 ? (
-        data?.pages.map((page, i) => (
-          <Page key={i} dataExist={page.documents.length !== 0}>
-            {page.documents.length !== 0 ? (
-              page.documents.map((document) => (
-                <SearchItem key={document.isbn} search={search} {...document} />
-              ))
-            ) : (
-              <ResultWrapper>
-                <span>검색 결과가 없습니다.</span>
-              </ResultWrapper>
-            )}
+    <>
+      <Container>
+        {data?.pages.map((page, index) => (
+          <Page key={index} dataExist={page.documents.length !== 0}>
+            {page.documents.map((document) => (
+              <SearchItem key={document.isbn} search={search} {...document} />
+            ))}
           </Page>
-        ))
-      ) : isLoading ? (
-        <div style={{ padding: '0 1rem' }}>
-          <ResultWrapper>
-            <span>책 제목을 검색해주세요.</span>
-          </ResultWrapper>
-        </div>
-      ) : (
-        <div style={{ padding: '0 1rem' }}>
-          <ResultWrapper>
-            <Loader size={3} />
-          </ResultWrapper>
-        </div>
-      )}
-      {isFetching ? (
+        ))}
+        <div>나는 fetch</div>
+      </Container>
+      {/* {data && data?.pages.length > 0 && isFetching ? (
         <FetchLoader>
           <Loader />
         </FetchLoader>
       ) : !hasNextPage ? null : (
         <Observer ref={lastSearchRef} />
-      )}
-    </Container>
+      )} */}
+    </>
   );
 }

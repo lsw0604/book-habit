@@ -11,20 +11,19 @@ interface IProps {
 }
 
 const Container = styled.div`
-  margin-top: 1rem;
-  height: auto;
-  padding: 1rem;
+  height: 100%;
   overflow: scroll;
   display: flex;
+  flex-direction: column;
+  padding: 1rem;
 `;
 
 const LoaderContainer = styled.div`
   width: 100%;
-  height: calc(100vh - 14rem);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
 `;
 
 const Page = styled.div`
@@ -90,29 +89,33 @@ export default function List({ status }: IProps) {
   }, [fetchNextPage, hasNextPage, isFetching]);
 
   return (
-    <Container>
+    <>
       {isLoading ? (
         <LoaderContainer>
           <Loader size={2} />
         </LoaderContainer>
-      ) : data && data.pages && data.pages[0].books.length !== 0 ? (
-        data.pages.map((page, index) => (
-          <Page key={index}>
-            {page.books.length !== 0
-              ? page.books.map((book, index) => <Item key={index} {...book} />)
-              : null}
-          </Page>
-        ))
       ) : (
-        <Empty />
+        <Container>
+          {data && data.pages && data.pages[0].books.length > 0 ? (
+            data.pages.map((page, index) => (
+              <Page key={index}>
+                {page.books.map((book) => (
+                  <Item key={book.id} {...book} />
+                ))}
+              </Page>
+            ))
+          ) : (
+            <Empty />
+          )}
+          {isFetching ? (
+            <FetchLoader>
+              <Loader size={2} />
+            </FetchLoader>
+          ) : !hasNextPage ? null : (
+            <Observer ref={lastPageRef} />
+          )}
+        </Container>
       )}
-      {isFetching ? (
-        <FetchLoader>
-          <Loader size={2} />
-        </FetchLoader>
-      ) : !hasNextPage ? null : (
-        <Observer ref={lastPageRef} />
-      )}
-    </Container>
+    </>
   );
 }

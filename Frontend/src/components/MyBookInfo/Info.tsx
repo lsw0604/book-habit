@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { IconImage } from '@style/icons';
 import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import ImageWrapper from 'components/common/ImageWrapper';
 
 const Container = styled.div`
   width: 100%;
@@ -19,32 +19,6 @@ const LoaderWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 10rem;
-`;
-
-const ImageWrapper = styled.div`
-  background-color: rgba(0, 0, 0, 0.1);
-  border: none;
-  border-radius: 5px;
-  margin: 0;
-  padding: 0;
-  min-width: 120px;
-  height: 174px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    border-radius: 5px;
-    object-fit: fill;
-    width: 100%;
-    height: auto;
-  }
-
-  svg {
-    width: 2rem;
-    height: 2rem;
-    fill: ${({ theme }) => theme.mode.typo_sub};
-  }
 `;
 
 const DetailContainer = styled.div`
@@ -88,22 +62,12 @@ export default function Info() {
 
   return (
     <Container>
-      <ImageWrapper>
-        {!myBookInfoIsLoading ? (
-          myBookInfoData?.result.image ? (
-            <img
-              src={myBookInfoData?.result.image}
-              alt={myBookInfoData?.result.title}
-            />
-          ) : (
-            <IconImage />
-          )
-        ) : (
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        )}
-      </ImageWrapper>
+      <ImageWrapper
+        src={myBookInfoData?.result.image}
+        alt={users_books_id}
+        height={174}
+        width={120}
+      />
       <DetailContainer>
         {!myBookInfoIsLoading ? (
           <>

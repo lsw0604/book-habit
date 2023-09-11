@@ -19,10 +19,11 @@ const Login = lazy(() => import('@pages/LoginPage'));
 const Search = lazy(() => import('@pages/SearchPage'));
 
 const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
 `;
 
 export default function Router({ isLoading }: { isLoading: boolean }) {

@@ -14,10 +14,8 @@ const Container = styled.div`
 
 export default function KakaoRegisterPage() {
   return (
-    <>
-      <Container>
-        <KakaoRegister />
-      </Container>
-    </>
+    <Container>
+      <KakaoRegister />
+    </Container>
   );
 }

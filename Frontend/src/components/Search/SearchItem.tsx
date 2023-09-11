@@ -93,7 +93,7 @@ export default function SearchItem({
       {isVisible ? (
         <>
           <Header>
-            <ImageWrapper src={thumbnail} alt={isbn} />
+            <ImageWrapper width={120} height={174} src={thumbnail} alt={isbn} />
           </Header>
           <InfoWrapper>
             <SearchItemHeader title={title} query={search} />

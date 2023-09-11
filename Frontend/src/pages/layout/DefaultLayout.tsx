@@ -6,7 +6,7 @@ const Layout = styled.div`
   width: 100vw;
   height: 100vh;
   padding: 4rem 0rem;
-  display: flex;
+  box-sizing: border-box;
 `;
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {

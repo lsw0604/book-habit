@@ -1,7 +1,7 @@
-import { IconImage } from '@style/icons';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+import ImageWrapper from 'components/common/ImageWrapper';
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
@@ -27,32 +27,6 @@ const Contents = styled.div`
   gap: 8px;
   display: flex;
   flex-direction: column;
-`;
-
-const ImageWrapper = styled.div`
-  background-color: rgba(0, 0, 0, 0.1);
-  border: none;
-  border-radius: 5px;
-  margin: 0;
-  padding: 0;
-  min-width: 120px;
-  height: 174px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    border-radius: 5px;
-    object-fit: fill;
-    width: 100%;
-    height: auto;
-  }
-
-  svg {
-    width: 2rem;
-    height: 2rem;
-    fill: ${({ theme }) => theme.mode.typo_sub};
-  }
 `;
 
 const Span = styled.span`
@@ -97,9 +71,7 @@ export default function Item({
   return (
     <Container onClick={() => navigate(`/my_books/${id}`)}>
       <Header>
-        <ImageWrapper>
-          {image ? <img alt={isbn} src={image} /> : <IconImage />}
-        </ImageWrapper>
+        <ImageWrapper src={image} alt={isbn} width={120} height={174} />
       </Header>
       <Contents>
         <Span>

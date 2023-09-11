@@ -4,11 +4,7 @@ import Search from 'components/Search';
 
 const Container = styled.div`
   width: 100%;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+  height: 100%;
 `;
 
 const HomePage = () => {

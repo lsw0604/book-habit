@@ -6,8 +6,9 @@ import SearchList from './SearchList';
 import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
 
 const Container = styled.div`
-  flex: 1;
   width: 100%;
+  height: 100%;
+  flex: 1;
   flex-direction: column;
   display: flex;
   gap: 1rem;
@@ -23,16 +24,23 @@ const Wrapper = styled.div`
 
 const Contents = styled.div`
   width: 100%;
+  height: 100%;
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: scroll;
+`;
+
+const Span = styled.span`
+  color: ${({ theme }) => theme.mode.typo_main};
+  font-size: 20px;
 `;
 
 export default function Index() {
   const [search, setSearch] = useState<string>('');
 
-  const { refetch, data, fetchNextPage, hasNextPage, isFetching, isLoading } =
+  const { refetch, data, fetchNextPage, hasNextPage, isFetching } =
     useBookSearchInfinityQuery(search);
 
   const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +58,17 @@ export default function Index() {
         <SearchInput onChange={onChange} search={search} onSubmit={onSubmit} />
       </Wrapper>
       <Contents>
-        <SearchList
-          search={search}
-          data={data}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetching={isFetching}
-          isLoading={isLoading}
-        />
+        {data && data?.pages.length > 0 ? (
+          <SearchList
+            search={search}
+            data={data}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetching={isFetching}
+          />
+        ) : (
+          <Span>책 제목을 검색해 주세요.</Span>
+        )}
       </Contents>
     </Container>
   );
