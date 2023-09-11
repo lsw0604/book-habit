@@ -1,6 +1,6 @@
 import { InfiniteData } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Loader from 'components/common/Loader';
 import SearchItem from 'components/Search/SearchItem';
@@ -8,7 +8,6 @@ import SearchItem from 'components/Search/SearchItem';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  overflow: scroll;
 `;
 
 const Page = styled.div<{ dataExist: boolean }>`
@@ -33,31 +32,15 @@ const Page = styled.div<{ dataExist: boolean }>`
 `;
 
 const FetchLoader = styled.div`
-  margin: 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30px;
+  height: 10%;
 `;
 
 const Observer = styled.div`
   margin-bottom: 20px;
 `;
-
-const ResultWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  padding: 1rem;
-  color: ${({ theme }) => theme.mode.typo_main};
-  /* background-color: rgba(0, 0, 0, 0.08); */
-`;
-
-const Span = styled.span``;
 
 interface IProps {
   data: InfiniteData<KakaoSearchResponseType> | undefined;
@@ -65,6 +48,7 @@ interface IProps {
   hasNextPage: boolean | undefined;
   isFetching: boolean;
   search: string;
+  isLoading: boolean;
 }
 
 export default function SearchList({
@@ -73,8 +57,11 @@ export default function SearchList({
   hasNextPage,
   isFetching,
   search,
+  isLoading,
 }: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
+  const [initialLoadComplete, setInitialLoadComplete] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const observerOptions = {
@@ -92,31 +79,29 @@ export default function SearchList({
     if (lastSearchRef.current) {
       observer.observe(lastSearchRef.current);
     }
+    setInitialLoadComplete(true);
 
     return () => {
       observer.disconnect();
     };
-  }, [fetchNextPage, hasNextPage, isFetching]);
+  }, [fetchNextPage, hasNextPage, isFetching, initialLoadComplete]);
 
   return (
-    <>
-      <Container>
-        {data?.pages.map((page, index) => (
-          <Page key={index} dataExist={page.documents.length !== 0}>
-            {page.documents.map((document) => (
-              <SearchItem key={document.isbn} search={search} {...document} />
-            ))}
-          </Page>
-        ))}
-        <div>나는 fetch</div>
-      </Container>
-      {/* {data && data?.pages.length > 0 && isFetching ? (
+    <Container>
+      {data?.pages.map((page, index) => (
+        <Page key={index} dataExist={page.documents.length !== 0}>
+          {page.documents.map((document) => (
+            <SearchItem key={document.isbn} search={search} {...document} />
+          ))}
+        </Page>
+      ))}
+      {isFetching || isLoading ? (
         <FetchLoader>
           <Loader />
         </FetchLoader>
-      ) : !hasNextPage ? null : (
+      ) : hasNextPage && initialLoadComplete ? (
         <Observer ref={lastSearchRef} />
-      )} */}
-    </>
+      ) : null}
+    </Container>
   );
 }

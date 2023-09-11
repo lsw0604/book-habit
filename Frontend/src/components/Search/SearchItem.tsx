@@ -12,7 +12,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   border: none;
   width: 100%;
-  height: auto;
+  height: 100%;
   display: grid;
   gap: 1rem;
   padding: 1rem;
