@@ -3,16 +3,15 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { MyBookInfoType } from '../types';
 
-const NAMESPACE = 'MY_BOOK_INFO';
-
 export default async function myBookInfo(req: Request, res: Response, next: NextFunction) {
+  const NAMESPACE = 'MY_BOOK_INFO';
   logging.info(NAMESPACE, '[START]');
   const { users_books_id } = req.params;
   try {
     const connection = await connectionPool.getConnection();
     try {
       const MY_BOOK_INFO_SQL =
-        'SELECT image, title, url, contents FROM users_books ub RIGHT JOIN books bs ON ub.books_id = bs.id WHERE ub.id = ? LIMIT 1';
+        'SELECT bs.image, bs.title, bs.url, bs.contents, bs.publisher, bs.authors FROM users_books ub RIGHT JOIN books bs ON ub.books_id = bs.id WHERE ub.id = ? LIMIT 1';
       const MY_BOOK_INFO_VALUES = [users_books_id];
       const [MY_BOOK_INFO_RESULT] = await connection.query<MyBookInfoType[]>(
         MY_BOOK_INFO_SQL,
@@ -20,10 +19,6 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
       );
       logging.debug(NAMESPACE, '[MY_BOOK_INFO_RESULT]', MY_BOOK_INFO_RESULT);
 
-      if (MY_BOOK_INFO_RESULT.length === 0) {
-        connection.release();
-        return res.status(403).json({ message: '정보를 불러오지 못했습니다.', status: 'error' });
-      }
       connection.release();
       res.status(200).json({ result: MY_BOOK_INFO_RESULT[0] });
     } catch (error: any) {

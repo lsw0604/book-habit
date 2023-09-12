@@ -3,15 +3,14 @@ import { motion } from 'framer-motion';
 
 import NeedLogin from 'components/common/NeedLogin';
 import MyBookRegister from 'components/BookRegister';
-import { useRecoilValue } from 'recoil';
-import { userAtom } from 'recoil/user';
+import useModalHook from '@hooks/useModalHook';
 
 const Container = styled(motion.div)`
   position: absolute;
   z-index: 9999;
   width: 100%;
   height: auto;
-  min-height: 50%;
+  min-height: 40%;
   bottom: 0;
   border-radius: 1rem 1rem 0 0;
   padding: 1rem;
@@ -20,7 +19,7 @@ const Container = styled(motion.div)`
 `;
 
 export default function BottomSheet() {
-  const { isLogged } = useRecoilValue(userAtom);
+  const { modalStateType } = useModalHook();
 
   return (
     <Container
@@ -34,7 +33,8 @@ export default function BottomSheet() {
         duration: 0.3,
       }}
     >
-      {isLogged ? <MyBookRegister /> : <NeedLogin />}
+      {modalStateType === 'isLogin' && <NeedLogin />}
+      {modalStateType === 'search' && <MyBookRegister />}
     </Container>
   );
 }

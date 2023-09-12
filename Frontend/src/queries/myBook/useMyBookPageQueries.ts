@@ -4,7 +4,6 @@ import {
   myBookCommentsAPI,
   myBookHistoryAPI,
   myBookInfoAPI,
-  myBookRatingAPI,
   myBookTimeRangeAPI,
 } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
@@ -38,15 +37,6 @@ export default function useMyBookPageQueries(
       isError: myBookHistoryIsError,
       error: myBookHistoryError,
       refetch: myBookHistoryRefetch,
-    },
-    {
-      data: myBookRatingData,
-      isLoading: myBookRatingIsLoading,
-      isFetching: myBookRatingIsFetching,
-      isSuccess: myBookRatingIsSuccess,
-      isError: myBookRatingIsError,
-      error: myBookRatingError,
-      refetch: myBookRatingRefetch,
     },
     {
       data: myBookTimeData,
@@ -87,10 +77,6 @@ export default function useMyBookPageQueries(
         staleTime: Infinity,
       },
       {
-        queryKey: [REACT_QUERY_KEY.rating, users_books_id],
-        queryFn: () => myBookRatingAPI(users_books_id),
-      },
-      {
         queryKey: [REACT_QUERY_KEY.time, users_books_id],
         queryFn: () => myBookTimeRangeAPI(users_books_id),
       },
@@ -120,15 +106,6 @@ export default function useMyBookPageQueries(
   });
 
   useEffect(() => {
-    if (myBookRatingIsError && myBookRatingError) {
-      addToast({
-        message: 'MY BOOK RATING을 불러오는데 실패했습니다.',
-        status: 'error',
-      });
-    }
-  }, [myBookRatingIsError, myBookRatingError]);
-
-  useEffect(() => {
     if (myBookHistoryIsError && myBookHistoryError) {
       addToast({
         message: 'MY BOOK HISTORY를 불러오는데 실패했습니다.',
@@ -139,6 +116,7 @@ export default function useMyBookPageQueries(
 
   useEffect(() => {
     if (myBookInfoIsError && myBookInfoError) {
+      console.log(myBookInfoError);
       addToast({
         message: 'MY BOOK INFO를 불러오는데 실패했습니다.',
         status: 'error',
@@ -176,13 +154,6 @@ export default function useMyBookPageQueries(
     myBookHistoryIsError,
     myBookHistoryError,
     myBookHistoryRefetch,
-    myBookRatingData,
-    myBookRatingIsLoading,
-    myBookRatingIsFetching,
-    myBookRatingIsSuccess,
-    myBookRatingIsError,
-    myBookRatingError,
-    myBookRatingRefetch,
     myBookTimeData,
     myBookTimeIsLoading,
     myBookTimeIsError,

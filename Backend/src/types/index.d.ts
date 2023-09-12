@@ -139,6 +139,8 @@ export type MyBookInfoType = {
   title: string;
   url: string;
   contents: string;
+  publisher: string;
+  authors: string;
 } & RowDataPacket;
 
 export type MyBookRatingExistType = {

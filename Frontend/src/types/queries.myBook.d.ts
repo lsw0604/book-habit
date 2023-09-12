@@ -17,10 +17,6 @@ type MyBOokCommentDeleteMutationRequestType = number;
 type MyBookHistoryDeleteMutationResponseType = MutationResponse;
 type MyBookHistoryDeleteMutationRequestType = number;
 
-// useMyBookRatingDeleteMutation의 타입들
-type MyBookRatingDeleteMutationResponseType = MutationResponse;
-type MyBookRatingDeleteMutationRequestType = number;
-
 // useMyBookListInfinityQuery의 타입들
 type MyBookListInfinityQueryResponseType = {
   nextPage: number;
@@ -36,23 +32,12 @@ type MyBookListInfinityQueryItemType = Pick<
   date: string;
 };
 
-// useMyBookRatingMutation의 타입들
-type MyBookRatingMutationResponseType = MutationResponse;
-type MyBookRatingMutationRequestType = Pick<
-  MyBookHistoryMutationRequestType,
-  'users_books_id'
-> & {
-  rating: number;
-  status: '읽기전' | '다읽음' | '읽는중';
-};
-
 // useMyBookHistoryMutation의 타입들
 type MyBookHistoryMutationResponseType = MutationResponse;
 type MyBookHistoryMutationRequestType = {
   status: '다읽음' | '읽는중' | '읽기시작함';
   date: Date;
   users_books_id: number;
-  page?: number | undefined;
 };
 
 // useMyBookListDeleteMutation의 타입들
@@ -63,6 +48,8 @@ type MyBookListDeleteMutationRequestType = number;
 
 type MyBookCommentMutationResponseType = MutationResponse;
 type MyBookCommentMutationRequestType = {
+  status: string;
+  rating: number;
   comment: string;
   users_books_id: number;
 };
@@ -79,6 +66,8 @@ type MyBookPageQueriesInfoResultType = {
   image?: string;
   url: string;
   contents: string;
+  publisher: string;
+  authors: string;
 };
 
 type MyBookPageQueriesInfoRequestType = number;
@@ -98,20 +87,6 @@ type MyBookPageQueriesHistoryItemType = {
   updated_at: string | null;
 };
 type MyBookPageQueriesHistoryListRequestType = number;
-
-// rating LIST
-
-type MyBookPageQueriesRatingListResponseType = {
-  result: MyBookPageQueriesRatingListType;
-};
-type MyBookPageQueriesRatingListType = MyBookPageQueriesRatingItemType[];
-type MyBookPageQueriesRatingItemType = {
-  id: number;
-  status: '다읽음' | '읽는중' | '읽기전';
-  created_at: string;
-  rating: number;
-};
-type MyBookPageQueriesRatingListRequestType = number;
 
 // myBook TIME
 

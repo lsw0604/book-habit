@@ -12,7 +12,7 @@ const Container = styled.div`
   padding: 1rem 0;
 `;
 
-export default function MyBooksInfoPage() {
+export default function MyBookInfoPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

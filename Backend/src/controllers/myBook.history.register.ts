@@ -16,7 +16,6 @@ interface IReadRequest {
   users_books_id: number;
   status: '다읽음' | '읽기시작함' | '읽는중';
   date: Date;
-  page?: number;
 }
 
 export default async function myBookHistoryRegister(
@@ -27,7 +26,7 @@ export default async function myBookHistoryRegister(
   const NAMESPACE = 'MY_BOOK_REGISTER';
   logging.debug(NAMESPACE, '[START]');
 
-  const { status, date, page, users_books_id } = req.body;
+  const { status, date, users_books_id } = req.body;
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
@@ -36,15 +35,13 @@ export default async function myBookHistoryRegister(
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
-
       if (status === '읽는중') {
         const MY_BOOK_HISTORY_REGISTER_SQL =
-          'INSERT INTO users_books_history (date, status, users_books_id, page) VALUES (?, ?, ?, ?)';
+          'INSERT INTO users_books_history (date, status, users_books_id) VALUES (?, ?, ?)';
         const MY_BOOK_HISTORY_REGISTER_VALUES = [
           new Date(addHours(new Date(date), 9).toISOString().split('T')[0]),
           status,
           users_books_id,
-          page,
         ];
         const [MY_BOOK_HISTORY_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
           MY_BOOK_HISTORY_REGISTER_SQL,

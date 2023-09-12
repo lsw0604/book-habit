@@ -1,15 +1,21 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ResultSetHeader } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 interface IRequest<T> extends Request {
   body: T;
 }
 
 interface IComment {
+  rating: number;
+  status: string;
   comment: string;
   users_books_id: number;
+}
+
+interface IFindBookResult extends RowDataPacket {
+  books_id: number;
 }
 
 export default async function myBookCommentsRegister(
@@ -20,19 +26,39 @@ export default async function myBookCommentsRegister(
   const NAMESPACE = 'MY_BOOK_COMMENTS_REGISTER';
   logging.debug(NAMESPACE, '[START]');
 
-  const { comment, users_books_id } = req.body;
+  const { comment, users_books_id, rating, status } = req.body;
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
-  const { id } = req.user;
   try {
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
 
+      const FIND_BOOK_ID_SQL = 'SELECT books_id FROM users_book WHERE id = ?';
+      const FIND_BOOK_ID_VALUE = [users_books_id];
+      const [FIND_BOOK_ID_RESULT] = await connection.query<IFindBookResult[]>(
+        FIND_BOOK_ID_SQL,
+        FIND_BOOK_ID_VALUE
+      );
+
+      if (FIND_BOOK_ID_RESULT[0].books_id === undefined) {
+        connection.release();
+        return res.status(200).json({
+          status: 'error',
+          message: '한줄평 등록에 실패했습니다.',
+        });
+      }
+
       const MY_BOOK_COMMENT_REGISTER_SQL =
-        'INSERT INTO users_books_comments (comment, users_books_id) VALUES(?, ?)';
-      const MY_BOOK_COMMENT_REGISTER_VALUE = [comment, users_books_id];
+        'INSERT INTO users_books_comments (comment, users_books_id, rating, status, books_id) VALUES(?, ?, ? ,?, ?)';
+      const MY_BOOK_COMMENT_REGISTER_VALUE = [
+        comment,
+        users_books_id,
+        rating,
+        status,
+        FIND_BOOK_ID_RESULT[0].books_id,
+      ];
       const [MY_BOOK_COMMENT_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_COMMENT_REGISTER_SQL,
         MY_BOOK_COMMENT_REGISTER_VALUE

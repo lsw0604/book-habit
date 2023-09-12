@@ -97,7 +97,7 @@ export default function Read() {
           />
         </Stack>
       </Box>
-      <Stack>
+      {/* <Stack>
         <StarRating
           label="다른 사람들에게 이 정도 추천해요."
           rating={rating as number}
@@ -106,7 +106,7 @@ export default function Read() {
           useValidation={useValidation}
           errorMessage="다른 사람들에게 어느정도 추천하는지 입력해주세요."
         />
-      </Stack>
+      </Stack> */}
       {startDate && endDate && rating !== 0 && (
         <Stack>
           <Span>

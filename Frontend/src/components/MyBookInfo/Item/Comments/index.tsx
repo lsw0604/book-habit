@@ -43,9 +43,8 @@ export default function Index({
 }: MyBookPageQueriesCommentItemType) {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  console.log(created_at);
-  // const [year, month, day] = created_at.split('-');
-  // const updatedAt = updated_at ? updated_at.split('-') : undefined;
+  const [year, month, day] = created_at.split('-');
+  const updatedAt = updated_at ? updated_at.split('-') : undefined;
   const itemRef = useRef<HTMLDivElement>(null);
 
   const { mutate, isLoading } = useMyBookCommentDeleteMutation(
@@ -61,9 +60,9 @@ export default function Index({
       {isVisible ? (
         <>
           <DateWrapper>
-            {/* {updatedAt */}
-            {/* ? `${updatedAt[0]}년 ${updatedAt[1]}월 ${updatedAt[2]}일` */}
-            {/* : `${year}년 ${month}월 ${day}일`} */}
+            {updatedAt
+              ? `${updatedAt[0]}년 ${updatedAt[1]}월 ${updatedAt[2]}일`
+              : `${year}년 ${month}월 ${day}일`}
           </DateWrapper>
           <Comment>{comment}</Comment>
           <Icon

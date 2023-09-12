@@ -32,7 +32,7 @@ const Background = styled.div`
 const ModalPortal = ({ children }: IProps) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const ref = useRef<Element | null>();
-  const modalState = useRecoilValue(modalAtom);
+  const { isOpen } = useRecoilValue(modalAtom);
   const setModalState = useSetRecoilState(modalAtom);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const ModalPortal = ({ children }: IProps) => {
 
   const onModalClose = () => setModalState({ isOpen: false });
 
-  if (ref.current && mounted && modalState.isOpen) {
+  if (ref.current && mounted && isOpen) {
     return createPortal(
       <Container role="presentation">
         <Background onClick={onModalClose} />

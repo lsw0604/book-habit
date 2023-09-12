@@ -18,7 +18,7 @@ const Span = styled.span`
   color: ${({ theme }) => theme.colors.main};
 `;
 
-const P = styled.p`
+const Name = styled.p`
   margin-left: 10px;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
@@ -56,10 +56,10 @@ export default function HeaderProfile() {
       {name !== null ? (
         <Span>
           {name}
-          <P>님 환영합니다.</P>
+          <Name>님 환영합니다.</Name>
         </Span>
       ) : (
-        <P>개인정보를 등록해주세요.</P>
+        <Name>개인정보를 등록해주세요.</Name>
       )}
       {isHamburger && <HeaderProfileDropdown />}
     </Container>

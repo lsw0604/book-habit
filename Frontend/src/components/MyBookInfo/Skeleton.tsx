@@ -11,14 +11,14 @@ const Stack = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 12px;
-  background-color: rgba(150, 150, 150, 0.1);
+  background-color: rgba(0, 0, 0, 0.05);
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 export default function Skeleton() {
   return (
     <Container>
-      <Stack>책 상태를 업데이트해주세요.</Stack>
+      <Stack>등록할 유형을 골라주세요.</Stack>
     </Container>
   );
 }

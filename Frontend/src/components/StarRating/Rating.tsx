@@ -7,12 +7,14 @@ import ErrorMessage from 'components/common/Message/ErrorMessage';
 
 const Rating = styled.div`
   width: 100%;
-  height: auto;
-  background-color: ${({ theme }) => theme.mode.main};
+  height: 40px;
+  background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 12px;
 `;
 
 const Container = styled.div`
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   font-size: 1rem;
@@ -24,9 +26,9 @@ const Container = styled.div`
 const Wrapper = styled(motion.div)`
   position: relative;
   width: auto;
-  margin: 0.5rem;
   display: flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
 `;
 

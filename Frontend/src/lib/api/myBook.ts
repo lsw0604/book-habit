@@ -25,19 +25,6 @@ export const myBookHistoryAPI = async (
 };
 
 /**
- * * 내 서재에 등록된 책의 평점을 불러오는 API
- */
-
-export const myBookRatingAPI = async (
-  users_books_id: MyBookPageQueriesRatingListRequestType
-) => {
-  const { data } = await axios.get<MyBookPageQueriesRatingListResponseType>(
-    `/api/my_book/rating/list/${users_books_id}`
-  );
-  return data;
-};
-
-/**
  * * 내 서재에 등록된 책의 한줄평을 불러오는 API
  */
 export const myBookCommentsAPI = async (
@@ -99,19 +86,6 @@ export const myBookHistoryRegisterAPI = async (
 };
 
 /**
- * * 내 서재에 등록된 책에 평점을 등록하는 API
- */
-export const myBookRatingRegisterAPI = async (
-  body: MyBookRatingMutationRequestType
-) => {
-  const { data } = await axios.post<MyBookRatingMutationResponseType>(
-    `/api/my_book/rating/register`,
-    body
-  );
-  return data;
-};
-
-/**
  * * 내 서제에 등록된 책에 한줄평을 등록하는 API
  */
 export const myBookCommentsRegisterAPI = async (
@@ -125,18 +99,6 @@ export const myBookCommentsRegisterAPI = async (
 };
 
 // DELETE
-
-/**
- * * 내 서재에 등록된 책의 평점을 삭제하는 API
- */
-export const myBookRatingDeleteAPI = async (
-  users_books_rating_id: MyBookRatingDeleteMutationRequestType
-) => {
-  const { data } = await axios.delete<MyBookRatingDeleteMutationResponseType>(
-    `/api/my_book/delete/rating/${users_books_rating_id}`
-  );
-  return data;
-};
 
 /**
  * * 내 서재에 등록된 책의 독서기록을 삭제하는 API

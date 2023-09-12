@@ -2,43 +2,49 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 
-import End from 'components/MyBookInfo/Item/History/End';
-import Reading from 'components/MyBookInfo/Item/History/Reading';
-import Start from 'components/MyBookInfo/Item/History/Start';
-import ReadTo from 'components/MyBookInfo/Item/History/ReadTo';
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
 import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
 
 const Container = styled.div`
   display: inline-flex;
-  gap: 8px;
   padding: 0;
+  margin: 0;
   width: 100%;
+  min-height: 40px;
 `;
 
-const DateContent = styled.div`
-  display: inline-flex;
+const DateContainer = styled.div`
+  width: 18%;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 8px;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 10px;
 `;
 
 const Content = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
   width: 100%;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 1px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 8px;
+  padding: 0 10px;
+  display: inline-flex;
+  flex-direction: row;
+  gap: 0;
+  align-items: center;
+`;
+
+const ContentMessage = styled.p`
+  font-size: 12px;
+`;
+
+const ContentDate = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
 const Line = styled.div`
   width: 0.3rem;
+  height: auto;
   background-color: ${({ theme }) => theme.colors.main};
 `;
 
@@ -68,29 +74,58 @@ export default function Index({
     .split('T')[0]
     .split('-');
 
+  const [createdYear, createdMonth, createdDay] = dayjs(created_at)
+    .add(9, 'hour')
+    .toISOString()
+    .split('T')[0]
+    .split('-');
+
+  const updatedAt = updated_at
+    ? dayjs(updated_at).add(9, 'hour').toISOString().split('T')[0].split('-')
+    : undefined;
+
+  const statusHandler = (
+    status: '읽기시작함' | '다읽음' | '읽고싶음' | '읽는중'
+  ) => {
+    switch (status) {
+      case '읽기시작함':
+        return '읽기 시작했어요.';
+      case '다읽음':
+        return '다 읽었어요.';
+      case '읽고싶음':
+        return '읽고싶은 책 목록에 찜했어요.';
+      case '읽는중':
+        return '읽었어요.';
+      default:
+        return '';
+    }
+  };
+
   return (
     <Container>
-      <DateContent>
-        {year}년{month}월{day}일
-      </DateContent>
+      <DateContainer>
+        {updatedAt ? (
+          <>
+            <p>{updatedAt[0]}년</p>
+            <p>
+              {updatedAt[1]}월 {updatedAt[2]}일
+            </p>
+          </>
+        ) : (
+          <>
+            <p>{createdYear}년</p>
+            <p>
+              {createdMonth}월 {createdDay}일
+            </p>
+          </>
+        )}
+      </DateContainer>
       <Line />
       <Content>
-        {status === '다읽음' && (
-          <End created_at={created_at} updated_at={updated_at} />
-        )}
-        {status === '읽는중' && (
-          <Reading
-            created_at={created_at}
-            updated_at={updated_at}
-            page={page as number}
-          />
-        )}
-        {status === '읽기시작함' && (
-          <Start created_at={created_at} updated_at={updated_at} />
-        )}
-        {status === '읽고싶음' && (
-          <ReadTo created_at={created_at} updated_at={updated_at} />
-        )}
+        <ContentDate>
+          {year}년 {month}월 {day}일&nbsp;
+        </ContentDate>
+        <ContentMessage>{statusHandler(status)}</ContentMessage>
       </Content>
       <IconWrapper>
         <Icon

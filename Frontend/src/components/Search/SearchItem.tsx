@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 import SearchItemHeader from 'components/Search/SearchItemHeader';
-import { useSetRecoilState } from 'recoil';
-import { modalAtom } from 'recoil/modal';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { bookAtom } from 'recoil/book';
 import ImageWrapper from 'components/common/ImageWrapper';
 import { useRef } from 'react';
-import { IconImage } from '@style/icons';
 import useObserverHook from '@hooks/useObserverHook';
+import { userAtom } from 'recoil/user';
+import useModalHook from '@hooks/useModalHook';
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
@@ -32,7 +32,7 @@ const InfoWrapper = styled.div`
   height: 100%;
 `;
 
-const Span = styled.span`
+const Stack = styled.div`
   font-size: 10px;
   line-height: 12px;
   width: 100%;
@@ -71,23 +71,28 @@ export default function SearchItem({
   const ISBN = isbn.split(' ');
   const itemRef = useRef<HTMLDivElement>(null);
 
-  const modalSetState = useSetRecoilState(modalAtom);
+  const { setModalState } = useModalHook();
   const bottomSheetSetState = useSetRecoilState(bookAtom);
+  const { isLogged } = useRecoilValue(userAtom);
 
   const { isVisible } = useObserverHook(itemRef);
 
   const onClick = () => {
-    modalSetState({ isOpen: true, type: 'search' });
-    bottomSheetSetState({
-      image: thumbnail ? thumbnail : '',
-      authors,
-      publisher,
-      contents,
-      isbn: ISBN[1],
-      price,
-      url,
-      title,
-    });
+    if (isLogged) {
+      setModalState({ isOpen: true, type: 'search' });
+      bottomSheetSetState({
+        image: thumbnail ? thumbnail : '',
+        authors,
+        publisher,
+        contents,
+        isbn: ISBN[1],
+        price,
+        url,
+        title,
+      });
+    } else {
+      setModalState({ isOpen: true, type: 'isLogin' });
+    }
   };
 
   return (
@@ -104,29 +109,29 @@ export default function SearchItem({
           </Header>
           <InfoWrapper>
             <SearchItemHeader title={title} query={search} />
-            <Span>
+            <Stack>
               출판사 <P>{publisher}</P>
-            </Span>
-            <Span>
+            </Stack>
+            <Stack>
               작가
               {authors && authors.map((author) => <P key={author}>{author}</P>)}
-            </Span>
-            <Span>
+            </Stack>
+            <Stack>
               번역
               {translators.length !== 0 ? (
                 translators.map((v) => <P key={v}>{v}</P>)
               ) : (
                 <P>미상</P>
               )}
-            </Span>
-            <Span>
+            </Stack>
+            <Stack>
               판매가{' '}
               <P style={{ textDecorationLine: 'line-through' }}>{price}</P>/
               <P>{sale_price}</P>/<P>{status}</P>
-            </Span>
-            <Span>
+            </Stack>
+            <Stack>
               출판<P>{`${date[0]}년 ${date[1]}월`}</P>
-            </Span>
+            </Stack>
           </InfoWrapper>
         </>
       ) : null}

@@ -1,45 +1,67 @@
-import { useState, ChangeEvent } from 'react';
+import { TextareaHTMLAttributes } from 'react';
 import styled from 'styled-components';
+import ErrorMessage from 'components/common/Message/ErrorMessage';
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 400px;
+const Container = styled.div<{ conWidth: string; conHeight: string }>`
+  width: ${({ conWidth }) => conWidth};
+  height: ${({ conHeight }) => conHeight};
+`;
+
+const Label = styled.span`
+  margin-left: 10px;
+  margin-bottom: 8px;
+  display: block;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 14px;
+  line-height: 18px;
 `;
 
 const Textarea = styled.textarea`
-  min-width: 100%;
-  min-height: 130px;
+  width: 100%;
+  max-width: 100%;
+  min-height: 70px;
   border: none;
   padding: 8px;
-  resize: vertical;
+  resize: both;
+  background-color: ${({ theme }) => theme.mode.main};
+  color: ${({ theme }) => theme.mode.typo_sub};
   overflow-y: hidden;
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: ${({ theme }) => theme.mode.typo_sub};
+  }
 `;
 
-export default function Index(): JSX.Element {
-  const [text, setText] = useState<string>('');
-  const [textareaHeight, setTextareaHeight] = useState<string>('auto');
-  const [textareaWidth, setTextareaWidth] = useState<string>('auto');
+interface IProps
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'label'> {
+  isValid?: boolean;
+  useValidation?: boolean;
+  errorMessage?: string;
+  label?: string;
+  conWidth?: string;
+  conHeight?: string;
+}
 
-  const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
-    setTextareaHeight('auto');
-    const textWidth = event.target.scrollWidth;
-    const scrollHeight = event.target.scrollHeight;
-    setTextareaHeight(`${scrollHeight}px`);
-    setTextareaWidth(`${textWidth}px`);
-  };
-
+export default function Index({
+  isValid,
+  useValidation,
+  errorMessage,
+  label,
+  conWidth = '100%',
+  conHeight = 'auto',
+  ...props
+}: IProps): JSX.Element {
   return (
-    <Container>
-      <Textarea
-        style={{ height: textareaHeight, width: textareaWidth }}
-        onClick={(e) => {
-          console.log(e);
-        }}
-        value={text}
-        onChange={handleTextChange}
-        placeholder="한줄평 추가하기..."
-      />
-    </Container>
+    <>
+      {label && <Label>{label}</Label>}
+      <Container conWidth={conWidth} conHeight={conHeight}>
+        <Textarea {...props} />
+      </Container>
+      {errorMessage && isValid && useValidation && (
+        <ErrorMessage message={errorMessage} />
+      )}
+    </>
   );
 }

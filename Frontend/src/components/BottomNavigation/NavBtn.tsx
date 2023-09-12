@@ -1,6 +1,6 @@
+import useModalHook from '@hooks/useModalHook';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { modalAtom } from 'recoil/modal';
+import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
 
@@ -40,14 +40,17 @@ const Title = styled.div`
 
 export default function NavBtn({ title, icon, url, isAuth }: IProps) {
   const { pathname } = useLocation();
-  const setModalState = useSetRecoilState(modalAtom);
+  const { setModalState } = useModalHook();
   const { isLogged } = useRecoilValue(userAtom);
-  const isOn: boolean = pathname === url;
+  const isOn: boolean = pathname === url || pathname.startsWith(url);
+
   const navigate = useNavigate();
 
   const onChangeUrl = (url: string) => {
     if (isAuth) {
-      return isLogged ? navigate(url) : setModalState({ isOpen: true });
+      return isLogged
+        ? navigate(url)
+        : setModalState({ isOpen: true, type: 'isLogin' });
     }
     return navigate(url);
   };

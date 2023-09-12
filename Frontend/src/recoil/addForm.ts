@@ -9,7 +9,7 @@ export const addFormAtom = atom<addFormAtomType>({
     date: null,
     status: '',
     useValidation: false,
-    page: '',
     rating: 0,
+    comment: '',
   },
 });

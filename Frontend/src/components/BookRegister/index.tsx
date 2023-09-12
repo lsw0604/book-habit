@@ -17,6 +17,7 @@ import useReadToBookMutation from '@queries/book/useReadToBookMutation';
 import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 import { bookAtom } from 'recoil/book';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
+import { userAtom } from 'recoil/user';
 
 const Read = lazy(() => import('components/BookRegister/Read'));
 const Reading = lazy(() => import('components/BookRegister/Reading'));
@@ -58,6 +59,7 @@ export default function Index() {
 
   const { authors, contents, image, isbn, price, publisher, url, title } =
     useRecoilValue(bookAtom);
+  const { isLogged } = useRecoilValue(userAtom);
 
   const { data } = useMyBookExistQuery(isbn);
 
@@ -95,7 +97,7 @@ export default function Index() {
       label: '읽고 싶은 책',
       value: '읽고싶음',
       icon: <IconHeart />,
-      description: '찜 해두고 있어요',
+      description: '아직 읽지는 않았어요.',
     },
   ];
 
@@ -152,7 +154,7 @@ export default function Index() {
   return (
     <Container onSubmit={onSubmit}>
       <Heading>{title}</Heading>
-      <BookStatus />
+      {isLogged ? <BookStatus /> : null}
       <Stack>
         <RadioButton<string>
           label="등록할 유형을 선택해주세요."

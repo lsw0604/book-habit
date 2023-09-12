@@ -2,13 +2,12 @@ import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { useParams } from 'react-router-dom';
 
-import Input from 'components/common/Input';
 import RadioButton from 'components/common/Radio/RadioButton';
-import { IconBook } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import dayjs from 'dayjs';
 
 const Container = styled.div`
   flex: 1;
@@ -36,21 +35,18 @@ const Content = styled.div`
 
 const options: RadioGroupOptionType<string>[] = [
   {
-    label: '시작한 날',
+    label: '읽기 시작한 날',
     value: '읽기시작함',
-    icon: <IconBook />,
     description: '책을 읽기 시작했어요.',
   },
   {
     label: '읽은 날',
     value: '읽는중',
-    icon: <IconBook />,
-    description: '책을 읽은 날이에요.',
+    description: '책을 읽었어요.',
   },
   {
-    label: '다 끝난날',
+    label: '다 읽은 날',
     value: '다읽음',
-    icon: <IconBook />,
     description: '책을 다 읽었어요.',
   },
 ];
@@ -62,25 +58,25 @@ export default function History() {
     addFormDate,
     addFormStatus,
     addFormUseValidation,
-    addFormPage,
     onChangeAddFormDate,
     onChangeAddFormStatus,
-    onChangeAddFormPage,
-    setAddFormState,
+    onChangeAddFormStateInitial,
   } = useMyBookAddFormHook();
 
   const userBookId = parseInt(users_books_id);
 
   const { myBookTimeData } = useMyBookPageQueries(userBookId);
 
+  const startDate = myBookTimeData?.startDate
+    ? new Date(dayjs(myBookTimeData.startDate).add(9, 'hour').toISOString())
+    : null;
+
+  const endDate = myBookTimeData?.endDate
+    ? new Date(dayjs(myBookTimeData.endDate).add(9, 'hour').toISOString())
+    : null;
+
   useEffect(() => {
-    setAddFormState({
-      date: null,
-      status: '',
-      useValidation: false,
-      page: '',
-      rating: 0,
-    });
+    onChangeAddFormStateInitial();
   }, []);
 
   return (
@@ -96,35 +92,16 @@ export default function History() {
         />
       </Stack>
       <Content>
-        <Stack isStatus={addFormStatus === '읽는중'}>
-          <Stack>
-            <DateSelector
-              startDate={myBookTimeData && new Date(myBookTimeData?.startDate)}
-              onChange={(e) => onChangeAddFormDate(e)}
-              date={addFormDate}
-              endDate={
-                myBookTimeData?.endDate
-                  ? new Date(myBookTimeData.endDate)
-                  : null
-              }
-              errorMessage="날짜를 입력해주세요."
-              isValid={addFormDate === null}
-              useValidation={addFormUseValidation}
-            />
-          </Stack>
-          {addFormStatus === '읽는중' && (
-            <Stack>
-              <Input
-                type="number"
-                label="이정도 읽었어요."
-                errorMessage="페이지를 입력해주세요."
-                value={addFormPage}
-                onChange={onChangeAddFormPage}
-                useValidation={addFormUseValidation}
-                isValid={addFormPage === 0 || addFormPage === ''}
-              />
-            </Stack>
-          )}
+        <Stack>
+          <DateSelector
+            startDate={startDate}
+            onChange={(e) => onChangeAddFormDate(e)}
+            date={addFormDate}
+            endDate={endDate}
+            errorMessage="날짜를 입력해주세요."
+            isValid={addFormDate === null}
+            useValidation={addFormUseValidation}
+          />
         </Stack>
       </Content>
     </Container>

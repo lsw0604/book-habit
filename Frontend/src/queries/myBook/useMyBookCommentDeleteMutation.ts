@@ -27,7 +27,6 @@ export default function useMyBookCommentDeleteMutation(
   });
 
   useEffect(() => {
-    console.log(data);
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });

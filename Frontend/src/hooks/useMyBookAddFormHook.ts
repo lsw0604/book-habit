@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
-import { useCallback, ChangeEvent } from 'react';
 import { addFormAtom } from 'recoil/addForm';
+import { useCallback, ChangeEvent } from 'react';
 
 export default function useMyBookAddFormHook() {
   const [addFormState, setAddFormState] = useRecoilState(addFormAtom);
@@ -19,16 +19,6 @@ export default function useMyBookAddFormHook() {
     }));
   };
 
-  const onChangeAddFormPage = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setAddFormState((prev: addFormAtomType) => ({
-        ...prev,
-        page: event.target.value !== '' ? parseInt(event.target.value) : '',
-      }));
-    },
-    []
-  );
-
   const onChangeAddFormUseValidation = (useValidation: boolean) => {
     setAddFormState((prev: addFormAtomType) => ({
       ...prev,
@@ -43,42 +33,52 @@ export default function useMyBookAddFormHook() {
     }));
   };
 
+  const onChangeAddFormComment = useCallback(
+    (event: ChangeEvent<HTMLTextAreaElement>) => {
+      setAddFormState((prev: addFormAtomType) => ({
+        ...prev,
+        comment: event.target.value,
+      }));
+    },
+    []
+  );
+
   const onChangeAddFormStateInitial = () => {
     setAddFormState({
       date: null,
-      page: '',
       status: '',
       useValidation: false,
       rating: 0,
+      comment: '',
     });
   };
 
   const addFormDate = addFormState.date;
   const addFormStatus = addFormState.status;
   const addFormUseValidation = addFormState.useValidation;
-  const addFormPage = addFormState.page;
-  const addFromRating = addFormState.rating;
+  const addFormRating = addFormState.rating;
+  const addFormComment = addFormState.comment;
 
   const useMyBookAddFormHistoryValidation =
     addFormDate !== null && addFormStatus !== '';
-  const useMyBookAddFromRatingValidation =
-    addFormStatus !== '' && addFromRating !== 0;
+  const useMyBookAddFormCommentValidation =
+    addFormStatus !== '' && addFormComment !== '' && addFormRating !== 0;
 
   return {
     onChangeAddFormDate,
     onChangeAddFormUseValidation,
     onChangeAddFormStatus,
-    onChangeAddFormPage,
+    onChangeAddFormComment,
     setAddFormState,
     onChangeAddFormRating,
     onChangeAddFormStateInitial,
     addFormDate,
     addFormStatus,
-    addFormPage,
-    addFromRating,
+    addFormRating,
     addFormUseValidation,
     addFormState,
+    addFormComment,
     useMyBookAddFormHistoryValidation,
-    useMyBookAddFromRatingValidation,
+    useMyBookAddFormCommentValidation,
   };
 }

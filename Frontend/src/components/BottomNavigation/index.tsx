@@ -14,7 +14,7 @@ const Container = styled.nav`
   position: fixed;
   bottom: 0;
   border-radius: 5px 10px 0 0;
-  background-color: ${({ theme }) => theme.mode.nav};
+  background-color: ${({ theme }) => theme.mode.main};
 `;
 
 const Buttons = styled.ul`
