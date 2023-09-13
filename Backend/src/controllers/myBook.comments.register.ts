@@ -35,7 +35,7 @@ export default async function myBookCommentsRegister(
     try {
       await connection.beginTransaction();
 
-      const FIND_BOOK_ID_SQL = 'SELECT books_id FROM users_book WHERE id = ?';
+      const FIND_BOOK_ID_SQL = 'SELECT books_id FROM users_books WHERE id = ?';
       const FIND_BOOK_ID_VALUE = [users_books_id];
       const [FIND_BOOK_ID_RESULT] = await connection.query<IFindBookResult[]>(
         FIND_BOOK_ID_SQL,

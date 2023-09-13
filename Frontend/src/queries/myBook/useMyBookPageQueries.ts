@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import {
-  myBookCommentsAPI,
   myBookHistoryAPI,
   myBookInfoAPI,
   myBookTimeRangeAPI,
 } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
-import dayjs from 'dayjs';
 
 export default function useMyBookPageQueries(
   users_books_id: number,
@@ -46,14 +44,6 @@ export default function useMyBookPageQueries(
       refetch: myBookTimeRefetch,
       isFetching: myBookTimeIsFetching,
     },
-    {
-      data: myBookCommentsData,
-      isLoading: myBookCommentsIsLoading,
-      isError: myBookCommentsIsError,
-      error: myBookCommentsError,
-      refetch: myBookCommentsRefetch,
-      isFetching: myBookCommentsIsFetching,
-    },
   ] = useQueries({
     queries: [
       {
@@ -77,28 +67,6 @@ export default function useMyBookPageQueries(
       {
         queryKey: [REACT_QUERY_KEY.time, users_books_id],
         queryFn: () => myBookTimeRangeAPI(users_books_id),
-      },
-      {
-        queryKey: [REACT_QUERY_KEY.comments, users_books_id],
-        queryFn: () => myBookCommentsAPI(users_books_id),
-        select: ({ comments }: MyBookPageQueriesCommentResponseType) => {
-          return comments.map((comment) => {
-            return {
-              comment_id: comment.comment_id,
-              comment: comment.comment,
-              created_at: dayjs(comment.created_at)
-                .add(9, 'hour')
-                .toISOString()
-                .split('T')[0],
-              updated_at: comment.updated_at
-                ? dayjs(comment.updated_at)
-                    .add(9, 'hour')
-                    .toISOString()
-                    .split('T')[0]
-                : undefined,
-            };
-          });
-        },
       },
     ],
   });
@@ -131,15 +99,6 @@ export default function useMyBookPageQueries(
     }
   }, [myBookTimeIsError, myBookTimeError]);
 
-  useEffect(() => {
-    if (myBookCommentsIsError && myBookCommentsError) {
-      addToast({
-        message: 'MY BOOK COMMENTS를 불러오는데 실패했습니다.',
-        status: 'error',
-      });
-    }
-  }, [myBookCommentsIsError, myBookCommentsError]);
-
   return {
     myBookInfoData,
     myBookInfoIsLoading,
@@ -158,11 +117,5 @@ export default function useMyBookPageQueries(
     myBookTimeError,
     myBookTimeRefetch,
     myBookTimeIsFetching,
-    myBookCommentsData,
-    myBookCommentsError,
-    myBookCommentsIsError,
-    myBookCommentsIsFetching,
-    myBookCommentsIsLoading,
-    myBookCommentsRefetch,
   };
 }

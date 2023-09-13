@@ -67,9 +67,8 @@ export default function DateBox({
   data,
 }: IProps) {
   if (!year || !month || !date) return null;
-
   const dayObj = dayjs()
-    .locale('kr')
+    .locale('ko')
     .year(parseInt(year))
     .month(parseInt(month) - 1)
     .date(date);

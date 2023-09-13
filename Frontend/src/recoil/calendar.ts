@@ -5,21 +5,20 @@ import { v1 } from 'uuid';
 const CALENDAR_ATOM_KEY = `CALENDAR_ATOM_KEY_${v1()}`;
 const CALENDAR_DETAIL_SELECTOR_KEY = `CALENDAR_DETAIL_SELECTOR_KEY_${v1()}`;
 
-type CalendarAtomType = {
-  initialDate: dayjs.Dayjs;
-};
+type CalendarAtomType = dayjs.Dayjs | null;
 
 export const calendarAtom = atom<CalendarAtomType>({
   key: CALENDAR_ATOM_KEY,
-  default: {
-    initialDate: new dayjs.Dayjs(),
-  },
+  default: undefined,
 });
 
 export const calendarDetailSelector = selector({
   key: CALENDAR_DETAIL_SELECTOR_KEY,
   get: ({ get }) => {
-    const { initialDate } = get(calendarAtom);
+    const initialDate = get(calendarAtom);
+
+    if (!initialDate) return null;
+
     const month = initialDate.format('MM');
     const year = initialDate.format('YYYY');
     const startDate = dayjs(`${year}${month}01`);

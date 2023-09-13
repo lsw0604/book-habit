@@ -12,6 +12,7 @@ import { RadioGroupOptionType } from 'types/style';
 import { IconOpenBook, IconPencil } from '@style/icons';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useMyBookHistoryMutation from '@queries/myBook/useMyBookHistoryMutation';
+import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
 
 const Container = styled.form`
   display: flex;
@@ -66,6 +67,8 @@ export default function Index() {
 
   const { isLoading: isHistoryRegisterLoading, mutate: historyMutate } =
     useMyBookHistoryMutation(parseInt(users_books_id));
+  const { isLoading: isCommentRegisterLoading, mutate: commentMutate } =
+    useMyBookCommentMutation(parseInt(users_books_id));
 
   const onChange = (value: string) => {
     setStatus(value as '' | '기록' | '한줄');
@@ -93,7 +96,7 @@ export default function Index() {
           comment: addFormComment,
           users_books_id: parseInt(users_books_id),
         };
-        console.log(body);
+        return commentMutate(body as MyBookCommentMutationRequestType);
       }
     }
   };
@@ -113,7 +116,10 @@ export default function Index() {
         {status === '한줄' && <Comment />}
       </Content>
       <Stack>
-        <Button type="submit" isLoading={isHistoryRegisterLoading}>
+        <Button
+          type="submit"
+          isLoading={isHistoryRegisterLoading || isCommentRegisterLoading}
+        >
           등록하기
         </Button>
       </Stack>

@@ -1,7 +1,8 @@
 import { atom, selector } from 'recoil';
 import { v1 } from 'uuid';
-import { differenceInDays } from 'date-fns';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
+
+dayjs.locale('ko');
 
 const BOOK_REGISTER_MODAL_ATOM_KEY = `BOOK_REGISTER_MODAL_ATOM_KEY/${v1()}`;
 
@@ -26,18 +27,14 @@ export const bookReadSelector = selector({
 
     if (!startDate || !endDate) return null;
 
-    const dayDiff = differenceInDays(endDate, startDate);
+    const dayDiff = dayjs(endDate)
+      .add(9, 'hour')
+      .diff(dayjs(startDate).add(9, 'hour'), 'day');
 
-    const start = addHours(startDate as Date, 9)
-      .toISOString()
-      .split('T')[0]
-      .split('-');
-    const end = addHours(endDate as Date, 9)
-      .toISOString()
-      .split('T')[0]
-      .split('-');
+    const start = dayjs(startDate).add(9, 'hour').format('YYYY년 MM월 DD일');
+    const end = dayjs(endDate).add(9, 'hour').format('YYYY년 MM월 DD일');
 
-    return `${start[0]}년 ${start[1]}월 ${start[2]}일 부터 ${end[0]}년 ${end[1]}월 ${end[2]}일 까지 ${dayDiff} 일 동안 읽으셨습니다.`;
+    return `${start} 부터 ${end} 까지 ${dayDiff} 일 동안 읽었습니다.`;
   },
 });
 
@@ -50,13 +47,10 @@ export const bookReadingSelector = selector({
 
     if (!startDate) return null;
 
-    const dayDiff = differenceInDays(new Date(), startDate);
+    const dayDiff = dayjs().diff(dayjs(startDate), 'day');
 
-    const start = addHours(startDate as Date, 9)
-      .toISOString()
-      .split('T')[0]
-      .split('-');
+    const start = dayjs(startDate).add(9, 'hour').format('YYYY년 MM월 DD일');
 
-    return `${start[0]}년 ${start[1]}월 ${start[2]}일 부터 읽기 시작해서 오늘까지 ${dayDiff}일 동안 읽고 있는 중이에요.`;
+    return `${start} 부터 읽기 시작해서 오늘까지 ${dayDiff}일 동안 읽고 있는 중이에요.`;
   },
 });

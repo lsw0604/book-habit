@@ -1,4 +1,4 @@
-import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import useMyBookCommentQuery from '@queries/myBook/useMyBookCommentQuery';
 import CommentItem from 'components/MyBookInfo/Item/CommentItem';
 import Loader from 'components/common/Loader';
 import { useParams } from 'react-router-dom';
@@ -39,22 +39,21 @@ const LoadingContainer = styled.div`
 export default function CommentList() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const {
-    myBookCommentsData,
-    myBookCommentsIsLoading,
-    myBookCommentsIsFetching,
-  } = useMyBookPageQueries(parseInt(users_books_id));
+
+  const { data, isLoading, isFetching } = useMyBookCommentQuery(
+    parseInt(users_books_id)
+  );
 
   return (
     <Container>
-      {myBookCommentsIsLoading || myBookCommentsIsFetching ? (
+      {isLoading || isFetching ? (
         <LoadingContainer>
           <Loader />
         </LoadingContainer>
-      ) : myBookCommentsData?.length === 0 ? (
+      ) : data?.length === 0 ? (
         <EmptyTag>아직 등록된 한줄평이 없습니다.</EmptyTag>
       ) : (
-        myBookCommentsData?.map((comment) => (
+        data?.map((comment) => (
           <CommentItem key={comment.comment_id} {...comment} />
         ))
       )}

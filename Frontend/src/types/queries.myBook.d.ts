@@ -3,6 +3,22 @@ type MutationResponse = {
   status: 'error' | 'info' | 'success' | 'warning' | '';
 };
 
+// useMyBookCommentQuery의 타입들
+
+type MyBookCommentQueryResponseType = {
+  comments: MyBookCommentQueryListType;
+};
+type MyBookCommentQueryListType = MyBookCommentQueryItemType[];
+type MyBookCommentQueryItemType = {
+  comment_id: number;
+  comment: string;
+  status: '읽는중' | '읽기전' | '다읽음';
+  rating: number;
+  created_at: string;
+  updated_at?: string;
+};
+type MyBookCommentQueryRequestType = number;
+
 // useMyBookExistQuery의 타입들
 type MyBookExistQueryResponseType = {
   status: '등록' | '미등록';
@@ -96,17 +112,3 @@ type MyBookPageQueriesTimeRangeResponseType = {
 };
 
 type MyBookPageQueriesTimeRangeRequestType = number;
-
-// myBook Comments
-
-type MyBookPageQueriesCommentResponseType = {
-  comments: MyBookPageQueriesCommentListType;
-};
-type MyBookPageQueriesCommentListType = MyBookPageQueriesCommentItemType[];
-type MyBookPageQueriesCommentItemType = {
-  comment_id: number;
-  comment: string;
-  created_at: string;
-  updated_at?: string;
-};
-type MyBookPageQueriesCommentRequestType = number;

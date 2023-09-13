@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import NeedLogin from 'components/common/NeedLogin';
 import MyBookRegister from 'components/BookRegister';
+import MyBookHistoryRegister from 'components/MyBookInfo/AddForm';
 import useModalHook from '@hooks/useModalHook';
 
 const Container = styled(motion.div)`
@@ -35,6 +36,7 @@ export default function BottomSheet() {
     >
       {modalStateType === 'isLogin' && <NeedLogin />}
       {modalStateType === 'search' && <MyBookRegister />}
+      {modalStateType === 'myBook' && <MyBookHistoryRegister />}
     </Container>
   );
 }

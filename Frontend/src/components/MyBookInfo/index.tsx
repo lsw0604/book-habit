@@ -9,8 +9,8 @@ import CommentsList from 'components/MyBookInfo/List/CommentList';
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 10rem);
-  overflow: scroll;
+  height: 100%;
+  position: relative;
 `;
 
 const Header = styled.div`

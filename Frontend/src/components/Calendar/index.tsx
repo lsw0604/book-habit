@@ -23,6 +23,7 @@ const Container = styled.div`
   height: auto;
   background-color: ${({ theme }) => theme.mode.sub};
   padding: 0 1rem;
+  position: relative;
 `;
 
 const CalendarHeader = styled.div`

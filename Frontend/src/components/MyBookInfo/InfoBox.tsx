@@ -25,6 +25,7 @@ const ImageContainer = styled.div`
   width: 40%;
   height: 100%;
   display: flex;
+  justify-content: center;
 `;
 
 const LoaderWrapper = styled.div`

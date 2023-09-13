@@ -150,6 +150,8 @@ export type MyBookRatingExistType = {
 export type MyBookCommentsListType = {
   comment_id: number;
   comment: string;
+  rating: number;
+  status: '읽기전' | '다읽음' | '읽는중';
   created_at: Date;
   updated_at: Date | null;
 } & RowDataPacket;
