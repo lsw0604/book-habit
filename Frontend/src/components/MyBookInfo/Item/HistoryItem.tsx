@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
 import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
+import { StatusWordObj, StatusColorObj } from 'lib/staticData';
 
 const Container = styled.div`
   display: inline-flex;
@@ -15,7 +16,7 @@ const Container = styled.div`
 `;
 
 const DateContainer = styled.div`
-  width: 18%;
+  width: 12%;
   color: ${({ theme }) => theme.mode.typo_sub};
   font-size: 8px;
   display: flex;
@@ -42,10 +43,10 @@ const ContentDate = styled.p`
   color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
-const Line = styled.div`
+const Line = styled.div<{ status: HistoryStatusType }>`
   width: 0.3rem;
   height: auto;
-  background-color: ${({ theme }) => theme.colors.main};
+  background-color: ${({ status }) => StatusColorObj[status]};
 `;
 
 const IconWrapper = styled.div`
@@ -54,10 +55,9 @@ const IconWrapper = styled.div`
   align-items: center;
 `;
 
-export default function Index({
+export default function HistoryItem({
   id,
   status,
-  page,
   date,
   created_at,
   updated_at,
@@ -84,48 +84,31 @@ export default function Index({
     ? dayjs(updated_at).add(9, 'hour').toISOString().split('T')[0].split('-')
     : undefined;
 
-  const statusHandler = (
-    status: '읽기시작함' | '다읽음' | '읽고싶음' | '읽는중'
-  ) => {
-    switch (status) {
-      case '읽기시작함':
-        return '읽기 시작했어요.';
-      case '다읽음':
-        return '다 읽었어요.';
-      case '읽고싶음':
-        return '읽고싶은 책 목록에 찜했어요.';
-      case '읽는중':
-        return '읽었어요.';
-      default:
-        return '';
-    }
-  };
-
   return (
     <Container>
       <DateContainer>
         {updatedAt ? (
           <>
-            <p>{updatedAt[0]}년</p>
+            <p>{updatedAt[0]}</p>
             <p>
-              {updatedAt[1]}월 {updatedAt[2]}일
+              {updatedAt[1]}/{updatedAt[2]}
             </p>
           </>
         ) : (
           <>
-            <p>{createdYear}년</p>
+            <p>{createdYear}</p>
             <p>
-              {createdMonth}월 {createdDay}일
+              {createdMonth}/{createdDay}
             </p>
           </>
         )}
       </DateContainer>
-      <Line />
+      <Line status={status} />
       <Content>
         <ContentDate>
           {year}년 {month}월 {day}일&nbsp;
         </ContentDate>
-        <ContentMessage>{statusHandler(status)}</ContentMessage>
+        <ContentMessage>{StatusWordObj[status]}</ContentMessage>
       </Content>
       <IconWrapper>
         <Icon

@@ -1,5 +1,5 @@
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
-import Item from 'components/MyBookInfo/Item/Comments';
+import CommentItem from 'components/MyBookInfo/Item/CommentItem';
 import Loader from 'components/common/Loader';
 import { useParams } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function Comment() {
+export default function CommentList() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const {
@@ -55,7 +55,7 @@ export default function Comment() {
         <EmptyTag>아직 등록된 한줄평이 없습니다.</EmptyTag>
       ) : (
         myBookCommentsData?.map((comment) => (
-          <Item key={comment.comment_id} {...comment} />
+          <CommentItem key={comment.comment_id} {...comment} />
         ))
       )}
     </Container>

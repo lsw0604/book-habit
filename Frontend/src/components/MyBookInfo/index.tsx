@@ -33,9 +33,7 @@ export default function Index() {
         <InfoBox />
       </Header>
       <Contents>
-        <Accordion label="기록보기">
-          <History />
-        </Accordion>
+        <History />
         <Accordion label="한줄평">
           <Comments />
         </Accordion>

@@ -3,10 +3,10 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 
 import DateBox from 'components/Calendar/DateBox';
-import { getMonthYearDetails, getNewMonthYear } from 'lib/utils/monthYear';
 import Icon from 'components/common/Button/Icon';
-import { IconLeftArrow, IconRightArrow } from '@style/icons';
 import Divider from 'components/common/Divider';
+import { IconLeftArrow, IconRightArrow } from '@style/icons';
+import { getMonthYearDetails, getNewMonthYear } from 'lib/utils/monthYear';
 
 interface IProps {
   history?: MyBookPageQueriesHistoryListType;
@@ -15,14 +15,14 @@ interface IProps {
 }
 
 interface IDateByData {
-  [date: string]: string;
+  [date: string]: HistoryStatusType[];
 }
 
 const Container = styled.div`
   width: 100%;
   height: auto;
   background-color: ${({ theme }) => theme.mode.sub};
-  padding: 1rem;
+  padding: 0 1rem;
 `;
 
 const CalendarHeader = styled.div`
@@ -42,7 +42,10 @@ const CalendarBox = styled.div<{ numRows: number }>`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: ${({ numRows }) => `repeat(${numRows}, 1fr)`};
-  gap: 2px;
+`;
+const Contents = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default function Index({ history, startDate, endDate }: IProps) {
@@ -56,28 +59,45 @@ export default function Index({ history, startDate, endDate }: IProps) {
   };
 
   const prevButtonDisabledHandler = (startDate?: string) => {
-    if (startDate) {
+    if (
+      startDate &&
+      parseInt(startDate.split('-')[0]) === parseInt(monthYear.year)
+    ) {
       return parseInt(startDate.split('-')[1]) > parseInt(monthYear.month) - 1;
+    }
+    if (!startDate) {
+      return true;
     }
   };
 
   const nextButtonDisabledHandler = (endDate?: string) => {
-    if (endDate) {
+    if (
+      endDate &&
+      parseInt(endDate.split('-')[0]) === parseInt(monthYear.year)
+    ) {
       return parseInt(endDate.split('-')[1]) < parseInt(monthYear.month) + 1;
+    }
+    if (!endDate) {
+      return true;
     }
   };
 
   const dataByDate: IDateByData = {};
   history?.forEach((item) => {
     const dateStr = dayjs(item.date).add(9, 'hour').toISOString().split('T')[0];
-    if (!dataByDate[dateStr]) {
-      dataByDate[dateStr] = item.status;
-    }
+    dataByDate[dateStr] = dataByDate[dateStr] || [];
+    dataByDate[dateStr].push(item.status);
   });
 
   return (
     <Container>
       <CalendarHeader>
+        <CalendarHeading>
+          {monthYear.year}년 {parseInt(monthYear.month)}월
+        </CalendarHeading>
+      </CalendarHeader>
+      <Divider divider={2} />
+      <Contents>
         <Icon
           onClick={() => updateMonthYear(-1)}
           icon={<IconLeftArrow />}
@@ -85,9 +105,26 @@ export default function Index({ history, startDate, endDate }: IProps) {
         >
           previous
         </Icon>
-        <CalendarHeading>
-          {monthYear.year} {monthYear.monthName}
-        </CalendarHeading>
+        <CalendarBox numRows={numRows}>
+          <DateBox
+            data={dataByDate}
+            date={1}
+            gridColumn={monthYear.firstDOW + 1}
+            month={monthYear.month}
+            year={monthYear.year}
+          />
+          {[...Array(monthYear.lastDate)].map((_, i) =>
+            i > 0 ? (
+              <DateBox
+                data={dataByDate}
+                key={i}
+                date={i + 1}
+                month={monthYear.month}
+                year={monthYear.year}
+              />
+            ) : null
+          )}
+        </CalendarBox>
         <Icon
           onClick={() => updateMonthYear(1)}
           icon={<IconRightArrow />}
@@ -95,28 +132,7 @@ export default function Index({ history, startDate, endDate }: IProps) {
         >
           next
         </Icon>
-      </CalendarHeader>
-      <Divider divider={2} />
-      <CalendarBox numRows={numRows}>
-        <DateBox
-          data={dataByDate}
-          date={1}
-          gridColumn={monthYear.firstDOW + 1}
-          month={monthYear.month}
-          year={monthYear.year}
-        />
-        {[...Array(monthYear.lastDate)].map((_, i) =>
-          i > 0 ? (
-            <DateBox
-              data={dataByDate}
-              key={i}
-              date={i + 1}
-              month={monthYear.month}
-              year={monthYear.year}
-            />
-          ) : null
-        )}
-      </CalendarBox>
+      </Contents>
     </Container>
   );
 }

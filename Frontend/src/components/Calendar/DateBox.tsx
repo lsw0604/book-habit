@@ -1,15 +1,15 @@
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 import { customize } from '@style/colors';
+import { StatusColorObj } from 'lib/staticData';
 
 interface IProps {
   gridColumn?: number;
   date?: number;
   year?: string;
   month?: string;
-  data: { [date: string]: string };
+  data: { [date: string]: HistoryStatusType[] };
 }
-
 const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
   height: 100%;
@@ -21,7 +21,7 @@ const Container = styled.div<{ gridColumn?: number }>`
 
 const Contents = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   position: absolute;
   padding: 4px;
@@ -33,8 +33,8 @@ const Contents = styled.div`
 const Span = styled.span<{ isSunday?: boolean; isSaturday?: boolean }>`
   font-size: 14px;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10;
+  left: 10;
   color: ${({ theme }) => theme.mode.typo_main};
   color: ${({ isSunday }) => (isSunday ? customize.red['400'] : null)};
   color: ${({ isSaturday }) => (isSaturday ? customize.sky['400'] : null)};
@@ -44,14 +44,19 @@ const StatusWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: end;
+  justify-content: end;
 `;
 
-const StatusCircle = styled.div`
-  width: 50%;
-  height: 50%;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.colors.spinner};
+const Status = styled.div<{ status: HistoryStatusType }>`
+  width: 20%;
+  height: 20%;
+  border-radius: 5px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: ${({ status }) => StatusColorObj[status]};
 `;
 
 export default function DateBox({
@@ -61,37 +66,31 @@ export default function DateBox({
   year,
   data,
 }: IProps) {
-  if (year && month && date) {
-    const dayObj = dayjs()
-      .locale('kr')
-      .year(parseInt(year))
-      .month(parseInt(month) - 1)
-      .date(date);
+  if (!year || !month || !date) return null;
 
-    const isSaturday = dayObj.day() === 6;
-    const isSunday = dayObj.day() === 0;
-    const dataMapped = data[dayObj.add(9, 'hour').toISOString().split('T')[0]];
+  const dayObj = dayjs()
+    .locale('kr')
+    .year(parseInt(year))
+    .month(parseInt(month) - 1)
+    .date(date);
 
-    if (dataMapped !== undefined) {
-      return (
-        <Container gridColumn={gridColumn}>
-          <Contents>
-            <Span isSaturday={isSaturday} isSunday={isSunday}>
-              {date}
-            </Span>
-            <StatusWrapper>{dataMapped && <StatusCircle />}</StatusWrapper>
-          </Contents>
-        </Container>
-      );
-    }
-    return (
-      <Container gridColumn={gridColumn}>
-        <Contents>
-          <Span isSaturday={isSaturday} isSunday={isSunday}>
-            {date}
-          </Span>
-        </Contents>
-      </Container>
-    );
-  }
+  const isSaturday = dayObj.day() === 6;
+  const isSunday = dayObj.day() === 0;
+  const dataMapped = data[dayObj.add(9, 'hour').toISOString().split('T')[0]];
+
+  return (
+    <Container gridColumn={gridColumn}>
+      <Contents>
+        <Span isSaturday={isSaturday} isSunday={isSunday}>
+          {date}
+        </Span>
+        <StatusWrapper>
+          {dataMapped &&
+            dataMapped.map((status, index) => (
+              <Status key={index} status={status} />
+            ))}
+        </StatusWrapper>
+      </Contents>
+    </Container>
+  );
 }

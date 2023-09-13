@@ -35,7 +35,7 @@ const DateWrapper = styled.div`
   font-size: 10px;
 `;
 
-export default function Index({
+export default function CommentItem({
   comment_id,
   comment,
   updated_at,

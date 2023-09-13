@@ -1,13 +1,14 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 import Calendar from 'components/Calendar';
 import Selector from 'components/common/Selector';
-import Item from 'components/MyBookInfo/Item/History';
-import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import HistoryItem from 'components/MyBookInfo/Item/HistoryItem';
 import Loader from 'components/common/Loader';
-import dayjs from 'dayjs';
+import Accordion from 'components/common/Accordion';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
   width: 100%;
@@ -22,7 +23,6 @@ const Stack = styled.div`
   width: 100%;
   padding: 0 1rem;
   display: grid;
-  margin-bottom: 8px;
 `;
 
 const EmptyTag = styled.div`
@@ -44,7 +44,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function History() {
+export default function HistoryList() {
   const { users_books_id } = useParams();
 
   if (users_books_id === undefined) {
@@ -84,21 +84,25 @@ export default function History() {
         startDate={startDate}
         endDate={endDate}
       />
-      <Container>
-        {myBookHistoryIsLoading || myBookHistoryIsFetching ? (
-          <LoadingContainer>
-            <Loader size={2} />
-          </LoadingContainer>
-        ) : myBookHistoryIsSuccess &&
-          myBookHistoryData &&
-          myBookHistoryData.length !== 0 ? (
-          myBookHistoryData.map((value) => <Item key={value.id} {...value} />)
-        ) : filter.length === 0 ? (
-          <EmptyTag>태그를 선택해 주세요.</EmptyTag>
-        ) : (
-          <EmptyTag>검색 결과가 없습니다.</EmptyTag>
-        )}
-      </Container>
+      <Accordion label="기록보기">
+        <Container>
+          {myBookHistoryIsLoading || myBookHistoryIsFetching ? (
+            <LoadingContainer>
+              <Loader size={2} />
+            </LoadingContainer>
+          ) : myBookHistoryIsSuccess &&
+            myBookHistoryData &&
+            myBookHistoryData.length !== 0 ? (
+            myBookHistoryData.map((value) => (
+              <HistoryItem key={value.id} {...value} />
+            ))
+          ) : filter.length === 0 ? (
+            <EmptyTag>태그를 선택해 주세요.</EmptyTag>
+          ) : (
+            <EmptyTag>검색 결과가 없습니다.</EmptyTag>
+          )}
+        </Container>
+      </Accordion>
     </>
   );
 }
