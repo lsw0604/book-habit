@@ -19,6 +19,12 @@ export const booksSearchAPI = async (body: string, page: number) => {
 };
 
 /**
+ * * 책 등록하는 API
+ */
+
+// export const bookRegisterAPI = async (body: )
+
+/**
  * * 읽은 책 등록하는 API
  */
 export const readBookRegisterAPI = async (body: ReadBookRegisterType) => {

@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
 import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
 import { StatusWordObj, StatusColorObj } from 'lib/staticData';
+import useToastHook from '@hooks/useToastHook';
 
 const Container = styled.div`
   display: inline-flex;
@@ -64,10 +66,12 @@ export default function HistoryItem({
 }: MyBookPageQueriesHistoryItemType) {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const { mutate, isLoading } = useMyBookHistoryDeleteMutation(
-    id,
-    parseInt(users_books_id)
-  );
+
+  const { addToast } = useToastHook();
+
+  const { mutate, isLoading, isSuccess, data, isError, error } =
+    useMyBookHistoryDeleteMutation(id, parseInt(users_books_id));
+
   const [year, month, day] = dayjs(date)
     .add(9, 'hour')
     .toISOString()
@@ -83,6 +87,21 @@ export default function HistoryItem({
   const updatedAt = updated_at
     ? dayjs(updated_at).add(9, 'hour').toISOString().split('T')[0].split('-')
     : undefined;
+
+  useEffect(() => {
+    console.log('HistoryItem', data);
+    if (isSuccess && data) {
+      const { message, status } = data;
+      addToast({ message, status });
+    }
+  }, [isSuccess, data]);
+
+  useEffect(() => {
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
+      addToast({ message, status });
+    }
+  }, [isError, error]);
 
   return (
     <Container>

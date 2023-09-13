@@ -28,8 +28,8 @@ type MyBookListInfinityQueryItemType = Pick<
   'isbn' | 'image' | 'title'
 > & {
   id: number;
-  status: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
-  date: string;
+  status?: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
+  date?: string;
 };
 
 // useMyBookHistoryMutation의 타입들

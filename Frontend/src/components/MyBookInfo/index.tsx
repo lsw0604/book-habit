@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 import Accordion from 'components/common/Accordion';
 import InfoBox from 'components/MyBookInfo/InfoBox';
-import History from 'components/MyBookInfo/List/History';
+import HistoryList from 'components/MyBookInfo/List/HistoryList';
 import AddForm from 'components/MyBookInfo/AddForm';
-import Comments from 'components/MyBookInfo/List/Comment';
+import CommentsList from 'components/MyBookInfo/List/CommentList';
 
 const Container = styled.div`
   width: 100%;
@@ -33,9 +33,11 @@ export default function Index() {
         <InfoBox />
       </Header>
       <Contents>
-        <History />
+        <Accordion label="기록보기">
+          <HistoryList />
+        </Accordion>
         <Accordion label="한줄평">
-          <Comments />
+          <CommentsList />
         </Accordion>
         <Accordion label="추가하기">
           <AddForm />

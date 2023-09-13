@@ -104,10 +104,10 @@ export const myBookCommentsRegisterAPI = async (
  * * 내 서재에 등록된 책의 독서기록을 삭제하는 API
  */
 export const myBookHistoryDeleteAPI = async (
-  users_books_history_id: number
+  users_books_history_id: MyBookHistoryDeleteMutationRequestType
 ) => {
-  const { data } = await axios.delete(
-    `/api/my_book/delete/history/${users_books_history_id}`
+  const { data } = await axios.delete<MyBookHistoryDeleteMutationResponseType>(
+    `/api/my_book/history/delete/${users_books_history_id}`
   );
   return data;
 };

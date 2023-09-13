@@ -26,19 +26,15 @@ type BookRegisterType = {
 };
 
 type ReadingBookRegisterType = BookRegisterType & {
-  page: number;
   startDate: Date;
 };
 
 type ReadBookRegisterType = BookRegisterType & {
-  rating: number;
   startDate: Date;
   endDate: Date;
 };
 
-type ReadToBookRegisterType = BookRegisterType & {
-  rating: number;
-};
+type ReadToBookRegisterType = BookRegisterType;
 
 type BookRegisterResponseType = {
   message: string;

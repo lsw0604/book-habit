@@ -20,14 +20,14 @@ export default async function myBookTimeRange(req: Request, res: Response, next:
       const SQL =
         'SELECT ' +
         "MAX(CASE WHEN status = '다읽음' THEN date ELSE NULL END) AS endDate, " +
-        'CASE ' +
-        "WHEN MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) IS NULL " +
-        "AND MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) IS NOT NULL " +
-        "THEN MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) " +
-        "WHEN MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) IS NOT NULL " +
-        "AND MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) IS NULL " +
-        "THEN MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) " +
-        'ELSE GREATEST( ' +
+        'CASE WHEN ' +
+        "MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) IS NULL AND " +
+        "MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) IS NOT NULL THEN " +
+        "MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) WHEN " +
+        "MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) IS NOT NULL AND " +
+        "MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) IS NULL THEN " +
+        "MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END) ELSE " +
+        'GREATEST( ' +
         "MAX(CASE WHEN status = '읽기시작함' THEN date ELSE NULL END), " +
         "MAX(CASE WHEN status = '읽고싶음' THEN date ELSE NULL END) " +
         ') ' +

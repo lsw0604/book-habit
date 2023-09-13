@@ -59,8 +59,6 @@ export default function useMyBookPageQueries(
       {
         queryKey: [REACT_QUERY_KEY.info, users_books_id],
         queryFn: () => myBookInfoAPI(users_books_id),
-        staleTime: 2 * 60 * 1000,
-        cacheTime: 3 * 60 * 1000,
       },
       {
         queryKey: [REACT_QUERY_KEY.history, users_books_id],

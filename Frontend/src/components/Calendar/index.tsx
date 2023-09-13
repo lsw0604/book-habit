@@ -48,7 +48,7 @@ const Contents = styled.div`
   align-items: center;
 `;
 
-export default function Index({ history, startDate, endDate }: IProps) {
+export default function Index({ history }: IProps) {
   const currentMonthYear = getMonthYearDetails(dayjs());
   const [monthYear, setMonthYear] = useState(currentMonthYear);
 
@@ -56,30 +56,6 @@ export default function Index({ history, startDate, endDate }: IProps) {
 
   const updateMonthYear = (monthIncrement: number): void => {
     setMonthYear((prev) => getNewMonthYear(prev, monthIncrement));
-  };
-
-  const prevButtonDisabledHandler = (startDate?: string) => {
-    if (
-      startDate &&
-      parseInt(startDate.split('-')[0]) === parseInt(monthYear.year)
-    ) {
-      return parseInt(startDate.split('-')[1]) > parseInt(monthYear.month) - 1;
-    }
-    if (!startDate) {
-      return true;
-    }
-  };
-
-  const nextButtonDisabledHandler = (endDate?: string) => {
-    if (
-      endDate &&
-      parseInt(endDate.split('-')[0]) === parseInt(monthYear.year)
-    ) {
-      return parseInt(endDate.split('-')[1]) < parseInt(monthYear.month) + 1;
-    }
-    if (!endDate) {
-      return true;
-    }
   };
 
   const dataByDate: IDateByData = {};
@@ -98,11 +74,7 @@ export default function Index({ history, startDate, endDate }: IProps) {
       </CalendarHeader>
       <Divider divider={2} />
       <Contents>
-        <Icon
-          onClick={() => updateMonthYear(-1)}
-          icon={<IconLeftArrow />}
-          disabled={prevButtonDisabledHandler(startDate)}
-        >
+        <Icon onClick={() => updateMonthYear(-1)} icon={<IconLeftArrow />}>
           previous
         </Icon>
         <CalendarBox numRows={numRows}>
@@ -125,11 +97,7 @@ export default function Index({ history, startDate, endDate }: IProps) {
             ) : null
           )}
         </CalendarBox>
-        <Icon
-          onClick={() => updateMonthYear(1)}
-          icon={<IconRightArrow />}
-          disabled={nextButtonDisabledHandler(endDate)}
-        >
+        <Icon onClick={() => updateMonthYear(1)} icon={<IconRightArrow />}>
           next
         </Icon>
       </Contents>

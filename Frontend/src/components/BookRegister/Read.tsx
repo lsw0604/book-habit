@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 
-import StarRating from 'components/StarRating/Rating';
 import StartDate from 'components/BookRegister/StartDate';
 import EndDate from 'components/BookRegister/EndDate';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
@@ -35,12 +34,10 @@ export default function Read() {
   const {
     onChangeBookRegisterModalStartDate: onChangeStartDate,
     onChangeBookRegisterModalEndDate: onChangeEndDate,
-    onChangeBookRegisterModalRating: onChangeRating,
     onChangeBookRegisterModalUseValidation: onChangeUseValidation,
     setBookRegisterModalState: setState,
     bookRegisterModalStartDate: startDate,
     bookRegisterModalEndDate: endDate,
-    bookRegisterModalRating: rating,
     bookRegisterModalUseValidation: useValidation,
     readStatus,
   } = useBookRegisterModalHook();
@@ -50,8 +47,6 @@ export default function Read() {
       setState({
         startDate: null,
         endDate: null,
-        rating: 0,
-        page: 0,
         useValidate: false,
       });
     };
@@ -61,7 +56,7 @@ export default function Read() {
     return () => {
       onChangeUseValidation(false);
     };
-  }, [startDate, endDate, rating]);
+  }, [startDate, endDate]);
 
   return (
     <Container
@@ -97,26 +92,9 @@ export default function Read() {
           />
         </Stack>
       </Box>
-      {/* <Stack>
-        <StarRating
-          label="다른 사람들에게 이 정도 추천해요."
-          rating={rating as number}
-          onChange={onChangeRating}
-          isValid={rating === 0}
-          useValidation={useValidation}
-          errorMessage="다른 사람들에게 어느정도 추천하는지 입력해주세요."
-        />
-      </Stack> */}
-      {startDate && endDate && rating !== 0 && (
+      {startDate && endDate && (
         <Stack>
-          <Span>
-            {readStatus &&
-              readStatus.map((value, index) => (
-                <span style={{ textAlign: 'center' }} key={index}>
-                  {value}
-                </span>
-              ))}
-          </Span>
+          <Span>{readStatus}</Span>
         </Stack>
       )}
     </Container>

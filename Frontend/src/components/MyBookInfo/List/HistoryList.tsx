@@ -1,22 +1,21 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useState } from 'react';
-import dayjs from 'dayjs';
 
 import Calendar from 'components/Calendar';
 import Selector from 'components/common/Selector';
 import HistoryItem from 'components/MyBookInfo/Item/HistoryItem';
 import Loader from 'components/common/Loader';
-import Accordion from 'components/common/Accordion';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
   width: 100%;
-  max-height: 5rem;
+  max-height: 2.5rem;
   overflow: scroll;
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
 `;
 
 const Stack = styled.div`
@@ -27,11 +26,10 @@ const Stack = styled.div`
 
 const EmptyTag = styled.div`
   width: 100%;
-  height: 5rem;
+  height: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
@@ -59,15 +57,7 @@ export default function HistoryList() {
     myBookHistoryIsLoading,
     myBookHistoryIsFetching,
     myBookHistoryIsSuccess,
-    myBookTimeData,
   } = useMyBookPageQueries(parseInt(users_books_id), filter);
-
-  const startDate = myBookTimeData?.startDate
-    ? dayjs(myBookTimeData.startDate).add(9, 'hour').toISOString().split('T')[0]
-    : undefined;
-  const endDate = myBookTimeData?.endDate
-    ? dayjs(myBookTimeData.endDate).add(9, 'hour').toISOString().split('T')[0]
-    : undefined;
 
   return (
     <>
@@ -79,30 +69,24 @@ export default function HistoryList() {
           options={options}
         />
       </Stack>
-      <Calendar
-        history={myBookHistoryData}
-        startDate={startDate}
-        endDate={endDate}
-      />
-      <Accordion label="기록보기">
-        <Container>
-          {myBookHistoryIsLoading || myBookHistoryIsFetching ? (
-            <LoadingContainer>
-              <Loader size={2} />
-            </LoadingContainer>
-          ) : myBookHistoryIsSuccess &&
-            myBookHistoryData &&
-            myBookHistoryData.length !== 0 ? (
-            myBookHistoryData.map((value) => (
-              <HistoryItem key={value.id} {...value} />
-            ))
-          ) : filter.length === 0 ? (
-            <EmptyTag>태그를 선택해 주세요.</EmptyTag>
-          ) : (
-            <EmptyTag>검색 결과가 없습니다.</EmptyTag>
-          )}
-        </Container>
-      </Accordion>
+      <Calendar history={myBookHistoryData} />
+      <Container>
+        {myBookHistoryIsLoading || myBookHistoryIsFetching ? (
+          <LoadingContainer>
+            <Loader size={2} />
+          </LoadingContainer>
+        ) : myBookHistoryIsSuccess &&
+          myBookHistoryData &&
+          myBookHistoryData.length !== 0 ? (
+          myBookHistoryData.map((value) => (
+            <HistoryItem key={value.id} {...value} />
+          ))
+        ) : filter.length === 0 ? (
+          <EmptyTag>태그를 선택해 주세요.</EmptyTag>
+        ) : (
+          <EmptyTag>검색 결과가 없습니다.</EmptyTag>
+        )}
+      </Container>
     </>
   );
 }

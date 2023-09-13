@@ -62,11 +62,34 @@ export default function Item({
   date,
 }: MyBookListInfinityQueryItemType) {
   const navigate = useNavigate();
-  const [created_year, created_month, created_day] = dayjs(date)
-    .add(9, 'hour')
-    .toISOString()
-    .split('T')[0]
-    .split('-');
+
+  if (date && status) {
+    const [year, month, day] = dayjs(date)
+      .add(9, 'hour')
+      .toISOString()
+      .split('T')[0]
+      .split('-');
+    return (
+      <Container onClick={() => navigate(`/my_books/${id}`)}>
+        <Header>
+          <ImageWrapper src={image} alt={isbn} width={120} height={174} />
+        </Header>
+        <Contents>
+          <Span>
+            <Title>{title}</Title>
+          </Span>
+          <Span>
+            <Status>{status}</Status>
+          </Span>
+        </Contents>
+        <Span>
+          <DateTime>
+            {year} / {month} / {day}
+          </DateTime>
+        </Span>
+      </Container>
+    );
+  }
 
   return (
     <Container onClick={() => navigate(`/my_books/${id}`)}>
@@ -78,13 +101,11 @@ export default function Item({
           <Title>{title}</Title>
         </Span>
         <Span>
-          <Status>{status}</Status>
+          <Status>서재에만 담아두고 </Status>
         </Span>
       </Contents>
       <Span>
-        <DateTime>
-          {created_year}년 {created_month}월 {created_day}일
-        </DateTime>
+        <DateTime>기록이 없는 상태 입니다.</DateTime>
       </Span>
     </Container>
   );

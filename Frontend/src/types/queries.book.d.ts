@@ -1,5 +1,4 @@
 // useBookSearchInfinityQuery의 타입들
-
 type BookSearchInfinityQueryResponseType = {
   meta: {
     is_end: boolean;
@@ -25,37 +24,20 @@ type BookSearchInfinityQueryResponseItemType = {
 };
 
 // useReadBookMutation의 타입들
-
-type ReadBookMutationResponseType = {
-  message: string;
-  status: StatusType;
-};
-
+type ReadBookMutationResponseType = MutationResponse;
 type ReadBookNutationRequestType = BookRegisterType & {
-  rating: number;
   startDate: Date;
   endDate: Date;
 };
 
 // useReadingBookMutation의 타입들
 
-type ReadingBookMutationResponseType = {
-  message: string;
-  status: StatusType;
-};
-
+type ReadingBookMutationResponseType = MutationResponse;
 type ReadingBookMutationRequestType = BookRegisterType & {
-  page: number;
   startDate: Date;
 };
 
 // useReadToBookMutation의 타입들
 
-type useReadToBookMutationResponseType = {
-  message: string;
-  status: StatusType;
-};
-
-type useReadToBookMutationRequestType = BookRegister & {
-  rating: number;
-};
+type useReadToBookMutationResponseType = MutationResponse;
+type useReadToBookMutationRequestType = BookRegister;

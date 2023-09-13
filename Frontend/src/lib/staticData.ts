@@ -40,7 +40,7 @@ export const readToBookOptions: RadioGroupOptionType<number>[] = [
 ];
 
 export const StatusColorObj: Record<HistoryStatusType, string> = {
-  읽는중: customize.yellow['300'],
+  읽는중: customize.rose['300'],
   다읽음: customize.teal['300'],
   읽기시작함: customize.yellow['300'],
   읽고싶음: customize.orange['300'],

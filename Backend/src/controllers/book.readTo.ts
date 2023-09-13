@@ -17,7 +17,6 @@ interface IReadToRequest {
   price: number;
   status: string;
   title: string;
-  rating: number;
   url: string;
   contents: string;
 }
@@ -35,7 +34,7 @@ export default async function readToBook(
   const NAMESPACE = 'READ_TO_BOOK_REGISTER';
   logging.info(NAMESPACE, '[START]');
 
-  const { isbn, title, authors, publisher, price, image, status, rating, url, contents } = req.body;
+  const { isbn, title, authors, publisher, price, image, status, url, contents } = req.body;
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
   try {
@@ -69,15 +68,6 @@ export default async function readToBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_RATING_SQL =
-          'INSERT INTO users_books_rating (rating, status, users_books_id) VALUES(?, ?, ?)';
-        const USER_BOOKS_RATING_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
-        const [USER_BOOKS_RATING_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_RATING_SQL,
-          USER_BOOKS_RATING_VALUES
-        );
-        logging.debug(NAMESPACE, '[USER_BOOKS_RATING_RESULT]', USER_BOOKS_RATING_RESULT);
-
         const USER_BOOKS_HISTORY_SQL = `INSERT INTO users_books_history (status, users_books_id, date) VALUES(?, ?, ?)`;
         const USER_BOOKS_HISTORY_VALUES = [
           status,
@@ -102,15 +92,6 @@ export default async function readToBook(
         );
         logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
 
-        const USER_BOOKS_RATING_SQL =
-          'INSERT INTO users_books_rating (rating, status, users_books_id) VALUES (?, ?, ?)';
-        const USER_BOOKS_RATING_VALUES = [rating, status, USER_BOOKS_RESULT.insertId];
-        const [USER_BOOKS_RATING_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_RATING_SQL,
-          USER_BOOKS_RATING_VALUES
-        );
-        logging.debug(NAMESPACE, '[USER_BOOKS_INFO_RESULT]', USER_BOOKS_RATING_RESULT);
-
         const USER_BOOKS_HISTORY_SQL =
           'INSERT INTO users_books_history (status, users_books_id, date) VALUES (?, ?, ?)';
         const USER_BOOKS_HISTORY_VALUES = [
@@ -130,6 +111,7 @@ export default async function readToBook(
     } catch (error: any) {
       await connection.rollback();
       connection.release();
+      logging.error(NAMESPACE, 'SQL', error);
       res.status(400).json({
         status: 'error',
         message: '읽고 싶은 책 등록에 실패 하셨습니다.',

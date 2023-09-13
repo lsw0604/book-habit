@@ -12,7 +12,8 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
 
   const { addToast } = useToastHook();
   const { onChangeAddFormStateInitial } = useMyBookAddFormHook();
-  const { myBookHistoryRefetch } = useMyBookPageQueries(users_books_id);
+  const { myBookHistoryRefetch, myBookTimeRefetch } =
+    useMyBookPageQueries(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     MyBookHistoryMutationResponseType,
@@ -23,11 +24,14 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
       if (data.status === 'success') {
         queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
         myBookHistoryRefetch();
+        myBookTimeRefetch();
       }
     },
   });
 
   useEffect(() => {
+    console.log('useMyBookHistoryMutation', data);
+    console.log('useMyBookHistoryMutation', isSuccess);
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });

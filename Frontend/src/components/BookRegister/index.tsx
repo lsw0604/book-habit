@@ -65,12 +65,9 @@ export default function Index() {
 
   const {
     bookRegisterModalEndDate: endDate,
-    bookRegisterModalPage: page,
-    bookRegisterModalRating: rating,
     bookRegisterModalStartDate: startDate,
     bookRegisterModalReadValidation: readValidation,
     bookRegisterModalReadingValidation: readingValidation,
-    bookRegisterModalReadToValidation: readToValidation,
     onChangeBookRegisterModalUseValidation,
   } = useBookRegisterModalHook();
 
@@ -132,20 +129,17 @@ export default function Index() {
         ...registerBody,
         startDate: startDate as Date,
         endDate: endDate as Date,
-        rating: rating as number,
       };
       return readMutate(body);
     } else if (value === '읽는중' && readingValidation) {
       const body: ReadingBookRegisterType = {
         ...registerBody,
         startDate: startDate as Date,
-        page: page as number,
       };
       return readingMutate(body);
-    } else if (value === '읽고싶음' && readToValidation) {
+    } else if (value === '읽고싶음') {
       const body: ReadToBookRegisterType = {
         ...registerBody,
-        rating: rating as number,
       };
       return readToMutate(body);
     }

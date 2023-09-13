@@ -23,7 +23,7 @@ export default async function myBookHistoryDelete(req: Request, res: Response, n
 
       await connection.commit();
       connection.release();
-      res.status(200).json({ status: 'success', message: '삭제에 성공했습니다.' });
+      return res.status(200).json({ status: 'success', message: '삭제에 성공했습니다.' });
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);
       await connection.rollback();

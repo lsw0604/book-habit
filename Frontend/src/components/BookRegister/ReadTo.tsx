@@ -1,8 +1,6 @@
-import Radio from 'components/common/Radio';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import styled from 'styled-components';
-import { readToBookOptions } from 'lib/staticData';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`
@@ -13,14 +11,17 @@ const Container = styled(motion.div)`
 const Stack = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: 8px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 export default function ToRead() {
   const {
-    onChangeBookRegisterModalRating: onChangeRating,
-    bookRegisterModalUseValidation: useValidation,
-    bookRegisterModalRating: rating,
     setBookRegisterModalState,
     onChangeBookRegisterModalUseValidation: onChangeUseValidation,
   } = useBookRegisterModalHook();
@@ -28,11 +29,9 @@ export default function ToRead() {
   useEffect(() => {
     return () => {
       setBookRegisterModalState({
-        rating: 0,
         useValidate: false,
         startDate: null,
         endDate: null,
-        page: 0,
       });
     };
   }, []);
@@ -41,7 +40,7 @@ export default function ToRead() {
     return () => {
       onChangeUseValidation(false);
     };
-  }, [rating]);
+  }, []);
 
   return (
     <Container
@@ -56,15 +55,8 @@ export default function ToRead() {
       }}
     >
       <Stack>
-        <Radio<number>
-          label="이 만큼 읽고 싶어요."
-          onChange={onChangeRating}
-          options={readToBookOptions}
-          value={rating as number}
-          errorMessage="얼만큼 읽고 싶은지 선택해주세요."
-          isValid={rating === 0}
-          useValidation={useValidation}
-        />
+        <span>아직 읽진 않았지만</span>
+        <span>곧 읽을 예정이에요.</span>
       </Stack>
     </Container>
   );

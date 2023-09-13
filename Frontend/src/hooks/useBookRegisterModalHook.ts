@@ -1,5 +1,4 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { useCallback, ChangeEvent } from 'react';
 import {
   bookRegisterModalAtom,
   bookReadSelector,
@@ -41,23 +40,6 @@ export default function useBookRegisterModalHook() {
     }
   };
 
-  const onChangeBookRegisterModalPage = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setBookRegisterModalState((prev: BookRegisterModalAtomType) => ({
-        ...prev,
-        page: event.target.value !== '' ? parseInt(event.target.value) : '',
-      }));
-    },
-    []
-  );
-
-  const onChangeBookRegisterModalRating = (rating: number) => {
-    setBookRegisterModalState((prev: BookRegisterModalAtomType) => ({
-      ...prev,
-      rating,
-    }));
-  };
-
   const onChangeBookRegisterModalUseValidation = (useValidate: boolean) => {
     setBookRegisterModalState((prev: BookRegisterModalAtomType) => ({
       ...prev,
@@ -67,39 +49,24 @@ export default function useBookRegisterModalHook() {
 
   const bookRegisterModalStartDate = bookRegisterModalState.startDate;
   const bookRegisterModalEndDate = bookRegisterModalState.endDate;
-  const bookRegisterModalPage = bookRegisterModalState.page;
-  const bookRegisterModalRating = bookRegisterModalState.rating;
   const bookRegisterModalUseValidation = bookRegisterModalState.useValidate;
 
   const bookRegisterModalReadValidation =
-    bookRegisterModalStartDate !== null &&
-    bookRegisterModalEndDate !== null &&
-    bookRegisterModalRating &&
-    bookRegisterModalRating > 0;
+    bookRegisterModalStartDate !== null && bookRegisterModalEndDate !== null;
 
   const bookRegisterModalReadingValidation =
-    bookRegisterModalStartDate !== null &&
-    bookRegisterModalPage &&
-    bookRegisterModalPage > 0;
-
-  const bookRegisterModalReadToValidation =
-    bookRegisterModalRating && bookRegisterModalRating > 0;
+    bookRegisterModalStartDate !== null;
 
   return {
     onChangeBookRegisterModalStartDate,
     onChangeBookRegisterModalEndDate,
-    onChangeBookRegisterModalPage,
-    onChangeBookRegisterModalRating,
     onChangeBookRegisterModalUseValidation,
     setBookRegisterModalState,
     bookRegisterModalStartDate,
     bookRegisterModalEndDate,
-    bookRegisterModalPage,
-    bookRegisterModalRating,
     bookRegisterModalUseValidation,
     bookRegisterModalReadValidation,
     bookRegisterModalReadingValidation,
-    bookRegisterModalReadToValidation,
     bookRegisterModalState,
     readStatus,
     readingStatus,

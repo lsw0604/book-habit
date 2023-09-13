@@ -17,7 +17,6 @@ interface IReadingRequest {
   status: string;
   title: string;
   startDate: string;
-  page: number;
   url: string;
   contents: string;
 }
@@ -35,7 +34,7 @@ export default async function readingBook(
   const NAMESPACE = 'READ_BOOK_REGISTER';
   logging.info(NAMESPACE, '[START]');
 
-  const { isbn, title, authors, publisher, price, image, status, startDate, page, url, contents } =
+  const { isbn, title, authors, publisher, price, image, status, startDate, url, contents } =
     req.body;
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
@@ -62,69 +61,51 @@ export default async function readingBook(
         );
         logging.debug(NAMESPACE, '[BOOK_REGISTER_RESULT]', BOOK_REGISTER_RESULT);
 
-        const USER_BOOKS_SQL = 'INSERT INTO users_books (users_id, books_id) VALUES(?, ?)';
-        const USER_BOOKS_VALUES = [id, BOOK_REGISTER_RESULT.insertId];
-        const [USER_BOOKS_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_SQL,
-          USER_BOOKS_VALUES
+        const USERS_BOOKS_SQL = 'INSERT INTO users_books (users_id, books_id) VALUES(?, ?)';
+        const USERS_BOOKS_VALUES = [id, BOOK_REGISTER_RESULT.insertId];
+        const [USERS_BOOKS_RESULT] = await connection.query<ResultSetHeader>(
+          USERS_BOOKS_SQL,
+          USERS_BOOKS_VALUES
         );
-        logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
+        logging.debug(NAMESPACE, '[USERS_BOOKS_RESULT]', USERS_BOOKS_RESULT);
 
-        const USER_BOOKS_HISTORY_START_SQL =
-          'INSERT INTO users_books_history (status, users_books_id, date, page) VALUES (?, ?, ?, ?)';
-        const USER_BOOKS_HISTORY_START_VALUES = [
+        const USERS_BOOKS_HISTORY_SQL =
+          'INSERT INTO users_books_history (status, users_books_id, date) VALUES (?, ?, ?)';
+        const USERS_BOOKS_HISTORY_VALUES = [
           '읽기시작함',
-          USER_BOOKS_RESULT.insertId,
+          USERS_BOOKS_RESULT.insertId,
           new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
-          page,
         ];
-        const [USER_BOOKS_HISTORY_START_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_HISTORY_START_SQL,
-          USER_BOOKS_HISTORY_START_VALUES
+        const [USERS_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
+          USERS_BOOKS_HISTORY_SQL,
+          USERS_BOOKS_HISTORY_VALUES
         );
-        logging.debug(
-          NAMESPACE,
-          '[USER_BOOKS_HISTORY_START_RESULT]',
-          USER_BOOKS_HISTORY_START_RESULT
-        );
+        logging.debug(NAMESPACE, '[USERS_BOOKS_HISTORY_RESULT]', USERS_BOOKS_HISTORY_RESULT);
 
         await connection.commit();
         connection.release();
         res.status(200).json({ status: 'success', message: '읽는중인 책 등록에 성공했습니다.' });
       } else {
-        const USER_BOOKS_SQL = 'INSERT INTO users_books (users_id, books_id) VALUES(?, ?)';
-        const USER_BOOKS_VALUES = [id, BOOK_EXIST_RESULT[0].id];
-        const [USER_BOOKS_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_SQL,
-          USER_BOOKS_VALUES
+        const USERS_BOOKS_SQL = 'INSERT INTO users_books (users_id, books_id) VALUES(?, ?)';
+        const USERS_BOOKS_VALUES = [id, BOOK_EXIST_RESULT[0].id];
+        const [USERS_BOOKS_RESULT] = await connection.query<ResultSetHeader>(
+          USERS_BOOKS_SQL,
+          USERS_BOOKS_VALUES
         );
-        logging.debug(NAMESPACE, '[USER_BOOKS_RESULT]', USER_BOOKS_RESULT);
+        logging.debug(NAMESPACE, '[USERS_BOOKS_RESULT]', USERS_BOOKS_RESULT);
 
-        const USER_BOOKS_STATUS_START_SQL =
-          'INSERT INTO users_books_status (status, users_books_id, date) VALUES (?, ?, ?)';
-        const USER_BOOKS_STATUS_START_VALUES = [
+        const USERS_BOOKS_HISTORY_SQL =
+          'INSERT INTO users_books_history (status, users_books_id, date) VALUES (?, ?, ?)';
+        const USERS_BOOKS_HISTORY_VALUES = [
           status,
-          USER_BOOKS_RESULT.insertId,
+          USERS_BOOKS_RESULT.insertId,
           new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
         ];
-        const [USER_BOOKS_STATUS_START_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_STATUS_START_SQL,
-          USER_BOOKS_STATUS_START_VALUES
+        const [USERS_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
+          USERS_BOOKS_HISTORY_SQL,
+          USERS_BOOKS_HISTORY_VALUES
         );
-        logging.debug(
-          NAMESPACE,
-          '[USER_BOOKS_STATUS_START_RESULT]',
-          USER_BOOKS_STATUS_START_RESULT
-        );
-
-        const USER_BOOKS_STATUS_PAGE_SQL =
-          'INSERT INTO users_books_status_page (page, users_books_status_id) VALUES (?, ?)';
-        const USER_BOOKS_STATUS_PAGE_VALUES = [page, USER_BOOKS_STATUS_START_RESULT.insertId];
-        const [USER_BOOKS_STATUS_PAGE_RESULT] = await connection.query<ResultSetHeader>(
-          USER_BOOKS_STATUS_PAGE_SQL,
-          USER_BOOKS_STATUS_PAGE_VALUES
-        );
-        logging.debug(NAMESPACE, '[USER_BOOKS_STATUS_PAGE_RESULT]', USER_BOOKS_STATUS_PAGE_RESULT);
+        logging.debug(NAMESPACE, '[USERS_BOOKS_HISTORY_RESULT]', USERS_BOOKS_HISTORY_RESULT);
 
         await connection.commit();
         connection.release();
@@ -133,7 +114,7 @@ export default async function readingBook(
     } catch (error: any) {
       await connection.rollback();
       connection.release();
-      logging.error(NAMESPACE, '[SQL_ERROR]', error);
+      logging.error(NAMESPACE, '[SQL]', error);
       res.status(400).json({
         status: 'error',
         message: '읽는중인 책 등록에 실패 하셨습니다.',
@@ -144,7 +125,7 @@ export default async function readingBook(
       });
     }
   } catch (error: any) {
-    logging.error(NAMESPACE, '[ERROR]', error);
+    logging.error(NAMESPACE, '[DB CONNECTION]', error);
     res.status(500).json({
       status: 'error',
       message: 'DB연결에 실패했습니다.',
