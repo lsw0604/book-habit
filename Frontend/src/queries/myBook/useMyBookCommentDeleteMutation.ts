@@ -45,5 +45,6 @@ export default function useMyBookCommentDeleteMutation(
   return {
     mutate,
     isLoading,
+    isSuccess,
   };
 }

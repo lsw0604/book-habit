@@ -6,7 +6,8 @@ type ModalAtomType = {
     | 'modify'
     | 'myBook'
     | 'modifyComment'
-    | 'registerComment';
+    | 'registerComment'
+    | 'deleteComment';
 };
 
 type ReadBookAtomType = {

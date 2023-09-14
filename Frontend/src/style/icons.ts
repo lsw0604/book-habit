@@ -35,6 +35,6 @@ export { ReactComponent as IconTrashCan } from '../assets/icons/iconTrashCan.svg
 export { ReactComponent as IconUpArrow } from '../assets/icons/iconUpArrow.svg';
 export { ReactComponent as IconUpload } from '../assets/icons/iconUpload.svg';
 export { ReactComponent as IconWarning } from '../assets/icons/iconWarning.svg';
-
-export { ReactComponent as Logo } from '../assets/logo.svg';
+export { ReactComponent as Logo } from '../assets/icons/Logo.svg';
+export { ReactComponent as Sad } from '../assets/icons/SadLogo.svg';
 export { ReactComponent as NeedLoginIcon } from '../assets/login.svg';

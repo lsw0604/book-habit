@@ -29,7 +29,7 @@ export default function Index() {
     <Container>
       <Wrapper>
         <Selector
-          label="내 책 상태에 따라 서재에 보여지는게 달라요"
+          label="내 서재에 등록된 책의 기록에 따라 보여지는게 달라요"
           options={options}
           value={status}
           onChange={(e) => setStatus(e)}

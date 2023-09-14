@@ -73,7 +73,7 @@ export default function NeedLogin() {
         <Logo />
         <div>
           <Title>
-            <span>다다익독</span>은
+            <span>책볼레</span>는
           </Title>
           <Title>
             <span>로그인</span>이 필요해요.
@@ -83,10 +83,10 @@ export default function NeedLogin() {
       <Content>
         <div>
           <Description>
-            로그인을 하시고 <span>다다익독</span>을 이용하시면
+            로그인을 하시고 <span>책볼레</span>을 이용하시면
           </Description>
           <Description>
-            <span>다다익독</span>의 서비스를 더 풍족하게 이용하실 수 있어요.
+            <span>책볼레</span>의 서비스를 더 풍족하게 이용하실 수 있어요.
           </Description>
           <Description>
             아이디가 없으시다면 <span>회원가입</span>을 해주세요.

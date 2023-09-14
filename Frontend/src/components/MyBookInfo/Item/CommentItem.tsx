@@ -1,8 +1,7 @@
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import { IconCalendar, IconPencil, IconStar, IconTrashCan } from '@style/icons';
 import Icon from 'components/common/Button/Icon';
-import { useParams } from 'react-router-dom';
-import useMyBookCommentDeleteMutation from '@queries/myBook/useMyBookCommentDeleteMutation';
 import Divider from 'components/common/Divider';
 import { customize } from '@style/colors';
 import useModalHook from '@hooks/useModalHook';
@@ -94,15 +93,17 @@ export default function CommentItem({
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
 
-  const { mutate, isLoading } = useMyBookCommentDeleteMutation(
-    parseInt(users_books_id),
-    comment_id
-  );
   const { setModalState } = useModalHook();
-  const { setAddFormState } = useMyBookAddFormHook();
+  const {
+    setAddFormState,
+    onChangeAddFormCommentId,
+    onChangeAddFormUsersBooksId,
+  } = useMyBookAddFormHook();
 
   const deleteHandler = () => {
-    mutate(comment_id);
+    setModalState({ isOpen: true, type: 'deleteComment' });
+    onChangeAddFormCommentId(comment_id);
+    onChangeAddFormUsersBooksId(parseInt(users_books_id));
   };
 
   const modifyHandler = () => {
@@ -131,11 +132,7 @@ export default function CommentItem({
             <IconStar />
             <RatingBox>{rating}</RatingBox>
           </IconBox>
-          <Icon
-            isLoading={isLoading}
-            onClick={deleteHandler}
-            icon={<IconTrashCan />}
-          >
+          <Icon onClick={deleteHandler} icon={<IconTrashCan />}>
             Delete
           </Icon>
           <Icon onClick={modifyHandler} icon={<IconPencil />}>

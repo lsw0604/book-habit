@@ -4,7 +4,7 @@ import Textarea from 'components/common/Textarea';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import { IconPencil } from '@style/icons';
 import { ChangeEvent } from 'react';
-import Button from './Button';
+import Button from 'components/common/Button';
 import useMyBookCommentUpdateMutation from '@queries/myBook/useMyBookCommentUpdateMutation';
 
 const Container = styled.form`

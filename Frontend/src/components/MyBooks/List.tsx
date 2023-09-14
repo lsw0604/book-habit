@@ -105,7 +105,7 @@ export default function List({ status }: IProps) {
               </Page>
             ))
           ) : (
-            <Empty />
+            <Empty status={status} />
           )}
           {isFetching ? (
             <FetchLoader>

@@ -12,7 +12,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow: scroll;
   scroll-behavior: row;
   padding: 1rem;

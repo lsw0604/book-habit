@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import NeedLogin from 'components/common/NeedLogin';
 import MyBookRegister from 'components/BookRegister';
 import MyBookHistoryRegister from 'components/MyBookInfo/AddForm';
-import CommentModify from 'components/common/CommentModify';
-import CommentRegister from 'components/common/CommentRegister';
+import CommentModify from 'components/Modals/Comment/CommentModify';
+import CommentRegister from 'components/Modals/Comment/CommentRegister';
+import CommentDelete from 'components/Modals/Comment/CommentDelete';
 import useModalHook from '@hooks/useModalHook';
 
 const Container = styled(motion.div)`
@@ -41,6 +42,7 @@ export default function BottomSheet() {
       {modalStateType === 'myBook' && <MyBookHistoryRegister />}
       {modalStateType === 'modifyComment' && <CommentModify />}
       {modalStateType === 'registerComment' && <CommentRegister />}
+      {modalStateType === 'deleteComment' && <CommentDelete />}
     </Container>
   );
 }
