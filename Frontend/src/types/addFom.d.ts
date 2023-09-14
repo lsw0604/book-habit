@@ -4,4 +4,6 @@ type addFormAtomType = {
   useValidation: boolean;
   rating: number;
   comment: string;
+  comment_id?: number;
+  users_books_id?: number;
 };

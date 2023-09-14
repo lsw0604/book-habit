@@ -139,10 +139,10 @@ export const myBookListDeleteAPI = async (
 /**
  * * 내 서재에 등록된 한줄평을 수정하는 API
  */
-export const myBookCommentUpdateAPI = async (
-  comment_id: number,
-  body: { comment: string; rating: number }
-) => {
+export const myBookCommentUpdateAPI = async ({
+  comment_id,
+  body,
+}: MyBookCommentUpdateMutationRequestType) => {
   const { data } = await axios.put(
     `/api/my_book/comment/update/${comment_id}`,
     body

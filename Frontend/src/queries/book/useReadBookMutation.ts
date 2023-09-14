@@ -38,8 +38,6 @@ export default function useReadBookMutation() {
       setBookRegisterModalState({
         startDate: null,
         endDate: null,
-        rating: 0,
-        page: 0,
         useValidate: false,
       });
       setModalState({ isOpen: false });

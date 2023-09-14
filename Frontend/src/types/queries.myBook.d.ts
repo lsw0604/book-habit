@@ -51,6 +51,11 @@ type MyBookListInfinityQueryItemType = Pick<
 // useMyBookCommentUpdateMutation의 타입들
 type MyBookCommentUpdateMutationResponseType = MutationResponse;
 type MyBookCommentUpdateMutationRequestType = {
+  comment_id: MyBookCommentUpdateMutationCommentIdType;
+  body: MyBookCommentUpdateMutationBodyType;
+};
+type MyBookCommentUpdateMutationCommentIdType = number;
+type MyBookCommentUpdateMutationBodyType = {
   rating: number;
   comment: string;
 };

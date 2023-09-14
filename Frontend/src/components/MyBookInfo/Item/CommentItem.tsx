@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import useMyBookCommentDeleteMutation from '@queries/myBook/useMyBookCommentDeleteMutation';
 import Divider from 'components/common/Divider';
 import { customize } from '@style/colors';
+import useModalHook from '@hooks/useModalHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 
 const Container = styled.div`
   display: flex;
@@ -93,9 +95,22 @@ export default function CommentItem({
     parseInt(users_books_id),
     comment_id
   );
+  const { setModalState } = useModalHook();
+  const { setAddFormState } = useMyBookAddFormHook();
 
-  const onHandler = () => {
+  const deleteHandler = () => {
     mutate(comment_id);
+  };
+
+  const modifyHandler = () => {
+    setAddFormState((prev: addFormAtomType) => ({
+      ...prev,
+      comment,
+      rating,
+      comment_id,
+      users_books_id: parseInt(users_books_id),
+    }));
+    setModalState({ isOpen: true, type: 'modifyComment' });
   };
   return (
     <Container>
@@ -114,12 +129,14 @@ export default function CommentItem({
           </IconBox>
           <Icon
             isLoading={isLoading}
-            onClick={onHandler}
+            onClick={deleteHandler}
             icon={<IconTrashCan />}
           >
             Delete
           </Icon>
-          <Icon icon={<IconPencil />}>Modify</Icon>
+          <Icon onClick={modifyHandler} icon={<IconPencil />}>
+            Modify
+          </Icon>
         </HeaderIconContainer>
       </Header>
       <Divider divider={2} />

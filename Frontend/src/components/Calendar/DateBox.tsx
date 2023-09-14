@@ -52,7 +52,7 @@ const StatusWrapper = styled.div`
 const Status = styled.div<{ status: HistoryStatusType }>`
   width: 20%;
   height: 20%;
-  border-radius: 5px;
+  border-radius: 50%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;

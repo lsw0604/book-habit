@@ -31,12 +31,7 @@ export default async function myBookCommentUpdate(
 
       const UPDATE_COMMENT_SQL =
         'UPDATE users_books_comments SET comment = ?, rating = ?, updated_at = ? WHERE id = ?';
-      const UPDATE_COMMENT_VALUE = [
-        comment,
-        rating,
-        new Date(dayjs().add(9, 'hour').toISOString()),
-        comment_id,
-      ];
+      const UPDATE_COMMENT_VALUE = [comment, rating, new Date(), comment_id];
       const [UPDATE_COMMENT_RESULT] = await connection.query<ResultSetHeader>(
         UPDATE_COMMENT_SQL,
         UPDATE_COMMENT_VALUE

@@ -43,6 +43,20 @@ export default function useMyBookAddFormHook() {
     []
   );
 
+  const onChangeAddFormCommentId = (comment_id: number) => {
+    setAddFormState((prev: addFormAtomType) => ({
+      ...prev,
+      comment_id,
+    }));
+  };
+
+  const onChangeAddFormUsersBooksId = (users_books_id: number) => {
+    setAddFormState((prev: addFormAtomType) => ({
+      ...prev,
+      users_books_id,
+    }));
+  };
+
   const onChangeAddFormStateInitial = () => {
     setAddFormState({
       date: null,
@@ -58,6 +72,8 @@ export default function useMyBookAddFormHook() {
   const addFormUseValidation = addFormState.useValidation;
   const addFormRating = addFormState.rating;
   const addFormComment = addFormState.comment;
+  const addFormCommentId = addFormState.comment_id;
+  const addFormUsersBooksId = addFormState.users_books_id;
 
   const useMyBookAddFormHistoryValidation =
     addFormDate !== null && addFormStatus !== '';
@@ -69,15 +85,19 @@ export default function useMyBookAddFormHook() {
     onChangeAddFormUseValidation,
     onChangeAddFormStatus,
     onChangeAddFormComment,
-    setAddFormState,
     onChangeAddFormRating,
+    onChangeAddFormCommentId,
+    onChangeAddFormUsersBooksId,
     onChangeAddFormStateInitial,
+    setAddFormState,
     addFormDate,
     addFormStatus,
     addFormRating,
     addFormUseValidation,
     addFormState,
     addFormComment,
+    addFormCommentId,
+    addFormUsersBooksId,
     useMyBookAddFormHistoryValidation,
     useMyBookAddFormCommentValidation,
   };

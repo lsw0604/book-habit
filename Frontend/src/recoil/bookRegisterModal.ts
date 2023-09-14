@@ -27,12 +27,10 @@ export const bookReadSelector = selector({
 
     if (!startDate || !endDate) return null;
 
-    const dayDiff = dayjs(endDate)
-      .add(9, 'hour')
-      .diff(dayjs(startDate).add(9, 'hour'), 'day');
+    const dayDiff = dayjs(endDate).diff(dayjs(startDate), 'day');
 
-    const start = dayjs(startDate).add(9, 'hour').format('YYYY년 MM월 DD일');
-    const end = dayjs(endDate).add(9, 'hour').format('YYYY년 MM월 DD일');
+    const start = dayjs(startDate).format('YYYY년 MM월 DD일');
+    const end = dayjs(endDate).format('YYYY년 MM월 DD일');
 
     return `${start} 부터 ${end} 까지 ${dayDiff} 일 동안 읽었습니다.`;
   },
@@ -49,7 +47,7 @@ export const bookReadingSelector = selector({
 
     const dayDiff = dayjs().diff(dayjs(startDate), 'day');
 
-    const start = dayjs(startDate).add(9, 'hour').format('YYYY년 MM월 DD일');
+    const start = dayjs(startDate).format('YYYY년 MM월 DD일');
 
     return `${start} 부터 읽기 시작해서 오늘까지 ${dayDiff}일 동안 읽고 있는 중이에요.`;
   },
