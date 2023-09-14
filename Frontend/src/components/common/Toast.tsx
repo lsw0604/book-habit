@@ -23,6 +23,12 @@ const Container = styled.div`
   top: 4rem;
   height: auto;
   z-index: 9999;
+  @media screen and (min-width: 1280px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 `;
 
 const Item = styled.div`
@@ -35,6 +41,9 @@ const Item = styled.div`
   border-radius: 1rem;
   margin-bottom: 0.5rem;
   box-shadow: ${({ theme }) => theme.shadow.xxl};
+  @media screen and (min-width: 1280px) {
+    width: 40%;
+  }
 `;
 
 const Span = styled.span`

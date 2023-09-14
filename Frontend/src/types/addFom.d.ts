@@ -6,4 +6,5 @@ type addFormAtomType = {
   comment: string;
   comment_id?: number;
   users_books_id?: number;
+  history_id?: number;
 };

@@ -96,8 +96,8 @@ export default function DateBox({
 
   const historyRegisterModalHandler = () => {
     if (
-      (startDateDayjs && dayObj.isBefore(startDateDayjs)) ||
-      (endDateDayjs && dayObj.isAfter(endDateDayjs.add(1, 'day')))
+      (startDateDayjs && dayObj.isBefore(startDateDayjs.add(1, 'day'))) ||
+      (endDateDayjs && dayObj.isAfter(endDateDayjs))
     ) {
       addToast({
         message: '해당 날짜는 선택하실 수 없습니다.',

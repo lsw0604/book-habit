@@ -10,6 +10,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 1rem 0;
+  border: 2px solid;
 `;
 
 export default function MyBookInfoPage() {

@@ -17,6 +17,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 10px;
+  position: relative;
 `;
 
 const Stack = styled.div`

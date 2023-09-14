@@ -57,6 +57,13 @@ export default function useMyBookAddFormHook() {
     }));
   };
 
+  const onChangeAddFormHistoryId = (history_id: number) => {
+    setAddFormState((prev: addFormAtomType) => ({
+      ...prev,
+      history_id,
+    }));
+  };
+
   const onChangeAddFormStateInitial = () => {
     setAddFormState({
       date: null,
@@ -76,6 +83,7 @@ export default function useMyBookAddFormHook() {
   const addFormComment = addFormState.comment;
   const addFormCommentId = addFormState.comment_id;
   const addFormUsersBooksId = addFormState.users_books_id;
+  const addFormHistoryId = addFormState.history_id;
 
   const useMyBookAddFormHistoryValidation =
     addFormDate !== null && addFormStatus !== '';
@@ -90,6 +98,7 @@ export default function useMyBookAddFormHook() {
     onChangeAddFormRating,
     onChangeAddFormCommentId,
     onChangeAddFormUsersBooksId,
+    onChangeAddFormHistoryId,
     onChangeAddFormStateInitial,
     setAddFormState,
     addFormDate,
@@ -100,6 +109,7 @@ export default function useMyBookAddFormHook() {
     addFormComment,
     addFormCommentId,
     addFormUsersBooksId,
+    addFormHistoryId,
     useMyBookAddFormHistoryValidation,
     useMyBookAddFormCommentValidation,
   };

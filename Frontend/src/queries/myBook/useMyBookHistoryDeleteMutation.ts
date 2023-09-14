@@ -23,8 +23,9 @@ export default function useMyBookHistoryDeleteMutation(
     MyBookHistoryDeleteMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     MyBookHistoryDeleteMutationRequestType
-  >([REACT_QUERY_KEY, users_books_id, users_books_history_id], () =>
-    myBookHistoryDeleteAPI(users_books_history_id)
+  >(
+    [REACT_QUERY_KEY, users_books_id, users_books_history_id],
+    myBookHistoryDeleteAPI
   );
 
   useEffect(() => {

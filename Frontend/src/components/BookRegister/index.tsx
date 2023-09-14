@@ -31,6 +31,18 @@ const Container = styled.form`
   justify-content: space-between;
 `;
 
+const Header = styled.div`
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const Content = styled.div`
+  position: relative;
+  margin-bottom: 1rem;
+`;
+
 const Heading = styled.h1`
   font-size: 18px;
   line-height: 20px;
@@ -147,33 +159,37 @@ export default function Index() {
 
   return (
     <Container onSubmit={onSubmit}>
-      <Heading>{title}</Heading>
-      {isLogged ? <BookStatus /> : null}
-      <Stack>
-        <RadioButton<string>
-          label="등록할 유형을 선택해주세요."
-          value={value}
-          options={options}
-          onChange={onChange}
-          disabled={disabledHandler(data?.status)}
-        />
-      </Stack>
-      <Suspense
-        fallback={
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        }
-      >
-        <Stack style={{ flex: '1' }}>
-          <AnimatePresence>
-            {value === '' && <Skeleton />}
-            {value === '다읽음' && <Read />}
-            {value === '읽는중' && <Reading />}
-            {value === '읽고싶음' && <ReadTo />}
-          </AnimatePresence>
+      <Header>
+        <Heading>{title}</Heading>
+        {isLogged ? <BookStatus /> : null}
+      </Header>
+      <Content>
+        <Stack>
+          <RadioButton<string>
+            label="등록할 유형을 선택해주세요."
+            value={value}
+            options={options}
+            onChange={onChange}
+            disabled={disabledHandler(data?.status)}
+          />
         </Stack>
-      </Suspense>
+        <Suspense
+          fallback={
+            <LoaderWrapper>
+              <Loader />
+            </LoaderWrapper>
+          }
+        >
+          <Stack style={{ flex: '1' }}>
+            <AnimatePresence>
+              {value === '' && <Skeleton />}
+              {value === '다읽음' && <Read />}
+              {value === '읽는중' && <Reading />}
+              {value === '읽고싶음' && <ReadTo />}
+            </AnimatePresence>
+          </Stack>
+        </Suspense>
+      </Content>
       <Stack>
         <Button
           disabled={disabledHandler(data?.status)}

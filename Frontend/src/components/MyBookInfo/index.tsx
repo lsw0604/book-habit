@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Accordion from 'components/common/Accordion';
 import InfoBox from 'components/MyBookInfo/InfoBox';
 import HistoryList from 'components/MyBookInfo/List/HistoryList';
-import AddForm from 'components/MyBookInfo/AddForm';
 import CommentsList from 'components/MyBookInfo/List/CommentList';
 
 const Container = styled.div`
@@ -45,9 +44,6 @@ export default function Index() {
         </Accordion>
         <Accordion label="한줄평">
           <CommentsList />
-        </Accordion>
-        <Accordion label="기록하기">
-          <AddForm />
         </Accordion>
       </Contents>
     </Container>

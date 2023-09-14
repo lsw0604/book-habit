@@ -8,6 +8,10 @@ interface IProps extends RowDataPacket {
   status: '다읽음' | '읽기시작함' | '읽는중';
 }
 
+interface IHistoryExist extends RowDataPacket {
+  count: number;
+}
+
 interface IRequest<T> extends Request {
   body: T;
 }
@@ -36,6 +40,24 @@ export default async function myBookHistoryRegister(
     try {
       await connection.beginTransaction();
       if (status === '읽는중') {
+        const MY_BOOK_HISTORY_EXIST_SQL =
+          'SELECT COUNT(*) AS count FROM users_books_history WHERE status = ? AND date = ?';
+        const MY_BOOK_HISTORY_EXIST_VALUE = [
+          '읽는중',
+          dayjs(date).add(9, 'hour').toISOString().split('T')[0],
+        ];
+        const [MY_BOOK_HISTORY_EXIST_RESULT] = await connection.query<IHistoryExist[]>(
+          MY_BOOK_HISTORY_EXIST_SQL,
+          MY_BOOK_HISTORY_EXIST_VALUE
+        );
+        logging.debug(NAMESPACE, '[MY_BOOK_HISTORY_EXIST_RESULT]', MY_BOOK_HISTORY_EXIST_RESULT);
+
+        if (MY_BOOK_HISTORY_EXIST_RESULT[0].count !== 0) {
+          return res
+            .status(200)
+            .json({ status: 'info', message: `이미 ${status}상태가 존재합니다.` });
+        }
+
         const MY_BOOK_HISTORY_REGISTER_SQL =
           'INSERT INTO users_books_history (date, status, users_books_id) VALUES (?, ?, ?)';
         const MY_BOOK_HISTORY_REGISTER_VALUES = [

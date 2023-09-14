@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
-import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
 import { StatusWordObj, StatusColorObj } from 'lib/staticData';
+import useModalHook from '@hooks/useModalHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 
 const Container = styled.div`
   display: inline-flex;
@@ -65,26 +66,25 @@ export default function HistoryItem({
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
 
-  const { mutate, isLoading } = useMyBookHistoryDeleteMutation(
-    id,
-    parseInt(users_books_id)
-  );
+  const { setModalState } = useModalHook();
+  const { onChangeAddFormUsersBooksId, onChangeAddFormHistoryId } =
+    useMyBookAddFormHook();
 
-  const [year, month, day] = dayjs(date)
-    .add(9, 'hour')
-    .toISOString()
-    .split('T')[0]
-    .split('-');
+  const [year, month, day] = dayjs(date).format('YYYY-MM-DD').split('-');
 
   const [createdYear, createdMonth, createdDay] = dayjs(created_at)
-    .add(9, 'hour')
-    .toISOString()
-    .split('T')[0]
+    .format('YYYY-MM-DD')
     .split('-');
 
   const updatedAt = updated_at
-    ? dayjs(updated_at).add(9, 'hour').toISOString().split('T')[0].split('-')
+    ? dayjs(updated_at).format('YYYY-MM-DD').split('-')
     : undefined;
+
+  const deleteHandler = () => {
+    onChangeAddFormHistoryId(id);
+    onChangeAddFormUsersBooksId(parseInt(users_books_id));
+    setModalState({ isOpen: true, type: 'deleteHistory' });
+  };
 
   return (
     <Container>
@@ -113,11 +113,7 @@ export default function HistoryItem({
         <ContentMessage>{StatusWordObj[status]}</ContentMessage>
       </Content>
       <IconWrapper>
-        <Icon
-          isLoading={isLoading}
-          icon={<IconTrashCan />}
-          onClick={() => mutate(id)}
-        >
+        <Icon icon={<IconTrashCan />} onClick={deleteHandler}>
           Delete
         </Icon>
       </IconWrapper>

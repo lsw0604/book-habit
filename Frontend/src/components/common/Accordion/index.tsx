@@ -15,12 +15,14 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 const Icon = styled.div`
   width: 1rem;
   svg {
     width: 1rem;
+    fill: ${({ theme }) => theme.mode.typo_main};
   }
 `;
 
