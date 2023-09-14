@@ -5,6 +5,7 @@ import { myBookCommentUpdateAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
 import useMyBookCommentQuery from './useMyBookCommentQuery';
 import useModalHook from '@hooks/useModalHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 
 export default function useMyBookCommentUpdateMutation(users_books_id: number) {
   const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_UPDATE_MUTATION';
@@ -13,6 +14,7 @@ export default function useMyBookCommentUpdateMutation(users_books_id: number) {
   const { refetch } = useMyBookCommentQuery(users_books_id);
   const { addToast } = useToastHook();
   const { setModalState } = useModalHook();
+  const { onChangeAddFormStateInitial } = useMyBookAddFormHook();
 
   const { mutate, isLoading, data, isSuccess, isError, error } = useMutation<
     MyBookCommentUpdateMutationResponseType,
@@ -27,6 +29,7 @@ export default function useMyBookCommentUpdateMutation(users_books_id: number) {
       setModalState({ isOpen: false, type: undefined });
       addToast({ message, status });
       refetch();
+      onChangeAddFormStateInitial();
     }
   }, [isSuccess, data]);
 

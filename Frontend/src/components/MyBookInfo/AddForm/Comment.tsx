@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 
 import Textarea from 'components/common/Textarea';
 import Select from 'components/common/Selector';
@@ -24,9 +23,6 @@ const Stack = styled.div<{ conWid: string }>`
 `;
 
 export default function Comment() {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-
   const {
     addFormComment,
     addFormRating,
@@ -35,11 +31,19 @@ export default function Comment() {
     onChangeAddFormComment,
     onChangeAddFormRating,
     onChangeAddFormStatus,
-    onChangeAddFormStateInitial,
+    setAddFormState,
   } = useMyBookAddFormHook();
 
   useEffect(() => {
-    onChangeAddFormStateInitial();
+    setAddFormState((prev: addFormAtomType) => ({
+      ...prev,
+      comment: '',
+      comment_id: undefined,
+      date: null,
+      rating: 0,
+      status: '',
+      useValidation: false,
+    }));
   }, []);
 
   return (

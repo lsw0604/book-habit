@@ -60,7 +60,6 @@ export default function CommentModify() {
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     mutate({ body, comment_id: addFormCommentId });
-    console.log(body);
   };
 
   return (

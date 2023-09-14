@@ -64,6 +64,8 @@ export default function useMyBookAddFormHook() {
       useValidation: false,
       rating: 0,
       comment: '',
+      comment_id: undefined,
+      users_books_id: undefined,
     });
   };
 

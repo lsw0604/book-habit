@@ -14,11 +14,11 @@ const Container = styled.div`
   padding: 0;
   width: 100%;
   height: 100%;
+  min-height: 170px;
   flex-direction: column;
   align-items: center;
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
-  overflow: scroll;
 `;
 
 const Header = styled.div`
@@ -58,6 +58,9 @@ const Comment = styled.span`
 const DateWrapper = styled.span`
   color: ${({ theme }) => theme.mode.typo_sub};
   font-size: 10px;
+  svg {
+    fill: ${({ theme }) => theme.mode.typo_sub};
+  }
 `;
 
 const RatingBox = styled.div`
@@ -119,6 +122,7 @@ export default function CommentItem({
           <Status>{status}</Status>
           <DateWrapper>
             <IconCalendar />
+            &nbsp;
             {updated_at ? `${updated_at} 수정` : `${created_at} 등록`}
           </DateWrapper>
         </HeaderInfoContainer>
