@@ -1,6 +1,7 @@
+import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-import styled from 'styled-components';
+import { Heart } from '@style/icons';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`
@@ -8,16 +9,27 @@ const Container = styled(motion.div)`
   height: 100%;
 `;
 
-const Stack = styled.div`
+const Content = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 1rem;
   color: ${({ theme }) => theme.mode.typo_main};
+  svg {
+    height: 100%;
+  }
+`;
+
+const Message = styled.h1`
+  font-size: 25px;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
 `;
 
 export default function ToRead() {
@@ -54,10 +66,13 @@ export default function ToRead() {
         duration: 0.3,
       }}
     >
-      <Stack>
-        <span>아직 읽진 않았지만</span>
-        <span>곧 읽을 예정이에요.</span>
-      </Stack>
+      <Content>
+        <Message>
+          <span>읽지는 않았지만</span>
+          <span>관심있는 책이에요.</span>
+        </Message>
+        <Heart />
+      </Content>
     </Container>
   );
 }

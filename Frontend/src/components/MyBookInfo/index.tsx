@@ -46,7 +46,7 @@ export default function Index() {
         <Accordion label="한줄평">
           <CommentsList />
         </Accordion>
-        <Accordion label="추가하기">
+        <Accordion label="기록하기">
           <AddForm />
         </Accordion>
       </Contents>

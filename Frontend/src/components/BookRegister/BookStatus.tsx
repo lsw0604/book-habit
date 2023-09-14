@@ -8,7 +8,7 @@ import Loader from 'components/common/Loader';
 const Container = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 `;
 

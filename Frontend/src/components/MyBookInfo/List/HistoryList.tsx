@@ -7,6 +7,7 @@ import Selector from 'components/common/Selector';
 import HistoryItem from 'components/MyBookInfo/Item/HistoryItem';
 import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import dayjs from 'dayjs';
 
 const Container = styled.div`
   width: 100%;
@@ -57,7 +58,15 @@ export default function HistoryList() {
     myBookHistoryIsLoading,
     myBookHistoryIsFetching,
     myBookHistoryIsSuccess,
+    myBookTimeData,
   } = useMyBookPageQueries(parseInt(users_books_id), filter);
+
+  const startMonth = myBookTimeData?.startDate
+    ? dayjs(myBookTimeData.startDate).add(9, 'hour').format('YYYY-MM-DD')
+    : undefined;
+  const endMonth = myBookTimeData?.endDate
+    ? dayjs(myBookTimeData.endDate).add(9, 'hour').format('YYYY-MM-DD')
+    : undefined;
 
   return (
     <>
@@ -69,7 +78,11 @@ export default function HistoryList() {
           options={options}
         />
       </Stack>
-      <Calendar history={myBookHistoryData} />
+      <Calendar
+        history={myBookHistoryData}
+        startDate={startMonth}
+        endDate={endMonth}
+      />
       <Container>
         {myBookHistoryIsLoading || myBookHistoryIsFetching ? (
           <LoadingContainer>

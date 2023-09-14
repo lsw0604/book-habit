@@ -7,6 +7,7 @@ import MyBookHistoryRegister from 'components/MyBookInfo/AddForm';
 import CommentModify from 'components/Modals/Comment/CommentModify';
 import CommentRegister from 'components/Modals/Comment/CommentRegister';
 import CommentDelete from 'components/Modals/Comment/CommentDelete';
+import HistoryRegister from 'components/Modals/History/HistoryRegister';
 import useModalHook from '@hooks/useModalHook';
 
 const Container = styled(motion.div)`
@@ -43,6 +44,7 @@ export default function BottomSheet() {
       {modalStateType === 'modifyComment' && <CommentModify />}
       {modalStateType === 'registerComment' && <CommentRegister />}
       {modalStateType === 'deleteComment' && <CommentDelete />}
+      {modalStateType === 'registerHistory' && <HistoryRegister />}
     </Container>
   );
 }

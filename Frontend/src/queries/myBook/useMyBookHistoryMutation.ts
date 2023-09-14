@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import useToastHook from '@hooks/useToastHook';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import useModalHook from '@hooks/useModalHook';
 
 export default function useMyBookHistoryMutation(users_books_id: number) {
   const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_MUTATION';
@@ -12,6 +13,7 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
 
   const { addToast } = useToastHook();
   const { onChangeAddFormStateInitial } = useMyBookAddFormHook();
+  const { setModalState } = useModalHook();
   const { myBookHistoryRefetch, myBookTimeRefetch } =
     useMyBookPageQueries(users_books_id);
 
@@ -33,6 +35,7 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
+      setModalState({ isOpen: false, type: undefined });
       onChangeAddFormStateInitial();
     }
   }, [isSuccess, data]);

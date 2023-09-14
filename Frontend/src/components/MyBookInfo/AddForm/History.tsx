@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
-import styled, { css } from 'styled-components';
-import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import dayjs from 'dayjs';
 
 import RadioButton from 'components/common/Radio/RadioButton';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
-import dayjs from 'dayjs';
 
 const Container = styled.div`
   flex: 1;
@@ -19,13 +18,6 @@ const Container = styled.div`
 const Stack = styled.div<{ isStatus?: boolean }>`
   position: relative;
   width: 100%;
-  ${({ isStatus }) =>
-    isStatus
-      ? css`
-          display: flex;
-          gap: 12px;
-        `
-      : null}
 `;
 
 const Content = styled.div`
@@ -52,20 +44,19 @@ const options: RadioGroupOptionType<string>[] = [
 ];
 
 export default function History() {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const {
     addFormDate,
     addFormStatus,
     addFormUseValidation,
+    addFormUsersBooksId,
     onChangeAddFormDate,
     onChangeAddFormStatus,
-    onChangeAddFormStateInitial,
+    setAddFormState,
   } = useMyBookAddFormHook();
 
-  const userBookId = parseInt(users_books_id);
-
-  const { myBookTimeData } = useMyBookPageQueries(userBookId);
+  const { myBookTimeData } = useMyBookPageQueries(
+    addFormUsersBooksId as number
+  );
 
   const startDate = myBookTimeData?.startDate
     ? new Date(dayjs(myBookTimeData.startDate).add(9, 'hour').toISOString())
@@ -76,13 +67,21 @@ export default function History() {
     : null;
 
   useEffect(() => {
-    onChangeAddFormStateInitial();
+    setAddFormState((prev: addFormAtomType) => ({
+      ...prev,
+      comment: '',
+      comment_id: undefined,
+      rating: 0,
+      status: '',
+      useValidation: false,
+    }));
   }, []);
 
   return (
     <Container>
       <Stack>
         <RadioButton<string>
+          label="독서 기록 상태를 선택해주세요."
           options={options}
           value={addFormStatus}
           onChange={onChangeAddFormStatus}

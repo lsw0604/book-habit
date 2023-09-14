@@ -2,13 +2,19 @@ import dayjs from 'dayjs';
 import styled from 'styled-components';
 import { customize } from '@style/colors';
 import { StatusColorObj } from 'lib/staticData';
+import useModalHook from '@hooks/useModalHook';
+import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useToastHook from '@hooks/useToastHook';
 
 interface IProps {
+  usersBooksId: number;
   gridColumn?: number;
   date?: number;
   year?: string;
   month?: string;
   data: { [date: string]: HistoryStatusType[] };
+  startDate?: string;
+  endDate?: string;
 }
 const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
@@ -33,8 +39,8 @@ const Contents = styled.div`
 const Span = styled.span<{ isSunday?: boolean; isSaturday?: boolean }>`
   font-size: 14px;
   position: absolute;
-  top: 10;
-  left: 10;
+  top: 10px;
+  left: 10px;
   color: ${({ theme }) => theme.mode.typo_main};
   color: ${({ isSunday }) => (isSunday ? customize.red['400'] : null)};
   color: ${({ isSaturday }) => (isSaturday ? customize.sky['400'] : null)};
@@ -45,8 +51,8 @@ const StatusWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: end;
-  justify-content: end;
+  align-items: flex-end;
+  justify-content: flex-end;
 `;
 
 const Status = styled.div<{ status: HistoryStatusType }>`
@@ -65,6 +71,9 @@ export default function DateBox({
   month,
   year,
   data,
+  usersBooksId,
+  startDate,
+  endDate,
 }: IProps) {
   if (!year || !month || !date) return null;
   const dayObj = dayjs()
@@ -73,12 +82,36 @@ export default function DateBox({
     .month(parseInt(month) - 1)
     .date(date);
 
+  const { setModalState } = useModalHook();
+  const { onChangeAddFormUsersBooksId, onChangeAddFormDate } =
+    useMyBookAddFormHook();
+  const { addToast } = useToastHook();
+
   const isSaturday = dayObj.day() === 6;
   const isSunday = dayObj.day() === 0;
   const dataMapped = data[dayObj.add(9, 'hour').toISOString().split('T')[0]];
 
+  const startDateDayjs = startDate ? dayjs(startDate) : undefined;
+  const endDateDayjs = endDate ? dayjs(endDate) : dayjs();
+
+  const historyRegisterModalHandler = () => {
+    if (
+      (startDateDayjs && dayObj.isBefore(startDateDayjs)) ||
+      (endDateDayjs && dayObj.isAfter(endDateDayjs.add(1, 'day')))
+    ) {
+      addToast({
+        message: '해당 날짜는 선택하실 수 없습니다.',
+        status: 'error',
+      });
+      return;
+    }
+    onChangeAddFormUsersBooksId(usersBooksId);
+    onChangeAddFormDate(dayObj.toDate());
+    setModalState({ isOpen: true, type: 'registerHistory' });
+  };
+
   return (
-    <Container gridColumn={gridColumn}>
+    <Container onClick={historyRegisterModalHandler} gridColumn={gridColumn}>
       <Contents>
         <Span isSaturday={isSaturday} isSunday={isSunday}>
           {date}

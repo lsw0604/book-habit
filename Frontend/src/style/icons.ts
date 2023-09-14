@@ -38,3 +38,4 @@ export { ReactComponent as IconWarning } from '../assets/icons/iconWarning.svg';
 export { ReactComponent as Logo } from '../assets/icons/Logo.svg';
 export { ReactComponent as Sad } from '../assets/icons/SadLogo.svg';
 export { ReactComponent as NeedLoginIcon } from '../assets/login.svg';
+export { ReactComponent as Heart } from '../assets/icons/HeartLogo.svg';
