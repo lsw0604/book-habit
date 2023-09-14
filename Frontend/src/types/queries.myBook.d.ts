@@ -48,6 +48,13 @@ type MyBookListInfinityQueryItemType = Pick<
   date?: string;
 };
 
+// useMyBookCommentUpdateMutation의 타입들
+type MyBookCommentUpdateMutationResponseType = MutationResponse;
+type MyBookCommentUpdateMutationRequestType = {
+  rating: number;
+  comment: string;
+};
+
 // useMyBookHistoryMutation의 타입들
 type MyBookHistoryMutationResponseType = MutationResponse;
 type MyBookHistoryMutationRequestType = {

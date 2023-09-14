@@ -17,6 +17,8 @@ import myBookRatingDelete from '../controllers/myBook.rating.delete';
 import myBookCommentDelete from '../controllers/myBook.comments.delete';
 import myBookHistoryDelete from '../controllers/myBook.history.delete';
 
+import myBookCommentUpdate from '../controllers/myBook.comment.update';
+
 import access from '../controllers/auth.access';
 
 /**
@@ -56,5 +58,6 @@ myBookRouter.delete('/comment/delete/:comment_id', access, myBookCommentDelete);
 myBookRouter.delete(`/list/delete/:users_books_id`, access, myBookListDelete);
 // UPDATE
 myBookRouter.put('/update/rating/:users_books_info_id', access);
+myBookRouter.put('/comment/update/:comment_id', access, myBookCommentUpdate);
 
 export default myBookRouter;

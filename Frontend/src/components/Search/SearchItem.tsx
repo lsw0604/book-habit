@@ -15,7 +15,8 @@ const Container = styled.div`
   width: 100%;
   min-height: 350px;
   height: auto;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   padding: 1rem;
   border-radius: 5px;
@@ -27,7 +28,7 @@ const Header = styled.div`
   justify-content: center;
 `;
 
-const InfoWrapper = styled.div`
+const Content = styled.div`
   width: 100%;
   height: 100%;
 `;
@@ -107,7 +108,7 @@ export default function SearchItem({
               height={174}
             />
           </Header>
-          <InfoWrapper>
+          <Content>
             <SearchItemHeader title={title} query={search} />
             <Stack>
               출판사 <P>{publisher}</P>
@@ -127,12 +128,15 @@ export default function SearchItem({
             <Stack>
               판매가{' '}
               <P style={{ textDecorationLine: 'line-through' }}>{price}</P>/
-              <P>{sale_price}</P>/<P>{status}</P>
+              <P>{sale_price}</P>
+            </Stack>
+            <Stack>
+              판매상태 <P>{status}</P>
             </Stack>
             <Stack>
               출판<P>{`${date[0]}년 ${date[1]}월`}</P>
             </Stack>
-          </InfoWrapper>
+          </Content>
         </>
       ) : null}
     </Container>

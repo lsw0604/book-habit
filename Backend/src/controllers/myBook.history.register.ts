@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 interface IProps extends RowDataPacket {
   status: '다읽음' | '읽기시작함' | '읽는중';
@@ -39,7 +39,7 @@ export default async function myBookHistoryRegister(
         const MY_BOOK_HISTORY_REGISTER_SQL =
           'INSERT INTO users_books_history (date, status, users_books_id) VALUES (?, ?, ?)';
         const MY_BOOK_HISTORY_REGISTER_VALUES = [
-          new Date(addHours(new Date(date), 9).toISOString().split('T')[0]),
+          dayjs(date).add(9, 'hour').toISOString().split('T')[0],
           status,
           users_books_id,
         ];
@@ -83,7 +83,7 @@ export default async function myBookHistoryRegister(
           'INSERT INTO users_books_history (status, date, users_books_id) VALUES (?, ? , ?)';
         const MY_BOOK_HISTORY_REGISTER_VALUES = [
           status,
-          new Date(addHours(new Date(date), 9).toISOString().split('T')[0]),
+          dayjs(date).add(9, 'hour').toISOString().split('T')[0],
           users_books_id,
         ];
         const [MY_BOOK_HISTORY_REGISTER_RESULT] = await connection.query<ResultSetHeader>(

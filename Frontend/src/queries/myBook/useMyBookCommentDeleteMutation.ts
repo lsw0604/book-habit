@@ -19,18 +19,15 @@ export default function useMyBookCommentDeleteMutation(
     MyBookCommentDeleteMutationResponseType,
     AxiosError,
     MyBOokCommentDeleteMutationRequestType
-  >([REACT_QUERY_KEY, users_books_id, comment_id], myBookCommentDeleteAPI, {
-    onSuccess: () => {
+  >([REACT_QUERY_KEY, users_books_id, comment_id], myBookCommentDeleteAPI);
+
+  useEffect(() => {
+    if (isSuccess && data) {
       queryClient.invalidateQueries({
         queryKey: ['USE_MY_BOOK_COMMENTS_QUERY'],
         exact: true,
       });
       refetch();
-    },
-  });
-
-  useEffect(() => {
-    if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
     }

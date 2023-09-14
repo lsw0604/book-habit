@@ -5,7 +5,8 @@ interface IProps {
   query: string;
 }
 
-const Container = styled.h1`
+const Container = styled.div`
+  width: 100%;
   font-size: 18px;
   line-height: 20px;
   font-weight: 700;
@@ -13,6 +14,9 @@ const Container = styled.h1`
   margin-bottom: 8px;
   float: left;
   text-align: start;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const Highlighted = styled.div`

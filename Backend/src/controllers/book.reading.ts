@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 interface IRequest<T> extends Request {
   body: T;
@@ -74,7 +74,7 @@ export default async function readingBook(
         const USERS_BOOKS_HISTORY_VALUES = [
           '읽기시작함',
           USERS_BOOKS_RESULT.insertId,
-          new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
+          dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USERS_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
           USERS_BOOKS_HISTORY_SQL,
@@ -99,7 +99,7 @@ export default async function readingBook(
         const USERS_BOOKS_HISTORY_VALUES = [
           status,
           USERS_BOOKS_RESULT.insertId,
-          new Date(addHours(new Date(startDate), 9).toISOString().split('T')[0]),
+          dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USERS_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
           USERS_BOOKS_HISTORY_SQL,

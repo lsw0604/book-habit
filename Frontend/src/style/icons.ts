@@ -1,10 +1,11 @@
 export { ReactComponent as ContactFingerImage } from '../assets/icons/contactFinger.svg';
 export { ReactComponent as IconBeach } from '../assets/icons/iconBeach.svg';
 export { ReactComponent as IconBook } from '../assets/icons/iconBook.svg';
+export { ReactComponent as IconBookMark } from '../assets/icons/iconBookmark.svg';
+export { ReactComponent as IconCalendar } from '../assets/icons/iconCalendar.svg';
 export { ReactComponent as IconCheck } from '../assets/icons/iconCheck.svg';
 export { ReactComponent as IconClose } from '../assets/icons/iconClose.svg';
 export { ReactComponent as IconClosedEye } from '../assets/icons/iconClosedEye.svg';
-export { ReactComponent as IconBookMark } from '../assets/icons/iconBookmark.svg';
 export { ReactComponent as IconCloudyParty } from '../assets/icons/iconCloudyParty.svg';
 export { ReactComponent as IconDownArrow } from '../assets/icons/iconDownArrow.svg';
 export { ReactComponent as IconError } from '../assets/icons/iconError.svg';

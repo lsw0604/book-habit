@@ -44,6 +44,7 @@ const CalendarBox = styled.div<{ numRows: number }>`
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: ${({ numRows }) => `repeat(${numRows}, 1fr)`};
 `;
+
 const Contents = styled.div`
   display: flex;
   align-items: center;

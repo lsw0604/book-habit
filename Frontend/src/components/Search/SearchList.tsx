@@ -8,26 +8,60 @@ import SearchItem from 'components/Search/SearchItem';
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: scroll;
 `;
 
-const Page = styled.div<{ dataExist: boolean }>`
+const Page = styled.div`
   padding: 0 1rem;
-  display: ${({ dataExist }) => (dataExist ? 'grid' : null)};
+  width: 100%;
   gap: 1rem;
   :first-child {
     margin-top: 0px;
   }
-  @media screen and (min-width: 414px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 1rem;
+  @media screen and (min-width: 360px) {
+    display: flex;
+    flex-direction: column;
   }
-  @media screen and (min-width: 514px) {
+
+  @media screen and (min-width: 768px) {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
-  @media screen and (min-width: 824px) {
+  @media screen and (min-width: 1280px) {
+    display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1rem;
+  }
+`;
+
+const EmptyPageContainer = styled.div`
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
+  .empty_page {
+    background-color: rgba(0, 0, 0, 0.05);
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .empty_page_message {
+    font-size: 20px;
+    line-height: 24px;
+    color: ${({ theme }) => theme.mode.typo_sub};
+  }
+
+  .highlight {
+    font-size: 24px;
+    line-height: 28px;
+    color: ${({ theme }) => theme.colors.sub};
   }
 `;
 
@@ -93,13 +127,25 @@ export default function SearchList({
 
   return (
     <Container>
-      {data?.pages.map((page, index) => (
-        <Page key={index} dataExist={page.documents.length !== 0}>
-          {page.documents.map((document) => (
-            <SearchItem key={document.isbn} search={search} {...document} />
-          ))}
-        </Page>
-      ))}
+      {data?.pages.map((page, index) =>
+        page.documents.length === 0 ? (
+          <EmptyPageContainer key={index}>
+            <div className="empty_page">
+              <p className="empty_page_message">
+                <span className="empty_page_message highlight">{search}</span>
+                에 대한
+                <br /> 검색 결과가 없습니다.
+              </p>
+            </div>
+          </EmptyPageContainer>
+        ) : (
+          <Page key={index}>
+            {page.documents.map((document) => (
+              <SearchItem key={document.isbn} search={search} {...document} />
+            ))}
+          </Page>
+        )
+      )}
       {isFetching || isLoading ? (
         <FetchLoader>
           <Loader />

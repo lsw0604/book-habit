@@ -11,6 +11,10 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  @media screen and (min-width: 1280px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const Header = styled.div`
@@ -21,6 +25,9 @@ const Header = styled.div`
 const Contents = styled.div`
   height: 70%;
   overflow: scroll;
+  @media screen and (min-width: 1280px) {
+    height: 100%;
+  }
 `;
 
 export default function Index() {

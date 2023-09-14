@@ -82,7 +82,6 @@ export default function useMyBookPageQueries(
 
   useEffect(() => {
     if (myBookInfoIsError && myBookInfoError) {
-      console.log(myBookInfoError);
       addToast({
         message: 'MY BOOK INFO를 불러오는데 실패했습니다.',
         status: 'error',

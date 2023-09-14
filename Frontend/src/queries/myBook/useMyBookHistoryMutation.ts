@@ -30,8 +30,6 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
   });
 
   useEffect(() => {
-    console.log('useMyBookHistoryMutation', data);
-    console.log('useMyBookHistoryMutation', isSuccess);
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });

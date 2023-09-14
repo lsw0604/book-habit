@@ -2,8 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
-import dateParse from 'date-fns/parseISO';
-import addHours from 'date-fns/addHours';
+import dayjs from 'dayjs';
 
 interface IRequest<T> extends Request {
   body: T;
@@ -72,7 +71,7 @@ export default async function readToBook(
         const USER_BOOKS_HISTORY_VALUES = [
           status,
           USER_BOOKS_RESULT.insertId,
-          dateParse(addHours(new Date(), 9).toISOString().split('T')[0]),
+          dayjs().add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USER_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_HISTORY_SQL,
@@ -97,7 +96,7 @@ export default async function readToBook(
         const USER_BOOKS_HISTORY_VALUES = [
           status,
           USER_BOOKS_RESULT.insertId,
-          dateParse(addHours(new Date(), 9).toISOString().split('T')[0]),
+          dayjs().add(9, 'hour').toISOString().split('T')[0],
         ];
         const [USER_BOOKS_HISTORY_RESULT] = await connection.query<ResultSetHeader>(
           USER_BOOKS_HISTORY_SQL,
