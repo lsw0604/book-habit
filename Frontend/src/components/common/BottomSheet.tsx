@@ -16,7 +16,7 @@ const Container = styled(motion.div)`
   z-index: 9999;
   width: 100%;
   height: auto;
-  min-height: 40%;
+  min-height: 30%;
   bottom: 0;
   border-radius: 1rem 1rem 0 0;
   padding: 1rem;

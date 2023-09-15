@@ -8,24 +8,22 @@ import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 const Container = styled(motion.div)`
   width: 100%;
   height: 100%;
-  border: 2px solid;
   box-sizing: border-box;
   position: relative;
   @media screen and (min-width: 1280px) {
     height: 100%;
-    min-height: 200px;
   }
 `;
 
 const Stack = styled.div`
-  height: 100%;
+  height: 74px;
   width: 100%;
-  border: 2px solid;
   display: flex;
   border-radius: 12px;
   justify-content: center;
   align-items: center;
   background-color: rgba(150, 150, 150, 0.05);
+  margin-bottom: 8px;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 

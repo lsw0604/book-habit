@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRef, useEffect } from 'react';
 
 import SearchItemHeader from 'components/Search/SearchItemHeader';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { bookAtom } from 'recoil/book';
 import ImageWrapper from 'components/common/ImageWrapper';
-import { useRef } from 'react';
 import useObserverHook from '@hooks/useObserverHook';
 import { userAtom } from 'recoil/user';
 import useModalHook from '@hooks/useModalHook';
@@ -78,26 +78,35 @@ export default function SearchItem({
 
   const { isVisible } = useObserverHook(itemRef);
 
-  const onClick = () => {
-    if (isLogged) {
-      setModalState({ isOpen: true, type: 'search' });
-      bottomSheetSetState({
-        image: thumbnail ? thumbnail : '',
-        authors,
-        publisher,
-        contents,
-        isbn: ISBN[1],
-        price,
-        url,
-        title,
-      });
-    } else {
-      setModalState({ isOpen: true, type: 'isLogin' });
+  useEffect(() => {
+    const onClick = () => {
+      if (isLogged) {
+        setModalState({ isOpen: true, type: 'search' });
+        bottomSheetSetState({
+          image: thumbnail ? thumbnail : '',
+          authors,
+          publisher,
+          contents,
+          isbn: ISBN[1],
+          price,
+          url,
+          title,
+        });
+      } else {
+        setModalState({ isOpen: true, type: 'isLogin' });
+      }
+    };
+    if (isVisible) {
+      itemRef.current?.addEventListener('click', onClick);
     }
-  };
+
+    return () => {
+      itemRef.current?.removeEventListener('click', onClick);
+    };
+  }, [isVisible, itemRef]);
 
   return (
-    <Container ref={itemRef} onClick={onClick}>
+    <Container ref={itemRef}>
       {isVisible ? (
         <>
           <Header>
