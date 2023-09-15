@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Button from 'components/common/Button';
 import { useEffect } from 'react';
 import useMyBookCommentDeleteMutation from '@queries/myBook/useMyBookCommentDeleteMutation';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import { IconTrashCan, Sad } from '@style/icons';
 import useModalHook from '@hooks/useModalHook';
 
@@ -40,22 +40,22 @@ const Stack = styled.div`
 `;
 
 export default function CommentDelete() {
-  const { addFormCommentId, addFormUsersBooksId, onChangeAddFormStateInitial } =
-    useMyBookAddFormHook();
+  const { myBookCommentId, myBookUsersBooksId, onChangeMyBookStateInitial } =
+    useMyBookHook();
   const { setModalState } = useModalHook();
   const { mutate, isLoading, isSuccess } = useMyBookCommentDeleteMutation(
-    addFormUsersBooksId as number,
-    addFormCommentId as number
+    myBookUsersBooksId as number,
+    myBookCommentId as number
   );
 
   const deleteHandler = () => {
-    mutate(addFormCommentId as number);
+    mutate(myBookCommentId as number);
   };
 
   useEffect(() => {
     if (isSuccess) {
       setModalState({ isOpen: false, type: undefined });
-      onChangeAddFormStateInitial();
+      onChangeMyBookStateInitial();
     }
   }, [isSuccess]);
 

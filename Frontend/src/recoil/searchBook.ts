@@ -1,10 +1,10 @@
 import { atom } from 'recoil';
 import { v1 } from 'uuid';
 
-const BOOK_ATOM_KEY = `BOOK_ATOM_KEY/${v1()}`;
+const SEARCH_BOOK_ATOM_KEY = `SEARCH_BOOK_ATOM_KEY/${v1()}`;
 
-export const bookAtom = atom<BookAtomType>({
-  key: BOOK_ATOM_KEY,
+export const searchBookAtom = atom<SearchBookAtomType>({
+  key: SEARCH_BOOK_ATOM_KEY,
   default: {
     image: '',
     isbn: '',

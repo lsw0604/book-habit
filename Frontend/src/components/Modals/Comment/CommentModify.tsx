@@ -1,7 +1,7 @@
 import StarRating from 'components/StarRating/Rating';
 import styled from 'styled-components';
 import Textarea from 'components/common/Textarea';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import { IconPencil } from '@style/icons';
 import { ChangeEvent } from 'react';
 import Button from 'components/common/Button';
@@ -38,39 +38,39 @@ const Footer = styled.div`
 
 export default function CommentModify() {
   const {
-    addFormCommentId,
-    addFormRating,
-    addFormComment,
-    addFormUsersBooksId,
-    onChangeAddFormRating,
-    onChangeAddFormComment,
-  } = useMyBookAddFormHook();
+    myBookCommentId,
+    myBookRating,
+    myBookComment,
+    myBookUsersBooksId,
+    onChangeMyBookRating,
+    onChangeMyBookComment,
+  } = useMyBookHook();
 
-  if (!addFormCommentId) return <div>잘못된 접근입니다.</div>;
-  if (!addFormUsersBooksId) return <div>잘못된 접근입니다.</div>;
+  if (!myBookCommentId) return <div>잘못된 접근입니다.</div>;
+  if (!myBookUsersBooksId) return <div>잘못된 접근입니다.</div>;
 
   const body: MyBookCommentUpdateMutationBodyType = {
-    rating: addFormRating,
-    comment: addFormComment,
+    rating: myBookRating,
+    comment: myBookComment,
   };
 
   const { mutate, isLoading } =
-    useMyBookCommentUpdateMutation(addFormUsersBooksId);
+    useMyBookCommentUpdateMutation(myBookUsersBooksId);
 
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate({ body, comment_id: addFormCommentId });
+    mutate({ body, comment_id: myBookCommentId });
   };
 
   return (
     <Container onSubmit={onSubmit}>
       <Header>수정하시겠습니까?</Header>
       <Content>
-        <StarRating rating={addFormRating} onChange={onChangeAddFormRating} />
+        <StarRating rating={myBookRating} onChange={onChangeMyBookRating} />
         <Textarea
           style={{ minHeight: '150px' }}
-          value={addFormComment}
-          onChange={onChangeAddFormComment}
+          value={myBookComment}
+          onChange={onChangeMyBookComment}
         />
       </Content>
       <Footer>

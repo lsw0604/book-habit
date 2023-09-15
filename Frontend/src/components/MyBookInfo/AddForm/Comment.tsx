@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import Textarea from 'components/common/Textarea';
 import Select from 'components/common/Selector';
 import StarRating from 'components/StarRating/Rating';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 
 const Container = styled.div`
   display: flex;
@@ -24,18 +24,18 @@ const Stack = styled.div<{ conWid: string }>`
 
 export default function Comment() {
   const {
-    addFormComment,
-    addFormRating,
-    addFormStatus,
-    addFormUseValidation,
-    onChangeAddFormComment,
-    onChangeAddFormRating,
-    onChangeAddFormStatus,
-    setAddFormState,
-  } = useMyBookAddFormHook();
+    myBookComment,
+    myBookRating,
+    myBookStatus,
+    myBookUseValidation,
+    onChangeMyBookComment,
+    onChangeMyBookRating,
+    onChangeMyBookStatus,
+    setMyBookState,
+  } = useMyBookHook();
 
   useEffect(() => {
-    setAddFormState((prev: addFormAtomType) => ({
+    setMyBookState((prev: MyBookAtomType) => ({
       ...prev,
       comment: '',
       comment_id: undefined,
@@ -52,32 +52,32 @@ export default function Comment() {
         <Stack conWid="30%">
           <Select
             label="상태"
-            isValid={addFormStatus === ''}
-            value={addFormStatus}
-            onChange={onChangeAddFormStatus as (value?: string) => void}
+            isValid={myBookStatus === ''}
+            value={myBookStatus}
+            onChange={onChangeMyBookStatus as (value?: string) => void}
             options={['읽는중', '다읽음', '읽기전']}
-            useValidation={addFormUseValidation}
+            useValidation={myBookUseValidation}
             errorMessage="상태를 선택해주세요."
           />
         </Stack>
         <Stack conWid="70%">
           <StarRating
             label="평점"
-            useValidation={addFormUseValidation}
+            useValidation={myBookUseValidation}
             errorMessage="평점을 선택해 주세요."
-            isValid={addFormRating === 0}
-            rating={addFormRating}
-            onChange={onChangeAddFormRating}
+            isValid={myBookRating === 0}
+            rating={myBookRating}
+            onChange={onChangeMyBookRating}
           />
         </Stack>
       </Box>
       <Textarea
         label="한줄평"
-        useValidation={addFormUseValidation}
-        isValid={addFormComment === ''}
+        useValidation={myBookUseValidation}
+        isValid={myBookComment === ''}
         errorMessage="한줄평을 입력해주세요."
-        value={addFormComment}
-        onChange={onChangeAddFormComment}
+        value={myBookComment}
+        onChange={onChangeMyBookComment}
         placeholder="이 책에대한 느낌을 설명해주세요."
       />
     </Container>

@@ -6,7 +6,7 @@ import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
 import { StatusWordObj, StatusColorObj } from 'lib/staticData';
 import useModalHook from '@hooks/useModalHook';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 
 const Container = styled.div`
   display: inline-flex;
@@ -67,8 +67,8 @@ export default function HistoryItem({
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
 
   const { setModalState } = useModalHook();
-  const { onChangeAddFormUsersBooksId, onChangeAddFormHistoryId } =
-    useMyBookAddFormHook();
+  const { onChangeMyBookUsersBooksId, onChangeMyBookHistoryId } =
+    useMyBookHook();
 
   const [year, month, day] = dayjs(date).format('YYYY-MM-DD').split('-');
 
@@ -81,8 +81,8 @@ export default function HistoryItem({
     : undefined;
 
   const deleteHandler = () => {
-    onChangeAddFormHistoryId(id);
-    onChangeAddFormUsersBooksId(parseInt(users_books_id));
+    onChangeMyBookHistoryId(id);
+    onChangeMyBookUsersBooksId(parseInt(users_books_id));
     setModalState({ isOpen: true, type: 'deleteHistory' });
   };
 

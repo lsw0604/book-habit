@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Button from 'components/common/Button';
 import { useEffect } from 'react';
 import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import { IconTrashCan, Sad } from '@style/icons';
 import useModalHook from '@hooks/useModalHook';
 
@@ -40,22 +40,22 @@ const Stack = styled.div`
 `;
 
 export default function HistoryDelete() {
-  const { addFormHistoryId, addFormUsersBooksId, onChangeAddFormStateInitial } =
-    useMyBookAddFormHook();
+  const { myBookHistoryId, myBookUsersBooksId, onChangeMyBookStateInitial } =
+    useMyBookHook();
   const { setModalState } = useModalHook();
   const { mutate, isLoading, isSuccess } = useMyBookHistoryDeleteMutation(
-    addFormHistoryId as number,
-    addFormUsersBooksId as number
+    myBookHistoryId as number,
+    myBookUsersBooksId as number
   );
 
   const deleteHandler = () => {
-    mutate(addFormHistoryId as number);
+    mutate(myBookHistoryId as number);
   };
 
   useEffect(() => {
     if (isSuccess) {
       setModalState({ isOpen: false, type: undefined });
-      onChangeAddFormStateInitial();
+      onChangeMyBookStateInitial();
     }
   }, [isSuccess]);
 

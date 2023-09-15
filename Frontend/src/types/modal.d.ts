@@ -2,7 +2,7 @@ type ModalAtomType = {
   isOpen: boolean;
   type?:
     | 'isLogin'
-    | 'search'
+    | 'registerSearchBook'
     | 'modify'
     | 'myBook'
     | 'modifyComment'

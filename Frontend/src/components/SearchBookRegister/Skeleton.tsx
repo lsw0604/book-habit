@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useRecoilValue } from 'recoil';
 
-import { bookAtom } from 'recoil/book';
+import { searchBookAtom } from 'recoil/searchBook';
 import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 
 const Container = styled(motion.div)`
@@ -28,7 +28,7 @@ const Stack = styled.div`
 `;
 
 export default function Skeleton() {
-  const { isbn } = useRecoilValue(bookAtom);
+  const { isbn } = useRecoilValue(searchBookAtom);
   const { data } = useMyBookExistQuery(isbn);
 
   const disabledHandler = (status?: '미등록' | '등록') => {

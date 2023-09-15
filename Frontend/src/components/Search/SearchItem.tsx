@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRef, useEffect } from 'react';
 
 import SearchItemHeader from 'components/Search/SearchItemHeader';
-import { bookAtom } from 'recoil/book';
+import { searchBookAtom } from 'recoil/searchBook';
 import ImageWrapper from 'components/common/ImageWrapper';
 import useObserverHook from '@hooks/useObserverHook';
 import { userAtom } from 'recoil/user';
@@ -73,7 +73,7 @@ export default function SearchItem({
   const itemRef = useRef<HTMLDivElement>(null);
 
   const { setModalState } = useModalHook();
-  const bottomSheetSetState = useSetRecoilState(bookAtom);
+  const setSearchBookState = useSetRecoilState(searchBookAtom);
   const { isLogged } = useRecoilValue(userAtom);
 
   const { isVisible } = useObserverHook(itemRef);
@@ -81,9 +81,9 @@ export default function SearchItem({
   useEffect(() => {
     const onClick = () => {
       if (isLogged) {
-        setModalState({ isOpen: true, type: 'search' });
-        bottomSheetSetState({
-          image: thumbnail ? thumbnail : '',
+        setModalState({ isOpen: true, type: 'registerSearchBook' });
+        setSearchBookState({
+          thumbnail,
           authors,
           publisher,
           contents,

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { customize } from '@style/colors';
 import { IconBook, IconPencil } from '@style/icons';
 import Button from 'components/common/Button';
-import AddForm from 'components/MyBookInfo/AddForm/Comment';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import Comment from 'components/MyBookInfo/AddForm/Comment';
+import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
 import useModalHook from '@hooks/useModalHook';
 
@@ -60,30 +60,30 @@ const Footer = styled.div`
 
 export default function CommentRegister() {
   const {
-    addFormComment,
-    addFormStatus,
-    addFormUsersBooksId,
-    addFormRating,
-    useMyBookAddFormCommentValidation,
-    onChangeAddFormUseValidation,
-  } = useMyBookAddFormHook();
+    myBookComment,
+    myBookStatus,
+    myBookUsersBooksId,
+    myBookRating,
+    useMyBookCommentValidation,
+    onChangeMyBookUseValidation,
+  } = useMyBookHook();
   const { setModalState } = useModalHook();
 
   const body: MyBookCommentMutationRequestType = {
-    users_books_id: addFormUsersBooksId as number,
-    status: addFormStatus,
-    comment: addFormComment,
-    rating: addFormRating,
+    users_books_id: myBookUsersBooksId as number,
+    status: myBookStatus,
+    comment: myBookComment,
+    rating: myBookRating,
   };
 
   const { mutate, isLoading, isSuccess } = useMyBookCommentMutation(
-    addFormUsersBooksId as number
+    myBookUsersBooksId as number
   );
 
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onChangeAddFormUseValidation(true);
-    if (useMyBookAddFormCommentValidation) {
+    onChangeMyBookUseValidation(true);
+    if (useMyBookCommentValidation) {
       mutate(body);
     }
   };
@@ -108,7 +108,7 @@ export default function CommentRegister() {
         </HeaderDescriptionContainer>
       </Header>
       <Content>
-        <AddForm />
+        <Comment />
       </Content>
       <Footer>
         <Button isLoading={isLoading} icon={<IconPencil />}>

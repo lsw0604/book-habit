@@ -4,7 +4,7 @@ import { customize } from '@style/colors';
 import HistoryForm from 'components/MyBookInfo/AddForm/History';
 import { IconCalendar } from '@style/icons';
 import Button from 'components/common/Button';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookHistoryMutation from '@queries/myBook/useMyBookHistoryMutation';
 
 const Container = styled.form`
@@ -59,26 +59,26 @@ const Footer = styled.div`
 
 export default function HistoryRegister() {
   const {
-    useMyBookAddFormHistoryValidation,
-    onChangeAddFormUseValidation,
-    addFormUsersBooksId,
-    addFormDate,
-    addFormStatus,
-  } = useMyBookAddFormHook();
+    useMyBookHistoryValidation,
+    onChangeMyBookUseValidation,
+    myBookUsersBooksId,
+    myBookDate,
+    myBookStatus,
+  } = useMyBookHook();
 
   const { mutate, isLoading } = useMyBookHistoryMutation(
-    addFormUsersBooksId as number
+    myBookUsersBooksId as number
   );
 
   const body: MyBookHistoryMutationRequestType = {
-    users_books_id: addFormUsersBooksId as number,
-    date: addFormDate as Date,
-    status: addFormStatus as '다읽음' | '읽는중' | '읽기시작함',
+    users_books_id: myBookUsersBooksId as number,
+    date: myBookDate as Date,
+    status: myBookStatus as '다읽음' | '읽는중' | '읽기시작함',
   };
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onChangeAddFormUseValidation(true);
-    if (useMyBookAddFormHistoryValidation) {
+    onChangeMyBookUseValidation(true);
+    if (useMyBookHistoryValidation) {
       return mutate(body);
     }
   };

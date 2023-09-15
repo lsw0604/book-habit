@@ -1,5 +1,5 @@
 import useModalHook from '@hooks/useModalHook';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentQuery from '@queries/myBook/useMyBookCommentQuery';
 import { IconPlus } from '@style/icons';
 import CommentItem from 'components/MyBookInfo/Item/CommentItem';
@@ -53,9 +53,9 @@ export default function CommentList() {
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
 
   const { setModalState } = useModalHook();
-  const { onChangeAddFormUsersBooksId } = useMyBookAddFormHook();
+  const { onChangeMyBookUsersBooksId } = useMyBookHook();
   const commentRegisterModalHandler = () => {
-    onChangeAddFormUsersBooksId(parseInt(users_books_id));
+    onChangeMyBookUsersBooksId(parseInt(users_books_id));
     setModalState({ isOpen: true, type: 'registerComment' });
   };
 

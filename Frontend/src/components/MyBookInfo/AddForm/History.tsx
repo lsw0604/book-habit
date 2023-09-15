@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import RadioButton from 'components/common/Radio/RadioButton';
 import { RadioGroupOptionType } from 'types/style';
 import DateSelector from 'components/MyBookInfo/DateSelector';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
@@ -45,18 +45,16 @@ const options: RadioGroupOptionType<string>[] = [
 
 export default function History() {
   const {
-    addFormDate,
-    addFormStatus,
-    addFormUseValidation,
-    addFormUsersBooksId,
-    onChangeAddFormDate,
-    onChangeAddFormStatus,
-    setAddFormState,
-  } = useMyBookAddFormHook();
+    myBookDate,
+    myBookStatus,
+    myBookUseValidation,
+    myBookUsersBooksId,
+    onChangeMyBookDate,
+    onChangeMyBookStatus,
+    setMyBookState,
+  } = useMyBookHook();
 
-  const { myBookTimeData } = useMyBookPageQueries(
-    addFormUsersBooksId as number
-  );
+  const { myBookTimeData } = useMyBookPageQueries(myBookUsersBooksId as number);
 
   const startDate = myBookTimeData?.startDate
     ? new Date(dayjs(myBookTimeData.startDate).add(9, 'hour').toISOString())
@@ -67,7 +65,7 @@ export default function History() {
     : null;
 
   useEffect(() => {
-    setAddFormState((prev: addFormAtomType) => ({
+    setMyBookState((prev: MyBookAtomType) => ({
       ...prev,
       comment: '',
       comment_id: undefined,
@@ -83,23 +81,23 @@ export default function History() {
         <RadioButton<string>
           label="독서 기록 상태를 선택해주세요."
           options={options}
-          value={addFormStatus}
-          onChange={onChangeAddFormStatus}
+          value={myBookStatus}
+          onChange={onChangeMyBookStatus}
           errorMessage="상태를 선택해주세요."
-          isValid={addFormStatus === ''}
-          useValidation={addFormUseValidation}
+          isValid={myBookStatus === ''}
+          useValidation={myBookUseValidation}
         />
       </Stack>
       <Content>
         <Stack>
           <DateSelector
             startDate={startDate}
-            onChange={(e) => onChangeAddFormDate(e)}
-            date={addFormDate}
+            onChange={(e) => onChangeMyBookDate(e)}
+            date={myBookDate}
             endDate={endDate}
             errorMessage="날짜를 입력해주세요."
-            isValid={addFormDate === null}
-            useValidation={addFormUseValidation}
+            isValid={myBookDate === null}
+            useValidation={myBookUseValidation}
           />
         </Stack>
       </Content>

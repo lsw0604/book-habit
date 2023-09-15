@@ -1,22 +1,7 @@
-type ResponseBookType = {
-  nextPage?: number;
-  books: BooksType[];
-};
-
-type BooksType = {
-  title: string;
-  ranking: number;
-  author: string;
-  image: string;
-  isbn: string;
-  company: string;
-  price: number;
-};
-
 type BookRegisterType = {
   authors: string;
   publisher: string;
-  image: string;
+  thumbnail?: string;
   isbn: string;
   title: string;
   status: ModalType;

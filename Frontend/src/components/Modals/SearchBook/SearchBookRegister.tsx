@@ -6,22 +6,22 @@ import { AnimatePresence } from 'framer-motion';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
-import Skeleton from 'components/BookRegister/Skeleton';
+import Skeleton from 'components/SearchBookRegister/Skeleton';
 import Button from 'components/common/Button';
 import Loader from 'components/common/Loader';
-import BookStatus from 'components/BookRegister/BookStatus';
+import BookStatus from 'components/SearchBookRegister/BookStatus';
 
 import useReadingBookMutation from '@queries/book/useReadingBookMutation';
 import useReadBookMutation from '@queries/book/useReadBookMutation';
 import useReadToBookMutation from '@queries/book/useReadToBookMutation';
 import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
-import { bookAtom } from 'recoil/book';
+import { searchBookAtom } from 'recoil/searchBook';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { userAtom } from 'recoil/user';
 
-const Read = lazy(() => import('components/BookRegister/Read'));
-const Reading = lazy(() => import('components/BookRegister/Reading'));
-const ReadTo = lazy(() => import('components/BookRegister/ReadTo'));
+const Read = lazy(() => import('components/SearchBookRegister/Read'));
+const Reading = lazy(() => import('components/SearchBookRegister/Reading'));
+const ReadTo = lazy(() => import('components/SearchBookRegister/ReadTo'));
 
 const Container = styled.form`
   width: 100%;
@@ -66,11 +66,11 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
-export default function Index() {
+export default function SearchBookRegister() {
   const [value, setValue] = useState<ModalType>('');
 
-  const { authors, contents, image, isbn, price, publisher, url, title } =
-    useRecoilValue(bookAtom);
+  const { authors, contents, thumbnail, isbn, price, publisher, url, title } =
+    useRecoilValue(searchBookAtom);
   const { isLogged } = useRecoilValue(userAtom);
 
   const { data } = useMyBookExistQuery(isbn);
@@ -124,7 +124,7 @@ export default function Index() {
   const registerBody: BookRegisterType = {
     authors: authors.join(','),
     publisher,
-    image,
+    thumbnail,
     isbn,
     price,
     status: value,

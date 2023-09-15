@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import NeedLogin from 'components/common/NeedLogin';
-import MyBookRegister from 'components/BookRegister';
+import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
 
 import CommentModify from 'components/Modals/Comment/CommentModify';
 import CommentRegister from 'components/Modals/Comment/CommentRegister';
@@ -48,7 +48,7 @@ export default function BottomSheet() {
       }}
     >
       {modalStateType === 'isLogin' && <NeedLogin />}
-      {modalStateType === 'search' && <MyBookRegister />}
+      {modalStateType === 'registerSearchBook' && <SearchBookRegister />}
       {modalStateType === 'modifyComment' && <CommentModify />}
       {modalStateType === 'registerComment' && <CommentRegister />}
       {modalStateType === 'deleteComment' && <CommentDelete />}

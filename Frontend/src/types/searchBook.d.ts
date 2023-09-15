@@ -1,5 +1,5 @@
-type BookAtomType = {
-  image: string;
+type SearchBookAtomType = {
+  thumbnail?: string;
   isbn: string;
   price: number;
   publisher: string;

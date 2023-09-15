@@ -17,7 +17,7 @@ type KakaoSearchResponseDocumentType = {
   publisher: string;
   sale_price: number;
   status: string;
-  thumbnail: string;
+  thumbnail?: string;
   translators: string[];
   url: string;
 };

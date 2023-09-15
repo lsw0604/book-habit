@@ -11,9 +11,7 @@ export default function useModalHook() {
     }));
   };
 
-  const onChangeModalStateType = (
-    type?: 'search' | 'isLogin' | 'modify' | 'myBook'
-  ) => {
+  const onChangeModalStateType = (type: ModalAtomType['type']) => {
     setModalState((prev: ModalAtomType) => ({
       ...prev,
       type,

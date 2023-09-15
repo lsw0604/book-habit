@@ -5,7 +5,7 @@ import Icon from 'components/common/Button/Icon';
 import Divider from 'components/common/Divider';
 import { customize } from '@style/colors';
 import useModalHook from '@hooks/useModalHook';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 
 const Container = styled.div`
   display: flex;
@@ -95,19 +95,19 @@ export default function CommentItem({
 
   const { setModalState } = useModalHook();
   const {
-    setAddFormState,
-    onChangeAddFormCommentId,
-    onChangeAddFormUsersBooksId,
-  } = useMyBookAddFormHook();
+    setMyBookState,
+    onChangeMyBookCommentId,
+    onChangeMyBookUsersBooksId,
+  } = useMyBookHook();
 
   const deleteHandler = () => {
     setModalState({ isOpen: true, type: 'deleteComment' });
-    onChangeAddFormCommentId(comment_id);
-    onChangeAddFormUsersBooksId(parseInt(users_books_id));
+    onChangeMyBookCommentId(comment_id);
+    onChangeMyBookUsersBooksId(parseInt(users_books_id));
   };
 
   const modifyHandler = () => {
-    setAddFormState((prev: addFormAtomType) => ({
+    setMyBookState((prev: MyBookAtomType) => ({
       ...prev,
       comment,
       rating,
