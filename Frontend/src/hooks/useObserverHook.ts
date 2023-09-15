@@ -1,6 +1,6 @@
 import { RefObject, useState, useEffect } from 'react';
 
-export default function useObserverHook<T extends HTMLElement>(
+export default function useObserverHook<T extends HTMLDivElement>(
   ref: RefObject<T>
 ): { isVisible: boolean } {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -8,12 +8,12 @@ export default function useObserverHook<T extends HTMLElement>(
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '10px',
       threshold: 0.1,
     };
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
         setIsVisible(true);
         observer.disconnect();
       }
@@ -28,7 +28,7 @@ export default function useObserverHook<T extends HTMLElement>(
         observer.unobserve(ref.current);
       }
     };
-  }, [ref]);
+  }, [ref.current]);
 
   return { isVisible };
 }

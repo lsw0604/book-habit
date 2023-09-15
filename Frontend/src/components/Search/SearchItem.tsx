@@ -103,10 +103,10 @@ export default function SearchItem({
     return () => {
       itemRef.current?.removeEventListener('click', onClick);
     };
-  }, [isVisible, itemRef]);
+  }, [isVisible]);
 
   return (
-    <Container ref={itemRef}>
+    <Container key={isbn} ref={itemRef}>
       {isVisible ? (
         <>
           <Header>

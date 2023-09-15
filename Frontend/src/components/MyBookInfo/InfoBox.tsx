@@ -5,6 +5,10 @@ import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import ImageWrapper from 'components/common/ImageWrapper';
 import Divider from 'components/common/Divider';
+import Icon from 'components/common/Button/Icon';
+import { IconBookMark, IconTrashCan } from '@style/icons';
+import { customize } from '@style/colors';
+import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
 
 const Container = styled.div`
   height: 100%;
@@ -26,6 +30,7 @@ const ImageContainer = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
+  position: relative;
 `;
 
 const LoaderWrapper = styled.div`
@@ -74,13 +79,44 @@ const A = styled.a`
   }
 `;
 
+const DetailHeader = styled.div`
+  display: flex;
+`;
+
+const DetailHeaderInfo = styled.div`
+  width: 80%;
+`;
+
+const DetailHeaderIconWrapper = styled.div`
+  width: 20%;
+`;
+
+const BookMarkWrapper = styled.div`
+  width: 120px;
+  height: 174px;
+  position: absolute;
+  svg {
+    position: absolute;
+    right: 10px;
+    height: 1.5rem;
+    fill: ${customize.yellow['300']};
+  }
+`;
+
 export default function InfoBox() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접급입니다.</div>;
 
+  const { mutate, isLoading } = useMyBookListDeleteMutation(
+    parseInt(users_books_id)
+  );
   const { myBookInfoData, myBookInfoIsLoading } = useMyBookPageQueries(
     parseInt(users_books_id)
   );
+
+  const deleteHandler = () => {
+    mutate(parseInt(users_books_id));
+  };
 
   return (
     <Container>
@@ -93,11 +129,27 @@ export default function InfoBox() {
               height={174}
               width={120}
             />
+            <BookMarkWrapper>
+              <IconBookMark />
+            </BookMarkWrapper>
           </ImageContainer>
           <DetailContainer>
-            <Publisher>{myBookInfoData?.result.publisher}</Publisher>
-            <Title>{myBookInfoData?.result.title}</Title>
-            <Authors>{myBookInfoData?.result.authors}</Authors>
+            <DetailHeader>
+              <DetailHeaderInfo>
+                <Publisher>{myBookInfoData?.result.publisher}</Publisher>
+                <Title>{myBookInfoData?.result.title}</Title>
+                <Authors>{myBookInfoData?.result.authors}</Authors>
+              </DetailHeaderInfo>
+              <DetailHeaderIconWrapper>
+                <Icon
+                  onClick={deleteHandler}
+                  icon={<IconTrashCan />}
+                  isLoading={isLoading}
+                >
+                  Delete
+                </Icon>
+              </DetailHeaderIconWrapper>
+            </DetailHeader>
             <Divider divider={2} />
             <Description>{myBookInfoData?.result.contents}&nbsp;</Description>
             <A

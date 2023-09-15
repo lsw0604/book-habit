@@ -45,5 +45,5 @@ export default function useMyBookListDeleteMutation(
     }
   }, [isError, error]);
 
-  return { mutate, isLoading };
+  return { mutate, isLoading, isSuccess };
 }
