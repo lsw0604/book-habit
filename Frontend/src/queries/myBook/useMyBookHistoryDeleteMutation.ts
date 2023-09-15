@@ -31,8 +31,12 @@ export default function useMyBookHistoryDeleteMutation(
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
-      queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
-      queryClient.invalidateQueries(['MY_BOOK_TIME']);
+      queryClient.invalidateQueries({
+        queryKey: ['MY_BOOK_HISTORY'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['MY_BOOK_TIME'],
+      });
       queryClient.invalidateQueries(['USE_MY_BOOK_LIST_INFINITY_QUERY']);
       myBookHistoryRefetch();
       myBookTimeRefetch();

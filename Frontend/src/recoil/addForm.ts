@@ -11,5 +11,6 @@ export const addFormAtom = atom<addFormAtomType>({
     useValidation: false,
     rating: 0,
     comment: '',
+    filter: ['전체보기'],
   },
 });

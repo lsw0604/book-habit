@@ -5,6 +5,7 @@ import { StatusColorObj } from 'lib/staticData';
 import useModalHook from '@hooks/useModalHook';
 import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
 import useToastHook from '@hooks/useToastHook';
+import { IconClose } from '@style/icons';
 
 interface IProps {
   usersBooksId: number;
@@ -65,6 +66,18 @@ const Status = styled.div<{ status: HistoryStatusType }>`
   background-color: ${({ status }) => StatusColorObj[status]};
 `;
 
+const IconWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  svg {
+    height: 30%;
+    fill: ${({ theme }) => theme.colors.spinner};
+  }
+`;
+
 export default function DateBox({
   gridColumn,
   date,
@@ -96,8 +109,8 @@ export default function DateBox({
 
   const historyRegisterModalHandler = () => {
     if (
-      (startDateDayjs && dayObj.isBefore(startDateDayjs.add(1, 'day'))) ||
-      (endDateDayjs && dayObj.isAfter(endDateDayjs))
+      (startDateDayjs && dayObj.isBefore(startDateDayjs)) ||
+      (endDateDayjs && dayObj.isAfter(endDateDayjs.add(1, 'day')))
     ) {
       addToast({
         message: '해당 날짜는 선택하실 수 없습니다.',
@@ -116,12 +129,19 @@ export default function DateBox({
         <Span isSaturday={isSaturday} isSunday={isSunday}>
           {date}
         </Span>
-        <StatusWrapper>
-          {dataMapped &&
-            dataMapped.map((status, index) => (
-              <Status key={index} status={status} />
-            ))}
-        </StatusWrapper>
+        {(startDateDayjs && dayObj.isBefore(startDateDayjs)) ||
+        (endDateDayjs && dayObj.isAfter(endDateDayjs.add(1, 'day'))) ? (
+          <IconWrapper>
+            <IconClose />
+          </IconWrapper>
+        ) : (
+          <StatusWrapper>
+            {dataMapped &&
+              dataMapped.map((status, index) => (
+                <Status key={index} status={status} />
+              ))}
+          </StatusWrapper>
+        )}
       </Contents>
     </Container>
   );

@@ -44,8 +44,8 @@ export default function HistoryDelete() {
     useMyBookAddFormHook();
   const { setModalState } = useModalHook();
   const { mutate, isLoading, isSuccess } = useMyBookHistoryDeleteMutation(
-    addFormUsersBooksId as number,
-    addFormHistoryId as number
+    addFormHistoryId as number,
+    addFormUsersBooksId as number
   );
 
   const deleteHandler = () => {

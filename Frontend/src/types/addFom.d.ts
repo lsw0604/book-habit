@@ -7,4 +7,5 @@ type addFormAtomType = {
   comment_id?: number;
   users_books_id?: number;
   history_id?: number;
+  filter: string[];
 };

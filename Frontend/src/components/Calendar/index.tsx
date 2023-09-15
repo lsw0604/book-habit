@@ -5,15 +5,11 @@ import { useState } from 'react';
 import DateBox from 'components/Calendar/DateBox';
 import Icon from 'components/common/Button/Icon';
 import Divider from 'components/common/Divider';
+import Selector from 'components/common/Selector';
 import { IconLeftArrow, IconRightArrow } from '@style/icons';
 import { getMonthYearDetails, getNewMonthYear } from 'lib/utils/monthYear';
 import { useParams } from 'react-router-dom';
-
-interface IProps {
-  history?: MyBookPageQueriesHistoryListType;
-  startDate?: string;
-  endDate?: string;
-}
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 interface IDateByData {
   [date: string]: HistoryStatusType[];
@@ -28,7 +24,7 @@ const Container = styled.div`
 `;
 
 const CalendarHeader = styled.div`
-  min-height: 40px;
+  min-height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,6 +33,13 @@ const CalendarHeader = styled.div`
 const CalendarHeading = styled.h1`
   font-size: 20px;
   line-height: 22px;
+  width: 30%;
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
+
+const CalendarSelectorWrapper = styled.div`
+  display: flex;
+  width: 70%;
 `;
 
 const CalendarBox = styled.div<{ numRows: number }>`
@@ -51,11 +54,27 @@ const Contents = styled.div`
   align-items: center;
 `;
 
-export default function Index({ history, startDate, endDate }: IProps) {
+export default function Index() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const currentMonthYear = getMonthYearDetails(dayjs());
   const [monthYear, setMonthYear] = useState(currentMonthYear);
+  const [filter, setFilter] = useState<string[]>(['전체보기']);
+
+  const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
+
+  const { myBookHistoryData, myBookTimeData } = useMyBookPageQueries(
+    parseInt(users_books_id),
+    filter
+  );
+
+  const startDate = myBookTimeData?.startDate
+    ? dayjs(myBookTimeData.startDate).add(9, 'hour').format('YYYY-MM-DD')
+    : undefined;
+  const endDate = myBookTimeData?.endDate
+    ? dayjs(myBookTimeData.endDate).add(9, 'hour').format('YYYY-MM-DD')
+    : undefined;
+
   const dayObj = dayjs()
     .locale('ko')
     .year(parseInt(monthYear.year))
@@ -68,7 +87,7 @@ export default function Index({ history, startDate, endDate }: IProps) {
   };
 
   const dataByDate: IDateByData = {};
-  history?.forEach((item) => {
+  myBookHistoryData?.forEach((item) => {
     const dateStr = dayjs(item.date).add(9, 'hour').toISOString().split('T')[0];
     dataByDate[dateStr] = dataByDate[dateStr] || [];
     dataByDate[dateStr].push(item.status);
@@ -91,6 +110,20 @@ export default function Index({ history, startDate, endDate }: IProps) {
   return (
     <Container>
       <CalendarHeader>
+        <CalendarHeading>
+          {monthYear.year}년 {parseInt(monthYear.month)}월
+        </CalendarHeading>
+        <CalendarSelectorWrapper>
+          <Selector
+            multiple
+            value={filter}
+            onChange={(e) => setFilter(e)}
+            options={options}
+          />
+        </CalendarSelectorWrapper>
+      </CalendarHeader>
+      <Divider divider={2} />
+      <Contents>
         <Icon
           disabled={!prevMonthHandler()}
           onClick={() => updateMonthYear(-1)}
@@ -98,19 +131,6 @@ export default function Index({ history, startDate, endDate }: IProps) {
         >
           previous
         </Icon>
-        <CalendarHeading>
-          {monthYear.year}년 {parseInt(monthYear.month)}월
-        </CalendarHeading>
-        <Icon
-          disabled={!nextMonthHandler()}
-          onClick={() => updateMonthYear(1)}
-          icon={<IconRightArrow />}
-        >
-          next
-        </Icon>
-      </CalendarHeader>
-      <Divider divider={2} />
-      <Contents>
         <CalendarBox numRows={numRows}>
           <DateBox
             startDate={startDate}
@@ -137,6 +157,13 @@ export default function Index({ history, startDate, endDate }: IProps) {
             ) : null
           )}
         </CalendarBox>
+        <Icon
+          disabled={!nextMonthHandler()}
+          onClick={() => updateMonthYear(1)}
+          icon={<IconRightArrow />}
+        >
+          next
+        </Icon>
       </Contents>
     </Container>
   );

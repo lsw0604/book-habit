@@ -15,8 +15,7 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   min-height: 40px;
-  border: 2px solid ${({ theme }) => theme.mode.typo_sub};
-  border-radius: 5px;
+  border-bottom: 2px solid ${({ theme }) => theme.mode.typo_main};
   align-items: center;
   padding: 0.25rem 0.5rem;
   outline: none;

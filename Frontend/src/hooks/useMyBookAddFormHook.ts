@@ -73,6 +73,7 @@ export default function useMyBookAddFormHook() {
       comment: '',
       comment_id: undefined,
       users_books_id: undefined,
+      filter: [],
     });
   };
 
