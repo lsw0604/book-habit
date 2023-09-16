@@ -30,7 +30,7 @@ export interface IRanking extends RowDataPacket {
   author: string;
   ranking: number;
   isbn: string;
-  image: string;
+  thumbnail: string;
   company: string;
   price: number;
 }
@@ -75,7 +75,7 @@ export interface IMyBooksResponse extends RowDataPacket {
   id: number;
   isbn: string;
   status: string;
-  image: string;
+  thumbnail: string;
   start_date: Date;
   end_date: Date;
   rating: number;
@@ -110,7 +110,7 @@ export type MyBookListResponseType = {
   id: number;
   isbn: string;
   title: string;
-  image: string | null;
+  thumbnail?: string;
   status: '다읽음' | '읽는중' | '읽고싶음';
   created_at: Date;
 } & RowDataPacket;
@@ -135,7 +135,7 @@ export type MyBookRatingType = {
 } & RowDataPacket;
 
 export type MyBookInfoType = {
-  image: string | null;
+  thumbnail?: string;
   title: string;
   url: string;
   contents: string;

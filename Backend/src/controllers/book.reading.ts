@@ -11,7 +11,7 @@ interface IRequest<T> extends Request {
 interface IReadingRequest {
   authors: string;
   publisher: string;
-  image: string;
+  thumbnail: string;
   isbn: string;
   price: number;
   status: string;
@@ -34,7 +34,7 @@ export default async function readingBook(
   const NAMESPACE = 'READ_BOOK_REGISTER';
   logging.info(NAMESPACE, '[START]');
 
-  const { isbn, title, authors, publisher, price, image, status, startDate, url, contents } =
+  const { isbn, title, authors, publisher, price, thumbnail, status, startDate, url, contents } =
     req.body;
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
@@ -53,8 +53,17 @@ export default async function readingBook(
 
       if (BOOK_EXIST_RESULT[0] === undefined) {
         const BOOK_REGISTER_SQL =
-          'INSERT INTO books (isbn, title, authors, publisher, price, image, url, contents) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
-        const BOOK_REGISTER_VALUES = [isbn, title, authors, publisher, price, image, url, contents];
+          'INSERT INTO books (isbn, title, authors, publisher, price, thumbnail, url, contents) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+        const BOOK_REGISTER_VALUES = [
+          isbn,
+          title,
+          authors,
+          publisher,
+          price,
+          thumbnail,
+          url,
+          contents,
+        ];
         const [BOOK_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
           BOOK_REGISTER_SQL,
           BOOK_REGISTER_VALUES

@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
 import useToastHook from '@hooks/useToastHook';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import useModalHook from '@hooks/useModalHook';
 
@@ -12,7 +12,7 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();
-  const { onChangeAddFormStateInitial } = useMyBookAddFormHook();
+  const { onChangeMyBookStateInitial } = useMyBookHook();
   const { setModalState } = useModalHook();
   const { myBookHistoryRefetch, myBookTimeRefetch } =
     useMyBookPageQueries(users_books_id);
@@ -36,7 +36,7 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
       const { message, status } = data;
       addToast({ message, status });
       setModalState({ isOpen: false, type: undefined });
-      onChangeAddFormStateInitial();
+      onChangeMyBookStateInitial();
     }
   }, [isSuccess, data]);
 

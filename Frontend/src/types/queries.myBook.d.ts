@@ -41,7 +41,7 @@ type MyBookListInfinityQueryResponseType = {
 
 type MyBookListInfinityQueryItemType = Pick<
   BooksType,
-  'isbn' | 'image' | 'title'
+  'isbn' | 'thumbnail' | 'title'
 > & {
   id: number;
   status?: '다읽음' | '읽기시작함' | '읽고싶음' | '읽는중';
@@ -91,7 +91,7 @@ type MyBookPageQueriesInfoResponseType = {
 
 type MyBookPageQueriesInfoResultType = {
   title: string;
-  image?: string;
+  thumbnail?: string;
   url: string;
   contents: string;
   publisher: string;

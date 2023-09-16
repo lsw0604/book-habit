@@ -6,7 +6,7 @@ const SEARCH_BOOK_ATOM_KEY = `SEARCH_BOOK_ATOM_KEY/${v1()}`;
 export const searchBookAtom = atom<SearchBookAtomType>({
   key: SEARCH_BOOK_ATOM_KEY,
   default: {
-    image: '',
+    thumbnail: '',
     isbn: '',
     price: 0,
     publisher: '',

@@ -25,7 +25,7 @@ type BookSearchInfinityQueryResponseItemType = {
 
 // useReadBookMutation의 타입들
 type ReadBookMutationResponseType = MutationResponse;
-type ReadBookNutationRequestType = BookRegisterType & {
+type ReadBookMutationRequestType = BookRegisterType & {
   startDate: Date;
   endDate: Date;
 };

@@ -11,7 +11,7 @@ export default async function myBookInfo(req: Request, res: Response, next: Next
     const connection = await connectionPool.getConnection();
     try {
       const MY_BOOK_INFO_SQL =
-        'SELECT bs.image, bs.title, bs.url, bs.contents, bs.publisher, bs.authors FROM users_books ub RIGHT JOIN books bs ON ub.books_id = bs.id WHERE ub.id = ? LIMIT 1';
+        'SELECT bs.thumbnail, bs.title, bs.url, bs.contents, bs.publisher, bs.authors FROM users_books ub RIGHT JOIN books bs ON ub.books_id = bs.id WHERE ub.id = ? LIMIT 1';
       const MY_BOOK_INFO_VALUES = [users_books_id];
       const [MY_BOOK_INFO_RESULT] = await connection.query<MyBookInfoType[]>(
         MY_BOOK_INFO_SQL,

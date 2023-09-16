@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { customize } from '@style/colors';
 import { StatusColorObj } from 'lib/staticData';
 import useModalHook from '@hooks/useModalHook';
-import useMyBookAddFormHook from '@hooks/useMyBookAddFormHook';
+import useMyBookHook from '@hooks/useMyBookHook';
 import useToastHook from '@hooks/useToastHook';
 import { IconClose } from '@style/icons';
 
@@ -96,8 +96,7 @@ export default function DateBox({
     .date(date);
 
   const { setModalState } = useModalHook();
-  const { onChangeAddFormUsersBooksId, onChangeAddFormDate } =
-    useMyBookAddFormHook();
+  const { onChangeMyBookUsersBooksId, onChangeMyBookDate } = useMyBookHook();
   const { addToast } = useToastHook();
 
   const isSaturday = dayObj.day() === 6;
@@ -118,8 +117,8 @@ export default function DateBox({
       });
       return;
     }
-    onChangeAddFormUsersBooksId(usersBooksId);
-    onChangeAddFormDate(dayObj.toDate());
+    onChangeMyBookUsersBooksId(usersBooksId);
+    onChangeMyBookDate(dayObj.toDate());
     setModalState({ isOpen: true, type: 'registerHistory' });
   };
 

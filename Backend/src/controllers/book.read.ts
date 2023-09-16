@@ -11,7 +11,7 @@ interface IRequest<T> extends Request {
 interface IReadRequest {
   authors: string;
   publisher: string;
-  image: string;
+  thumbnail: string;
   isbn: string;
   price: number;
   status: string;
@@ -41,7 +41,7 @@ export default async function readBook(
     authors,
     publisher,
     price,
-    image,
+    thumbnail,
     status,
     startDate,
     endDate,
@@ -56,7 +56,7 @@ export default async function readBook(
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
-      logging.info(NAMESPACE, '[START]', req.body);
+      logging.info(NAMESPACE, '[REQ.BODY]', req.body);
 
       const BOOK_EXIST_SQL = 'SELECT isbn, id FROM books WHERE isbn = ?';
       const BOOK_EXIST_VALUES = [isbn];
@@ -68,8 +68,18 @@ export default async function readBook(
 
       if (BOOK_EXIST_RESULT[0] === undefined) {
         const BOOK_REGISTER_SQL =
-          'INSERT INTO books (isbn, title, authors, publisher, price, image, url, contents) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
-        const BOOK_REGISTER_VALUES = [isbn, title, authors, publisher, price, image, url, contents];
+          'INSERT INTO books (isbn, title, authors, publisher, price, thumbnail, url, contents, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+        const BOOK_REGISTER_VALUES = [
+          isbn,
+          title,
+          authors,
+          publisher,
+          price,
+          thumbnail,
+          url,
+          contents,
+          status,
+        ];
         const [BOOK_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
           BOOK_REGISTER_SQL,
           BOOK_REGISTER_VALUES

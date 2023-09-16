@@ -68,7 +68,7 @@ export default async function myBookList(req: Request, res: Response, next: Next
           ') AS rn ' +
           'FROM users_books_history ubh ' +
           ') ' +
-          'SELECT ub.id AS id, bs.title, bs.image, bs.isbn, ls.date, ls.status ' +
+          'SELECT ub.id AS id, bs.title, bs.thumbnail, bs.isbn, ls.date, ls.status ' +
           'FROM users_books ub ' +
           'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
           'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +
@@ -141,7 +141,7 @@ export default async function myBookList(req: Request, res: Response, next: Next
         ') AS rn ' +
         'FROM users_books_history ubh ' +
         ') ' +
-        'SELECT ub.id AS id, bs.title, bs.image, bs.isbn, ls.date, ls.status ' +
+        'SELECT ub.id AS id, bs.title, bs.thumbnail, bs.isbn, ls.date, ls.status ' +
         'FROM users_books ub ' +
         'RIGHT JOIN books bs ON ub.books_id = bs.id ' +
         'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +

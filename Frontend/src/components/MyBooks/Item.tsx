@@ -55,7 +55,7 @@ const DateTime = styled.p`
 
 export default function Item({
   isbn,
-  image,
+  thumbnail,
   status,
   title,
   id,
@@ -72,7 +72,7 @@ export default function Item({
     return (
       <Container onClick={() => navigate(`/my_books/${id}`)}>
         <Header>
-          <ImageWrapper src={image} alt={isbn} width={120} height={174} />
+          <ImageWrapper src={thumbnail} alt={isbn} width={120} height={174} />
         </Header>
         <Contents>
           <Span>
@@ -94,7 +94,7 @@ export default function Item({
   return (
     <Container onClick={() => navigate(`/my_books/${id}`)}>
       <Header>
-        <ImageWrapper src={image} alt={isbn} width={120} height={174} />
+        <ImageWrapper src={thumbnail} alt={isbn} width={120} height={174} />
       </Header>
       <Contents>
         <Span>

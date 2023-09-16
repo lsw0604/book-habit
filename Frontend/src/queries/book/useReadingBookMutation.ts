@@ -36,11 +36,9 @@ export default function useReadingBookMutation() {
       const { message, status } = data;
       addToast({ message, status });
       setBookRegisterModalState({
-        page: 0,
         startDate: null,
         useValidate: false,
         endDate: null,
-        rating: 0,
       });
       setModalState({ isOpen: false });
     }

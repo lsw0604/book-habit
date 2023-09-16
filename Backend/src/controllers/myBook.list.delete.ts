@@ -39,7 +39,9 @@ export default async function myBookList(req: Request, res: Response, next: Next
 
       await connection.commit();
       connection.release();
-      return res.status(200).json({ status: 'success', message: '삭제 완료했습니다.' });
+      return res
+        .status(200)
+        .json({ status: 'success', message: '내 서재에 등록된 책을 삭제 완료했습니다.' });
     } catch (error: any) {
       logging.error(NAMESPACE, error.message, error);
       connection.release();

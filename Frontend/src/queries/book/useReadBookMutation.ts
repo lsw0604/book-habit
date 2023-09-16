@@ -21,7 +21,7 @@ export default function useReadBookMutation() {
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     ReadBookMutationResponseType,
     AxiosError<{ message: string; status: string }>,
-    ReadBookNutationRequestType
+    ReadBookMutationRequestType
   >([REACT_QUERY_KEY], readBookRegisterAPI, {
     onSuccess: () => {
       queryClient.invalidateQueries({
