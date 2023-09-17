@@ -16,38 +16,6 @@ declare module 'styled-components' {
   }
 }
 
-export type IconType =
-  | 'Star'
-  | 'Mail'
-  | 'X'
-  | 'Male'
-  | 'Female'
-  | 'Error'
-  | 'Success'
-  | 'Warning'
-  | 'Info'
-  | 'OpenEye'
-  | 'ClosedEye'
-  | 'Person'
-  | 'WarningCircle'
-  | 'Sunny'
-  | 'Beach'
-  | 'CloudyParty'
-  | 'Map'
-  | 'Support'
-  | 'UpArrow'
-  | 'DownArrow'
-  | 'Hamburger'
-  | 'RightArrow'
-  | 'LeftArrow'
-  | 'Plus'
-  | 'Pencil'
-  | 'TrashCan'
-  | 'Upload'
-  | 'Image'
-  | 'Search'
-  | 'Home';
-
 export type ColorType =
   | 'slate'
   | 'gray'
