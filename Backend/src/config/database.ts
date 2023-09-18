@@ -6,8 +6,11 @@ export function dbConfig() {
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    connectionLimit: 10
+    port: 3306,
+    connectionLimit: 10,
   });
+
+  console.log(process.env.MYSQL_USER, process.env.MYSQL_PASSWORD);
 
   connectionPool.on('connection', (connection) => {
     console.log(`Connection ${connection.threadId} connected`);

@@ -124,7 +124,7 @@ export default function InfoBox() {
         <>
           <ImageContainer>
             <ImageWrapper
-              src={myBookInfoData?.result.image}
+              src={myBookInfoData?.result.thumbnail}
               alt={users_books_id}
               height={174}
               width={120}

@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useRef, useEffect } from 'react';
 
 import SearchItemHeader from 'components/Search/SearchItemHeader';
 import { searchBookAtom } from 'recoil/searchBook';
 import ImageWrapper from 'components/common/ImageWrapper';
 import useObserverHook from '@hooks/useObserverHook';
-import { userAtom } from 'recoil/user';
 import useModalHook from '@hooks/useModalHook';
 
 const Container = styled.div`
@@ -74,27 +73,22 @@ export default function SearchItem({
 
   const { setModalState } = useModalHook();
   const setSearchBookState = useSetRecoilState(searchBookAtom);
-  const { isLogged } = useRecoilValue(userAtom);
 
   const { isVisible } = useObserverHook(itemRef);
 
   useEffect(() => {
     const onClick = () => {
-      if (isLogged) {
-        setModalState({ isOpen: true, type: 'registerSearchBook' });
-        setSearchBookState({
-          thumbnail,
-          authors,
-          publisher,
-          contents,
-          isbn: ISBN[1],
-          price,
-          url,
-          title,
-        });
-      } else {
-        setModalState({ isOpen: true, type: 'isLogin' });
-      }
+      setModalState({ isOpen: true, type: 'registerSearchBook' });
+      setSearchBookState({
+        thumbnail,
+        authors,
+        publisher,
+        contents,
+        isbn: ISBN[1],
+        price,
+        url,
+        title,
+      });
     };
     if (isVisible) {
       itemRef.current?.addEventListener('click', onClick);

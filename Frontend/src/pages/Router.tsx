@@ -43,11 +43,11 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
               }
             >
               <Routes>
+                <Route path="/" Component={Home} />
                 <Route element={<IsKakaoAuthLayout isKakaoRegister={true} />}>
                   <Route path="/register/kakao" Component={KakaoRegister} />
                 </Route>
                 <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
-                  <Route path="/" Component={Home} />
                   <Route path="/search" Component={Search} />
                   <Route element={<IsAuthLayout isAuth={true} />}>
                     <Route path="/my_books" Component={MyBooks} />

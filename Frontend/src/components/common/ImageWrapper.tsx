@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-import { useRef } from 'react';
 import { IconImage } from '@style/icons';
-import useObserverHook from '@hooks/useObserverHook';
 
 interface IProps {
   src?: string;
@@ -37,13 +35,9 @@ const Container = styled.div<{ width: number; height: number }>`
 `;
 
 export default function ImageWrapper({ src, alt, height, width }: IProps) {
-  const imageRef = useRef<HTMLDivElement>(null);
-
-  const { isVisible } = useObserverHook(imageRef);
-
   return (
-    <Container ref={imageRef} height={height} width={width}>
-      {isVisible ? src ? <img src={src} alt={alt} /> : <IconImage /> : null}
+    <Container height={height} width={width}>
+      {src ? <img src={src} alt={alt} loading="lazy" /> : <IconImage />}
     </Container>
   );
 }

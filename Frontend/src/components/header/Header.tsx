@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import { userAtom } from 'recoil/user';
@@ -15,6 +15,7 @@ const Container = styled.nav`
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
   background-color: ${({ theme }) => theme.mode.main};
   z-index: 9998;
 `;
@@ -41,40 +42,28 @@ const LoaderWrapper = styled.div`
 export default function Index({ isLoading }: { isLoading: boolean }) {
   const navigate = useNavigate();
   const { isLogged } = useRecoilValue(userAtom);
+  const { pathname } = useLocation();
 
   return (
-    <Container>
-      <LogoWrapper onClick={() => navigate('/')}></LogoWrapper>
-      {/* <Wrapper>
-        {userState.isLogged ? (
-          !isLoading ? (
-            <HeaderProfile name={userState.name} />
-          ) : (
-            <LoaderWrapper>
-              <Loader />
-            </LoaderWrapper>
-          )
-        ) : !isLoading ? (
-          <HeaderAuth />
-        ) : (
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        )}
-      </Wrapper> */}
-      <Wrapper>
-        {!isLoading ? (
-          isLogged ? (
-            <HeaderProfile />
-          ) : (
-            <HeaderAuth />
-          )
-        ) : (
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        )}
-      </Wrapper>
-    </Container>
+    <>
+      {pathname !== '/' ? (
+        <Container>
+          <LogoWrapper onClick={() => navigate('/')}>책벌래</LogoWrapper>
+          <Wrapper>
+            {!isLoading ? (
+              isLogged ? (
+                <HeaderProfile />
+              ) : (
+                <HeaderAuth />
+              )
+            ) : (
+              <LoaderWrapper>
+                <Loader />
+              </LoaderWrapper>
+            )}
+          </Wrapper>
+        </Container>
+      ) : null}
+    </>
   );
 }

@@ -34,6 +34,12 @@ const Container = styled.form`
   max-width: 375px;
   width: 100%;
   height: auto;
+  @media screen and (min-width: 1280px) {
+    max-width: 500px;
+    padding: 2rem;
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+    border-radius: 10px;
+  }
 `;
 
 const Box = styled.div`

@@ -18,6 +18,12 @@ const Container = styled.form`
   margin-right: auto;
   max-width: 375px;
   width: 100%;
+  @media screen and (min-width: 1280px) {
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+    padding: 2rem;
+    max-width: 500px;
+    border-radius: 10px;
+  }
 `;
 
 const Box = styled.div`
@@ -94,59 +100,57 @@ export default function Login() {
   }, [email, password]);
 
   return (
-    <>
-      <Container onSubmit={onSubmit}>
-        <Box>
-          <Header>로그인</Header>
-          <Stack>
-            <Input
-              label="이메일"
-              icon={<IconMail />}
-              type="email"
-              value={email}
-              onChange={onChangeEmail}
-              useValidation={useValidation}
-              isValid={!email}
-              errorMessage="이메일이 필요합니다."
-            />
-          </Stack>
-          <Stack>
-            <Input
-              label="비밀번호"
-              icon={
-                eyeOpen ? (
-                  <IconOpenEye onClick={toggleIcon} />
-                ) : (
-                  <IconClosedEye onClick={toggleIcon} />
-                )
-              }
-              type={eyeOpen ? 'text' : 'password'}
-              value={password}
-              onChange={onChangePassword}
-              useValidation={useValidation}
-              isValid={!password}
-              errorMessage="비밀번호가 필요합니다."
-            />
-          </Stack>
-          <Footer>
-            계정이 없나요 ?{' '}
-            <span onClick={() => navigate('/register')}>회원가입</span>
-          </Footer>
-          <Divider divider={10} />
-          <Stack style={{ marginBottom: '0px' }}>
-            <Button
-              type="submit"
-              isLoading={isLoading}
-              style={{ marginBottom: '8px' }}
-            >
-              로그인
-            </Button>
-          </Stack>
-          <Stack>
-            <Kakao />
-          </Stack>
-        </Box>
-      </Container>
-    </>
+    <Container onSubmit={onSubmit}>
+      <Box>
+        <Header>로그인</Header>
+        <Stack>
+          <Input
+            label="이메일"
+            icon={<IconMail />}
+            type="email"
+            value={email}
+            onChange={onChangeEmail}
+            useValidation={useValidation}
+            isValid={!email}
+            errorMessage="이메일이 필요합니다."
+          />
+        </Stack>
+        <Stack>
+          <Input
+            label="비밀번호"
+            icon={
+              eyeOpen ? (
+                <IconOpenEye onClick={toggleIcon} />
+              ) : (
+                <IconClosedEye onClick={toggleIcon} />
+              )
+            }
+            type={eyeOpen ? 'text' : 'password'}
+            value={password}
+            onChange={onChangePassword}
+            useValidation={useValidation}
+            isValid={!password}
+            errorMessage="비밀번호가 필요합니다."
+          />
+        </Stack>
+        <Footer>
+          계정이 없나요 ?{' '}
+          <span onClick={() => navigate('/register')}>회원가입</span>
+        </Footer>
+        <Divider divider={10} />
+        <Stack style={{ marginBottom: '0px' }}>
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            style={{ marginBottom: '8px' }}
+          >
+            로그인
+          </Button>
+        </Stack>
+        <Stack>
+          <Kakao />
+        </Stack>
+      </Box>
+    </Container>
   );
 }

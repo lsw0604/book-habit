@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, FormEvent, Suspense, lazy } from 'react';
+import { useState, FormEvent } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AnimatePresence } from 'framer-motion';
 
@@ -8,20 +8,19 @@ import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
 import Skeleton from 'components/SearchBookRegister/Skeleton';
 import Button from 'components/common/Button';
-import Loader from 'components/common/Loader';
 import BookStatus from 'components/SearchBookRegister/BookStatus';
+import Read from 'components/SearchBookRegister/Read';
+import Reading from 'components/SearchBookRegister/Reading';
+import ReadTo from 'components/SearchBookRegister/ReadTo';
 
 import useReadingBookMutation from '@queries/book/useReadingBookMutation';
 import useReadBookMutation from '@queries/book/useReadBookMutation';
 import useReadToBookMutation from '@queries/book/useReadToBookMutation';
-import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 import { searchBookAtom } from 'recoil/searchBook';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { userAtom } from 'recoil/user';
-
-const Read = lazy(() => import('components/SearchBookRegister/Read'));
-const Reading = lazy(() => import('components/SearchBookRegister/Reading'));
-const ReadTo = lazy(() => import('components/SearchBookRegister/ReadTo'));
+import ImageWrapper from 'components/common/ImageWrapper';
+import useToastHook from '@hooks/useToastHook';
 
 const Container = styled.form`
   width: 100%;
@@ -32,25 +31,48 @@ const Container = styled.form`
 `;
 
 const Header = styled.div`
-  height: 40px;
+  height: 190px;
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+`;
+
+const HeaderImageWrapper = styled.div`
+  width: 120px;
+  height: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+`;
+
+const HeaderDetailContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const Title = styled.h1`
+  font-size: 22px;
+  line-height: 20px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  width: 100%;
+  margin-bottom: 8px;
+`;
+
+const Description = styled.div`
+  height: 100%;
+  font-size: 12px;
+  line-height: 12px;
+  color: ${({ theme }) => theme.mode.typo_main};
+  overflow: scroll;
 `;
 
 const Content = styled.div`
   position: relative;
   margin-bottom: 1rem;
-`;
-
-const Heading = styled.h1`
-  font-size: 18px;
-  line-height: 20px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.mode.typo_sub};
-  margin-bottom: 8px;
-  width: 100%;
-  text-align: center;
 `;
 
 const Stack = styled.div`
@@ -59,22 +81,13 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
-const LoaderWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export default function SearchBookRegister() {
   const [value, setValue] = useState<ModalType>('');
 
   const { authors, contents, thumbnail, isbn, price, publisher, url, title } =
     useRecoilValue(searchBookAtom);
   const { isLogged } = useRecoilValue(userAtom);
-
-  const { data } = useMyBookExistQuery(isbn);
-
+  const { addToast } = useToastHook();
   const {
     bookRegisterModalEndDate: endDate,
     bookRegisterModalStartDate: startDate,
@@ -114,13 +127,6 @@ export default function SearchBookRegister() {
     setValue(value as ModalType);
   };
 
-  const disabledHandler = (status?: '등록' | '미등록') => {
-    if (status === '등록') {
-      return true;
-    }
-    return false;
-  };
-
   const registerBody: BookRegisterType = {
     authors: authors.join(','),
     publisher,
@@ -135,33 +141,42 @@ export default function SearchBookRegister() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onChangeBookRegisterModalUseValidation(true);
-    if (value === '다읽음' && readValidation) {
-      const body: ReadBookRegisterType = {
-        ...registerBody,
-        startDate: startDate as Date,
-        endDate: endDate as Date,
-      };
-      return readMutate(body);
-    } else if (value === '읽는중' && readingValidation) {
-      const body: ReadingBookRegisterType = {
-        ...registerBody,
-        startDate: startDate as Date,
-      };
-      return readingMutate(body);
-    } else if (value === '읽고싶음') {
-      const body: ReadToBookRegisterType = {
-        ...registerBody,
-      };
-      return readToMutate(body);
+    if (isLogged) {
+      onChangeBookRegisterModalUseValidation(true);
+      if (value === '다읽음' && readValidation) {
+        const body: ReadBookRegisterType = {
+          ...registerBody,
+          startDate: startDate as Date,
+          endDate: endDate as Date,
+        };
+        return readMutate(body);
+      } else if (value === '읽는중' && readingValidation) {
+        const body: ReadingBookRegisterType = {
+          ...registerBody,
+          startDate: startDate as Date,
+        };
+        return readingMutate(body);
+      } else if (value === '읽고싶음') {
+        const body: ReadToBookRegisterType = {
+          ...registerBody,
+        };
+        return readToMutate(body);
+      }
     }
+    addToast({ message: '로그인해주세요.', status: 'info' });
   };
 
   return (
     <Container onSubmit={onSubmit}>
       <Header>
-        <Heading>{title}</Heading>
-        {isLogged ? <BookStatus /> : null}
+        <HeaderImageWrapper>
+          <ImageWrapper src={thumbnail} alt={isbn} height={174} width={120} />
+        </HeaderImageWrapper>
+        <HeaderDetailContainer>
+          <Title>{title}</Title>
+          {contents ? <Description>{contents}...</Description> : null}
+          {isLogged ? <BookStatus /> : null}
+        </HeaderDetailContainer>
       </Header>
       <Content>
         <Stack>
@@ -170,29 +185,19 @@ export default function SearchBookRegister() {
             value={value}
             options={options}
             onChange={onChange}
-            disabled={disabledHandler(data?.status)}
           />
         </Stack>
-        <Suspense
-          fallback={
-            <LoaderWrapper>
-              <Loader />
-            </LoaderWrapper>
-          }
-        >
-          <Stack style={{ flex: '1' }}>
-            <AnimatePresence>
-              {value === '' && <Skeleton />}
-              {value === '다읽음' && <Read />}
-              {value === '읽는중' && <Reading />}
-              {value === '읽고싶음' && <ReadTo />}
-            </AnimatePresence>
-          </Stack>
-        </Suspense>
+        <Stack style={{ flex: '1' }}>
+          <AnimatePresence>
+            {value === '' && <Skeleton />}
+            {value === '다읽음' && <Read />}
+            {value === '읽는중' && <Reading />}
+            {value === '읽고싶음' && <ReadTo />}
+          </AnimatePresence>
+        </Stack>
       </Content>
       <Stack>
         <Button
-          disabled={disabledHandler(data?.status)}
           type="submit"
           isLoading={readingLoading || readLoading || readToLoading}
         >

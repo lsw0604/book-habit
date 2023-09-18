@@ -1,13 +1,9 @@
 import { ReactNode } from 'react';
-import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
-const Layout = styled.div`
-  background-color: ${({ theme }) => theme.mode.sub};
-  width: 100vw;
-  height: 100vh;
-
+const media = css`
   padding: 4rem 0rem;
-  box-sizing: border-box;
   @media screen and (min-width: 768px) {
     padding: 4rem 10%;
   }
@@ -16,8 +12,19 @@ const Layout = styled.div`
   }
 `;
 
+const Layout = styled.div<{ pathname: string }>`
+  background-color: ${({ theme }) => theme.mode.sub};
+  width: 100vw;
+  height: 100vh;
+  padding: 0rem 0rem 4rem 0rem;
+  box-sizing: border-box;
+  ${({ pathname }) => pathname !== '/' && media}
+`;
+
 const DefaultLayout = ({ children }: { children: ReactNode }) => {
-  return <Layout>{children}</Layout>;
+  const { pathname } = useLocation();
+
+  return <Layout pathname={pathname}>{children}</Layout>;
 };
 
 export default DefaultLayout;
