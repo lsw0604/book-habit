@@ -3,7 +3,7 @@ import Button from 'components/common/Button';
 import { useEffect } from 'react';
 import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
 import useMyBookHook from '@hooks/useMyBookHook';
-import { IconTrashCan, Sad } from '@style/icons';
+import { IconTrashCan, LogoSad } from '@style/icons';
 import useModalHook from '@hooks/useModalHook';
 
 const Container = styled.div`
@@ -63,7 +63,7 @@ export default function HistoryDelete() {
     <Container>
       <Header>
         <Stack>
-          <Sad />
+          <LogoSad />
         </Stack>
         <Stack>소중한 독서기록 삭제 하시겠어요?</Stack>
       </Header>

@@ -14,8 +14,8 @@ const Container = styled.div`
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+    grid-column-gap: 1rem;
+    grid-row-gap: 2rem;
   }
 `;
 
@@ -23,8 +23,11 @@ const Header = styled.div`
   width: 100%;
   height: 30%;
   @media screen and (min-width: 1280px) {
-    height: 70%;
+    padding-top: 2rem;
+    height: 100%;
     grid-area: 1 / 1 / 3 / 3;
+    border-radius: 2rem;
+    box-shadow: ${({ theme }) => theme.shadow.lg};
   }
 `;
 
@@ -39,20 +42,25 @@ const Contents = styled.div`
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(7, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    padding: 2rem;
   }
 `;
 
 const CalendarWrapper = styled.div`
   @media screen and (min-width: 1280px) {
     grid-area: 1 / 1 / 6 / 4;
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+    border-radius: 2rem;
   }
 `;
 
 const HistoryListWrapper = styled.div`
   @media screen and (min-width: 1280px) {
     grid-area: 6 / 1 / 8 / 4;
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+    border-radius: 2rem;
   }
 `;
 
@@ -61,6 +69,8 @@ const CommentListWrapper = styled.div`
     height: 100%;
     overflow: scroll;
     grid-area: 1 / 4 / 8 / 6;
+    border-radius: 2rem;
+    box-shadow: ${({ theme }) => theme.shadow.lg};
   }
 `;
 

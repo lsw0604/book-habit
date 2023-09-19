@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { Heart } from '@style/icons';
+import { LogoHeart } from '@style/icons';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`
@@ -71,7 +71,7 @@ export default function ToRead() {
           <span>읽지는 않았지만</span>
           <span>관심있는 책이에요.</span>
         </Message>
-        <Heart />
+        <LogoHeart />
       </Content>
     </Container>
   );

@@ -151,13 +151,15 @@ export default function InfoBox() {
               </DetailHeaderIconWrapper>
             </DetailHeader>
             <Divider divider={2} />
-            <Description>{myBookInfoData?.result.contents}&nbsp;</Description>
+            <Description>
+              {myBookInfoData?.result.contents}&nbsp;...
+            </Description>
             <A
               href={myBookInfoData?.result.url}
               target="_blank"
               rel="noreferrer"
             >
-              더보기...
+              더보기
             </A>
           </DetailContainer>
         </>

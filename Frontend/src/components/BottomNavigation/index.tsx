@@ -16,6 +16,7 @@ const Container = styled.nav`
   bottom: 0;
   border-radius: 5px 10px 0 0;
   background-color: ${({ theme }) => theme.mode.main};
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const Buttons = styled.ul`

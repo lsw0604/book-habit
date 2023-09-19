@@ -1,4 +1,4 @@
-import { Logo } from '@style/icons';
+import { LogoMain } from '@style/icons';
 import styled from 'styled-components';
 import Button from 'components/common/Button';
 import Kakao from './Button/Kakao';
@@ -70,7 +70,7 @@ export default function NeedLogin() {
   return (
     <Container>
       <Header>
-        <Logo />
+        <LogoMain />
         <div>
           <Title>
             <span>책볼레</span>는

@@ -42,28 +42,25 @@ const LoaderWrapper = styled.div`
 export default function Index({ isLoading }: { isLoading: boolean }) {
   const navigate = useNavigate();
   const { isLogged } = useRecoilValue(userAtom);
-  const { pathname } = useLocation();
 
   return (
     <>
-      {pathname !== '/' ? (
-        <Container>
-          <LogoWrapper onClick={() => navigate('/')}>책벌래</LogoWrapper>
-          <Wrapper>
-            {!isLoading ? (
-              isLogged ? (
-                <HeaderProfile />
-              ) : (
-                <HeaderAuth />
-              )
+      <Container>
+        <LogoWrapper onClick={() => navigate('/home')}>책벌래</LogoWrapper>
+        <Wrapper>
+          {!isLoading ? (
+            isLogged ? (
+              <HeaderProfile />
             ) : (
-              <LoaderWrapper>
-                <Loader />
-              </LoaderWrapper>
-            )}
-          </Wrapper>
-        </Container>
-      ) : null}
+              <HeaderAuth />
+            )
+          ) : (
+            <LoaderWrapper>
+              <Loader />
+            </LoaderWrapper>
+          )}
+        </Wrapper>
+      </Container>
     </>
   );
 }

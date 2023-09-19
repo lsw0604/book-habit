@@ -1,6 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 import GuardLayout from './GuardLayout';
+import { useLocation } from 'react-router-dom';
 
 export default function IsKakaoAuthLayout({
   isKakaoRegister,
@@ -9,6 +10,7 @@ export default function IsKakaoAuthLayout({
 }) {
   const userState = useRecoilValue(userAtom);
   const { isLogged, provider, age, name, gender } = userState;
+  const { pathname } = useLocation();
 
   let isRouteAccessible;
   let redirectUrl;
@@ -18,7 +20,7 @@ export default function IsKakaoAuthLayout({
       isLogged &&
       provider === 'kakao' &&
       (age === null || name === null || gender === null);
-    redirectUrl = '/';
+    redirectUrl = pathname;
   } else {
     isRouteAccessible = !(
       isLogged &&

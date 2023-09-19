@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import DateBox from 'components/Calendar/DateBox';
 import Icon from 'components/common/Button/Icon';
-import Divider from 'components/common/Divider';
 import Selector from 'components/common/Selector';
 import { IconLeftArrow, IconRightArrow } from '@style/icons';
 import { getMonthYearDetails, getNewMonthYear } from 'lib/utils/monthYear';
@@ -55,23 +54,19 @@ const Contents = styled.div`
 `;
 
 export default function Index() {
+  const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
 
   const [filter, setFilter] = useState<string[]>(['전체보기']);
 
+  const currentMonthYear = getMonthYearDetails(dayjs());
+  const [monthYear, setMonthYear] = useState(currentMonthYear);
+
   const { myBookHistoryData, myBookTimeData } = useMyBookPageQueries(
     parseInt(users_books_id),
     filter
   );
-
-  const currentMonthYear = myBookTimeData?.endDate
-    ? getMonthYearDetails(dayjs(myBookTimeData.endDate).add(9, 'hour'))
-    : getMonthYearDetails(dayjs());
-  const [monthYear, setMonthYear] = useState(currentMonthYear);
-
-  const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
-
   const startDate = myBookTimeData?.startDate
     ? dayjs(myBookTimeData.startDate).add(9, 'hour').format('YYYY-MM-DD')
     : undefined;
@@ -111,6 +106,24 @@ export default function Index() {
     return dayObj.isBefore(dayjs(), 'month');
   };
 
+  useEffect(() => {
+    if (myBookTimeData && myBookTimeData.endDate) {
+      setMonthYear(
+        getMonthYearDetails(dayjs(myBookTimeData.endDate).add(9, 'hour'))
+      );
+    }
+
+    if (
+      myBookTimeData &&
+      myBookTimeData.endDate === undefined &&
+      myBookTimeData.startDate
+    ) {
+      setMonthYear(
+        getMonthYearDetails(dayjs(myBookTimeData.startDate).add(9, 'hour'))
+      );
+    }
+  }, [myBookTimeData, myBookTimeData?.endDate, myBookTimeData?.startDate]);
+
   return (
     <Container>
       <CalendarHeader>
@@ -126,7 +139,6 @@ export default function Index() {
           />
         </CalendarSelectorWrapper>
       </CalendarHeader>
-      <Divider divider={2} />
       <Contents>
         <Icon
           disabled={!prevMonthHandler()}

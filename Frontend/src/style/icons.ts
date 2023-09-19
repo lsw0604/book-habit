@@ -1,4 +1,3 @@
-export { ReactComponent as ContactFingerImage } from '../assets/icons/contactFinger.svg';
 export { ReactComponent as IconBeach } from '../assets/icons/iconBeach.svg';
 export { ReactComponent as IconBook } from '../assets/icons/iconBook.svg';
 export { ReactComponent as IconBookMark } from '../assets/icons/iconBookmark.svg';
@@ -38,7 +37,7 @@ export { ReactComponent as IconTrashCan } from '../assets/icons/iconTrashCan.svg
 export { ReactComponent as IconUpArrow } from '../assets/icons/iconUpArrow.svg';
 export { ReactComponent as IconUpload } from '../assets/icons/iconUpload.svg';
 export { ReactComponent as IconWarning } from '../assets/icons/iconWarning.svg';
-export { ReactComponent as Logo } from '../assets/icons/Logo.svg';
-export { ReactComponent as Sad } from '../assets/icons/SadLogo.svg';
-export { ReactComponent as NeedLoginIcon } from '../assets/login.svg';
-export { ReactComponent as Heart } from '../assets/icons/HeartLogo.svg';
+export { ReactComponent as LogoMain } from '../assets/icons/LogoMain.svg';
+export { ReactComponent as LogoSad } from '../assets/icons/LogoSad.svg';
+export { ReactComponent as LogoHeart } from '../assets/icons/LogoHeart.svg';
+export { ReactComponent as LogoSub } from '../assets/icons/LogoSub.svg';
