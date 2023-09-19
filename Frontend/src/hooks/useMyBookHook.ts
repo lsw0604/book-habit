@@ -64,6 +64,13 @@ export default function useMyBookHook() {
     }));
   };
 
+  const onChangeMyBookCommentIsOpen = (comment_isOpen: boolean) => {
+    setMyBookState((prev: MyBookAtomType) => ({
+      ...prev,
+      comment_isOpen,
+    }));
+  };
+
   const onChangeMyBookStateInitial = () => {
     setMyBookState({
       date: null,
@@ -74,6 +81,7 @@ export default function useMyBookHook() {
       comment_id: undefined,
       users_books_id: undefined,
       history_id: undefined,
+      comment_isOpen: false,
     });
   };
 
@@ -85,6 +93,7 @@ export default function useMyBookHook() {
   const myBookCommentId = myBookState.comment_id;
   const myBookUsersBooksId = myBookState.users_books_id;
   const myBookHistoryId = myBookState.history_id;
+  const myBookCommentIsOpen = myBookState.comment_isOpen;
 
   const useMyBookHistoryValidation = myBookDate !== null && myBookStatus !== '';
   const useMyBookCommentValidation =
@@ -99,6 +108,7 @@ export default function useMyBookHook() {
     onChangeMyBookCommentId,
     onChangeMyBookUsersBooksId,
     onChangeMyBookHistoryId,
+    onChangeMyBookCommentIsOpen,
     onChangeMyBookStateInitial,
     setMyBookState,
     myBookDate,
@@ -110,6 +120,7 @@ export default function useMyBookHook() {
     myBookCommentId,
     myBookUsersBooksId,
     myBookHistoryId,
+    myBookCommentIsOpen,
     useMyBookHistoryValidation,
     useMyBookCommentValidation,
   };

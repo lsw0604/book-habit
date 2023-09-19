@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PaletteBtn from './PaletteBtn';
 import NavBtn from 'components/BottomNavigation/NavBtn';
 import { IconBook, IconSearch } from '@style/icons';
+import { useLocation } from 'react-router-dom';
 
 const Container = styled.nav`
   height: 4rem;
@@ -30,19 +31,30 @@ const Wrapper = styled.li`
 `;
 
 export default function Index() {
+  const { pathname } = useLocation();
+
   return (
-    <Container>
-      <Buttons>
-        <Wrapper>
-          <NavBtn title="검색하기" icon={<IconSearch />} url="/search" />
-        </Wrapper>
-        <Wrapper>
-          <PaletteBtn />
-        </Wrapper>
-        <Wrapper>
-          <NavBtn isAuth title="내 서재" icon={<IconBook />} url="/my_books" />
-        </Wrapper>
-      </Buttons>
-    </Container>
+    <>
+      {pathname !== '/' ? (
+        <Container>
+          <Buttons>
+            <Wrapper>
+              <NavBtn title="검색하기" icon={<IconSearch />} url="/search" />
+            </Wrapper>
+            <Wrapper>
+              <PaletteBtn />
+            </Wrapper>
+            <Wrapper>
+              <NavBtn
+                isAuth
+                title="내 서재"
+                icon={<IconBook />}
+                url="/my_books"
+              />
+            </Wrapper>
+          </Buttons>
+        </Container>
+      ) : null}
+    </>
   );
 }

@@ -80,7 +80,7 @@ export const myBookHistoryRegisterAPI = async (
 ) => {
   const { data } = await axios.post<MyBookHistoryMutationResponseType>(
     `/api/my_book/history/register`,
-    body
+    JSON.stringify(body)
   );
   return data;
 };
@@ -93,7 +93,7 @@ export const myBookCommentsRegisterAPI = async (
 ) => {
   const { data } = await axios.post<MyBookCommentMutationResponseType>(
     `/api/my_book/comments/register`,
-    body
+    JSON.stringify(body)
   );
   return data;
 };
@@ -145,7 +145,7 @@ export const myBookCommentUpdateAPI = async ({
 }: MyBookCommentUpdateMutationRequestType) => {
   const { data } = await axios.put(
     `/api/my_book/comment/update/${comment_id}`,
-    body
+    JSON.stringify(body)
   );
   return data;
 };

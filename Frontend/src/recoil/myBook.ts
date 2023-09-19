@@ -11,5 +11,6 @@ export const myBookAtom = atom<MyBookAtomType>({
     useValidation: false,
     rating: 0,
     comment: '',
+    comment_isOpen: false,
   },
 });

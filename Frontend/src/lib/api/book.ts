@@ -28,7 +28,7 @@ export const booksSearchAPI = async (body: string, page: number) => {
  * * 읽은 책 등록하는 API
  */
 export const readBookRegisterAPI = async (body: ReadBookRegisterType) => {
-  const { data } = await axios.post(`/api/books/read`, body);
+  const { data } = await axios.post(`/api/books/read`, JSON.stringify(body));
   return data;
 };
 
@@ -36,7 +36,7 @@ export const readBookRegisterAPI = async (body: ReadBookRegisterType) => {
  * * 읽고 있는 책 등록하는 API
  */
 export const readingBookRegisterAPI = async (body: ReadingBookRegisterType) => {
-  const { data } = await axios.post(`/api/books/reading`, body);
+  const { data } = await axios.post(`/api/books/reading`, JSON.stringify(body));
   return data;
 };
 
@@ -44,6 +44,6 @@ export const readingBookRegisterAPI = async (body: ReadingBookRegisterType) => {
  * * 읽고 싶은 책 등록하는 API
  */
 export const readToBookRegisterAPI = async (body: ReadToBookRegisterType) => {
-  const { data } = await axios.post(`/api/books/read_to`, body);
+  const { data } = await axios.post(`/api/books/read_to`, JSON.stringify(body));
   return data;
 };

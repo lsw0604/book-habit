@@ -11,6 +11,7 @@ interface IComment {
   rating: number;
   status: string;
   comment: string;
+  comment_is_open: boolean;
   users_books_id: number;
 }
 
@@ -25,8 +26,7 @@ export default async function myBookCommentsRegister(
 ) {
   const NAMESPACE = 'MY_BOOK_COMMENTS_REGISTER';
   logging.debug(NAMESPACE, '[START]');
-
-  const { comment, users_books_id, rating, status } = req.body;
+  const { comment, users_books_id, rating, status, comment_is_open } = req.body;
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
@@ -51,13 +51,14 @@ export default async function myBookCommentsRegister(
       }
 
       const MY_BOOK_COMMENT_REGISTER_SQL =
-        'INSERT INTO users_books_comments (comment, users_books_id, rating, status, books_id) VALUES(?, ?, ? ,?, ?)';
+        'INSERT INTO users_books_comments (comment, users_books_id, rating, status, books_id, comment_is_open) VALUES(?, ?, ? ,?, ?, ?)';
       const MY_BOOK_COMMENT_REGISTER_VALUE = [
         comment,
         users_books_id,
         rating,
         status,
         FIND_BOOK_ID_RESULT[0].books_id,
+        comment_is_open,
       ];
       const [MY_BOOK_COMMENT_REGISTER_RESULT] = await connection.query<ResultSetHeader>(
         MY_BOOK_COMMENT_REGISTER_SQL,

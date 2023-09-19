@@ -16,7 +16,6 @@ axios.interceptors.request.use(
       'ACCESS'
     )}`;
     config.headers.Accept = 'application/json';
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     return config;
   },
   (error) => {

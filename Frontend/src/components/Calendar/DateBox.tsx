@@ -74,7 +74,7 @@ const IconWrapper = styled.div`
   align-items: flex-end;
   svg {
     height: 30%;
-    fill: ${({ theme }) => theme.colors.spinner};
+    fill: ${customize.slate['400']};
   }
 `;
 

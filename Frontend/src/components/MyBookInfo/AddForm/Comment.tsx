@@ -4,7 +4,10 @@ import { useEffect } from 'react';
 import Textarea from 'components/common/Textarea';
 import Select from 'components/common/Selector';
 import StarRating from 'components/StarRating/Rating';
+import Radio from 'components/common/Radio';
 import useMyBookHook from '@hooks/useMyBookHook';
+import { RadioGroupOptionType } from 'types/style';
+import { IconLock, IconLockOpen } from '@style/icons';
 
 const Container = styled.div`
   display: flex;
@@ -28,9 +31,11 @@ export default function Comment() {
     myBookRating,
     myBookStatus,
     myBookUseValidation,
+    myBookCommentIsOpen,
     onChangeMyBookComment,
     onChangeMyBookRating,
     onChangeMyBookStatus,
+    onChangeMyBookCommentIsOpen,
     setMyBookState,
   } = useMyBookHook();
 
@@ -46,10 +51,30 @@ export default function Comment() {
     }));
   }, []);
 
+  const options: RadioGroupOptionType<boolean>[] = [
+    {
+      label: '비공개',
+      value: false,
+      icon: <IconLock />,
+    },
+    {
+      label: '공개',
+      value: true,
+      icon: <IconLockOpen />,
+    },
+  ];
+
   return (
     <Container>
+      <Stack conWid="100%" style={{ display: 'flex' }}>
+        <Radio
+          value={myBookCommentIsOpen}
+          onChange={onChangeMyBookCommentIsOpen}
+          options={options}
+        />
+      </Stack>
       <Box>
-        <Stack conWid="30%">
+        <Stack conWid="25%">
           <Select
             label="상태"
             isValid={myBookStatus === ''}
@@ -60,7 +85,7 @@ export default function Comment() {
             errorMessage="상태를 선택해주세요."
           />
         </Stack>
-        <Stack conWid="70%">
+        <Stack conWid="75%">
           <StarRating
             label="평점"
             useValidation={myBookUseValidation}

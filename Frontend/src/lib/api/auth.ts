@@ -4,13 +4,16 @@ import Axios from 'axios';
 export const signUpAPI = async (body: SignUpRequestType) => {
   const { data } = await axios.post<SignUpResponseType>(
     '/api/auth/register',
-    body
+    JSON.stringify(body)
   );
   return data;
 };
 
 export const loginAPI = async (body: LoginRequestType) => {
-  const { data } = await axios.post<LoginResponseType>('/api/auth/login', body);
+  const { data } = await axios.post<LoginResponseType>(
+    '/api/auth/login',
+    JSON.stringify(body)
+  );
   return data;
 };
 
@@ -37,7 +40,7 @@ export const meAPI = async () => {
 export const kakaoSignupAPI = async (body: KakaoSignUpRequestType) => {
   const { data } = await axios.post<KakaoSignUpResponseType>(
     '/api/auth/kakao/register',
-    body
+    JSON.stringify(body)
   );
   return data;
 };

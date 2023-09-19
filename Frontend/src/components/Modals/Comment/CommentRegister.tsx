@@ -64,6 +64,7 @@ export default function CommentRegister() {
     myBookStatus,
     myBookUsersBooksId,
     myBookRating,
+    myBookCommentIsOpen,
     useMyBookCommentValidation,
     onChangeMyBookUseValidation,
   } = useMyBookHook();
@@ -73,6 +74,7 @@ export default function CommentRegister() {
     users_books_id: myBookUsersBooksId as number,
     status: myBookStatus,
     comment: myBookComment,
+    comment_is_open: myBookCommentIsOpen,
     rating: myBookRating,
   };
 

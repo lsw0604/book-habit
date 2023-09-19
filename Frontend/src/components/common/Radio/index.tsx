@@ -107,7 +107,7 @@ const InfoDescription = styled.span`
   font-size: 14px;
 `;
 
-const Radio = <T extends string | number>({
+const Radio = <T extends string | number | boolean>({
   label,
   value,
   options,

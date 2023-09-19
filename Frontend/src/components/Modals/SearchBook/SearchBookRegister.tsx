@@ -84,8 +84,17 @@ const Stack = styled.div`
 export default function SearchBookRegister() {
   const [value, setValue] = useState<ModalType>('');
 
-  const { authors, contents, thumbnail, isbn, price, publisher, url, title } =
-    useRecoilValue(searchBookAtom);
+  const {
+    authors,
+    contents,
+    thumbnail,
+    isbn,
+    price,
+    publisher,
+    url,
+    title,
+    status,
+  } = useRecoilValue(searchBookAtom);
   const { isLogged } = useRecoilValue(userAtom);
   const { addToast } = useToastHook();
   const {
@@ -133,7 +142,7 @@ export default function SearchBookRegister() {
     thumbnail,
     isbn,
     price,
-    status: value,
+    status,
     title,
     contents,
     url,

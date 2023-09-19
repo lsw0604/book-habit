@@ -7,4 +7,5 @@ type SearchBookAtomType = {
   contents: string;
   url: string;
   title: string;
+  status: string;
 };

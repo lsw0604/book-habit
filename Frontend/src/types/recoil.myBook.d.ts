@@ -7,4 +7,5 @@ type MyBookAtomType = {
   comment_id?: number;
   users_books_id?: number;
   history_id?: number;
+  comment_isOpen: boolean;
 };

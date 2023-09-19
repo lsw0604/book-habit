@@ -11,7 +11,7 @@ export default async function myBookCommentsList(req: Request, res: Response, ne
     const connection = await connectionPool.getConnection();
     try {
       const MY_BOOK_COMMENTS_LIST_SQL =
-        'SELECT id as comment_id, comment, created_at, rating, status, updated_at FROM users_books_comments WHERE users_books_id = ? ';
+        'SELECT id as comment_id, comment, created_at, rating, status, updated_at, comment_is_open FROM users_books_comments WHERE users_books_id = ? ';
       const MY_BOOK_COMMENTS_LIST_VALUE = [users_books_id];
       const [MY_BOOK_COMMENTS_LIST_RESULT] = await connection.query<MyBookCommentsListType[]>(
         MY_BOOK_COMMENTS_LIST_SQL,

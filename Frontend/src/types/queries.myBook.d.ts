@@ -12,6 +12,7 @@ type MyBookCommentQueryListType = MyBookCommentQueryItemType[];
 type MyBookCommentQueryItemType = {
   comment_id: number;
   comment: string;
+  comment_is_open: boolean;
   status: '읽는중' | '읽기전' | '다읽음';
   rating: number;
   created_at: string;
@@ -79,6 +80,7 @@ type MyBookCommentMutationRequestType = {
   status: string;
   rating: number;
   comment: string;
+  comment_is_open: boolean;
   users_books_id: number;
 };
 

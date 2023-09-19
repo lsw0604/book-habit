@@ -152,6 +152,7 @@ export type MyBookCommentsListType = {
   comment: string;
   rating: number;
   status: '읽기전' | '다읽음' | '읽는중';
+  comment_is_open: boolean;
   created_at: Date;
   updated_at: Date | null;
 } & RowDataPacket;

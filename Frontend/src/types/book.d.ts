@@ -4,10 +4,10 @@ type BookRegisterType = {
   thumbnail?: string;
   isbn: string;
   title: string;
-  status: ModalType;
   price: number;
   contents: string;
   url: string;
+  status: string;
 };
 
 type ReadingBookRegisterType = BookRegisterType & {

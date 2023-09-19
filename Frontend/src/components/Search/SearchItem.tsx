@@ -88,6 +88,7 @@ export default function SearchItem({
         price,
         url,
         title,
+        status,
       });
     };
     if (isVisible) {

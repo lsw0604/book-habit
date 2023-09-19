@@ -19,6 +19,7 @@ export default function useMyBookCommentQuery(users_books_id: number) {
             return {
               comment_id: comment.comment_id,
               comment: comment.comment,
+              comment_is_open: comment.comment_is_open,
               created_at: dayjs(comment.created_at).format(
                 'YYYY년 MM월 DD일 HH시 mm분'
               ),

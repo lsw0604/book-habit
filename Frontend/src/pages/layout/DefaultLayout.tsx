@@ -16,7 +16,7 @@ const Layout = styled.div<{ pathname: string }>`
   background-color: ${({ theme }) => theme.mode.sub};
   width: 100vw;
   height: 100vh;
-  padding: 0rem 0rem 4rem 0rem;
+  padding: 0;
   box-sizing: border-box;
   ${({ pathname }) => pathname !== '/' && media}
 `;

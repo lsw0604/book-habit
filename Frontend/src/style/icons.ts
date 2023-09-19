@@ -17,6 +17,8 @@ export { ReactComponent as IconImage } from '../assets/icons/iconImage.svg';
 export { ReactComponent as IconInfo } from '../assets/icons/iconInfo.svg';
 export { ReactComponent as IconKakao } from '../assets/icons/iconKakao.svg';
 export { ReactComponent as IconLeftArrow } from '../assets/icons/iconLeftArrow.svg';
+export { ReactComponent as IconLock } from '../assets/icons/iconLock.svg';
+export { ReactComponent as IconLockOpen } from '../assets/icons/iconLockOpen.svg';
 export { ReactComponent as IconMail } from '../assets/icons/iconMail.svg';
 export { ReactComponent as IconMale } from '../assets/icons/iconMale.svg';
 export { ReactComponent as IconNumber } from '../assets/icons/iconNumber.svg';

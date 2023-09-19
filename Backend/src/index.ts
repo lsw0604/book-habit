@@ -1,6 +1,5 @@
 import http from 'http';
 import path from 'path';
-import bodyParser from 'body-parser';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import session, { SessionOptions } from 'express-session';
@@ -46,8 +45,8 @@ app.use(cors(corsOptions));
 app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../Frontend/dist')));
 
 app.use(passport.initialize());

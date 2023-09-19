@@ -68,7 +68,7 @@ export default async function readBook(
 
       if (BOOK_EXIST_RESULT[0] === undefined) {
         const BOOK_REGISTER_SQL =
-          'INSERT INTO books (isbn, title, authors, publisher, price, thumbnail, url, contents, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)';
+          'INSERT INTO books (isbn, title, authors, publisher, price, thumbnail, url, contents, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
         const BOOK_REGISTER_VALUES = [
           isbn,
           title,

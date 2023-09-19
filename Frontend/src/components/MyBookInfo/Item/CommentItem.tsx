@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { IconCalendar, IconPencil, IconStar, IconTrashCan } from '@style/icons';
+import {
+  IconCalendar,
+  IconLock,
+  IconLockOpen,
+  IconPencil,
+  IconStar,
+  IconTrashCan,
+} from '@style/icons';
 import Icon from 'components/common/Button/Icon';
 import Divider from 'components/common/Divider';
 import { customize } from '@style/colors';
@@ -42,6 +49,10 @@ const HeaderIconContainer = styled.div`
 const Status = styled.h3`
   color: ${({ theme }) => theme.mode.typo_main};
   font-size: 18px;
+  svg {
+    margin-left: 8px;
+    height: 0.8rem;
+  }
 `;
 
 const Content = styled.div`
@@ -85,6 +96,7 @@ const IconBox = styled.div`
 export default function CommentItem({
   comment_id,
   comment,
+  comment_is_open,
   rating,
   status,
   updated_at,
@@ -116,11 +128,15 @@ export default function CommentItem({
     }));
     setModalState({ isOpen: true, type: 'modifyComment' });
   };
+
   return (
     <Container>
       <Header>
         <HeaderInfoContainer>
-          <Status>{status}</Status>
+          <Status>
+            {status}
+            {comment_is_open ? <IconLockOpen /> : <IconLock />}
+          </Status>
           <DateWrapper>
             <IconCalendar />
             &nbsp;
