@@ -11,7 +11,8 @@ export default function useMyBookCommentMutation(users_books_id: number) {
   const queryClient = new QueryClient();
   const { addToast } = useToastHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();
-  const { refetch } = useMyBookCommentQuery(users_books_id);
+  const { refetch: myBookCommentRefetch } =
+    useMyBookCommentQuery(users_books_id);
 
   const { isLoading, mutate, isSuccess, data, isError, error } = useMutation<
     MyBookCommentMutationResponseType,
@@ -23,7 +24,7 @@ export default function useMyBookCommentMutation(users_books_id: number) {
         queryKey: ['USE_MY_BOOK_COMMENTS_QUERY'],
         exact: true,
       });
-      refetch();
+      myBookCommentRefetch();
     },
   });
 

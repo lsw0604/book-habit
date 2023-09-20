@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { customize } from '@style/colors';
-import HistoryForm from 'components/MyBookInfo/AddForm/History';
+import HistoryForm from 'components/Modals/History/HistoryAddForm';
 import { IconCalendar } from '@style/icons';
 import Button from 'components/common/Button';
 import useMyBookHook from '@hooks/useMyBookHook';

@@ -42,6 +42,7 @@ export default async function readingBook(
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
+      logging.info(NAMESPACE, '[REQ.BODY]', req.body);
 
       const BOOK_EXIST_SQL = 'SELECT isbn, id FROM books WHERE isbn = ?';
       const BOOK_EXIST_VALUES = [isbn];
@@ -106,7 +107,7 @@ export default async function readingBook(
         const USERS_BOOKS_HISTORY_SQL =
           'INSERT INTO users_books_history (status, users_books_id, date) VALUES (?, ?, ?)';
         const USERS_BOOKS_HISTORY_VALUES = [
-          status,
+          '읽기시작함',
           USERS_BOOKS_RESULT.insertId,
           dayjs(startDate).add(9, 'hour').toISOString().split('T')[0],
         ];

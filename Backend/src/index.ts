@@ -16,6 +16,7 @@ import { dbConfig } from './config/database';
 import bookRouter from './routes/book';
 import authRouter from './routes/auth';
 import myBookRouter from './routes/myBook';
+import commentsRouter from './routes/comments';
 
 import { localOptions, LocalVerify } from './strategy/LocalStrategy';
 import { AccessJWTStrategyOptions, AccessVerify } from './strategy/Access.Strategy';
@@ -59,6 +60,7 @@ passport.use('refresh', new JWTStrategy(RefreshJWTStrategyOptions, RefreshVerify
 app.use('/api/books', bookRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/my_book', myBookRouter);
+app.use('/api/comments', commentsRouter);
 
 const httpSever = http.createServer(app);
 

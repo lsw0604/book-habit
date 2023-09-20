@@ -6,12 +6,11 @@ import { AnimatePresence } from 'framer-motion';
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
 import RadioButton from 'components/common/Radio/RadioButton';
-import Skeleton from 'components/SearchBookRegister/Skeleton';
+import Skeleton from 'components/Modals/SearchBook/SearchBookRegister/Skeleton';
 import Button from 'components/common/Button';
-import BookStatus from 'components/SearchBookRegister/BookStatus';
-import Read from 'components/SearchBookRegister/Read';
-import Reading from 'components/SearchBookRegister/Reading';
-import ReadTo from 'components/SearchBookRegister/ReadTo';
+import Read from 'components/Modals/SearchBook/SearchBookRegister/Read';
+import Reading from 'components/Modals/SearchBook/SearchBookRegister/Reading';
+import ReadTo from 'components/Modals/SearchBook/SearchBookRegister/ReadTo';
 
 import useReadingBookMutation from '@queries/book/useReadingBookMutation';
 import useReadBookMutation from '@queries/book/useReadBookMutation';
@@ -21,6 +20,7 @@ import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { userAtom } from 'recoil/user';
 import ImageWrapper from 'components/common/ImageWrapper';
 import useToastHook from '@hooks/useToastHook';
+import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 
 const Container = styled.form`
   width: 100%;
@@ -148,6 +148,15 @@ export default function SearchBookRegister() {
     url,
   };
 
+  const { data } = isLogged ? useMyBookExistQuery(isbn) : { data: undefined };
+
+  const disabledHandler = (data?: MyBookExistQueryResponseType) => {
+    if (data && data.status === '미등록') {
+      return false;
+    }
+    return true;
+  };
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isLogged) {
@@ -184,13 +193,13 @@ export default function SearchBookRegister() {
         <HeaderDetailContainer>
           <Title>{title}</Title>
           {contents ? <Description>{contents}...</Description> : null}
-          {isLogged ? <BookStatus /> : null}
         </HeaderDetailContainer>
       </Header>
       <Content>
         <Stack>
           <RadioButton<string>
             label="등록할 유형을 선택해주세요."
+            disabled={disabledHandler(data)}
             value={value}
             options={options}
             onChange={onChange}
@@ -198,7 +207,7 @@ export default function SearchBookRegister() {
         </Stack>
         <Stack style={{ flex: '1' }}>
           <AnimatePresence>
-            {value === '' && <Skeleton />}
+            {value === '' && <Skeleton disabled={disabledHandler(data)} />}
             {value === '다읽음' && <Read />}
             {value === '읽는중' && <Reading />}
             {value === '읽고싶음' && <ReadTo />}
@@ -207,6 +216,7 @@ export default function SearchBookRegister() {
       </Content>
       <Stack>
         <Button
+          disabled={disabledHandler(data)}
           type="submit"
           isLoading={readingLoading || readLoading || readToLoading}
         >

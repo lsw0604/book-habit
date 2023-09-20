@@ -6,6 +6,7 @@ import useToastHook from '@hooks/useToastHook';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import useModalHook from '@hooks/useModalHook';
+import useMyBookListInfinityQuery from './useMyBookListInfinityQuery';
 
 export default function useMyBookHistoryMutation(users_books_id: number) {
   const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_MUTATION';
@@ -16,6 +17,7 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
   const { setModalState } = useModalHook();
   const { myBookHistoryRefetch, myBookTimeRefetch } =
     useMyBookPageQueries(users_books_id);
+  const { refetch } = useMyBookListInfinityQuery('전체보기');
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     MyBookHistoryMutationResponseType,
@@ -27,6 +29,7 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
         queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
         myBookHistoryRefetch();
         myBookTimeRefetch();
+        refetch();
       }
     },
   });

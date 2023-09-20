@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { customize } from '@style/colors';
 import { IconBook, IconPencil } from '@style/icons';
 import Button from 'components/common/Button';
-import Comment from 'components/MyBookInfo/AddForm/Comment';
+import Comment from 'components/Modals/Comment/CommentAddForm';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
 import useModalHook from '@hooks/useModalHook';

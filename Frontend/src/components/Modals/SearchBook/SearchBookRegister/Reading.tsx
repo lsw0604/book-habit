@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
-import StartDate from 'components/SearchBookRegister/StartDate';
+import StartDate from 'components/Modals/SearchBook/SearchBookRegister/StartDate';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`

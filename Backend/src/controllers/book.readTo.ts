@@ -78,7 +78,7 @@ export default async function readToBook(
 
         const USER_BOOKS_HISTORY_SQL = `INSERT INTO users_books_history (status, users_books_id, date) VALUES(?, ?, ?)`;
         const USER_BOOKS_HISTORY_VALUES = [
-          status,
+          '읽고싶음',
           USER_BOOKS_RESULT.insertId,
           dayjs().add(9, 'hour').toISOString().split('T')[0],
         ];
@@ -103,7 +103,7 @@ export default async function readToBook(
         const USER_BOOKS_HISTORY_SQL =
           'INSERT INTO users_books_history (status, users_books_id, date) VALUES (?, ?, ?)';
         const USER_BOOKS_HISTORY_VALUES = [
-          status,
+          '읽고싶음',
           USER_BOOKS_RESULT.insertId,
           dayjs().add(9, 'hour').toISOString().split('T')[0],
         ];

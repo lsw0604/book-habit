@@ -7,9 +7,9 @@ import Loader from 'components/common/Loader';
 import BottomNavigation from 'components/BottomNavigation';
 import DefaultLayout from '@pages/layout/DefaultLayout';
 import IsAuthLayout from '@pages/layout/IsAuthLayout';
+import Home from '@pages/HomePage';
 import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 
-const Home = lazy(() => import('@pages/HomePage'));
 const MyBookInfo = lazy(() => import('@pages/MyBooksInfoPage'));
 const MyBooks = lazy(() => import('@pages/MyBooksPage'));
 const Kakao = lazy(() => import('@pages/KakaoPage'));
@@ -17,6 +17,7 @@ const KakaoRegister = lazy(() => import('@pages/KakaoRegisterPage'));
 const Register = lazy(() => import('@pages/RegisterPage'));
 const Login = lazy(() => import('@pages/LoginPage'));
 const Search = lazy(() => import('@pages/SearchPage'));
+const Comments = lazy(() => import('@pages/CommentsPage'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -49,6 +50,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                 </Route>
                 <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
                   <Route path="/search" Component={Search} />
+                  <Route path="/comments" Component={Comments} />
                   <Route element={<IsAuthLayout isAuth={true} />}>
                     <Route path="/my_books" Component={MyBooks} />
                     <Route

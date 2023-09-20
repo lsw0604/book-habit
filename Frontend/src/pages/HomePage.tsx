@@ -1,4 +1,5 @@
-import Button from 'components/common/Button';
+import Loader from 'components/common/Loader';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -7,8 +8,13 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+  gap: 8px;
+`;
+
+const SubTitle = styled.h2`
+  font-size: 20px;
 `;
 
 const Title = styled.h1`
@@ -16,19 +22,30 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const ButtonWrapper = styled.div`
-  width: 50%;
-  position: relative;
+const LoaderWrapper = styled.div`
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const HomePage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigate('search');
+    }, 1500);
+  }, []);
+
   return (
     <Container>
+      <SubTitle>부담없이 기록하는 독서기록장</SubTitle>
       <Title>책벌래</Title>
-      <ButtonWrapper>
-        <Button onClick={() => navigate('/search')}>시작하기</Button>
-      </ButtonWrapper>
+      <LoaderWrapper>
+        <Loader size={2} />
+      </LoaderWrapper>
     </Container>
   );
 };
