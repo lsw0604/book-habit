@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import PaletteBtn from './PaletteBtn';
 import NavBtn from 'components/BottomNavigation/NavBtn';
-import { IconBook, IconSearch } from '@style/icons';
+import { IconBook, IconPlus } from '@style/icons';
 import { useLocation } from 'react-router-dom';
 
 const Container = styled.nav`
@@ -33,14 +33,13 @@ const Wrapper = styled.li`
 
 export default function Index() {
   const { pathname } = useLocation();
-
   return (
     <>
       {pathname !== '/' ? (
         <Container>
           <Buttons>
             <Wrapper>
-              <NavBtn title="검색하기" icon={<IconSearch />} url="/search" />
+              <NavBtn title="추가하기" icon={<IconPlus />} url="/search" />
             </Wrapper>
             <Wrapper>
               <PaletteBtn />

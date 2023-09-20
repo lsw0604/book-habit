@@ -18,6 +18,6 @@ export default function IsAuthLayout({ isAuth }: IProps) {
       redirectUrl={pathname}
     />
   ) : (
-    <GuardLayout isRouteAccessible={!userState.isLogged} redirectUrl="/home" />
+    <GuardLayout isRouteAccessible={!userState.isLogged} redirectUrl="/" />
   );
 }

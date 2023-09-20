@@ -1,18 +1,34 @@
-import { customize } from '@style/colors';
 import Button from 'components/common/Button';
-import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  font-size: 40px;
+  text-align: center;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 50%;
+  position: relative;
 `;
 
 const HomePage = () => {
+  const navigate = useNavigate();
   return (
     <Container>
-      <div>서재에 가장많이 등록된 책</div>
-      <div>좋아요가 많이 달린 코멘트</div>
+      <Title>책벌래</Title>
+      <ButtonWrapper>
+        <Button onClick={() => navigate('/search')}>시작하기</Button>
+      </ButtonWrapper>
     </Container>
   );
 };

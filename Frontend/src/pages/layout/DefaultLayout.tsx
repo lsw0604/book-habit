@@ -17,7 +17,6 @@ const Layout = styled.div<{ pathname: string }>`
   width: 100vw;
   height: 100vh;
   padding: 0;
-  padding-top: 4rem;
   box-sizing: border-box;
   ${({ pathname }) => pathname !== '/' && media}
 `;

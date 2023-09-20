@@ -1,161 +1,174 @@
 import styled from 'styled-components';
-import { useRef, useState, useEffect } from 'react';
 import { customize } from '@style/colors';
-import { IconOpenEye, LogoMain, LogoSub } from '@style/icons';
-import Button from 'components/common/Button';
+import { LogoMain, LogoSad, LogoSub } from '@style/icons';
+import { useEffect, useRef, useState } from 'react';
 
-const Container = styled.div<{ position: number }>`
+const Container = styled.div`
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
   color: ${customize.slate['900']};
+`;
 
-  .page {
-    height: 100%;
-    width: 100%;
+const Page = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+`;
+
+const BackGround = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  .balloon {
+    background-image: url('/images/balloon.png');
+    background-repeat: no-repeat;
+    background-size: 20%;
+  }
+  .green {
+    background-image: url('/images/green.png');
+    background-repeat: no-repeat;
+    background-size: 30%;
+    background-position: 100% 0;
+  }
+  .blue {
+    background-image: url('/images/blue.png');
+    background-repeat: no-repeat;
+    background-size: 30%;
+    background-position: 0 100%;
+  }
+  .yellow {
+    background-image: url('/images/yellow.png');
+    background-repeat: no-repeat;
+    background-size: 30%;
+    background-position: 100% 100%;
+  }
+  .first {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    .img_diamond {
-      width: 20%;
-      height: 10%;
-      background-image: url('../../public/images/Layer_1.png');
-      background-repeat: no-repeat;
-      background-position: 100% 0;
-      background-size: contain;
-    }
-    .img_smuggle {
-      width: 20%;
-      height: 10%;
-      background-image: url('../../public/images/Layer_2.png');
-      background-repeat: no-repeat;
-      background-position: 0;
-      background-size: contain;
-    }
-    .img_rainbow {
-      width: 20%;
-      height: 20%;
-      background-image: url('../../public/images/Layer_1-1.png');
-      background-repeat: no-repeat;
-      background-position: 0 100%;
-      background-size: contain;
-      opacity: ${({ position }) => Number(780 - position) / 780};
-    }
-    .img_container {
-      width: 100%;
-      height: 20%;
-      display: flex;
-      .top.right {
-        width: 100%;
-        background-image: url('../../public/images/Group 2.png');
-        background-repeat: no-repeat;
-        background-position: 100% 0;
-        background-size: contain;
-      }
-      .top.left {
-        width: 100%;
-        background-image: url('../../public/images/Vector.png');
-        background-repeat: no-repeat;
-        background-position: 0;
-        background-size: contain;
-      }
-      .middle {
-        width: 40%;
-        background-image: url('../../public//images/smiley.png');
-        background-repeat: no-repeat;
-        background-position: 0;
-        background-size: contain;
-      }
-      .bottom.left {
-        width: 100%;
-        background-image: url('../../public/images/blue.png');
-        background-repeat: no-repeat;
-        background-position: 0;
-        background-size: contain;
-      }
-      .bottom.right {
-        width: 100%;
-        background-image: url('../../public/images/yellow.png');
-        background-repeat: no-repeat;
-        background-position: 100%;
-        background-size: contain;
-      }
-    }
-
-    .content {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      padding: 0 5%;
-      gap: 1rem;
-    }
-
-    .content.title {
-      height: 10%;
-      font-size: 40px;
-    }
-
-    .logo_wrapper {
-      box-shadow: ${({ theme }) => theme.shadow.lg};
-      border-radius: 3rem;
-      width: 40%;
-      svg {
-        width: 100%;
-      }
-    }
-
-    .description {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-    }
+    justify-content: center;
   }
+`;
+
+const BackGroundFix = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`;
+
+const CharacterWrapper = styled.div`
+  width: 10rem;
+  height: 10rem;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+  border-radius: 2rem;
+  svg {
+    width: 10rem;
+    height: 10rem;
+  }
+`;
+
+const DetailContainer = styled.div`
+  width: 100%;
+  height: 15%;
+  padding: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
 `;
 
 export default function LandingPage() {
   const [position, setPosition] = useState<number>(0);
-
-  const contRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLDivElement>(null);
 
   const onScroll = () => {
-    if (contRef.current) {
-      console.log(contRef.current.scrollTop);
-      setPosition(contRef.current.scrollTop);
+    if (targetRef.current) {
+      console.log(targetRef.current.scrollTop);
+      setPosition(targetRef.current.scrollTop);
     }
   };
 
   useEffect(() => {
-    contRef.current?.addEventListener('scroll', onScroll);
+    targetRef.current?.addEventListener('scroll', onScroll);
+
     return () => {
-      contRef.current?.removeEventListener('scroll', onScroll);
+      targetRef.current?.removeEventListener('scroll', onScroll);
     };
   }, []);
 
   return (
-    <Container position={position} ref={contRef}>
-      <div className="page">
-        <div className="img_container">
-          <div className="top left" />
-          <div className="top right" />
-        </div>
-        <div className="content title">
-          <span>간단하게 사용하는 </span>
-          <span>독서기록장</span>
-          <span>책벌래?</span>
-        </div>
-        <div className="img_rainbow" />
-      </div>
-      <div className="page">
-        <div className="img_container">
-          <div className="bottom left" />
-          <div className="bottom right" />
-        </div>
-        <div className="img_container"></div>
-        <div className="img_smuggle" />
-        <div className="img_diamond" />
-        <div className="img_smuggle" />
-      </div>
+    <Container>
+      <Page>
+        <BackGround>
+          <BackGroundFix className="first">
+            <DetailContainer
+              style={{
+                opacity: `${1 - position / 200}`,
+                left: `-${position / 3}px`,
+              }}
+            >
+              <CharacterWrapper>
+                <LogoSub />
+              </CharacterWrapper>
+              책벌래는 어떤 독서기록장이야?
+            </DetailContainer>
+            <DetailContainer
+              style={{
+                opacity: `${1 - (position - 85) / 200}`,
+                left: `${position >= 85 ? `${position / 3}px` : 0}`,
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>간단하게 기록할 수 있는 기록장이야!</span>
+                <span>중요하든 중요치 않든 뭐든지 기록만 하면돼</span>
+              </div>
+
+              <CharacterWrapper>
+                <LogoMain />
+              </CharacterWrapper>
+            </DetailContainer>
+            <DetailContainer>
+              <CharacterWrapper>
+                <LogoSub />
+              </CharacterWrapper>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>다른 기록장이랑 뭐가 다른데 ?</span>
+              </div>
+            </DetailContainer>
+            <DetailContainer>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>다른 사람들이 남긴 기록들을 서로 볼 수 있어</span>
+              </div>
+              <CharacterWrapper>
+                <LogoSad />
+              </CharacterWrapper>
+            </DetailContainer>
+            <DetailContainer>
+              <CharacterWrapper>
+                <LogoSub />
+              </CharacterWrapper>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                }}
+              >
+                <span>그게 다야 ?</span>
+              </div>
+            </DetailContainer>
+          </BackGroundFix>
+          <BackGroundFix className="bg_fix balloon" />
+          <BackGroundFix className="bg_fix green" />
+        </BackGround>
+        <BackGround>
+          <BackGroundFix className="bg_fix blue" />
+          <BackGroundFix className="bg_fix yellow" />
+        </BackGround>
+      </Page>
     </Container>
   );
 }

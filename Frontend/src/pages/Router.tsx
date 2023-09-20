@@ -10,7 +10,6 @@ import IsAuthLayout from '@pages/layout/IsAuthLayout';
 import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 
 const Home = lazy(() => import('@pages/HomePage'));
-const Landing = lazy(() => import('@pages/LandingPage'));
 const MyBookInfo = lazy(() => import('@pages/MyBooksInfoPage'));
 const MyBooks = lazy(() => import('@pages/MyBooksPage'));
 const Kakao = lazy(() => import('@pages/KakaoPage'));
@@ -44,8 +43,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
               }
             >
               <Routes>
-                <Route path="/" Component={Landing} />
-                <Route path="/home" Component={Home} />
+                <Route path="/" Component={Home} />
                 <Route element={<IsKakaoAuthLayout isKakaoRegister={true} />}>
                   <Route path="/register/kakao" Component={KakaoRegister} />
                 </Route>

@@ -24,12 +24,14 @@ const Contents = styled.div`
   overflow: scroll;
 `;
 
-const SpanWrapper = styled.div`
+const SpanContainer = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
   span {
     color: ${({ theme }) => theme.mode.typo_main};
     font-size: 20px;
@@ -72,9 +74,10 @@ export default function Index() {
             isFetching={isFetching}
           />
         ) : (
-          <SpanWrapper>
+          <SpanContainer>
+            <span>서재에 넣고 싶은</span>
             <span>책 제목을 검색해 주세요.</span>
-          </SpanWrapper>
+          </SpanContainer>
         )}
       </Contents>
     </Container>

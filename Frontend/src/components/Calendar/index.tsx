@@ -57,7 +57,6 @@ export default function Index() {
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-
   const [filter, setFilter] = useState<string[]>(['전체보기']);
 
   const currentMonthYear = getMonthYearDetails(dayjs());
