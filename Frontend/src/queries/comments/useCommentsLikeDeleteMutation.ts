@@ -1,33 +1,32 @@
-import { useEffect } from 'react';
-import { AxiosError } from 'axios';
-
-import useToastHook from '@hooks/useToastHook';
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { commentsLikeRegisterAPI } from 'lib/api/comments';
-import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
+import { AxiosError } from 'axios';
+import { useEffect } from 'react';
 
-export default function useCommentsLikeMutation(
-  comment_id: CommentsLikeMutationRequestType
+import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
+import useToastHook from '@hooks/useToastHook';
+import { commentsLikeDeleteAPI } from 'lib/api/comments';
+
+export default function useCommentsLikeDeleteMutation(
+  comment_id: CommentsLikeDeleteMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION_KEY';
+  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_DELETE_MUTATION_KEY';
   const queryClient = new QueryClient();
 
   const { refetch } = useCommentsLikeListQuery(comment_id);
-
   const { addToast } = useToastHook();
 
-  const { data, mutate, isSuccess, isError, error, isLoading } = useMutation<
-    CommentsLikeMutationResponseType,
+  const { data, isLoading, isError, error, isSuccess, mutate } = useMutation<
+    CommentsLikeDeleteMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
-    CommentsLikeMutationRequestType
-  >([REACT_QUERY_KEY, comment_id], commentsLikeRegisterAPI);
+    CommentsLikeDeleteMutationRequestType
+  >([REACT_QUERY_KEY, comment_id], commentsLikeDeleteAPI);
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
       queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY_KEY', comment_id],
+        queryKey: ['USE_COMMENTS_LIKE_QUERY_KEY', comment_id],
       });
       refetch();
     }

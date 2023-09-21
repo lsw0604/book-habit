@@ -29,3 +29,8 @@ type CommentsLikeListRequestType = number;
 
 type CommentsLikeMutationResponseType = MutationResponse;
 type CommentsLikeMutationRequestType = number;
+
+// useCommentsLikeDeleteMutation의 타입들
+
+type CommentsLikeDeleteMutationResponseType = MutationResponse;
+type CommentsLikeDeleteMutationRequestType = number;

@@ -1,4 +1,5 @@
 import useToastHook from '@hooks/useToastHook';
+import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
 import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
 import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
 import { customize } from '@style/colors';
@@ -146,6 +147,11 @@ export default function PublicCommentsItem({
     isLoading: commentLikeMutationIsLoading,
   } = useCommentsLikeMutation(comment_id);
 
+  const {
+    mutate: commentLikeDeleteMutation,
+    isLoading: commentLikeDeleteMutationIsLoading,
+  } = useCommentsLikeDeleteMutation(comment_id);
+
   const commentLikeRegisterHandler = () => {
     if (!isLogged) {
       return addToast({ message: '로그인이 필요합니다.', status: 'error' });
@@ -157,6 +163,7 @@ export default function PublicCommentsItem({
     if (!isLogged) {
       return addToast({ message: '로그인이 필요합니다.', status: 'error' });
     }
+    commentLikeDeleteMutation(comment_id);
   };
 
   const isLikeHandler = () => {
@@ -207,7 +214,11 @@ export default function PublicCommentsItem({
               </HeartIconWrapper>
             ) : (
               <HeartIconWrapper isLike={true}>
-                <IconHeartFill />
+                {!commentLikeDeleteMutationIsLoading ? (
+                  <IconHeartFill onClick={commentLikeDeleteHandler} />
+                ) : (
+                  <Loader />
+                )}
               </HeartIconWrapper>
             )}
             <HeartNumber>{commentsLikeArray?.length}</HeartNumber>
