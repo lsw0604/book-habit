@@ -6,9 +6,11 @@ import DateBox from 'components/Calendar/DateBox';
 import Icon from 'components/common/Button/Icon';
 import Selector from 'components/common/Selector';
 import { IconLeftArrow, IconRightArrow } from '@style/icons';
-import { getMonthYearDetails, getNewMonthYear } from 'lib/utils/monthYear';
+import { getCalendarDetail, getNewCalendar } from 'lib/utils/calendar';
 import { useParams } from 'react-router-dom';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import { useRecoilState } from 'recoil';
+import { calendarAtom } from 'recoil/calendar';
 
 interface IDateByData {
   [date: string]: HistoryStatusType[];
@@ -59,13 +61,13 @@ export default function Index() {
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
   const [filter, setFilter] = useState<string[]>(['전체보기']);
 
-  const currentMonthYear = getMonthYearDetails(dayjs());
-  const [monthYear, setMonthYear] = useState(currentMonthYear);
+  const [calendarState, setCalendarState] = useRecoilState(calendarAtom);
 
   const { myBookHistoryData, myBookTimeData } = useMyBookPageQueries(
     parseInt(users_books_id),
     filter
   );
+
   const startDate = myBookTimeData?.startDate
     ? dayjs(myBookTimeData.startDate).add(9, 'hour').format('YYYY-MM-DD')
     : undefined;
@@ -75,13 +77,15 @@ export default function Index() {
 
   const dayObj = dayjs()
     .locale('ko')
-    .year(parseInt(monthYear.year))
-    .month(parseInt(monthYear.month) - 1);
+    .year(parseInt(calendarState.year))
+    .month(parseInt(calendarState.month) - 1);
 
-  const numRows = Math.ceil((monthYear.firstDOW + monthYear.lastDate) / 7);
+  const numRows = Math.ceil(
+    (calendarState.firstDOW + calendarState.lastDate) / 7
+  );
 
   const updateMonthYear = (monthIncrement: number): void => {
-    setMonthYear((prev) => getNewMonthYear(prev, monthIncrement));
+    setCalendarState((prev) => getNewCalendar(prev, monthIncrement));
   };
 
   const dataByDate: IDateByData = {};
@@ -107,8 +111,8 @@ export default function Index() {
 
   useEffect(() => {
     if (myBookTimeData && myBookTimeData.endDate) {
-      setMonthYear(
-        getMonthYearDetails(dayjs(myBookTimeData.endDate).add(9, 'hour'))
+      setCalendarState(
+        getCalendarDetail(dayjs(myBookTimeData.endDate).add(9, 'hour'))
       );
     }
 
@@ -117,8 +121,8 @@ export default function Index() {
       myBookTimeData.endDate === undefined &&
       myBookTimeData.startDate
     ) {
-      setMonthYear(
-        getMonthYearDetails(dayjs(myBookTimeData.startDate).add(9, 'hour'))
+      setCalendarState(
+        getCalendarDetail(dayjs(myBookTimeData.startDate).add(9, 'hour'))
       );
     }
   }, [myBookTimeData, myBookTimeData?.endDate, myBookTimeData?.startDate]);
@@ -127,7 +131,7 @@ export default function Index() {
     <Container>
       <CalendarHeader>
         <CalendarHeading>
-          {monthYear.year}년 {parseInt(monthYear.month)}월
+          {calendarState.year}년 {parseInt(calendarState.month)}월
         </CalendarHeading>
         <CalendarSelectorWrapper>
           <Selector
@@ -153,11 +157,11 @@ export default function Index() {
             usersBooksId={parseInt(users_books_id)}
             data={dataByDate}
             date={1}
-            gridColumn={monthYear.firstDOW + 1}
-            month={monthYear.month}
-            year={monthYear.year}
+            gridColumn={calendarState.firstDOW + 1}
+            month={calendarState.month}
+            year={calendarState.year}
           />
-          {[...Array(monthYear.lastDate)].map((_, i) =>
+          {[...Array(calendarState.lastDate)].map((_, i) =>
             i > 0 ? (
               <DateBox
                 startDate={startDate}
@@ -166,8 +170,8 @@ export default function Index() {
                 data={dataByDate}
                 key={i}
                 date={i + 1}
-                month={monthYear.month}
-                year={monthYear.year}
+                month={calendarState.month}
+                year={calendarState.year}
               />
             ) : null
           )}

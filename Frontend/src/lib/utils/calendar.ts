@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export interface MonthYear {
+export interface ICalendar {
   startDate: dayjs.Dayjs;
   firstDOW: number;
   lastDate: number;
@@ -9,14 +9,14 @@ export interface MonthYear {
   year: string;
 }
 
-export function getUpdatedMonthYear(
-  monthYear: MonthYear,
+export function getUpdatedCalendar(
+  monthYear: ICalendar,
   monthIncrement: number
 ): dayjs.Dayjs {
   return monthYear.startDate.clone().add(monthIncrement, 'months');
 }
 
-export function getMonthYearDetails(initialDate: dayjs.Dayjs): MonthYear {
+export function getCalendarDetail(initialDate: dayjs.Dayjs): ICalendar {
   const month = initialDate.format('MM');
   const year = initialDate.format('YYYY');
   const startDate = dayjs(`${year}${month}01`);
@@ -26,11 +26,11 @@ export function getMonthYearDetails(initialDate: dayjs.Dayjs): MonthYear {
   return { startDate, firstDOW, lastDate, monthName, month, year };
 }
 
-export function getNewMonthYear(
-  prevData: MonthYear,
+export function getNewCalendar(
+  prevData: ICalendar,
   monthIncrement: number
-): MonthYear {
-  const newMonthYear = getUpdatedMonthYear(prevData, monthIncrement);
+): ICalendar {
+  const newMonthYear = getUpdatedCalendar(prevData, monthIncrement);
 
-  return getMonthYearDetails(newMonthYear);
+  return getCalendarDetail(newMonthYear);
 }

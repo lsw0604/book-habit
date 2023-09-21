@@ -7,6 +7,9 @@ import { IconTrashCan } from '@style/icons';
 import { StatusWordObj, StatusColorObj } from 'lib/staticData';
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
+import { useSetRecoilState } from 'recoil';
+import { calendarAtom } from 'recoil/calendar';
+import { getCalendarDetail } from 'lib/utils/calendar';
 
 const Container = styled.div`
   display: inline-flex;
@@ -72,6 +75,8 @@ export default function HistoryItem({
 
   const [year, month, day] = dayjs(date).format('YYYY-MM-DD').split('-');
 
+  const setCalendarState = useSetRecoilState(calendarAtom);
+
   const [createdYear, createdMonth, createdDay] = dayjs(created_at)
     .format('YYYY-MM-DD')
     .split('-');
@@ -106,7 +111,11 @@ export default function HistoryItem({
         )}
       </DateContainer>
       <Line status={status} />
-      <Content>
+      <Content
+        onClick={() =>
+          setCalendarState(getCalendarDetail(dayjs(`${year}-${month}`)))
+        }
+      >
         <ContentDate>
           {year}년 {month}월 {day}일&nbsp;
         </ContentDate>

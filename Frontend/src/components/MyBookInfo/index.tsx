@@ -53,6 +53,10 @@ const CalendarWrapper = styled.div`
     grid-area: 1 / 1 / 6 / 4;
     box-shadow: ${({ theme }) => theme.shadow.lg};
     border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 0 5%;
   }
 `;
 
@@ -61,6 +65,9 @@ const HistoryListWrapper = styled.div`
     grid-area: 6 / 1 / 8 / 4;
     box-shadow: ${({ theme }) => theme.shadow.lg};
     border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
@@ -71,6 +78,7 @@ const CommentListWrapper = styled.div`
     grid-area: 1 / 4 / 8 / 6;
     border-radius: 2rem;
     box-shadow: ${({ theme }) => theme.shadow.lg};
+    padding: 5% 0;
   }
 `;
 

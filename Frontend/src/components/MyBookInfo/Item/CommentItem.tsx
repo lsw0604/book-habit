@@ -25,6 +25,7 @@ const Container = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
+  cursor: pointer;
 `;
 
 const Header = styled.div`
