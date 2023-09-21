@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import BottomNavigationPaletteButton from 'components/bottom/BottomNavigationPaletteButton';
 import BottomNavigationButton from 'components/bottom/BottomNavigationButton';
-import { IconBook, IconPlus } from '@style/icons';
+import { IconBook, IconComments, IconPlus } from '@style/icons';
 import { useLocation } from 'react-router-dom';
 
 const Container = styled.nav`
@@ -47,6 +47,13 @@ export default function BottomNavigationBar() {
             </Wrapper>
             <Wrapper>
               <BottomNavigationPaletteButton />
+            </Wrapper>
+            <Wrapper>
+              <BottomNavigationButton
+                title="한줄평"
+                icon={<IconComments />}
+                url="/comments"
+              />
             </Wrapper>
             <Wrapper>
               <BottomNavigationButton

@@ -4,7 +4,6 @@ import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery
 import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
 import { customize } from '@style/colors';
 import { IconCalendar, IconHeart, IconHeartFill, IconStar } from '@style/icons';
-import Divider from 'components/common/Divider';
 import Loader from 'components/common/Loader';
 import dayjs from 'dayjs';
 import { useRecoilValue } from 'recoil';
@@ -16,11 +15,12 @@ const Container = styled.div`
   gap: 8px;
   padding: 1rem;
   width: 100%;
-  height: 100%;
-  min-height: 170px;
+  height: auto;
+  min-height: 180px;
   position: relative;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
   cursor: pointer;
@@ -58,6 +58,7 @@ const Status = styled.h3`
 const Content = styled.div`
   width: 100%;
   height: 100%;
+  border: 2px solid;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
@@ -72,13 +73,13 @@ const HeartContainer = styled.div`
   }
 `;
 
-const HeartIconWrapper = styled.div<{ isLike: boolean }>`
+const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
   height: 100%;
   width: 1rem;
   svg {
     width: 100%;
-    fill: ${({ isLike }) =>
-      isLike ? customize.rose['300'] : ({ theme }) => theme.mode.typo_sub};
+    fill: ${({ isLiked, theme }) =>
+      isLiked ? customize.rose['300'] : theme.mode.typo_sub};
   }
 `;
 
@@ -152,29 +153,18 @@ export default function PublicCommentsItem({
     isLoading: commentLikeDeleteMutationIsLoading,
   } = useCommentsLikeDeleteMutation(comment_id);
 
-  const commentLikeRegisterHandler = () => {
+  const isLiked = commentsLikeArray?.some((like) => like.users_id === id);
+
+  const commentLikeHandler = (isLike: boolean) => {
     if (!isLogged) {
       return addToast({ message: '로그인이 필요합니다.', status: 'error' });
     }
-    commentLikeRegisterMutation(comment_id);
-  };
 
-  const commentLikeDeleteHandler = () => {
-    if (!isLogged) {
-      return addToast({ message: '로그인이 필요합니다.', status: 'error' });
+    if (isLike) {
+      commentLikeRegisterMutation(comment_id);
+    } else {
+      commentLikeDeleteMutation(comment_id);
     }
-    commentLikeDeleteMutation(comment_id);
-  };
-
-  const isLikeHandler = () => {
-    if (commentsLikeArray && commentsLikeArray.length > 0) {
-      for (const commentsLike of commentsLikeArray) {
-        if (commentsLike.users_id === id) {
-          return false;
-        }
-      }
-    }
-    return true;
   };
 
   return (
@@ -195,7 +185,6 @@ export default function PublicCommentsItem({
           </IconBox>
         </HeaderIconContainer>
       </Header>
-      <Divider divider={2} />
       <Content>{comment}</Content>
       <HeartContainer>
         {commentsLikeLoading || commentsLikeFetching ? (
@@ -204,23 +193,18 @@ export default function PublicCommentsItem({
           </HeartLoaderContainer>
         ) : (
           <>
-            {isLikeHandler() ? (
-              <HeartIconWrapper isLike={false}>
-                {!commentLikeMutationIsLoading ? (
-                  <IconHeart onClick={commentLikeRegisterHandler} />
+            <HeartIconWrapper isLiked={isLiked}>
+              {!commentLikeMutationIsLoading ||
+              !commentLikeDeleteMutationIsLoading ? (
+                isLiked ? (
+                  <IconHeartFill onClick={() => commentLikeHandler(false)} />
                 ) : (
-                  <Loader />
-                )}
-              </HeartIconWrapper>
-            ) : (
-              <HeartIconWrapper isLike={true}>
-                {!commentLikeDeleteMutationIsLoading ? (
-                  <IconHeartFill onClick={commentLikeDeleteHandler} />
-                ) : (
-                  <Loader />
-                )}
-              </HeartIconWrapper>
-            )}
+                  <IconHeart onClick={() => commentLikeHandler(true)} />
+                )
+              ) : (
+                <Loader />
+              )}
+            </HeartIconWrapper>
             <HeartNumber>{commentsLikeArray?.length}</HeartNumber>
           </>
         )}
