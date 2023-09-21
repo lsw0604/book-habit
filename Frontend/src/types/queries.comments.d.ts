@@ -1,6 +1,6 @@
 // useCommentsListQuery의 타입들
 
-type CommentsListResponseType = {
+type CommentsListQueryResponseType = {
   comments: CommentsListType;
 };
 type CommentsListType = CommentsItemType[];
@@ -15,12 +15,17 @@ type CommentsItemType = {
 
 // useCommentsLikeListQuery의 타입들
 
-type CommentsLikeListResponseType = {
+type CommentsLikeListQueryResponseType = {
   comment_likes: CommentsLikeListType;
 };
-type CommentsLikeListType = CommentsItemType[];
+type CommentsLikeListType = CommentsLikeItemType[];
 type CommentsLikeItemType = {
   users_id: number;
 };
 
 type CommentsLikeListRequestType = number;
+
+// useCommentsLikeMutation의 타입들
+
+type CommentsLikeMutationResponseType = MutationResponse;
+type CommentsLikeMutationRequestType = number;

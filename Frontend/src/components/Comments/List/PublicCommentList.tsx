@@ -9,7 +9,8 @@ const Container = styled.div`
   display: grid;
   padding: 1rem;
   gap: 1rem;
-  border: 2px solid red;
+  position: relative;
+  overflow: scroll;
 `;
 
 const LoaderContainer = styled.div`

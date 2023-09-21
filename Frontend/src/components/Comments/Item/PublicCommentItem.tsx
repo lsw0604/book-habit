@@ -1,8 +1,13 @@
+import useToastHook from '@hooks/useToastHook';
 import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
+import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
 import { customize } from '@style/colors';
-import { IconCalendar, IconHeart, IconStar } from '@style/icons';
+import { IconCalendar, IconHeart, IconHeartFill, IconStar } from '@style/icons';
 import Divider from 'components/common/Divider';
+import Loader from 'components/common/Loader';
 import dayjs from 'dayjs';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -12,6 +17,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   min-height: 170px;
+  position: relative;
   flex-direction: column;
   align-items: center;
   background-color: ${({ theme }) => theme.mode.sub};
@@ -54,17 +60,32 @@ const Content = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-const Comment = styled.span`
-  font-size: 20px;
-`;
-
 const HeartContainer = styled.div`
-  border: 2px solid red;
-  height: 10%;
+  height: 15%;
   width: 100%;
+  display: inline-flex;
+  justify-content: start;
+  gap: 1rem;
   svg {
     width: 1rem;
   }
+`;
+
+const HeartIconWrapper = styled.div<{ isLike: boolean }>`
+  height: 100%;
+  width: 1rem;
+  svg {
+    width: 100%;
+    fill: ${({ isLike }) =>
+      isLike ? customize.rose['300'] : ({ theme }) => theme.mode.typo_sub};
+  }
+`;
+
+const HeartNumber = styled.p`
+  height: 100%;
+  font-size: 100%;
+  line-height: 100%;
+  color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
 const DateWrapper = styled.span`
@@ -80,6 +101,14 @@ const RatingBox = styled.div`
   align-items: center;
 `;
 
+const HeartLoaderContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const IconBox = styled.div`
   display: flex;
   gap: 1rem;
@@ -92,6 +121,7 @@ const IconBox = styled.div`
   svg {
     height: 100%;
     fill: ${customize.yellow['400']};
+    cursor: pointer;
   }
 `;
 
@@ -103,8 +133,43 @@ export default function PublicCommentsItem({
   rating,
   title,
 }: CommentsItemType) {
-  const { data, isLoading, isFetching } = useCommentsLikeListQuery(comment_id);
+  const {
+    data: commentsLikeArray,
+    isLoading: commentsLikeLoading,
+    isFetching: commentsLikeFetching,
+  } = useCommentsLikeListQuery(comment_id);
   const createdTime = dayjs(created_at).format('YYYY/MM/DD HH:mm:ss');
+  const { isLogged, id } = useRecoilValue(userAtom);
+  const { addToast } = useToastHook();
+  const {
+    mutate: commentLikeRegisterMutation,
+    isLoading: commentLikeMutationIsLoading,
+  } = useCommentsLikeMutation(comment_id);
+
+  const commentLikeRegisterHandler = () => {
+    if (!isLogged) {
+      return addToast({ message: '로그인이 필요합니다.', status: 'error' });
+    }
+    commentLikeRegisterMutation(comment_id);
+  };
+
+  const commentLikeDeleteHandler = () => {
+    if (!isLogged) {
+      return addToast({ message: '로그인이 필요합니다.', status: 'error' });
+    }
+  };
+
+  const isLikeHandler = () => {
+    if (commentsLikeArray && commentsLikeArray.length > 0) {
+      for (const commentsLike of commentsLikeArray) {
+        if (commentsLike.users_id === id) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
   return (
     <Container>
       <Header>
@@ -125,8 +190,30 @@ export default function PublicCommentsItem({
       </Header>
       <Divider divider={2} />
       <Content>{comment}</Content>
-      <Divider divider={2} />
-      <HeartContainer></HeartContainer>
+      <HeartContainer>
+        {commentsLikeLoading || commentsLikeFetching ? (
+          <HeartLoaderContainer>
+            <Loader />
+          </HeartLoaderContainer>
+        ) : (
+          <>
+            {isLikeHandler() ? (
+              <HeartIconWrapper isLike={false}>
+                {!commentLikeMutationIsLoading ? (
+                  <IconHeart onClick={commentLikeRegisterHandler} />
+                ) : (
+                  <Loader />
+                )}
+              </HeartIconWrapper>
+            ) : (
+              <HeartIconWrapper isLike={true}>
+                <IconHeartFill />
+              </HeartIconWrapper>
+            )}
+            <HeartNumber>{commentsLikeArray?.length}</HeartNumber>
+          </>
+        )}
+      </HeartContainer>
     </Container>
   );
 }

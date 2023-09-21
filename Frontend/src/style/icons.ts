@@ -12,6 +12,7 @@ export { ReactComponent as IconError } from '../assets/icons/iconError.svg';
 export { ReactComponent as IconFemale } from '../assets/icons/iconFemale.svg';
 export { ReactComponent as IconFlag } from '../assets/icons/iconFlag.svg';
 export { ReactComponent as IconHeart } from '../assets/icons/iconHeart.svg';
+export { ReactComponent as IconHeartFill } from '../assets/icons/iconHeartFill.svg';
 export { ReactComponent as IconHome } from '../assets/icons/iconHome.svg';
 export { ReactComponent as IconImage } from '../assets/icons/iconImage.svg';
 export { ReactComponent as IconInfo } from '../assets/icons/iconInfo.svg';

@@ -21,6 +21,7 @@ const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
   height: 100%;
   position: relative;
+  cursor: pointer;
   grid-column-start: ${({ gridColumn }) => gridColumn};
   padding-bottom: 100%;
   box-shadow: ${({ theme }) => theme.shadow.md};
@@ -40,8 +41,9 @@ const Contents = styled.div`
 const Span = styled.span<{ isSunday?: boolean; isSaturday?: boolean }>`
   font-size: 14px;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  left: 5px;
+
   color: ${({ theme }) => theme.mode.typo_main};
   color: ${({ isSunday }) => (isSunday ? customize.red['400'] : null)};
   color: ${({ isSaturday }) => (isSaturday ? customize.sky['400'] : null)};
