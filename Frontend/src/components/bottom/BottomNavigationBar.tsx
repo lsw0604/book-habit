@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import PaletteBtn from './PaletteBtn';
-import NavBtn from 'components/BottomNavigation/NavBtn';
+import BottomNavigationPaletteButton from 'components/bottom/BottomNavigationPaletteButton';
+import BottomNavigationButton from 'components/bottom/BottomNavigationButton';
 import { IconBook, IconPlus } from '@style/icons';
 import { useLocation } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ const Wrapper = styled.li`
   height: 100%;
 `;
 
-export default function Index() {
+export default function BottomNavigationBar() {
   const { pathname } = useLocation();
   return (
     <>
@@ -39,13 +39,17 @@ export default function Index() {
         <Container>
           <Buttons>
             <Wrapper>
-              <NavBtn title="추가하기" icon={<IconPlus />} url="/search" />
+              <BottomNavigationButton
+                title="추가하기"
+                icon={<IconPlus />}
+                url="/search"
+              />
             </Wrapper>
             <Wrapper>
-              <PaletteBtn />
+              <BottomNavigationPaletteButton />
             </Wrapper>
             <Wrapper>
-              <NavBtn
+              <BottomNavigationButton
                 isAuth
                 title="내 서재"
                 icon={<IconBook />}

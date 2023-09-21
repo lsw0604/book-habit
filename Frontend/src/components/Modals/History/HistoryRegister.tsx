@@ -78,6 +78,7 @@ export default function HistoryRegister() {
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     onChangeMyBookUseValidation(true);
+    console.log(body);
     if (useMyBookHistoryValidation) {
       return mutate(body);
     }

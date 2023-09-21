@@ -1,6 +1,6 @@
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
-import Loader from 'components/common/Loader';
 import styled from 'styled-components';
+
+import PublicCommentsList from 'components/Comments/List/PublicCommentList';
 
 const Container = styled.div`
   width: 100%;
@@ -8,15 +8,9 @@ const Container = styled.div`
 `;
 
 export default function CommentsPage() {
-  const { isLoading, isFetching, data } = useCommentsListQuery();
-  console.log(data);
   return (
     <Container>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        data?.map((v, i) => <div key={i}>{v.title}</div>)
-      )}
+      <PublicCommentsList />
     </Container>
   );
 }

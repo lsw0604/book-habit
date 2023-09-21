@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import HistoryItem from 'components/MyBookInfo/Item/HistoryItem';
+import MyBookInfoHistoryItem from 'components/History/Item/MyBookInfoHistoryItem';
 import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
@@ -12,8 +12,9 @@ const Container = styled.div`
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
   position: relative;
+  border-radius: 1rem;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const EmptyTag = styled.div`
@@ -58,7 +59,7 @@ export default function HistoryList() {
         myBookHistoryData &&
         myBookHistoryData.length !== 0 ? (
         myBookHistoryData.map((value) => (
-          <HistoryItem key={value.id} {...value} />
+          <MyBookInfoHistoryItem key={value.id} {...value} />
         ))
       ) : (
         <EmptyTag>검색 결과가 없습니다.</EmptyTag>

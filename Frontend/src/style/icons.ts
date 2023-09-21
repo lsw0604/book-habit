@@ -1,3 +1,4 @@
+export { ReactComponent as IconBurger } from '../assets/icons/iconBurger.svg';
 export { ReactComponent as IconBeach } from '../assets/icons/iconBeach.svg';
 export { ReactComponent as IconBook } from '../assets/icons/iconBook.svg';
 export { ReactComponent as IconBookMark } from '../assets/icons/iconBookmark.svg';

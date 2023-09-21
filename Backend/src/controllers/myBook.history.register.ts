@@ -40,11 +40,12 @@ export default async function myBookHistoryRegister(
     try {
       await connection.beginTransaction();
       if (status === '읽는중') {
+        logging.debug(NAMESPACE, '[dayjs]', dayjs(date).format('YYYY-MM-DD'));
         const MY_BOOK_HISTORY_EXIST_SQL =
           'SELECT COUNT(*) AS count FROM users_books_history WHERE status = ? AND date = ? AND users_books_id = ?';
         const MY_BOOK_HISTORY_EXIST_VALUE = [
           '읽는중',
-          dayjs(date).add(9, 'hour').format('YYYY-MM-DD'),
+          dayjs(date).format('YYYY-MM-DD'),
           users_books_id,
         ];
         const [MY_BOOK_HISTORY_EXIST_RESULT] = await connection.query<IHistoryExist[]>(

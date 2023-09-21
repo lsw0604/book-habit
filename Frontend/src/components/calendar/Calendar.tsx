@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
-import DateBox from 'components/Calendar/DateBox';
+import CalendarDateBox from 'components/calendar/CalendarDateBox';
 import Icon from 'components/common/Button/Icon';
 import Selector from 'components/common/Selector';
 import { IconLeftArrow, IconRightArrow } from '@style/icons';
@@ -19,9 +19,11 @@ interface IDateByData {
 const Container = styled.div`
   width: 100%;
   height: auto;
+  border-radius: 1rem;
   background-color: ${({ theme }) => theme.mode.sub};
-  padding: 0 1rem;
+  padding: 1rem;
   position: relative;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const CalendarHeader = styled.div`
@@ -32,9 +34,9 @@ const CalendarHeader = styled.div`
 `;
 
 const CalendarHeading = styled.h1`
-  font-size: 20px;
-  line-height: 22px;
-  width: 30%;
+  font-size: 16px;
+  line-height: 20px;
+  width: 33%;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
@@ -55,7 +57,7 @@ const Contents = styled.div`
   align-items: center;
 `;
 
-export default function Index() {
+export default function Calendar() {
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
@@ -151,7 +153,7 @@ export default function Index() {
           previous
         </Icon>
         <CalendarBox numRows={numRows}>
-          <DateBox
+          <CalendarDateBox
             startDate={startDate}
             endDate={endDate}
             usersBooksId={parseInt(users_books_id)}
@@ -163,7 +165,7 @@ export default function Index() {
           />
           {[...Array(calendarState.lastDate)].map((_, i) =>
             i > 0 ? (
-              <DateBox
+              <CalendarDateBox
                 startDate={startDate}
                 endDate={endDate}
                 usersBooksId={parseInt(users_books_id)}

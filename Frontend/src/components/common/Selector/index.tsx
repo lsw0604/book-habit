@@ -56,13 +56,14 @@ const SingleTag = styled.span`
 const ValueTag = styled.button`
   display: flex;
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.mode.typo_sub};
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   outline: none;
-  background-color: ${({ theme }) => theme.mode.main};
-  color: ${({ theme }) => theme.mode.typo_main};
+  background-color: ${({ theme }) => theme.colors.spinner};
+  color: ${({ theme }) => theme.mode.typo_sub};
   padding: 0.15rem 0.25rem;
+  justify-content: center;
   gap: 8px;
   text-align: center;
 `;

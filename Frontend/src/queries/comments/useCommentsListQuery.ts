@@ -11,9 +11,8 @@ export default function useCommentsListQuery() {
     AxiosError,
     CommentsListType
   >([REACT_QUERY_KEY], () => commentsListAPI(), {
-    select: (data) => {
-      console.log('useQuery', data.comments);
-      return data.comments;
+    select: ({ comments }) => {
+      return comments;
     },
   });
 

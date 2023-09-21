@@ -1,18 +1,17 @@
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentQuery from '@queries/myBook/useMyBookCommentQuery';
 import { IconPlus } from '@style/icons';
-import CommentItem from 'components/MyBookInfo/Item/CommentItem';
+import MyBookInfoCommentItem from 'components/Comments/Item/MyBookInfoCommentItem';
 import Icon from 'components/common/Button/Icon';
-import Divider from 'components/common/Divider';
 import Loader from 'components/common/Loader';
-import { useParams } from 'react-router-dom';
-
-import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  height: auto;
+  height: 100%;
   overflow: scroll;
   scroll-behavior: row;
   padding: 1rem;
@@ -20,6 +19,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+  border-radius: 1rem;
 `;
 
 const AddContainer = styled.div`
@@ -48,7 +49,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function CommentList() {
+export default function MyBookInfoCommentList() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
 
@@ -78,12 +79,11 @@ export default function CommentList() {
         </EmptyTag>
       ) : (
         data?.map((comment) => (
-          <CommentItem key={comment.comment_id} {...comment} />
+          <MyBookInfoCommentItem key={comment.comment_id} {...comment} />
         ))
       )}
       {data?.length !== 0 && (
         <>
-          <Divider divider={2} />
           <AddContainer>
             <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
               AddComment

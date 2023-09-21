@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 
 import { userAtom } from 'recoil/user';
 import HeaderAuth from 'components/header/HeaderAuth';
-import HeaderProfile from 'components/header/HeaderProfile';
+import HeaderProfile from 'components/header/HeaderProfileContainer';
 import Loader from 'components/common/Loader';
 import { IconLeftArrow } from '@style/icons';
 
@@ -26,6 +26,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 20px;
+  height: 100%;
 `;
 
 const LogoWrapper = styled.div`
@@ -50,8 +51,14 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
   const { pathname } = useLocation();
 
   const logoHandler = (pathname: string) => {
-    if (pathname === '/search') return <LogoWrapper>책벌래</LogoWrapper>;
-    if (pathname.includes('/my_books'))
+    if (pathname === '/search' || pathname === '/register/kakao')
+      return <LogoWrapper>책벌래</LogoWrapper>;
+    if (
+      pathname.includes('/my_books') ||
+      pathname === '/comments' ||
+      pathname === '/login' ||
+      pathname === '/register'
+    )
       return (
         <LogoWrapper onClick={() => navigate(-1)}>
           <IconLeftArrow />

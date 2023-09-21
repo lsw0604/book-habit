@@ -12,16 +12,20 @@ import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMuta
 
 const Container = styled.div`
   height: 100%;
-  padding: 0 1rem;
   width: 100%;
   flex-wrap: wrap;
+  border-radius: 1rem;
   display: flex;
+  padding: 1rem 0;
   margin: 0 auto;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const DetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  width: 60%;
+  width: 57%;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
@@ -61,12 +65,8 @@ const Title = styled.h1`
 `;
 
 const Description = styled.p`
-  display: block;
   font-size: 12px;
   width: 100%;
-  height: 60%;
-  text-overflow: ellipsis;
-  overflow: scroll;
   font-weight: 400;
 `;
 

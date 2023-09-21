@@ -1,67 +1,36 @@
-import { useState, useRef, useEffect } from 'react';
+import { IconBurger } from '@style/icons';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
 
-import HeaderProfileDropdown from './HeaderProfileDropdown';
-import { userAtom } from 'recoil/user';
-
-const Container = styled.div<{ isHamburger: boolean }>`
+const Container = styled.div`
+  height: 70%;
+  width: 5rem;
+  border-radius: 30px;
   display: flex;
-  cursor: pointer;
-  &:focus {
-    background-color: ${({ theme }) => theme.mode.sub};
+  align-items: center;
+  gap: 8px;
+  &:hover {
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+  }
+  svg {
+    width: 20px;
+    fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;
 
-const Span = styled.span`
-  display: inline-flex;
-  color: ${({ theme }) => theme.colors.main};
-`;
-
-const Name = styled.p`
-  margin-left: 10px;
-  color: ${({ theme }) => theme.mode.typo_main};
+const ImageWrapper = styled.div`
+  width: 45%;
+  height: 80%;
+  border-radius: 5rem;
+  background-color: lightblue;
+  margin-left: 5px;
+  overflow: hidden;
 `;
 
 export default function HeaderProfile() {
-  const { name } = useRecoilValue(userAtom);
-  const [isHamburger, setIsHamburger] = useState<boolean>(false);
-  const hamburgerRef = useRef<HTMLDivElement>(null);
-
-  const handleHamburger = () => {
-    setIsHamburger((prev) => !prev);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        hamburgerRef.current &&
-        !hamburgerRef.current.contains(event.target as Node)
-      ) {
-        setIsHamburger(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isHamburger]);
-
   return (
-    <Container
-      isHamburger={isHamburger}
-      ref={hamburgerRef}
-      onClick={handleHamburger}
-    >
-      {name !== null ? (
-        <Span>
-          {name}
-          <Name>님 환영합니다.</Name>
-        </Span>
-      ) : (
-        <Name>개인정보를 등록해주세요.</Name>
-      )}
-      {isHamburger && <HeaderProfileDropdown />}
+    <Container>
+      <ImageWrapper></ImageWrapper>
+      <IconBurger />
     </Container>
   );
 }

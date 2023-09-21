@@ -12,3 +12,15 @@ type CommentsItemType = {
   title: string;
   name: string;
 };
+
+// useCommentsLikeListQuery의 타입들
+
+type CommentsLikeListResponseType = {
+  comment_likes: CommentsLikeListType;
+};
+type CommentsLikeListType = CommentsItemType[];
+type CommentsLikeItemType = {
+  users_id: number;
+};
+
+type CommentsLikeListRequestType = number;

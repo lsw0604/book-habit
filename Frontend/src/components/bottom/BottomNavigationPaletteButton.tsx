@@ -30,7 +30,7 @@ const CircleBtn = styled.button`
   }
 `;
 
-export default function PaletteBtn() {
+export default function BottomNavigationPaletteButton() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const paletteRef = useRef<HTMLDivElement>(null);
 

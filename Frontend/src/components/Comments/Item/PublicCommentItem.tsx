@@ -1,23 +1,14 @@
-import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
-import {
-  IconCalendar,
-  IconLock,
-  IconLockOpen,
-  IconPencil,
-  IconStar,
-  IconTrashCan,
-} from '@style/icons';
-import Icon from 'components/common/Button/Icon';
-import Divider from 'components/common/Divider';
+import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
 import { customize } from '@style/colors';
-import useModalHook from '@hooks/useModalHook';
-import useMyBookHook from '@hooks/useMyBookHook';
+import { IconCalendar, IconHeart, IconStar } from '@style/icons';
+import Divider from 'components/common/Divider';
+import dayjs from 'dayjs';
+import styled from 'styled-components';
 
 const Container = styled.div`
   display: flex;
   gap: 8px;
-  padding: 0;
+  padding: 1rem;
   width: 100%;
   height: 100%;
   min-height: 170px;
@@ -26,6 +17,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
   cursor: pointer;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const Header = styled.div`
@@ -66,6 +58,15 @@ const Comment = styled.span`
   font-size: 20px;
 `;
 
+const HeartContainer = styled.div`
+  border: 2px solid red;
+  height: 10%;
+  width: 100%;
+  svg {
+    width: 1rem;
+  }
+`;
+
 const DateWrapper = styled.span`
   color: ${({ theme }) => theme.mode.typo_sub};
   font-size: 10px;
@@ -94,54 +95,25 @@ const IconBox = styled.div`
   }
 `;
 
-export default function CommentItem({
-  comment_id,
+export default function PublicCommentsItem({
   comment,
-  comment_is_open,
-  rating,
-  status,
-  updated_at,
+  comment_id,
   created_at,
-}: MyBookCommentQueryItemType) {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-
-  const { setModalState } = useModalHook();
-  const {
-    setMyBookState,
-    onChangeMyBookCommentId,
-    onChangeMyBookUsersBooksId,
-  } = useMyBookHook();
-
-  const deleteHandler = () => {
-    setModalState({ isOpen: true, type: 'deleteComment' });
-    onChangeMyBookCommentId(comment_id);
-    onChangeMyBookUsersBooksId(parseInt(users_books_id));
-  };
-
-  const modifyHandler = () => {
-    setMyBookState((prev: MyBookAtomType) => ({
-      ...prev,
-      comment,
-      rating,
-      comment_id,
-      users_books_id: parseInt(users_books_id),
-    }));
-    setModalState({ isOpen: true, type: 'modifyComment' });
-  };
-
+  name,
+  rating,
+  title,
+}: CommentsItemType) {
+  const { data, isLoading, isFetching } = useCommentsLikeListQuery(comment_id);
+  const createdTime = dayjs(created_at).format('YYYY/MM/DD HH:mm:ss');
   return (
     <Container>
       <Header>
         <HeaderInfoContainer>
-          <Status>
-            {status}
-            {comment_is_open ? <IconLockOpen /> : <IconLock />}
-          </Status>
+          <Status>{title}</Status>
           <DateWrapper>
             <IconCalendar />
-            &nbsp;
-            {updated_at ? `${updated_at} 수정` : `${created_at} 등록`}
+            &nbsp;{createdTime}
+            &nbsp;{name}
           </DateWrapper>
         </HeaderInfoContainer>
         <HeaderIconContainer>
@@ -149,18 +121,12 @@ export default function CommentItem({
             <IconStar />
             <RatingBox>{rating}</RatingBox>
           </IconBox>
-          <Icon onClick={deleteHandler} icon={<IconTrashCan />}>
-            Delete
-          </Icon>
-          <Icon onClick={modifyHandler} icon={<IconPencil />}>
-            Modify
-          </Icon>
         </HeaderIconContainer>
       </Header>
       <Divider divider={2} />
-      <Content>
-        <Comment>{comment}</Comment>
-      </Content>
+      <Content>{comment}</Content>
+      <Divider divider={2} />
+      <HeartContainer></HeartContainer>
     </Container>
   );
 }
