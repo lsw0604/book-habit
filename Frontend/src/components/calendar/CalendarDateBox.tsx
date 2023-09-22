@@ -7,16 +7,6 @@ import useMyBookHook from '@hooks/useMyBookHook';
 import useToastHook from '@hooks/useToastHook';
 import { IconClose } from '@style/icons';
 
-interface IProps {
-  usersBooksId: number;
-  gridColumn?: number;
-  date?: number;
-  year?: string;
-  month?: string;
-  data: { [date: string]: HistoryStatusType[] };
-  startDate?: string;
-  endDate?: string;
-}
 const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
   height: 100%;
@@ -89,7 +79,7 @@ export default function DateBox({
   usersBooksId,
   startDate,
   endDate,
-}: IProps) {
+}: DateBoxType) {
   if (!year || !month || !date) return null;
   const dayObj = dayjs()
     .locale('ko')

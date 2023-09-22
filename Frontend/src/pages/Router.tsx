@@ -18,6 +18,7 @@ const Register = lazy(() => import('@pages/RegisterPage'));
 const Login = lazy(() => import('@pages/LoginPage'));
 const Search = lazy(() => import('@pages/SearchPage'));
 const Comments = lazy(() => import('@pages/CommentsPage'));
+const Profile = lazy(() => import('@pages/ProfilePage'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -52,6 +53,7 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                   <Route path="/search" Component={Search} />
                   <Route path="/comments" Component={Comments} />
                   <Route element={<IsAuthLayout isAuth={true} />}>
+                    <Route path="/profile" Component={Profile} />
                     <Route path="/my_books" Component={MyBooks} />
                     <Route
                       path="/my_books/:users_books_id"

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import BottomNavigationPaletteButton from 'components/bottom/BottomNavigationPaletteButton';
 import BottomNavigationButton from 'components/bottom/BottomNavigationButton';
-import { IconBook, IconComments, IconPlus } from '@style/icons';
+import { IconBook, IconComments, IconPerson, IconSearch } from '@style/icons';
 import { useLocation } from 'react-router-dom';
 
 const Container = styled.nav`
@@ -40,13 +40,10 @@ export default function BottomNavigationBar() {
           <Buttons>
             <Wrapper>
               <BottomNavigationButton
-                title="추가하기"
-                icon={<IconPlus />}
+                title="검색하기"
+                icon={<IconSearch />}
                 url="/search"
               />
-            </Wrapper>
-            <Wrapper>
-              <BottomNavigationPaletteButton />
             </Wrapper>
             <Wrapper>
               <BottomNavigationButton
@@ -56,11 +53,22 @@ export default function BottomNavigationBar() {
               />
             </Wrapper>
             <Wrapper>
+              <BottomNavigationPaletteButton />
+            </Wrapper>
+            <Wrapper>
               <BottomNavigationButton
                 isAuth
                 title="내 서재"
                 icon={<IconBook />}
                 url="/my_books"
+              />
+            </Wrapper>
+            <Wrapper>
+              <BottomNavigationButton
+                isAuth
+                title="내 프로필"
+                icon={<IconPerson />}
+                url="/profile"
               />
             </Wrapper>
           </Buttons>

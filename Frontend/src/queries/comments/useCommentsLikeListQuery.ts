@@ -5,7 +5,7 @@ import { commentsLikeListAPI } from 'lib/api/comments';
 export default function useCommentsLikeListQuery(
   comment_id: CommentsLikeListRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_LIST_QUERY_KEY';
+  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_LIST_QUERY';
 
   const { data, isFetching, isLoading, refetch } = useQuery<
     CommentsLikeListQueryResponseType,

@@ -48,7 +48,7 @@ export default function StarRating({
   errorMessage,
   isValid,
   useValidation,
-}: IStarRating) {
+}: StarRatingType) {
   const isClickedHandler = (i: number) => {
     if (i === rating) {
       onChange(rating - 1);

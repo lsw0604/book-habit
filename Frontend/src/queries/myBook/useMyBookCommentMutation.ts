@@ -5,6 +5,7 @@ import { myBookCommentsRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentQuery from './useMyBookCommentQuery';
+import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 
 export default function useMyBookCommentMutation(users_books_id: number) {
   const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_MUTATION';
@@ -13,6 +14,7 @@ export default function useMyBookCommentMutation(users_books_id: number) {
   const { onChangeMyBookStateInitial } = useMyBookHook();
   const { refetch: myBookCommentRefetch } =
     useMyBookCommentQuery(users_books_id);
+  const { refetch: commentListRefetch } = useCommentsListQuery();
 
   const { isLoading, mutate, isSuccess, data, isError, error } = useMutation<
     MyBookCommentMutationResponseType,
@@ -21,10 +23,14 @@ export default function useMyBookCommentMutation(users_books_id: number) {
   >([REACT_QUERY_KEY, users_books_id], myBookCommentsRegisterAPI, {
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['USE_MY_BOOK_COMMENTS_QUERY'],
+        queryKey: ['USE_MY_BOOK_COMMENT_QUERY'],
         exact: true,
       });
+      queryClient.invalidateQueries({
+        queryKey: ['USE_COMMENTS_LIST_QUERY'],
+      });
       myBookCommentRefetch();
+      commentListRefetch();
     },
   });
 

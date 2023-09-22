@@ -8,17 +8,18 @@ import { IconPlus } from '@style/icons';
 import MyBookInfoCommentItem from 'components/Comments/Item/MyBookInfoCommentItem';
 import Icon from 'components/common/Button/Icon';
 import Loader from 'components/common/Loader';
+import Divider from 'components/common/Divider';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: scroll;
   box-sizing: border-box;
-  padding: 1rem;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 1rem;
   box-shadow: ${({ theme }) => theme.shadow.lg};
   border-radius: 1rem;
 `;
@@ -79,7 +80,10 @@ export default function MyBookInfoCommentList() {
         </EmptyTag>
       ) : (
         data?.map((comment) => (
-          <MyBookInfoCommentItem key={comment.comment_id} {...comment} />
+          <>
+            <MyBookInfoCommentItem key={comment.comment_id} {...comment} />
+            <Divider divider={0.1} />
+          </>
         ))
       )}
       {data?.length !== 0 && (

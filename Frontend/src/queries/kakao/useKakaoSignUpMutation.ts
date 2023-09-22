@@ -29,9 +29,28 @@ export default function useKakaoSignUpMutation() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      const { message, status, age, email, gender, id, name, provider } = data;
+      const {
+        message,
+        status,
+        age,
+        email,
+        gender,
+        id,
+        name,
+        provider,
+        profile,
+      } = data;
       addToast({ message, status });
-      setUserState({ age, email, name, gender, id, provider, isLogged: true });
+      setUserState({
+        age,
+        email,
+        name,
+        gender,
+        id,
+        provider,
+        isLogged: true,
+        profile,
+      });
     }
   }, [isSuccess, data]);
 

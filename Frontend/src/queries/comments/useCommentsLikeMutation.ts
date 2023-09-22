@@ -9,7 +9,7 @@ import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery
 export default function useCommentsLikeMutation(
   comment_id: CommentsLikeMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION_KEY';
+  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch } = useCommentsLikeListQuery(comment_id);
@@ -27,7 +27,7 @@ export default function useCommentsLikeMutation(
       const { message, status } = data;
       addToast({ message, status });
       queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY_KEY', comment_id],
+        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY', comment_id],
       });
       refetch();
     }

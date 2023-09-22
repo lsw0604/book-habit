@@ -24,6 +24,7 @@ type KakaoSignUpMutationResponseType = {
   age: number;
   message: string;
   status: StatusType;
+  profile: string;
 };
 
 type KakaoSignUpMutationRequestType = {

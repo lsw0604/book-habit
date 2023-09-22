@@ -57,7 +57,8 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
       pathname.includes('/my_books') ||
       pathname === '/comments' ||
       pathname === '/login' ||
-      pathname === '/register'
+      pathname === '/register' ||
+      pathname === '/profile'
     )
       return (
         <LogoWrapper onClick={() => navigate(-1)}>

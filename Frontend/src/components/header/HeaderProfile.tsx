@@ -4,35 +4,34 @@ import { useRecoilValue } from 'recoil';
 
 import HeaderProfileDropdown from './HeaderProfileDropdown';
 import { userAtom } from 'recoil/user';
-import { IconBurger } from '@style/icons';
 
 const Container = styled.div<{ isHamburger: boolean }>`
-  display: flex;
-  cursor: pointer;
   height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
   align-items: center;
 `;
 
-const ProfileContainer = styled.div`
-  height: 70%;
-  width: 5rem;
+const ProfileImageWrapper = styled.div`
+  cursor: pointer;
+  height: 3rem;
+  width: 3rem;
   border-radius: 30px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   box-shadow: ${({ theme }) => theme.shadow.lg};
+  .img_horizon {
+    width: 85%;
+    height: 85%;
+    border-radius: 5rem;
+    overflow: hidden;
+  }
   svg {
     width: 20px;
     fill: ${({ theme }) => theme.mode.typo_sub};
   }
-`;
-
-const ProfileImageWrapper = styled.div`
-  width: 45%;
-  height: 80%;
-  border-radius: 5rem;
-  margin-left: 5px;
-  overflow: hidden;
   img {
     width: 100%;
     height: 100%;
@@ -40,10 +39,18 @@ const ProfileImageWrapper = styled.div`
   }
 `;
 
+const ProfileName = styled.p`
+  color: ${({ theme }) => theme.colors.spinner};
+  display: inline-flex;
+  .welcome_mention {
+    color: ${({ theme }) => theme.mode.typo_sub};
+  }
+`;
+
 export default function HeaderProfile() {
   const [isHamburger, setIsHamburger] = useState<boolean>(false);
   const hamburgerRef = useRef<HTMLDivElement>(null);
-  const { profile, id } = useRecoilValue(userAtom);
+  const { profile, id, name } = useRecoilValue(userAtom);
 
   const handleHamburger = () => {
     setIsHamburger((prev) => !prev);
@@ -70,12 +77,15 @@ export default function HeaderProfile() {
       ref={hamburgerRef}
       onClick={handleHamburger}
     >
-      <ProfileContainer>
-        <ProfileImageWrapper>
+      <ProfileName>
+        {name}
+        <p className="welcome_mention">님 환영합니다.</p>
+      </ProfileName>
+      <ProfileImageWrapper>
+        <div className="img_horizon">
           <img src={profile} alt={id.toString()} />
-        </ProfileImageWrapper>
-        <IconBurger />
-      </ProfileContainer>
+        </div>
+      </ProfileImageWrapper>
       {isHamburger && <HeaderProfileDropdown />}
     </Container>
   );

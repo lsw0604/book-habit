@@ -11,6 +11,7 @@ type CommentsItemType = {
   rating: number;
   title: string;
   name: string;
+  profile: string;
 };
 
 // useCommentsLikeListQuery의 타입들

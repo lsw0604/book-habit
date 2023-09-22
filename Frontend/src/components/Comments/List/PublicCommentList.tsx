@@ -7,15 +7,14 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  display: flex;
   overflow: scroll;
   gap: 1rem;
   padding: 1rem;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  align-content: flex-start;
   @media screen and (min-width: 1280px) {
-    flex-direction: row;
+    align-items: flex-start;
+    align-content: flex-start;
     flex-wrap: wrap;
   }
 `;

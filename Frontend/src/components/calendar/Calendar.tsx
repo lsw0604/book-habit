@@ -12,10 +12,6 @@ import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { useRecoilState } from 'recoil';
 import { calendarAtom } from 'recoil/calendar';
 
-interface IDateByData {
-  [date: string]: HistoryStatusType[];
-}
-
 const Container = styled.div`
   width: 100%;
   height: auto;
@@ -90,7 +86,7 @@ export default function Calendar() {
     setCalendarState((prev) => getNewCalendar(prev, monthIncrement));
   };
 
-  const dataByDate: IDateByData = {};
+  const dataByDate: CalendarDateByDataType = {};
   myBookHistoryData?.forEach((item) => {
     const dateStr = dayjs(item.date).add(9, 'hour').toISOString().split('T')[0];
     dataByDate[dateStr] = dataByDate[dateStr] || [];

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Register from 'components/user/Register';
 
 const Container = styled.div`
   width: 100%;
@@ -9,10 +8,6 @@ const Container = styled.div`
   align-items: center;
 `;
 
-export default function RegisterPage() {
-  return (
-    <Container>
-      <Register />
-    </Container>
-  );
+export default function ProfilePage() {
+  return <Container>ProfilePage</Container>;
 }

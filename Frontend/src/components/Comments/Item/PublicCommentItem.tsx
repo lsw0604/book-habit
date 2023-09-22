@@ -37,22 +37,19 @@ const HeaderInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 70%;
 `;
 
-const Title = styled.h3`
+const HeaderInfoContainerTitleWrapper = styled.h3`
   color: ${({ theme }) => theme.mode.typo_main};
   font-size: 18px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   width: 100%;
-  svg {
-    margin-left: 8px;
-    height: 0.8rem;
-  }
 `;
 
-const DateWrapper = styled.span`
+const HeaderInfoContainerDateWrapper = styled.span`
   color: ${({ theme }) => theme.mode.typo_sub};
   font-size: 10px;
   svg {
@@ -63,24 +60,70 @@ const DateWrapper = styled.span`
 const HeaderIconContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
+  width: 30%;
 `;
 
-const IconBox = styled.div`
+const HeaderIconContainerProfile = styled.div`
+  height: 2.5rem;
+  width: 2.5rem;
   display: flex;
-  gap: 1rem;
-  height: 70%;
-  border-radius: 50px;
-  padding: 5px 10px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.mode.sub};
-  color: ${({ theme }) => theme.mode.typo_main};
-  box-shadow: ${({ theme }) => theme.shadow.md};
-  svg {
-    height: 1rem;
-    fill: ${customize.yellow['400']};
-    cursor: pointer;
+  border-radius: 50%;
+  box-shadow: ${({ theme }) => theme.shadow.lg};
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    overflow: hidden;
+    object-fit: cover;
   }
+`;
+
+const HeaderIconContainerRating = styled.div`
+  display: flex;
+  height: 100%;
+  gap: 8px;
+  align-items: center;
+  svg {
+    height: 1.5rem;
+    fill: ${customize.yellow['300']};
+  }
+`;
+
+const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  min-height: 95px;
+  font-size: 18px;
+  line-height: 22px;
+  color: ${({ theme }) => theme.mode.typo_main};
+`;
+
+const Bottom = styled.div`
+  width: 100%;
+  display: inline-flex;
+  justify-content: start;
+  gap: 1rem;
+  svg {
+    width: 1rem;
+  }
+`;
+
+const BottomLoaderContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+`;
+
+const HeartNumber = styled.p`
+  height: 100%;
+  font-size: 100%;
+  line-height: 100%;
+  color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
 const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
@@ -94,45 +137,6 @@ const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
   }
 `;
 
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
-  min-height: 95px;
-  font-size: 18px;
-  line-height: 22px;
-  color: ${({ theme }) => theme.mode.typo_main};
-`;
-
-const HeartContainer = styled.div`
-  width: 100%;
-  display: inline-flex;
-  justify-content: start;
-  gap: 1rem;
-  svg {
-    width: 1rem;
-  }
-`;
-
-const HeartNumber = styled.p`
-  height: 100%;
-  font-size: 100%;
-  line-height: 100%;
-  color: ${({ theme }) => theme.mode.typo_sub};
-`;
-
-const RatingBox = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const HeartLoaderContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export default function PublicCommentsItem({
   comment,
   comment_id,
@@ -140,6 +144,7 @@ export default function PublicCommentsItem({
   name,
   rating,
   title,
+  profile,
 }: CommentsItemType) {
   const {
     data: commentsLikeArray,
@@ -177,26 +182,31 @@ export default function PublicCommentsItem({
     <Container>
       <Header>
         <HeaderInfoContainer>
-          <Title>{title}</Title>
-          <DateWrapper>
+          <HeaderInfoContainerTitleWrapper>
+            {title}
+          </HeaderInfoContainerTitleWrapper>
+          <HeaderInfoContainerDateWrapper>
             <IconCalendar />
             &nbsp;{createdTime}
             &nbsp;{name}
-          </DateWrapper>
+          </HeaderInfoContainerDateWrapper>
         </HeaderInfoContainer>
         <HeaderIconContainer>
-          <IconBox>
+          <HeaderIconContainerRating>
             <IconStar />
-            <RatingBox>{rating}</RatingBox>
-          </IconBox>
+            {rating}
+          </HeaderIconContainerRating>
+          <HeaderIconContainerProfile>
+            <img src={profile} />
+          </HeaderIconContainerProfile>
         </HeaderIconContainer>
       </Header>
       <Content>{comment}</Content>
-      <HeartContainer>
+      <Bottom>
         {commentsLikeLoading || commentsLikeFetching ? (
-          <HeartLoaderContainer>
+          <BottomLoaderContainer>
             <Loader />
-          </HeartLoaderContainer>
+          </BottomLoaderContainer>
         ) : (
           <>
             <HeartIconWrapper isLiked={isLiked}>
@@ -214,7 +224,7 @@ export default function PublicCommentsItem({
             <HeartNumber>{commentsLikeArray?.length}</HeartNumber>
           </>
         )}
-      </HeartContainer>
+      </Bottom>
     </Container>
   );
 }

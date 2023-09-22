@@ -37,8 +37,8 @@ export const meAPI = async () => {
   return data;
 };
 
-export const kakaoSignupAPI = async (body: KakaoSignUpRequestType) => {
-  const { data } = await axios.post<KakaoSignUpResponseType>(
+export const kakaoSignupAPI = async (body: KakaoSignUpMutationRequestType) => {
+  const { data } = await axios.post<KakaoSignUpMutationResponseType>(
     '/api/auth/kakao/register',
     JSON.stringify(body)
   );

@@ -9,7 +9,7 @@ import { commentsLikeDeleteAPI } from 'lib/api/comments';
 export default function useCommentsLikeDeleteMutation(
   comment_id: CommentsLikeDeleteMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_DELETE_MUTATION_KEY';
+  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_DELETE_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch } = useCommentsLikeListQuery(comment_id);
@@ -26,7 +26,7 @@ export default function useCommentsLikeDeleteMutation(
       const { message, status } = data;
       addToast({ message, status });
       queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIKE_QUERY_KEY', comment_id],
+        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY', comment_id],
       });
       refetch();
     }
