@@ -9,8 +9,8 @@ export const signUpAPI = async (body: SignUpRequestType) => {
   return data;
 };
 
-export const loginAPI = async (body: LoginRequestType) => {
-  const { data } = await axios.post<LoginResponseType>(
+export const loginAPI = async (body: LocalLoginMutationRequestType) => {
+  const { data } = await axios.post<LocalLoginMutationResponseType>(
     '/api/auth/login',
     JSON.stringify(body)
   );

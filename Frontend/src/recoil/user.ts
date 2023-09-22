@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
-import { v1 } from 'uuid';
+import { v4 } from 'uuid';
 
-const USER_ATOM_KEY = `USER_ATOM_KEY/${v1()}`;
+const USER_ATOM_KEY = `USER_ATOM_KEY/${v4()}`;
 
 export const userAtom = atom<UserAtomType>({
   key: USER_ATOM_KEY,
@@ -13,5 +13,6 @@ export const userAtom = atom<UserAtomType>({
     age: 0,
     gender: '',
     provider: '',
+    profile: '',
   },
 });

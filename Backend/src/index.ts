@@ -2,7 +2,6 @@ import http from 'http';
 import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import session, { SessionOptions } from 'express-session';
 import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
 import passport from 'passport';
@@ -22,7 +21,7 @@ import { localOptions, LocalVerify } from './strategy/LocalStrategy';
 import { AccessJWTStrategyOptions, AccessVerify } from './strategy/Access.Strategy';
 import { RefreshJWTStrategyOptions, RefreshVerify } from './strategy/Refresh.Strategy';
 
-const NAMESPACE = 'SERVER';
+const NAMESPACE = 'INDEX';
 const app = express();
 dbConfig();
 
@@ -32,18 +31,7 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 
-const sessionOptions: SessionOptions = {
-  resave: false,
-  saveUninitialized: false,
-  secret: process.env.SESSION_SECRET as string,
-  cookie: {
-    httpOnly: true,
-    secure: false,
-  },
-};
-
 app.use(cors(corsOptions));
-app.use(session(sessionOptions));
 app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
@@ -51,7 +39,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../Frontend/dist')));
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 passport.use('local', new LocalStrategy(localOptions, LocalVerify));
 passport.use('access', new JWTStrategy(AccessJWTStrategyOptions, AccessVerify));
@@ -65,5 +52,5 @@ app.use('/api/comments', commentsRouter);
 const httpSever = http.createServer(app);
 
 httpSever.listen(config.server.port, () =>
-  logging.info(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`)
+  logging.debug(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`)
 );

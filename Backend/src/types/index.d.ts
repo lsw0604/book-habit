@@ -25,20 +25,6 @@ export interface IRequestBodyRegister {
   password: string;
 }
 
-export interface IRanking extends RowDataPacket {
-  title: string;
-  author: string;
-  ranking: number;
-  isbn: string;
-  thumbnail: string;
-  company: string;
-  price: number;
-}
-
-export interface IRankingCount extends RowDataPacket {
-  total: number;
-}
-
 export interface ISelectFromJWTPayload extends RowDataPacket {
   id: number;
   email: string;
@@ -99,6 +85,7 @@ export type ResponseLoginType = {
   email: string;
   gender: GenderType;
   age: number;
+  profile: string;
   provider: ProviderType;
 };
 
@@ -177,6 +164,7 @@ declare global {
       gender?: GenderType;
       provider?: ProviderType;
       access_jwt?: string;
+      profile?: string;
     }
   }
 }

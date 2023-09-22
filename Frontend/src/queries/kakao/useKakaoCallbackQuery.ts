@@ -32,10 +32,20 @@ export default function useKakaoCallbackQuery(code: string) {
         provider,
         message,
         status,
+        profile,
         access_jwt,
       } = data;
       window.localStorage.setItem('ACCESS', access_jwt);
-      setUserState({ email, id, gender, age, name, isLogged: true, provider });
+      setUserState({
+        email,
+        id,
+        gender,
+        age,
+        name,
+        isLogged: true,
+        provider,
+        profile,
+      });
       addToast({ message, status });
     }
   }, [isSuccess, data]);

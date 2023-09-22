@@ -1,13 +1,13 @@
 import { atom, selector } from 'recoil';
-import { v1 } from 'uuid';
+import { v4 } from 'uuid';
 import dayjs from 'dayjs';
 
 dayjs.locale('ko');
 
-const BOOK_REGISTER_MODAL_ATOM_KEY = `BOOK_REGISTER_MODAL_ATOM_KEY/${v1()}`;
+const BOOK_REGISTER_MODAL_ATOM_KEY = `BOOK_REGISTER_MODAL_ATOM_KEY/${v4()}`;
 
-const BOOK_READ_SELECTOR_KEY = `BOOK_READ_SELECTOR_KEY/${v1()}`;
-const BOOK_READING_SELECTOR_KEY = `BOOK_READING_SELECTOR_KEY/${v1()}`;
+const BOOK_READ_SELECTOR_KEY = `BOOK_READ_SELECTOR_KEY/${v4()}`;
+const BOOK_READING_SELECTOR_KEY = `BOOK_READING_SELECTOR_KEY/${v4()}`;
 
 export const bookRegisterModalAtom = atom<BookRegisterModalAtomType>({
   key: BOOK_REGISTER_MODAL_ATOM_KEY,

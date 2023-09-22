@@ -13,12 +13,12 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: scroll;
-  scroll-behavior: row;
+  box-sizing: border-box;
   padding: 1rem;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 1rem;
   box-shadow: ${({ theme }) => theme.shadow.lg};
   border-radius: 1rem;
 `;

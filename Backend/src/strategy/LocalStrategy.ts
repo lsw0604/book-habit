@@ -14,6 +14,7 @@ interface IQueryResult extends RowDataPacket {
   gender: GenderType;
   age: number;
   provider: ProviderType;
+  profile: string;
 }
 
 const localOptions = {
@@ -30,7 +31,7 @@ const LocalVerify: LocalVerify = async (email, password, done) => {
       await connection.beginTransaction();
 
       const SQL =
-        'SELECT id, email, name, password, gender, age, provider FROM users WHERE email = ?';
+        'SELECT id, email, name, password, gender, age, provider, profile FROM users WHERE email = ?';
       const VALUE = [email];
 
       const [rows] = await connection.query<IQueryResult[]>(SQL, VALUE);
@@ -59,6 +60,7 @@ const LocalVerify: LocalVerify = async (email, password, done) => {
         name: rows[0].name,
         gender: rows[0].gender,
         age: rows[0].age,
+        profile: rows[0].profile,
         provider: rows[0].provider,
       });
     } catch (error: any) {

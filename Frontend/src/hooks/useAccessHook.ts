@@ -10,8 +10,17 @@ export default function useAccessHook() {
   const fetch = async () => {
     try {
       setIsLoading(true);
-      const { age, email, gender, id, name, message, status, provider } =
-        await accessAPI();
+      const {
+        age,
+        email,
+        gender,
+        id,
+        name,
+        message,
+        status,
+        provider,
+        profile,
+      } = await accessAPI();
       if (message === 'ACCESS_TOKEN_VERIFIED' && status === 'success') {
         setUserState({
           age,
@@ -21,6 +30,7 @@ export default function useAccessHook() {
           isLogged: true,
           name,
           provider,
+          profile,
         });
         setIsLoading(false);
       }

@@ -27,9 +27,19 @@ export default function useLocalLoginMutation() {
         name,
         provider,
         status,
+        profile,
       } = data;
       window.localStorage.setItem('ACCESS', access_jwt);
-      setUserState({ age, id, email, gender, name, provider, isLogged: true });
+      setUserState({
+        age,
+        id,
+        email,
+        gender,
+        name,
+        provider,
+        isLogged: true,
+        profile,
+      });
       addToast({ message, status });
     }
   }, [isSuccess, data]);

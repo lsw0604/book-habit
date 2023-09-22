@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 
 import { userAtom } from 'recoil/user';
 import HeaderAuth from 'components/header/HeaderAuth';
-import HeaderProfile from 'components/header/HeaderProfileContainer';
+import HeaderProfile from 'components/header/HeaderProfile';
 import Loader from 'components/common/Loader';
 import { IconLeftArrow } from '@style/icons';
 

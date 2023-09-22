@@ -6,15 +6,17 @@ import PublicCommentsItem from '../Item/PublicCommentItem';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  gap: 1rem;
   position: relative;
+  display: flex;
   overflow: scroll;
+  gap: 1rem;
+  padding: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  align-content: flex-start;
   @media screen and (min-width: 1280px) {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 `;
 
@@ -30,16 +32,18 @@ export default function PublicCommentsList() {
   const { data: comments, isFetching, isLoading } = useCommentsListQuery();
 
   return (
-    <Container>
-      {isLoading || isFetching ? (
+    <>
+      {!isLoading || !isFetching ? (
+        <Container>
+          {comments?.map((comment) => (
+            <PublicCommentsItem key={comment.comment_id} {...comment} />
+          ))}
+        </Container>
+      ) : (
         <LoaderContainer>
           <Loader size={2} />
         </LoaderContainer>
-      ) : (
-        comments?.map((comment) => (
-          <PublicCommentsItem key={comment.comment_id} {...comment} />
-        ))
       )}
-    </Container>
+    </>
   );
 }

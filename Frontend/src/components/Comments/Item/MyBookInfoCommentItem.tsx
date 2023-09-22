@@ -15,17 +15,17 @@ import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
 
 const Container = styled.div`
-  display: flex;
+  border: 2px solid;
   gap: 8px;
   padding: 1rem 0;
   width: 100%;
   height: 100%;
   min-height: 170px;
   flex-direction: column;
+  box-sizing: border-box;
   align-items: center;
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
-  cursor: pointer;
 `;
 
 const Header = styled.div`
@@ -58,7 +58,7 @@ const Status = styled.h3`
 
 const Content = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 

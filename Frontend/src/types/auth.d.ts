@@ -54,6 +54,7 @@ type AccessResponseType = {
   provider: ProviderType;
   message: string;
   status: StatusType;
+  profile: string;
 };
 
 type RefreshResponseType = AccessResponseType & {
@@ -85,6 +86,7 @@ type UserAtomType = {
   age?: number;
   gender?: GenderType;
   provider: ProviderType;
+  profile: string;
 };
 
 type StatusType = 'success' | 'error' | 'warning' | 'info' | '';

@@ -12,6 +12,7 @@ interface IProps extends RowDataPacket {
   gender: GenderType;
   age: number;
   provider: ProviderType;
+  profile: string;
 }
 
 const AccessJWTStrategyOptions: StrategyOptions = {
@@ -26,16 +27,16 @@ const AccessVerify: VerifyCallback = async (payload, done) => {
   try {
     const connection = await connectionPool.getConnection();
     try {
-      const SQL = 'SELECT id, email, name, gender, age, provider FROM users WHERE id = ?';
+      const SQL = 'SELECT id, email, name, gender, age, provider, profile FROM users WHERE id = ?';
       const VALUES = [payload.id];
 
       const [rows] = await connection.query<IProps[]>(SQL, VALUES);
 
       if (rows[0] !== undefined) {
-        const { id, name, email, gender, age, provider } = rows[0];
+        const { id, name, email, gender, age, provider, profile } = rows[0];
         connection.release();
         logging.debug(NAMESPACE, '[FINISH]');
-        return done(null, { id, name, email, age, gender, provider });
+        return done(null, { id, name, email, age, gender, provider, profile });
       } else {
         connection.release();
         logging.error(NAMESPACE, 'SQL 문 실행 결과가 존재하지 않습니다.');

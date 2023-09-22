@@ -5,6 +5,7 @@ type KakaoCallbackQueryResponseType = {
   name?: string;
   gender?: GenderType;
   age?: number;
+  profile: string;
   email: string;
   provider: ProviderType;
   access_jwt: string;

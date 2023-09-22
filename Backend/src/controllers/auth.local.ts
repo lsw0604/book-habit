@@ -12,7 +12,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (!user) {
         return res.status(403).json({ message: info.message, status: 'error' });
       }
-      const { id, name, email, age, gender, provider } = user as ResponseLoginType;
+      const { id, name, email, age, gender, provider, profile } = user as ResponseLoginType;
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
@@ -30,6 +30,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
         age,
         provider,
         access_jwt,
+        profile,
         message: '로그인에 성공했습니다.',
         status: 'success',
       });

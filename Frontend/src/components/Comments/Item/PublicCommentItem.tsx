@@ -11,26 +11,25 @@ import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  display: flex;
+  box-sizing: border-box;
   gap: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 1rem;
   width: 100%;
-  height: auto;
-  min-height: 180px;
   position: relative;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
-  cursor: pointer;
   box-shadow: ${({ theme }) => theme.shadow.lg};
+  @media screen and (min-width: 1280px) {
+    width: 32%;
+  }
 `;
 
 const Header = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
 `;
 
@@ -40,30 +39,71 @@ const HeaderInfoContainer = styled.div`
   gap: 8px;
 `;
 
-const HeaderIconContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`;
-
-const Status = styled.h3`
+const Title = styled.h3`
   color: ${({ theme }) => theme.mode.typo_main};
   font-size: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
   svg {
     margin-left: 8px;
     height: 0.8rem;
   }
 `;
 
+const DateWrapper = styled.span`
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 10px;
+  svg {
+    fill: ${({ theme }) => theme.mode.typo_sub};
+  }
+`;
+
+const HeaderIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const IconBox = styled.div`
+  display: flex;
+  gap: 1rem;
+  height: 70%;
+  border-radius: 50px;
+  padding: 5px 10px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.mode.sub};
+  color: ${({ theme }) => theme.mode.typo_main};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  svg {
+    height: 1rem;
+    fill: ${customize.yellow['400']};
+    cursor: pointer;
+  }
+`;
+
+const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
+  height: 100%;
+  width: 1rem;
+  cursor: pointer;
+  svg {
+    width: 100%;
+    fill: ${({ isLiked, theme }) =>
+      isLiked ? customize.rose['300'] : theme.mode.typo_sub};
+  }
+`;
+
 const Content = styled.div`
   width: 100%;
   height: 100%;
-  border: 2px solid;
+  min-height: 95px;
+  font-size: 18px;
+  line-height: 22px;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 const HeartContainer = styled.div`
-  height: 15%;
   width: 100%;
   display: inline-flex;
   justify-content: start;
@@ -73,29 +113,11 @@ const HeartContainer = styled.div`
   }
 `;
 
-const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
-  height: 100%;
-  width: 1rem;
-  svg {
-    width: 100%;
-    fill: ${({ isLiked, theme }) =>
-      isLiked ? customize.rose['300'] : theme.mode.typo_sub};
-  }
-`;
-
 const HeartNumber = styled.p`
   height: 100%;
   font-size: 100%;
   line-height: 100%;
   color: ${({ theme }) => theme.mode.typo_sub};
-`;
-
-const DateWrapper = styled.span`
-  color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 10px;
-  svg {
-    fill: ${({ theme }) => theme.mode.typo_sub};
-  }
 `;
 
 const RatingBox = styled.div`
@@ -111,22 +133,6 @@ const HeartLoaderContainer = styled.div`
   align-items: center;
 `;
 
-const IconBox = styled.div`
-  display: flex;
-  gap: 1rem;
-  height: 60%;
-  border-radius: 50px;
-  padding: 5px 10px;
-  background-color: ${({ theme }) => theme.mode.sub};
-  color: ${({ theme }) => theme.mode.typo_main};
-  box-shadow: ${({ theme }) => theme.shadow.md};
-  svg {
-    height: 100%;
-    fill: ${customize.yellow['400']};
-    cursor: pointer;
-  }
-`;
-
 export default function PublicCommentsItem({
   comment,
   comment_id,
@@ -140,7 +146,7 @@ export default function PublicCommentsItem({
     isLoading: commentsLikeLoading,
     isFetching: commentsLikeFetching,
   } = useCommentsLikeListQuery(comment_id);
-  const createdTime = dayjs(created_at).format('YYYY/MM/DD HH:mm:ss');
+  const createdTime = dayjs(created_at).format('YYYY/MM/DD');
   const { isLogged, id } = useRecoilValue(userAtom);
   const { addToast } = useToastHook();
   const {
@@ -171,7 +177,7 @@ export default function PublicCommentsItem({
     <Container>
       <Header>
         <HeaderInfoContainer>
-          <Status>{title}</Status>
+          <Title>{title}</Title>
           <DateWrapper>
             <IconCalendar />
             &nbsp;{createdTime}

@@ -10,6 +10,7 @@ type LocalLoginMutationResponseType = {
   access_jwt: string;
   message: string;
   status: StatusType;
+  profile: string;
 };
 
 type LocalLoginMutationRequestType = {

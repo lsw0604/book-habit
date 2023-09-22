@@ -70,6 +70,7 @@ export default function HeaderProfileDropdown() {
           isLogged: false,
           age: 0,
           gender: '',
+          profile: '',
         });
         window.localStorage.removeItem('ACCESS');
         window.open(
@@ -91,6 +92,7 @@ export default function HeaderProfileDropdown() {
           isLogged: false,
           age: 0,
           gender: '',
+          profile: '',
         });
         window.localStorage.removeItem('ACCESS');
         addToast({ message, status });

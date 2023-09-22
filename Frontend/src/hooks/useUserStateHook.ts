@@ -13,6 +13,7 @@ export default function useUserStateHook() {
       isLogged: false,
       name: '',
       provider: '',
+      profile: '',
     });
   };
 

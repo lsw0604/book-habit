@@ -13,17 +13,19 @@ interface IQueryResult extends RowDataPacket {
   gender: GenderType;
   age: number;
   email: string;
+  profile?: string;
   provider: ProviderType;
 }
 
 export default async function KakaoCallback(req: Request, res: Response, next: NextFunction) {
   const NAMESPACE = 'KAKAO_CALLBACK';
+
   const code = req.query.code as string;
   const body = qs.stringify({
     grant_type: 'authorization_code',
     client_id: process.env.KAKAO_CLIENT as string,
     redirect_uri: `${process.env.CLIENT_URL}/login/kakao`,
-    code: code,
+    code,
   });
 
   try {
@@ -36,13 +38,15 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
     if (access_token === undefined)
       return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
 
-    const { id } = await fetch('https://kapi.kakao.com/v2/user/me', {
+    const { id, kakao_account } = await fetch('https://kapi.kakao.com/v2/user/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;',
         'Authorization': `Bearer ${access_token}`,
       },
     }).then((res) => res.json());
+
+    logging.debug(NAMESPACE, '[kakao_account]', kakao_account.profile.thumbnail_image_url);
 
     if (id === undefined)
       return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
@@ -51,32 +55,36 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
     try {
       await connection.beginTransaction();
 
-      const EXIST_SQL =
-        'SELECT id, email, gender, age, name, provider FROM users WHERE email = ? AND provider = ?';
-      const EXIST_VALUE = [id, 'kakao'];
-      const [EXIST_RESULT] = await connection.query<IQueryResult[]>(EXIST_SQL, EXIST_VALUE);
+      const KAKAO_ID_EXIST_SQL =
+        'SELECT id, email, gender, age, name, provider, profile FROM users WHERE email = ? AND provider = ?';
+      const KAKAO_ID_EXIST_VALUE = [id, 'kakao'];
+      const [KAKAO_ID_EXIST_RESULT] = await connection.query<IQueryResult[]>(
+        KAKAO_ID_EXIST_SQL,
+        KAKAO_ID_EXIST_VALUE
+      );
+      logging.debug(NAMESPACE, '[KAKAO_ID_EXIST_RESULT]', KAKAO_ID_EXIST_RESULT);
 
-      if (EXIST_RESULT[0] !== undefined) {
+      if (KAKAO_ID_EXIST_RESULT[0] !== undefined) {
         connection.release();
-        const { id, email, name } = EXIST_RESULT[0];
+
+        const { id, email, name } = KAKAO_ID_EXIST_RESULT[0];
         const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
-        logging.debug(NAMESPACE, '[DEBUG]', EXIST_RESULT[0]);
         res.cookie('refresh', refresh_jwt, {
           maxAge: 1000 * 60 * 60 * 24,
           httpOnly: true,
           path: '/',
         });
         return res.status(200).json({
-          ...EXIST_RESULT[0],
+          ...KAKAO_ID_EXIST_RESULT[0],
           access_jwt,
           message: '로그인에 성공 하셨습니다.',
           status: 'success',
         });
       }
 
-      const REGISTER_SQL = 'INSERT INTO users (email, provider) VALUES(?, ?)';
-      const REGISTER_VALUE = [id, 'kakao'];
+      const REGISTER_SQL = 'INSERT INTO users (email, provider, profile) VALUES(?, ?, ?)';
+      const REGISTER_VALUE = [id, 'kakao', kakao_account.profile.thumbnail_image_url];
 
       const [REGISTER_RESULT] = await connection.query<ResultSetHeader>(
         REGISTER_SQL,
@@ -86,7 +94,7 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
       logging.info(NAMESPACE, '[RESULT_SET_HEADER]', REGISTER_RESULT.insertId);
 
       const EXIST_SUB_SQL =
-        'SELECT id, email, gender, age, name, provider FROM users WHERE id = ? AND provider = ?';
+        'SELECT id, email, gender, age, name, provider, profile FROM users WHERE id = ? AND provider = ?';
       const EXIST_SUB_VALUES = [REGISTER_RESULT.insertId, 'kakao'];
       const [EXIST_SUB_RESULT] = await connection.query<IQueryResult[]>(
         EXIST_SUB_SQL,
