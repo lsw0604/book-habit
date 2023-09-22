@@ -1,12 +1,14 @@
 import multer from 'multer';
-import AWS from 'aws-sdk';
 import multerS3 from 'multer-s3';
 import dayjs from 'dayjs';
+import { S3Client } from '@aws-sdk/client-s3';
 
-const storage: AWS.S3 = new AWS.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRETE_KEY,
+const storage = new S3Client({
   region: 'ap-northeast-2',
+  credentials: {
+    accessKeyId: process.env.S3_ACCESS_KEY as string,
+    secretAccessKey: process.env.S3_SECRETE_KEY as string,
+  },
 });
 
 const upload = multer({
