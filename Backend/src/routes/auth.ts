@@ -27,6 +27,6 @@ authRouter.post('/register', register);
 authRouter.post('/login', local);
 authRouter.post('/kakao/register', access, KakaoRegister);
 
-authRouter.post('/profile', upload.single('profile'), profileUpdate);
+authRouter.post('/profile', access, upload.single('profile'), profileUpdate);
 
 export default authRouter;
