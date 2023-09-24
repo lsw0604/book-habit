@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
+import { Fragment } from 'react';
 
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
@@ -80,20 +81,18 @@ export default function MyBookInfoCommentList() {
         </EmptyTag>
       ) : (
         data?.map((comment) => (
-          <>
-            <MyBookInfoCommentItem key={comment.comment_id} {...comment} />
+          <Fragment key={comment.comment_id}>
+            <MyBookInfoCommentItem {...comment} />
             <Divider divider={0.1} />
-          </>
+          </Fragment>
         ))
       )}
       {data?.length !== 0 && (
-        <>
-          <AddContainer>
-            <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
-              AddComment
-            </Icon>
-          </AddContainer>
-        </>
+        <AddContainer>
+          <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
+            AddComment
+          </Icon>
+        </AddContainer>
       )}
     </Container>
   );

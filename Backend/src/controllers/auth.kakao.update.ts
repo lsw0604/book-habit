@@ -20,14 +20,14 @@ interface IQueryResult extends RowDataPacket {
 
 const NAMESPACE = 'KAKAO_REGISTER';
 
-const KakaoRegister = async (
+export default async function kakaoUpdate(
   req: IRequest<{
     name: string;
     gender: 'female' | 'male';
     age: number;
   }>,
   res: Response
-) => {
+) {
   const { name, gender, age } = req.body;
   const { id, email } = req.user as { id: number; email: string };
 
@@ -83,6 +83,4 @@ const KakaoRegister = async (
       sqlMessage: error?.sqlMessage,
     });
   }
-};
-
-export default KakaoRegister;
+}

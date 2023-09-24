@@ -2,7 +2,6 @@ import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
-import dayjs from 'dayjs';
 
 interface IRequest<T> extends Request {
   body: T;

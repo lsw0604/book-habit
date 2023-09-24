@@ -7,7 +7,7 @@ import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
 const Container = styled.div`
   width: 100%;
-  max-height: 7.5rem;
+  height: 6rem;
   overflow: scroll;
   padding: 1rem;
   display: flex;

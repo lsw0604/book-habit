@@ -14,7 +14,7 @@ import { calendarAtom } from 'recoil/calendar';
 
 const Container = styled.div`
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.mode.sub};
   padding: 1rem;

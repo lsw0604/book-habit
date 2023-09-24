@@ -37,6 +37,8 @@ export default async function profileUpdate(req: Request, res: Response, next: N
       );
       logging.debug(NAMESPACE, '[PROFILE_UPDATE_RESULT]', PROFILE_UPDATE_RESULT);
 
+      await connection.commit();
+      connection.release();
       res
         .status(200)
         .json({ message: '프로필 등록에 성공 하셨습니다.', status: 'success', profile: s3Url });

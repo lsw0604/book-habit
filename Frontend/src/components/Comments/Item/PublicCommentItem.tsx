@@ -1,3 +1,7 @@
+import styled from 'styled-components';
+import dayjs from 'dayjs';
+import { useRecoilValue } from 'recoil';
+
 import useToastHook from '@hooks/useToastHook';
 import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
 import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
@@ -5,10 +9,8 @@ import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
 import { customize } from '@style/colors';
 import { IconCalendar, IconHeart, IconHeartFill, IconStar } from '@style/icons';
 import Loader from 'components/common/Loader';
-import dayjs from 'dayjs';
-import { useRecoilValue } from 'recoil';
+import Avatar from 'components/common/Avatar';
 import { userAtom } from 'recoil/user';
-import styled from 'styled-components';
 
 const Container = styled.div`
   box-sizing: border-box;
@@ -63,23 +65,6 @@ const HeaderIconContainer = styled.div`
   justify-content: space-between;
   gap: 8px;
   width: 30%;
-`;
-
-const HeaderIconContainerProfile = styled.div`
-  height: 2.5rem;
-  width: 2.5rem;
-  display: flex;
-  border-radius: 50%;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
-  justify-content: center;
-  align-items: center;
-  img {
-    width: 90%;
-    height: 90%;
-    border-radius: 50%;
-    overflow: hidden;
-    object-fit: cover;
-  }
 `;
 
 const HeaderIconContainerRating = styled.div`
@@ -196,9 +181,7 @@ export default function PublicCommentsItem({
             <IconStar />
             {rating}
           </HeaderIconContainerRating>
-          <HeaderIconContainerProfile>
-            <img src={profile} />
-          </HeaderIconContainerProfile>
+          <Avatar src={profile} size="2.5rem" />
         </HeaderIconContainer>
       </Header>
       <Content>{comment}</Content>

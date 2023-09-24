@@ -32,13 +32,8 @@ export const logoutAPI = async () => {
   return data;
 };
 
-export const meAPI = async () => {
-  const { data } = await axios.get('/api/auth/me');
-  return data;
-};
-
 export const kakaoSignupAPI = async (body: KakaoSignUpMutationRequestType) => {
-  const { data } = await axios.post<KakaoSignUpMutationResponseType>(
+  const { data } = await axios.put<KakaoSignUpMutationResponseType>(
     '/api/auth/kakao/register',
     JSON.stringify(body)
   );
@@ -69,4 +64,26 @@ export const kakaoLogoutUserAPI = async () => {
   } catch (err) {
     console.log('[KAKAO][LOGOUT]', err);
   }
+};
+
+export const profileUpdateAPI = async (
+  body: ProfileEditMutationRequestType
+) => {
+  const { data } = await axios.put<ProfileEditMutationResponseType>(
+    '/api/auth/profile',
+    body,
+    {
+      headers: {
+        'Content-Type': 'Multipart/form-data',
+      },
+    }
+  );
+  return data;
+};
+
+export const profileInfoAPI = async () => {
+  const { data } = await axios.get<ProfileInfoQueryResponseType>(
+    `/api/auth/info`
+  );
+  return data;
 };

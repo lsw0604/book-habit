@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import HeaderProfileDropdown from './HeaderProfileDropdown';
+import HeaderProfileDropdown from 'components/header/HeaderProfileDropdown';
+import Avatar from 'components/common/Avatar';
 import { userAtom } from 'recoil/user';
 
 const Container = styled.div<{ isHamburger: boolean }>`
@@ -11,46 +12,18 @@ const Container = styled.div<{ isHamburger: boolean }>`
   flex-direction: row;
   gap: 8px;
   align-items: center;
-`;
-
-const ProfileImageWrapper = styled.div`
-  cursor: pointer;
-  height: 3rem;
-  width: 3rem;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
-  .img_horizon {
-    width: 85%;
-    height: 85%;
-    border-radius: 5rem;
-    overflow: hidden;
-  }
-  svg {
-    width: 20px;
-    fill: ${({ theme }) => theme.mode.typo_sub};
-  }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
 const ProfileName = styled.p`
   color: ${({ theme }) => theme.colors.spinner};
   display: inline-flex;
-  .welcome_mention {
-    color: ${({ theme }) => theme.mode.typo_sub};
-  }
 `;
 
 export default function HeaderProfile() {
   const [isHamburger, setIsHamburger] = useState<boolean>(false);
   const hamburgerRef = useRef<HTMLDivElement>(null);
-  const { profile, id, name } = useRecoilValue(userAtom);
+  const { profile, name } = useRecoilValue(userAtom);
 
   const handleHamburger = () => {
     setIsHamburger((prev) => !prev);
@@ -77,15 +50,9 @@ export default function HeaderProfile() {
       ref={hamburgerRef}
       onClick={handleHamburger}
     >
-      <ProfileName>
-        {name}
-        <p className="welcome_mention">님 환영합니다.</p>
-      </ProfileName>
-      <ProfileImageWrapper>
-        <div className="img_horizon">
-          <img src={profile} alt={id.toString()} />
-        </div>
-      </ProfileImageWrapper>
+      <ProfileName>{name}</ProfileName>
+      님 환영합니다.
+      <Avatar src={profile} size="3rem" />
       {isHamburger && <HeaderProfileDropdown />}
     </Container>
   );

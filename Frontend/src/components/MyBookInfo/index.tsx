@@ -20,26 +20,26 @@ const Container = styled.div`
 
   .calendar {
     @media screen and (min-width: 1280px) {
-      grid-area: 1 / 3 / 6 / 6;
+      grid-area: 1 / 3 / 7 / 6;
     }
   }
 
   .history {
     @media screen and (min-width: 1280px) {
-      grid-area: 6 / 3 / 7 / 6;
+      grid-area: 7 / 3 / 8 / 6;
     }
   }
 
   .comment {
     @media screen and (min-width: 1280px) {
-      grid-area: 3 / 1 / 7 / 3;
+      grid-area: 3 / 1 / 8 / 3;
     }
   }
 
   @media screen and (min-width: 1280px) {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(7, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
   }
