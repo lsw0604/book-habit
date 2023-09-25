@@ -67,7 +67,7 @@ const Title = styled.h1`
 const Description = styled.p`
   font-size: 12px;
   width: 100%;
-  font-weight: 400;
+  font-weight: 700;
 `;
 
 const A = styled.a`

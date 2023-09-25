@@ -88,9 +88,3 @@ type UserAtomType = {
   provider: ProviderType;
   profile: string;
 };
-
-type StatusType = 'success' | 'error' | 'warning' | 'info' | '';
-
-type GenderType = 'male' | 'female' | '';
-
-type ProviderType = 'local' | 'kakao' | '';

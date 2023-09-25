@@ -44,4 +44,3 @@ export { ReactComponent as LogoMain } from '../assets/icons/LogoMain.svg';
 export { ReactComponent as LogoSad } from '../assets/icons/LogoSad.svg';
 export { ReactComponent as LogoHeart } from '../assets/icons/LogoHeart.svg';
 export { ReactComponent as LogoSub } from '../assets/icons/LogoSub.svg';
-export { ReactComponent as SpeechBubble } from '../assets/icons/SpeechBubble.svg';

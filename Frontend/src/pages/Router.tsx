@@ -9,6 +9,8 @@ import DefaultLayout from '@pages/layout/DefaultLayout';
 import IsAuthLayout from '@pages/layout/IsAuthLayout';
 import Home from '@pages/HomePage';
 import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
+import ModalPortal from 'components/common/ModalPortal';
+import BottomSheet from 'components/common/BottomSheet';
 
 const MyBookInfo = lazy(() => import('@pages/MyBooksInfoPage'));
 const MyBooks = lazy(() => import('@pages/MyBooksPage'));
@@ -74,6 +76,9 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
       <footer>
         <BottomNavigationBar />
       </footer>
+      <ModalPortal>
+        <BottomSheet />
+      </ModalPortal>
     </BrowserRouter>
   );
 }

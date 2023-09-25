@@ -7,7 +7,7 @@ export default function Kakao() {
   const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
   const url = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
-  const onWindowOpen = () => {
+  const kakaoPageHandler = () => {
     window.open(url, '_self');
   };
 
@@ -15,7 +15,7 @@ export default function Kakao() {
     <Button
       style={{ backgroundColor: customize.yellow['300'] }}
       type="button"
-      onClick={onWindowOpen}
+      onClick={kakaoPageHandler}
       icon={<IconKakao />}
     >
       카카오로 로그인하기

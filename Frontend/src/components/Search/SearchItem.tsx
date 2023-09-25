@@ -46,7 +46,7 @@ const Stack = styled.div`
 const P = styled.p`
   font-size: 10px;
   line-height: 12px;
-  font-weight: 400;
+  font-weight: 700;
   overflow: hidden;
 `;
 

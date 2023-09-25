@@ -41,6 +41,7 @@ const ProfileHeader = styled.div`
     svg {
       height: 30px;
       margin: 0 8px;
+      fill: ${({ theme }) => theme.mode.typo_sub};
     }
   }
 `;

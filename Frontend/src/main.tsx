@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <RecoilRoot>
         <App />
       </RecoilRoot>
-      {/* <ReactQueryDevtools position="top-right" /> */}
+      <ReactQueryDevtools position="top-right" />
     </QueryClientProvider>
   </React.StrictMode>
 );

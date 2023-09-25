@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Button from 'components/common/Button';
 import Kakao from './Button/Kakao';
 import Divider from './Divider';
+import { useNavigate } from 'react-router-dom';
+import useModalHook from '@hooks/useModalHook';
 
 const Container = styled.div`
   display: flex;
@@ -67,6 +69,14 @@ const Description = styled.div`
 `;
 
 export default function NeedLogin() {
+  const navigate = useNavigate();
+  const { setModalState } = useModalHook();
+
+  const loginPageHandler = () => {
+    navigate('/login');
+    setModalState({ isOpen: false });
+  };
+
   return (
     <Container>
       <Header>
@@ -99,9 +109,9 @@ export default function NeedLogin() {
       <Divider divider={10} />
       <Footer>
         <Stack>
-          <a href="/login">
-            <Button type="button">로그인하러가기</Button>
-          </a>
+          <Button onClick={loginPageHandler} type="button">
+            로그인하러가기
+          </Button>
         </Stack>
         <Stack>
           <Kakao />
