@@ -49,10 +49,6 @@ app.use('/api/auth', authRouter);
 app.use('/api/my_book', myBookRouter);
 app.use('/api/comments', commentsRouter);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Frontend/dist', 'index.html'));
-});
-
 const httpSever = http.createServer(app);
 
 httpSever.listen(config.server.port, () =>
