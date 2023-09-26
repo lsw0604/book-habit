@@ -8,7 +8,7 @@ export default function Kakao() {
   const url = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
   const kakaoPageHandler = () => {
-    window.open(url);
+    window.location.href = url;
   };
 
   return (
