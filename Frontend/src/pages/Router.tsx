@@ -10,7 +10,6 @@ import IsAuthLayout from '@pages/layout/IsAuthLayout';
 import Home from '@pages/HomePage';
 import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 import ModalPortal from 'components/common/ModalPortal';
-import BottomSheet from 'components/common/BottomSheet';
 
 const MyBookInfo = lazy(() => import('@pages/MyBooksInfoPage'));
 const MyBooks = lazy(() => import('@pages/MyBooksPage'));
@@ -21,6 +20,7 @@ const Login = lazy(() => import('@pages/LoginPage'));
 const Search = lazy(() => import('@pages/SearchPage'));
 const Comments = lazy(() => import('@pages/CommentsPage'));
 const Profile = lazy(() => import('@pages/ProfilePage'));
+const BottomSheet = lazy(() => import('components/common/BottomSheet'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -77,7 +77,15 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
         <BottomNavigationBar />
       </footer>
       <ModalPortal>
-        <BottomSheet />
+        <Suspense
+          fallback={
+            <LoadingWrapper>
+              <Loader />
+            </LoadingWrapper>
+          }
+        >
+          <BottomSheet />
+        </Suspense>
       </ModalPortal>
     </BrowserRouter>
   );

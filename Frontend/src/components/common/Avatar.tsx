@@ -42,7 +42,11 @@ export default function Avatar({ size, src, editProfile, isLoading }: IProps) {
   return (
     <Container size={size} onClick={editProfile}>
       <ProfileWrapper>
-        {!isLoading ? <img key={`profile/${v4()}`} src={src} /> : <Loader />}
+        {!isLoading ? (
+          <img key={`profile/${v4()}`} src={src} alt={src} />
+        ) : (
+          <Loader />
+        )}
       </ProfileWrapper>
     </Container>
   );

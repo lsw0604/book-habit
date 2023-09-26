@@ -12,7 +12,7 @@ import Loader from 'components/common/Loader';
 import Avatar from 'components/common/Avatar';
 import { userAtom } from 'recoil/user';
 
-const Container = styled.div`
+const Container = styled.li`
   box-sizing: border-box;
   gap: 8px;
   display: flex;
@@ -20,13 +20,9 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 1rem;
   width: 100%;
-  position: relative;
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
   box-shadow: ${({ theme }) => theme.shadow.lg};
-  @media screen and (min-width: 1280px) {
-    width: 32%;
-  }
 `;
 
 const Header = styled.div`

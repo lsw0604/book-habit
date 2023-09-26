@@ -12,7 +12,7 @@ export default function useCommentsListQuery() {
     CommentsListType
   >([REACT_QUERY_KEY], () => commentsListAPI(), {
     select: ({ comments }) => {
-      return comments;
+      return comments.reverse();
     },
   });
 
