@@ -28,6 +28,8 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
     code,
   });
 
+  logging.debug(NAMESPACE, body);
+
   try {
     const { access_token } = await fetch('https://kauth.kakao.com/oauth/token', {
       method: 'POST',
