@@ -226,6 +226,7 @@ export default function Register() {
           <Input
             label="비밀번호"
             type="password"
+            autoComplete="off"
             value={password}
             onChange={onChangePassword}
             useValidation={useValidation}
@@ -238,6 +239,7 @@ export default function Register() {
           <Input
             label="비밀번호 확인"
             type="password"
+            autoComplete="off"
             value={checkedPassword}
             onChange={onChangeCheckedPassword}
             useValidation={useValidation}

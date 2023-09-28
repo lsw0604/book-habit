@@ -14,8 +14,8 @@ export default function useCommentsListQuery() {
     select: ({ comments }) => {
       return comments.reverse();
     },
-    staleTime: Infinity,
-    cacheTime: 5 * 60 * 1000,
+    staleTime: 3 * 60 * 1000,
+    cacheTime: 3 * 60 * 1000,
   });
 
   useEffect(() => {

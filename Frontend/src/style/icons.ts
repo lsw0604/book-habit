@@ -31,6 +31,7 @@ export { ReactComponent as IconPencil } from '../assets/icons/iconPencil.svg';
 export { ReactComponent as IconPerson } from '../assets/icons/iconPerson.svg';
 export { ReactComponent as IconPlus } from '../assets/icons/iconPlus.svg';
 export { ReactComponent as IconRank } from '../assets/icons/iconRank.svg';
+export { ReactComponent as IconRefresh } from '../assets/icons/iconRefresh.svg';
 export { ReactComponent as IconRightArrow } from '../assets/icons/iconRightArrow.svg';
 export { ReactComponent as IconSearch } from '../assets/icons/iconSearch.svg';
 export { ReactComponent as IconStar } from '../assets/icons/iconStar.svg';

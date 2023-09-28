@@ -126,6 +126,7 @@ export default function Login() {
               )
             }
             type={eyeOpen ? 'text' : 'password'}
+            autoComplete="off"
             value={password}
             onChange={onChangePassword}
             useValidation={useValidation}

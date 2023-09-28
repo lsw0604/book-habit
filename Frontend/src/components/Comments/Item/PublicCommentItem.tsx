@@ -60,7 +60,7 @@ const HeaderIconContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  width: 30%;
+  width: 100px;
 `;
 
 const HeaderIconContainerRating = styled.div`
