@@ -21,6 +21,7 @@ const Search = lazy(() => import('@pages/SearchPage'));
 const Comments = lazy(() => import('@pages/CommentsPage'));
 const Profile = lazy(() => import('@pages/ProfilePage'));
 const BottomSheet = lazy(() => import('components/common/BottomSheet'));
+const CommentDetail = lazy(() => import('@pages/CommentDetailPage'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -54,6 +55,10 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                 <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
                   <Route path="/search" Component={Search} />
                   <Route path="/comments" Component={Comments} />
+                  <Route
+                    path="/comments/:comment_id"
+                    Component={CommentDetail}
+                  />
                   <Route element={<IsAuthLayout isAuth={true} />}>
                     <Route path="/profile" Component={Profile} />
                     <Route path="/my_books" Component={MyBooks} />

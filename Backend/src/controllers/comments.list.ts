@@ -30,7 +30,8 @@ export default async function commentList(req: Request, res: Response, next: Nex
         'LEFT JOIN books AS bs ON bs.id = ubc.books_id ' +
         'LEFT JOIN users_books AS ub ON ub.id = ubc.users_books_id ' +
         'LEFT JOIN users AS us ON us.id = ub.users_id ' +
-        'WHERE comment_is_open = true AND ubc.created_at BETWEEN ? AND ?';
+        'WHERE comment_is_open = true AND ubc.created_at BETWEEN ? AND ? ' +
+        'ORDER BY created_at DESC';
       const COMMENT_LIST_VALUE = [
         firstDateCurrentMonth.format('YYYY-MM-DD'),
         lastDateCurrentMonth.format('YYYY-MM-DD'),

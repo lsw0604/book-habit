@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useMutation, QueryClient } from '@tanstack/react-query';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
 
 import { readingBookRegisterAPI } from 'lib/api/book';
@@ -8,12 +8,16 @@ import useToastHook from '@hooks/useToastHook';
 import { modalAtom } from 'recoil/modal';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import useMyBookListHook from '@queries/myBook/useMyBookListInfinityQuery';
+import { userAtom } from 'recoil/user';
 
 export default function useReadingBookMutation() {
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
   const { setBookRegisterModalState } = useBookRegisterModalHook();
-  const { refetch } = useMyBookListHook('전체보기');
+  const { isLogged } = useRecoilValue(userAtom);
+  const { refetch } = isLogged
+    ? useMyBookListHook('전체보기')
+    : { refetch: () => undefined };
 
   const REACT_QUERY_KEY = 'USE_READING_BOOK_MUTATION';
   const queryClient = new QueryClient();

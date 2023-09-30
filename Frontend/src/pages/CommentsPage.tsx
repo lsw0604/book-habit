@@ -54,9 +54,11 @@ const TimerWord = styled.p`
 `;
 
 export default function CommentsPage() {
+  const queryClient = new QueryClient();
+
   const [second, setSecond] = useState<number>(59);
   const [minute, setMinute] = useState<number>(2);
-  const queryClient = new QueryClient();
+
   const {
     data: comments,
     isFetching,
@@ -75,7 +77,6 @@ export default function CommentsPage() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      console.log('timer', minute, second);
       setSecond((prev) => prev - 1);
       if (second === 0) {
         setSecond(60);

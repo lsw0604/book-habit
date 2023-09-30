@@ -15,6 +15,8 @@ export default function useCommentsLikeListQuery(
     select: ({ comment_likes }) => {
       return comment_likes;
     },
+    staleTime: 3 * 60 * 1000,
+    cacheTime: 3 * 60 * 1000,
   });
 
   return {

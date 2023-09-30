@@ -11,6 +11,7 @@ import { IconCalendar, IconHeart, IconHeartFill, IconStar } from '@style/icons';
 import Loader from 'components/common/Loader';
 import Avatar from 'components/common/Avatar';
 import { userAtom } from 'recoil/user';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.li`
   box-sizing: border-box;
@@ -76,10 +77,13 @@ const HeaderIconContainerRating = styled.div`
 
 const Content = styled.div`
   width: 100%;
-  height: 100%;
-  min-height: 95px;
+  height: 100px;
   font-size: 18px;
-  line-height: 22px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-height: 25px;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
@@ -127,6 +131,7 @@ export default function PublicCommentsItem({
   title,
   profile,
 }: CommentsItemType) {
+  const navigate = useNavigate();
   const {
     data: commentsLikeArray,
     isLoading: commentsLikeLoading,
@@ -180,7 +185,9 @@ export default function PublicCommentsItem({
           <Avatar src={profile} size="2.5rem" />
         </HeaderIconContainer>
       </Header>
-      <Content>{comment}</Content>
+      <Content onClick={() => navigate(`/comments/${comment_id}`)}>
+        {comment}
+      </Content>
       <Bottom>
         {commentsLikeLoading || commentsLikeFetching ? (
           <BottomLoaderContainer>

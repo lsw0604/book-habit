@@ -205,7 +205,7 @@ export default function SearchBookRegister() {
             onChange={onChange}
           />
         </Stack>
-        <Stack style={{ flex: '1' }}>
+        <Stack>
           <AnimatePresence>
             {value === '' && <Skeleton disabled={disabledHandler(data)} />}
             {value === '다읽음' && <Read />}

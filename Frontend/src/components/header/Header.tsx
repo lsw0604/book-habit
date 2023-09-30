@@ -55,7 +55,7 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
       return <LogoWrapper>책벌래</LogoWrapper>;
     if (
       pathname.includes('/my_books') ||
-      pathname === '/comments' ||
+      pathname.includes('/comments') ||
       pathname === '/login' ||
       pathname === '/register' ||
       pathname === '/profile'
