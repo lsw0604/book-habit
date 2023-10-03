@@ -24,6 +24,18 @@ export const commentsLikeListAPI = async (
   return data;
 };
 
+/**
+ * * 특정 comment_id를 가진 comments를 불러오는 API
+ */
+export const commentsDetailAPI = async (
+  comment_id: CommentsDetailQueryRequestType
+) => {
+  const { data } = await axios.get<CommentsDetailQueryResponseType>(
+    `/api/comments/detail/${comment_id}`
+  );
+  return data;
+};
+
 // CREATE
 
 /**

@@ -17,12 +17,13 @@ import useMyBookHook from '@hooks/useMyBookHook';
 const Container = styled.div`
   gap: 8px;
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: ${({ theme }) => theme.mode.sub};
-  border-radius: 5px;
+  border-radius: 1rem;
+  padding: 1rem;
 `;
 
 const Header = styled.div`
@@ -57,6 +58,7 @@ const Content = styled.div`
   width: 100%;
   min-height: 120px;
   height: auto;
+  min-height: 100px;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 

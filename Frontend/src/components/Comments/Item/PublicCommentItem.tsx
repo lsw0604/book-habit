@@ -1,17 +1,8 @@
 import styled from 'styled-components';
-import dayjs from 'dayjs';
-import { useRecoilValue } from 'recoil';
-
-import useToastHook from '@hooks/useToastHook';
-import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
-import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
-import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
-import { customize } from '@style/colors';
-import { IconCalendar, IconHeart, IconHeartFill, IconStar } from '@style/icons';
-import Loader from 'components/common/Loader';
-import Avatar from 'components/common/Avatar';
-import { userAtom } from 'recoil/user';
 import { useNavigate } from 'react-router-dom';
+
+import CommentHeart from 'components/Comments/CommentHeart';
+import CommentHeaderInfo from 'components/Comments/CommentHeaderInfo';
 
 const Container = styled.li`
   box-sizing: border-box;
@@ -28,63 +19,18 @@ const Container = styled.li`
 
 const Header = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const HeaderInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 70%;
-`;
-
-const HeaderInfoContainerTitleWrapper = styled.h3`
-  color: ${({ theme }) => theme.mode.typo_main};
-  font-size: 18px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-`;
-
-const HeaderInfoContainerDateWrapper = styled.span`
-  color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 10px;
-  svg {
-    fill: ${({ theme }) => theme.mode.typo_sub};
-  }
-`;
-
-const HeaderIconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100px;
-`;
-
-const HeaderIconContainerRating = styled.div`
-  display: flex;
-  height: 100%;
-  gap: 8px;
-  align-items: center;
-  svg {
-    height: 1.5rem;
-    fill: ${customize.yellow['300']};
-  }
 `;
 
 const Content = styled.div`
   width: 100%;
-  height: 100px;
   font-size: 18px;
+  color: ${({ theme }) => theme.mode.typo_main};
   display: -webkit-box;
   -webkit-box-orient: vertical;
   line-height: 25px;
   overflow: hidden;
   -webkit-line-clamp: 4;
-  color: ${({ theme }) => theme.mode.typo_main};
+  height: 100px;
 `;
 
 const Bottom = styled.div`
@@ -94,31 +40,6 @@ const Bottom = styled.div`
   gap: 1rem;
   svg {
     width: 1rem;
-  }
-`;
-
-const BottomLoaderContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: start;
-`;
-
-const HeartNumber = styled.p`
-  height: 100%;
-  font-size: 100%;
-  line-height: 100%;
-  color: ${({ theme }) => theme.mode.typo_sub};
-`;
-
-const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
-  height: 100%;
-  width: 1rem;
-  cursor: pointer;
-  svg {
-    width: 100%;
-    fill: ${({ isLiked, theme }) =>
-      isLiked ? customize.rose['300'] : theme.mode.typo_sub};
   }
 `;
 
@@ -132,84 +53,23 @@ export default function PublicCommentsItem({
   profile,
 }: CommentsItemType) {
   const navigate = useNavigate();
-  const {
-    data: commentsLikeArray,
-    isLoading: commentsLikeLoading,
-    isFetching: commentsLikeFetching,
-  } = useCommentsLikeListQuery(comment_id);
-  const createdTime = dayjs(created_at).format('YYYY/MM/DD');
-  const { isLogged, id } = useRecoilValue(userAtom);
-  const { addToast } = useToastHook();
-  const {
-    mutate: commentLikeRegisterMutation,
-    isLoading: commentLikeMutationIsLoading,
-  } = useCommentsLikeMutation(comment_id);
-
-  const {
-    mutate: commentLikeDeleteMutation,
-    isLoading: commentLikeDeleteMutationIsLoading,
-  } = useCommentsLikeDeleteMutation(comment_id);
-
-  const isLiked = commentsLikeArray?.some((like) => like.users_id === id);
-
-  const commentLikeHandler = (isLike: boolean) => {
-    if (!isLogged) {
-      return addToast({ message: '로그인이 필요합니다.', status: 'error' });
-    }
-
-    if (isLike) {
-      commentLikeRegisterMutation(comment_id);
-    } else {
-      commentLikeDeleteMutation(comment_id);
-    }
-  };
 
   return (
     <Container>
       <Header>
-        <HeaderInfoContainer>
-          <HeaderInfoContainerTitleWrapper>
-            {title}
-          </HeaderInfoContainerTitleWrapper>
-          <HeaderInfoContainerDateWrapper>
-            <IconCalendar />
-            &nbsp;{createdTime}
-            &nbsp;{name}
-          </HeaderInfoContainerDateWrapper>
-        </HeaderInfoContainer>
-        <HeaderIconContainer>
-          <HeaderIconContainerRating>
-            <IconStar />
-            {rating}
-          </HeaderIconContainerRating>
-          <Avatar src={profile} size="2.5rem" />
-        </HeaderIconContainer>
+        <CommentHeaderInfo
+          title={title}
+          name={name}
+          rating={rating}
+          profile={profile}
+          created_at={created_at}
+        />
       </Header>
       <Content onClick={() => navigate(`/comments/${comment_id}`)}>
         {comment}
       </Content>
       <Bottom>
-        {commentsLikeLoading || commentsLikeFetching ? (
-          <BottomLoaderContainer>
-            <Loader />
-          </BottomLoaderContainer>
-        ) : (
-          <>
-            <HeartIconWrapper isLiked={isLiked}>
-              {!commentLikeMutationIsLoading ||
-              !commentLikeDeleteMutationIsLoading ? (
-                isLiked ? (
-                  <IconHeartFill onClick={() => commentLikeHandler(false)} />
-                ) : (
-                  <IconHeart onClick={() => commentLikeHandler(true)} />
-                )
-              ) : (
-                <Loader />
-              )}
-            </HeartIconWrapper>
-            <HeartNumber>{commentsLikeArray?.length}</HeartNumber>
-          </>
-        )}
+        <CommentHeart comment_id={comment_id} />
       </Bottom>
     </Container>
   );

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { Fragment } from 'react';
 
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
@@ -9,7 +8,6 @@ import { IconPlus } from '@style/icons';
 import MyBookInfoCommentItem from 'components/Comments/Item/MyBookInfoCommentItem';
 import Icon from 'components/common/Button/Icon';
 import Loader from 'components/common/Loader';
-import Divider from 'components/common/Divider';
 
 const Container = styled.div`
   width: 100%;
@@ -20,9 +18,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
   border-radius: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const AddContainer = styled.div`
@@ -81,10 +78,7 @@ export default function MyBookInfoCommentList() {
         </EmptyTag>
       ) : (
         data?.map((comment) => (
-          <Fragment key={comment.comment_id}>
-            <MyBookInfoCommentItem {...comment} />
-            <Divider divider={0.1} />
-          </Fragment>
+          <MyBookInfoCommentItem {...comment} key={comment.comment_id} />
         ))
       )}
       {data?.length !== 0 && (

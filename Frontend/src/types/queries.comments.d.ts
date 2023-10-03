@@ -35,3 +35,8 @@ type CommentsLikeMutationRequestType = number;
 
 type CommentsLikeDeleteMutationResponseType = MutationResponse;
 type CommentsLikeDeleteMutationRequestType = number;
+
+// useCommentsDetailQuery의 타입들
+
+type CommentsDetailQueryResponseType = CommentsItemType;
+type CommentsDetailQueryRequestType = number;

@@ -17,7 +17,7 @@ const Container = styled.div<{ size: string }>`
   overflow: hidden;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.mode.main};
+  background-color: ${({ theme }) => theme.mode.nav};
   box-shadow: ${({ theme }) => theme.shadow.xl};
 `;
 
