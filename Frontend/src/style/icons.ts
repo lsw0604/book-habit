@@ -8,6 +8,7 @@ export { ReactComponent as IconClose } from '../assets/icons/iconClose.svg';
 export { ReactComponent as IconClosedEye } from '../assets/icons/iconClosedEye.svg';
 export { ReactComponent as IconCloudyParty } from '../assets/icons/iconCloudyParty.svg';
 export { ReactComponent as IconComments } from '../assets/icons/iconComments.svg';
+export { ReactComponent as IconCommentDots } from '../assets/icons/iconCommentDots.svg';
 export { ReactComponent as IconDownArrow } from '../assets/icons/iconDownArrow.svg';
 export { ReactComponent as IconError } from '../assets/icons/iconError.svg';
 export { ReactComponent as IconFemale } from '../assets/icons/iconFemale.svg';
