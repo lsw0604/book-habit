@@ -50,6 +50,20 @@ export const commentsLikeRegisterAPI = async (
   return data;
 };
 
+/**
+ * * 한줄평에 댓글을 등록하는 API
+ */
+export const commentsReplyRegisterAPI = async ({
+  body,
+  comment_id,
+}: CommentsReplyMutationRequestType) => {
+  const { data } = await axios.post<CommentsReplyMutationResponseType>(
+    `/api/comments/reply/register/${comment_id}`,
+    body
+  );
+  return data;
+};
+
 // DELETE
 
 /**

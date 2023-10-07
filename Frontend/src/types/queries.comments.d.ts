@@ -40,3 +40,10 @@ type CommentsLikeDeleteMutationRequestType = number;
 
 type CommentsDetailQueryResponseType = CommentsItemType;
 type CommentsDetailQueryRequestType = number;
+
+// useCommentsReplyMutation의 타입들
+type CommentsReplyMutationResponseType = MutationResponse;
+type CommentsReplyMutationRequestType = {
+  body: { reply: string };
+  comment_id: number;
+};

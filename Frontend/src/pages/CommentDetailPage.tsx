@@ -11,11 +11,15 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
   gap: 1rem;
+  @media screen and (min-width: 1280px) {
+    padding: 1rem 30%;
+  }
 `;
 
 const Header = styled.div`

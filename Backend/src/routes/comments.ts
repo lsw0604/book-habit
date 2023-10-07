@@ -5,6 +5,8 @@ import commentsLikeList from '../controllers/comments.like.list';
 
 import commentsLikeRegister from '../controllers/comments.like.register';
 import commentsLikeDelete from '../controllers/comments.like.delete';
+import commentsReplyRegister from '../controllers/comments.reply.register';
+
 import access from '../controllers/auth.access';
 
 /**
@@ -22,6 +24,7 @@ commentsRouter.get('/like/list/:comment_id', commentsLikeList);
 
 // CREATE
 commentsRouter.post('/like/register/:comment_id', access, commentsLikeRegister);
+commentsRouter.post('/reply/register/:comment_id', access, commentsReplyRegister);
 
 // DELETE
 commentsRouter.delete('/like/delete/:comment_id', access, commentsLikeDelete);
