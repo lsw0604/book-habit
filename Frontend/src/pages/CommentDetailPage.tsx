@@ -2,19 +2,19 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 
 import Loader from 'components/common/Loader';
-import CommentReply from 'components/Comments/CommentReply';
 import CommentHeart from 'components/Comments/CommentHeart';
 import CommentHeaderInfo from 'components/Comments/CommentHeaderInfo';
 import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
+import CommentReply from 'components/Comments/CommentReply';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: scroll;
   padding: 0 1rem;
   gap: 1rem;
   @media screen and (min-width: 1280px) {
@@ -24,6 +24,7 @@ const Container = styled.div`
 
 const Header = styled.div`
   width: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -79,8 +80,8 @@ export default function CommentDetailPage() {
       <Comment>{data.comment}</Comment>
       <Bottom>
         <CommentHeart comment_id={parseInt(comment_id)} />
+        <CommentReply comment_id={parseInt(comment_id)} />
       </Bottom>
-      <CommentReply />
     </Container>
   );
 }

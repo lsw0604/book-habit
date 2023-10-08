@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 import CalendarDateBox from 'components/calendar/CalendarDateBox';
 import Icon from 'components/common/Button/Icon';
@@ -78,40 +78,41 @@ export default function Calendar() {
     .year(parseInt(calendarState.year))
     .month(parseInt(calendarState.month) - 1);
 
-  const numRows = Math.ceil(
-    (calendarState.firstDOW + calendarState.lastDate) / 7
-  );
+  const numRows = useMemo(() => {
+    return Math.ceil((calendarState.firstDOW + calendarState.lastDate) / 7);
+  }, [calendarState.firstDOW, calendarState.lastDate]);
 
   const updateMonthYear = (monthIncrement: number): void => {
     setCalendarState((prev) => getNewCalendar(prev, monthIncrement));
   };
 
-  const dataByDate: CalendarDateByDataType = {};
-  myBookHistoryData?.forEach((item) => {
-    const dateStr = dayjs(item.date).add(9, 'hour').toISOString().split('T')[0];
-    dataByDate[dateStr] = dataByDate[dateStr] || [];
-    dataByDate[dateStr].push(item.status);
-  });
+  const dataByDate = useMemo(() => {
+    const data: CalendarDateByDataType = {};
+    myBookHistoryData?.forEach((item) => {
+      const dateStr = dayjs(item.date).add(9, 'hour').format('YYYY-MM-DD');
+      data[dateStr] = data[dateStr] || [];
+      data[dateStr].push(item.status);
+    });
+    return data;
+  }, [myBookHistoryData]);
 
-  const prevMonthHandler = () => {
+  const prevMonthHandler: boolean = useMemo(() => {
     if (startDate) {
       return dayObj.isAfter(startDate, 'month');
     }
     return true;
-  };
+  }, [startDate, updateMonthYear]);
 
-  const nextMonthHandler = () => {
+  const nextMonthHandler: boolean = useMemo(() => {
     if (endDate) {
       return dayObj.isBefore(endDate, 'month');
     }
     return dayObj.isBefore(dayjs(), 'month');
-  };
+  }, [endDate, updateMonthYear]);
 
   useEffect(() => {
     if (myBookTimeData && myBookTimeData.endDate) {
-      setCalendarState(
-        getCalendarDetail(dayjs(myBookTimeData.endDate).add(9, 'hour'))
-      );
+      setCalendarState(getCalendarDetail(dayjs(myBookTimeData.endDate)));
     }
 
     if (
@@ -119,9 +120,7 @@ export default function Calendar() {
       myBookTimeData.endDate === undefined &&
       myBookTimeData.startDate
     ) {
-      setCalendarState(
-        getCalendarDetail(dayjs(myBookTimeData.startDate).add(9, 'hour'))
-      );
+      setCalendarState(getCalendarDetail(dayjs(myBookTimeData.startDate)));
     }
   }, [myBookTimeData, myBookTimeData?.endDate, myBookTimeData?.startDate]);
 
@@ -142,7 +141,7 @@ export default function Calendar() {
       </CalendarHeader>
       <Contents>
         <Icon
-          disabled={!prevMonthHandler()}
+          disabled={!prevMonthHandler}
           onClick={() => updateMonthYear(-1)}
           icon={<IconLeftArrow />}
         >
@@ -175,7 +174,7 @@ export default function Calendar() {
           )}
         </CalendarBox>
         <Icon
-          disabled={!nextMonthHandler()}
+          disabled={!nextMonthHandler}
           onClick={() => updateMonthYear(1)}
           icon={<IconRightArrow />}
         >

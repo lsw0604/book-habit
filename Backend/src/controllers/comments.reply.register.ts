@@ -38,6 +38,8 @@ export default async function commentsReplyRegister(
       );
 
       logging.debug(NAMESPACE, '[COMMENT_REPLY_REGISTER_RESULT]', COMMENT_REPLY_REGISTER_RESULT);
+
+      await connection.commit();
       connection.release();
       res.status(200).json({ status: 'success', message: '댓글 등록에 성공하셨습니다.' });
     } catch (error: any) {

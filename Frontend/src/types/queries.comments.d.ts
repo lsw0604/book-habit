@@ -47,3 +47,18 @@ type CommentsReplyMutationRequestType = {
   body: { reply: string };
   comment_id: number;
 };
+
+// useCommentsReplyListQuery의 타입들
+type CommentsReplyListQueryResponseType = {
+  reply: CommentsReplyListQueryListType;
+};
+type CommentsReplyListQueryListType = CommentsReplyListQueryItemType[];
+type CommentsReplyListQueryItemType = {
+  reply_id: number;
+  reply: string;
+  created_at: Date;
+  users_id: number;
+  name: string;
+  profile: string;
+};
+type CommentsReplyListQueryRequestType = number;

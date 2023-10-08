@@ -22,6 +22,7 @@ const Comments = lazy(() => import('@pages/CommentsPage'));
 const Profile = lazy(() => import('@pages/ProfilePage'));
 const BottomSheet = lazy(() => import('components/common/BottomSheet'));
 const CommentDetail = lazy(() => import('@pages/CommentDetailPage'));
+const CommentReply = lazy(() => import('@pages/CommentReplyPage'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -58,6 +59,10 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
                   <Route
                     path="/comments/:comment_id"
                     Component={CommentDetail}
+                  />
+                  <Route
+                    path="/comments/:comment_id/reply"
+                    Component={CommentReply}
                   />
                   <Route element={<IsAuthLayout isAuth={true} />}>
                     <Route path="/profile" Component={Profile} />

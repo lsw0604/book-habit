@@ -1,62 +1,48 @@
-import { memo } from 'react';
+import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
+import { IconCommentDots } from '@style/icons';
+import Loader from 'components/common/Loader';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCallback, useState, ChangeEvent, FormEvent } from 'react';
 
-import TextArea from 'components/common/Textarea';
-import Button from 'components/common/Button';
-import useCommentsReplyMutation from '@queries/comments/useCommentsReplyMutation';
-import { useLocation } from 'react-router-dom';
+interface IProps {
+  comment_id: number;
+}
 
-const Container = styled.form`
-  width: 100%;
+const Container = styled.div`
+  height: 18px;
+  width: 50px;
+  display: inline-flex;
+  gap: 1rem;
 `;
 
-const IconWrapper = styled.div`
+const ReplyNumber = styled.p`
+  height: 100%;
+  font-size: 100%;
+  line-height: 100%;
+  color: ${({ theme }) => theme.mode.typo_sub};
+`;
+
+const ReplyIconWrapper = styled.div`
+  height: 100%;
+  width: 1rem;
+  cursor: pointer;
   svg {
-    width: 1rem;
+    width: 100%;
+    fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;
 
-export default function CommentReply() {
-  const comment_id = useLocation().pathname.split('/')[2];
-  const [reply, setReply] = useState<string>('');
-  const [useValidation, setUseValidation] = useState<boolean>(false);
-
-  const { mutate } = useCommentsReplyMutation(parseInt(comment_id));
-
-  const replyHandler = useCallback(
-    (event: ChangeEvent<HTMLTextAreaElement>) => {
-      setReply(event.target.value);
-    },
-    []
-  );
-
-  console.log(comment_id);
-
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    setUseValidation(true);
-
-    mutate({
-      comment_id: parseInt(comment_id),
-      body: {
-        reply,
-      },
-    });
-    console.log(reply);
-  };
-
+export default function CommentReply({ comment_id }: IProps) {
+  const { data, isFetching, isLoading } = useCommentsReplyListQuery(comment_id);
+  const navigate = useNavigate();
   return (
-    <Container onSubmit={onSubmit}>
-      <div>list</div>
-      <TextArea
-        onChange={(event) => replyHandler(event)}
-        value={reply}
-        isValid={reply === ''}
-        useValidation={useValidation}
-        errorMessage="댓글을 입력해주세요."
-      />
-      <Button>Submit</Button>
+    <Container onClick={() => navigate('reply')}>
+      <ReplyIconWrapper>
+        <IconCommentDots />
+      </ReplyIconWrapper>
+      <ReplyNumber>
+        {isFetching || isLoading ? <Loader /> : data?.length}
+      </ReplyNumber>
     </Container>
   );
 }

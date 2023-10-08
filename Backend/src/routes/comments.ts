@@ -1,4 +1,6 @@
 import express from 'express';
+
+import commentsReplyList from '../controllers/comments.reply.list';
 import commentsList from '../controllers/comments.list';
 import commentsDetail from '../controllers/comments.detail';
 import commentsLikeList from '../controllers/comments.like.list';
@@ -21,6 +23,7 @@ const commentsRouter = express.Router();
 commentsRouter.get('/list', commentsList);
 commentsRouter.get('/detail/:comment_id', commentsDetail);
 commentsRouter.get('/like/list/:comment_id', commentsLikeList);
+commentsRouter.get('/reply/list/:comment_id', commentsReplyList);
 
 // CREATE
 commentsRouter.post('/like/register/:comment_id', access, commentsLikeRegister);

@@ -4,10 +4,12 @@ import { AxiosError } from 'axios';
 import useToastHook from '@hooks/useToastHook';
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import { commentsReplyRegisterAPI } from 'lib/api/comments';
+import useCommentsReplyListQuery from './useCommentsReplyListQuery';
 
 export default function useCommentsReplyMutation(comment_id: number) {
   const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_MUTATION';
   const queryClient = new QueryClient();
+  const { refetch } = useCommentsReplyListQuery(comment_id);
 
   const { addToast } = useToastHook();
 
@@ -22,6 +24,10 @@ export default function useCommentsReplyMutation(comment_id: number) {
       const { message, status } = data;
 
       addToast({ message, status });
+      queryClient.invalidateQueries({
+        queryKey: ['USE_COMMENTS_REPLY_LIST_QUERY', comment_id],
+      });
+      refetch();
     }
   }, [isSuccess, data]);
 

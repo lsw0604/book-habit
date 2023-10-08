@@ -81,6 +81,7 @@ export default function DateBox({
   endDate,
 }: DateBoxType) {
   if (!year || !month || !date) return null;
+
   const dayObj = dayjs()
     .locale('ko')
     .year(parseInt(year))
@@ -121,7 +122,7 @@ export default function DateBox({
           {date}
         </Span>
         {(startDateDayjs && dayObj.isBefore(startDateDayjs)) ||
-        (endDateDayjs && dayObj.isAfter(endDateDayjs.add(1, 'day'))) ? (
+        (endDateDayjs && dayObj.isAfter(endDateDayjs)) ? (
           <IconWrapper>
             <IconClose />
           </IconWrapper>
