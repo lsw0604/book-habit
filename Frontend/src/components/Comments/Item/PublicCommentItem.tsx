@@ -15,6 +15,7 @@ const Container = styled.li`
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 5px;
   box-shadow: ${({ theme }) => theme.shadow.lg};
+  cursor: pointer;
 `;
 
 const Header = styled.div`

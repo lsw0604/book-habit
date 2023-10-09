@@ -16,7 +16,7 @@ const Container = styled.nav`
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
+  box-shadow: ${({ theme }) => theme.shadow.md};
   background-color: ${({ theme }) => theme.mode.main};
   z-index: 9998;
 `;

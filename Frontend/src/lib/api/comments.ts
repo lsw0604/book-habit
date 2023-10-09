@@ -85,3 +85,15 @@ export const commentsLikeDeleteAPI = async (
   );
   return data;
 };
+
+/**
+ * * 한줄평에 등록된 댓글을 삭제하는 API
+ */
+export const commentsReplyDeleteAPI = async (
+  reply_id: CommentsReplyDeleteMutationRequestType
+) => {
+  const { data } = await axios.delete<CommentsReplyDeleteMutationResponseType>(
+    `/api/comments/reply/delete/${reply_id}`
+  );
+  return data;
+};

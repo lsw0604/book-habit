@@ -5,16 +5,29 @@ import MyBookInfoHistoryItem from 'components/History/Item/MyBookInfoHistoryItem
 import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
+interface IProps {
+  filter: string[];
+}
+
 const Container = styled.div`
   width: 100%;
   height: 6rem;
-  overflow: scroll;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   position: relative;
+  justify-content: center;
+  align-items: center;
   border-radius: 1rem;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+`;
+
+const ItemListContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  scroll-snap-type: y mandatory;
 `;
 
 const EmptyTag = styled.div`
@@ -35,7 +48,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function HistoryList() {
+export default function HistoryList({ filter }: IProps) {
   const { users_books_id } = useParams();
 
   if (users_books_id === undefined) {
@@ -47,7 +60,7 @@ export default function HistoryList() {
     myBookHistoryIsLoading,
     myBookHistoryIsFetching,
     myBookHistoryIsSuccess,
-  } = useMyBookPageQueries(parseInt(users_books_id), ['전체보기']);
+  } = useMyBookPageQueries(parseInt(users_books_id), filter);
 
   return (
     <Container>
@@ -58,9 +71,11 @@ export default function HistoryList() {
       ) : myBookHistoryIsSuccess &&
         myBookHistoryData &&
         myBookHistoryData.length !== 0 ? (
-        myBookHistoryData.map((value) => (
-          <MyBookInfoHistoryItem key={value.id} {...value} />
-        ))
+        <ItemListContainer>
+          {myBookHistoryData.map((value) => (
+            <MyBookInfoHistoryItem key={value.id} {...value} />
+          ))}
+        </ItemListContainer>
       ) : (
         <EmptyTag>검색 결과가 없습니다.</EmptyTag>
       )}

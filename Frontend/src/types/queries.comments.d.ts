@@ -62,3 +62,7 @@ type CommentsReplyListQueryItemType = {
   profile: string;
 };
 type CommentsReplyListQueryRequestType = number;
+
+// useCommentsReplyDeleteMutation의 타입들
+type CommentsReplyDeleteMutationResponseType = MutationResponse;
+type CommentsReplyDeleteMutationRequestType = number;

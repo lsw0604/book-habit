@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 import InfoBox from 'components/MyBookInfo/InfoBox';
 import Calendar from 'components/calendar/Calendar';
@@ -52,6 +53,7 @@ const Wrapper = styled.div`
 export default function Index() {
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
+  const [filter, setFilter] = useState<string[]>(['전체보기']);
 
   return (
     <Container>
@@ -59,10 +61,10 @@ export default function Index() {
         <InfoBox />
       </Wrapper>
       <Wrapper className="calendar">
-        <Calendar />
+        <Calendar filter={filter} setFilter={setFilter} />
       </Wrapper>
       <Wrapper className="history">
-        <MyBookInfoHistoryList />
+        <MyBookInfoHistoryList filter={filter} />
       </Wrapper>
       <Wrapper className="comment">
         <MyBookInfoCommentList />

@@ -15,6 +15,33 @@ export default async function myBookCommentsDelete(
     const connection = await connectionPool.getConnection();
     try {
       await connection.beginTransaction();
+
+      const MY_BOOK_COMMENTS_LIKE_DELETE_SQL =
+        'DELETE FROM comments_likes WHERE users_books_comments_id = ?';
+      const MY_BOOK_COMMENTS_LIKE_DELETE_VALUE = [comment_id];
+      const MY_BOOK_COMMENTS_LIKE_DELETE_RESULT = await connection.query<ResultSetHeader>(
+        MY_BOOK_COMMENTS_LIKE_DELETE_SQL,
+        MY_BOOK_COMMENTS_LIKE_DELETE_VALUE
+      );
+      logging.debug(
+        NAMESPACE,
+        '[MY_BOOK_COMMENTS_LIKE_DELETE_VALUE]',
+        MY_BOOK_COMMENTS_LIKE_DELETE_RESULT
+      );
+
+      const MY_BOOK_COMMENTS_REPLY_DELETE_SQL =
+        'DELETE FROM public_comments_reply WHERE users_books_comments_id = ?';
+      const MY_BOOK_COMMENTS_REPLY_DELETE_VALUE = [comment_id];
+      const [MY_BOOK_COMMENTS_REPLY_DELETE_RESULT] = await connection.query<ResultSetHeader>(
+        MY_BOOK_COMMENTS_REPLY_DELETE_SQL,
+        MY_BOOK_COMMENTS_REPLY_DELETE_VALUE
+      );
+      logging.debug(
+        NAMESPACE,
+        '[MY_BOOK_COMMENTS_REPLY_DELETE_RESULT]',
+        MY_BOOK_COMMENTS_REPLY_DELETE_RESULT
+      );
+
       const MY_BOOK_COMMENTS_DELETE_SQL = 'DELETE FROM users_books_comments WHERE id = ?';
       const MY_BOOK_COMMENTS_DELETE_VALUE = [comment_id];
       const [MY_BOOK_COMMENTS_DELETE_RESULT] = await connection.query<ResultSetHeader>(
@@ -26,7 +53,7 @@ export default async function myBookCommentsDelete(
       await connection.commit();
       connection.release();
       res.status(200).json({
-        message: 'comment 삭제에 성공했습니다.',
+        message: '한줄평 삭제에 성공했습니다.',
         status: 'success',
       });
     } catch (error: any) {

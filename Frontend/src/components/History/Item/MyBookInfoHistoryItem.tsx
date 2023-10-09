@@ -17,7 +17,8 @@ const Container = styled.div`
   margin: 0;
   width: 100%;
   cursor: pointer;
-  min-height: 40px;
+  min-height: 100%;
+  scroll-snap-align: start;
 `;
 
 const DateContainer = styled.div`

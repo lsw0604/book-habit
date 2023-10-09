@@ -122,7 +122,7 @@ export default function DateBox({
           {date}
         </Span>
         {(startDateDayjs && dayObj.isBefore(startDateDayjs)) ||
-        (endDateDayjs && dayObj.isAfter(endDateDayjs)) ? (
+        (endDateDayjs && dayObj.isAfter(endDateDayjs.add(1, 'day'))) ? (
           <IconWrapper>
             <IconClose />
           </IconWrapper>

@@ -6,8 +6,10 @@ import commentsDetail from '../controllers/comments.detail';
 import commentsLikeList from '../controllers/comments.like.list';
 
 import commentsLikeRegister from '../controllers/comments.like.register';
-import commentsLikeDelete from '../controllers/comments.like.delete';
 import commentsReplyRegister from '../controllers/comments.reply.register';
+
+import commentsLikeDelete from '../controllers/comments.like.delete';
+import commentsReplyDelete from '../controllers/comments.reply.delete';
 
 import access from '../controllers/auth.access';
 
@@ -31,5 +33,6 @@ commentsRouter.post('/reply/register/:comment_id', access, commentsReplyRegister
 
 // DELETE
 commentsRouter.delete('/like/delete/:comment_id', access, commentsLikeDelete);
+commentsRouter.delete(`/reply/delete/:reply_id`, access, commentsReplyDelete);
 
 export default commentsRouter;

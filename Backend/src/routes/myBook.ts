@@ -17,7 +17,7 @@ import myBookRatingDelete from '../controllers/myBook.rating.delete';
 import myBookCommentDelete from '../controllers/myBook.comments.delete';
 import myBookHistoryDelete from '../controllers/myBook.history.delete';
 
-import myBookCommentUpdate from '../controllers/myBook.comment.update';
+import myBookCommentUpdate from '../controllers/myBook.comments.update';
 
 import access from '../controllers/auth.access';
 

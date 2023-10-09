@@ -12,14 +12,23 @@ import Loader from 'components/common/Loader';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  overflow: scroll;
   box-sizing: border-box;
   position: relative;
   display: flex;
+  padding: 1rem;
   flex-direction: column;
   gap: 1rem;
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+`;
+
+const ListContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  position: relative;
+  border: 2px solid black;
 `;
 
 const AddContainer = styled.div`
@@ -77,9 +86,11 @@ export default function MyBookInfoCommentList() {
           </Icon>
         </EmptyTag>
       ) : (
-        data?.map((comment) => (
-          <MyBookInfoCommentItem {...comment} key={comment.comment_id} />
-        ))
+        <ListContainer>
+          {data?.map((comment) => (
+            <MyBookInfoCommentItem {...comment} key={comment.comment_id} />
+          ))}
+        </ListContainer>
       )}
       {data?.length !== 0 && (
         <AddContainer>

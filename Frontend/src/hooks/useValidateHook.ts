@@ -33,7 +33,7 @@ export default function useValidateHook({
   );
 
   const isPasswordOverMinLength = useMemo(
-    () => password.length >= PASSWORD_MIN_LENGTH,
+    () => !!password && password.length >= PASSWORD_MIN_LENGTH,
     [password]
   );
 

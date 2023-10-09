@@ -45,7 +45,13 @@ export default function ImageWrapper({ src, alt, height, width }: IProps) {
     <Container height={height} width={width} ref={itemRef}>
       {src ? (
         isVisible ? (
-          <img src={src} alt={alt} height={height} width={width} />
+          <img
+            src={src}
+            alt={alt}
+            height={height}
+            width={width}
+            loading="lazy"
+          />
         ) : null
       ) : (
         <IconImage />

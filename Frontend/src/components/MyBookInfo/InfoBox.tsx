@@ -18,7 +18,7 @@ const Container = styled.div`
   display: flex;
   padding: 1rem 0;
   margin: 0 auto;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
+  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const DetailContainer = styled.div`
@@ -39,7 +39,8 @@ const ImageContainer = styled.div`
 
 const LoaderWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
+  min-height: 190px;
   display: flex;
   justify-content: center;
   align-items: center;

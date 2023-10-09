@@ -1,7 +1,9 @@
+import useCommentsReplyDeleteMutation from '@queries/comments/useCommentsReplyDeleteMutaion';
 import { IconTrashCan } from '@style/icons';
 import Avatar from 'components/common/Avatar';
 import Icon from 'components/common/Button/Icon';
 import dayjs from 'dayjs';
+import { useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
@@ -67,9 +69,22 @@ export default function CommentReplyItem({
   reply_id,
   users_id,
 }: CommentsReplyListQueryItemType) {
+  const { pathname } = useLocation();
+  const comment_id = pathname.split('/')[2];
+
+  const { mutate, isLoading } = useCommentsReplyDeleteMutation(
+    reply_id,
+    parseInt(comment_id)
+  );
+
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
   const { id } = useRecoilValue(userAtom);
   const isAuth = users_id === id ? true : false;
+
+  const replyDeleteHandler = () => {
+    mutate(reply_id);
+  };
+
   return (
     <Container>
       <ReplyHeaderContainer>
@@ -80,7 +95,15 @@ export default function CommentReplyItem({
             <ReplyHeaderDateWrapper>{createdTime}</ReplyHeaderDateWrapper>
           </ReplyHeaderInfoContainer>
         </ReplyIconContainer>
-        {isAuth ? <Icon icon={<IconTrashCan />}>Delete</Icon> : null}
+        {isAuth ? (
+          <Icon
+            onClick={replyDeleteHandler}
+            isLoading={isLoading}
+            icon={<IconTrashCan />}
+          >
+            Delete
+          </Icon>
+        ) : null}
       </ReplyHeaderContainer>
       <ReplyWrapper>{reply}</ReplyWrapper>
     </Container>

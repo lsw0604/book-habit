@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, Dispatch, SetStateAction } from 'react';
 
 import CalendarDateBox from 'components/calendar/CalendarDateBox';
 import Icon from 'components/common/Button/Icon';
@@ -12,6 +12,11 @@ import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { useRecoilState } from 'recoil';
 import { calendarAtom } from 'recoil/calendar';
 
+interface IProps {
+  filter: string[];
+  setFilter: Dispatch<SetStateAction<string[]>>;
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -19,7 +24,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   padding: 1rem;
   position: relative;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
+  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const CalendarHeader = styled.div`
@@ -53,11 +58,10 @@ const Contents = styled.div`
   align-items: center;
 `;
 
-export default function Calendar() {
+export default function Calendar({ filter, setFilter }: IProps) {
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
   const { users_books_id } = useParams();
   if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-  const [filter, setFilter] = useState<string[]>(['전체보기']);
 
   const [calendarState, setCalendarState] = useRecoilState(calendarAtom);
 
