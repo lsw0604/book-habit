@@ -75,6 +75,7 @@ export default function CommentDetailPage() {
           profile={data.profile}
           created_at={data.created_at}
           rating={data.rating}
+          status={data.status}
         />
       </Header>
       <Comment>{data.comment}</Comment>

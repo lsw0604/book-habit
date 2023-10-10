@@ -59,6 +59,7 @@ export default function CommentHeaderInfo({
   name,
   rating,
   profile,
+  status,
 }: Omit<CommentsItemType, 'comment' | 'comment_id'>) {
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
   return (
@@ -70,6 +71,7 @@ export default function CommentHeaderInfo({
         <HeaderInfoContainerDateWrapper>
           <IconCalendar />
           &nbsp;{createdTime}
+          &nbsp;{status}
           &nbsp;{name}
         </HeaderInfoContainerDateWrapper>
       </HeaderInfoContainer>

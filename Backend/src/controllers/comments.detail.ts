@@ -11,6 +11,7 @@ interface ICommentDetail extends RowDataPacket {
   title: string;
   name: string;
   profile: string;
+  status: '다읽음' | '읽는중' | '읽기전';
 }
 
 export default async function commentsDetail(req: Request, res: Response, next: NextFunction) {
@@ -22,7 +23,7 @@ export default async function commentsDetail(req: Request, res: Response, next: 
     const connection = await connectionPool.getConnection();
     try {
       const COMMENT_DETAIL_SQL =
-        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile ' +
+        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status ' +
         'FROM users_books_comments AS ubc ' +
         'LEFT JOIN books AS bs ON bs.id = ubc.books_id ' +
         'LEFT JOIN users_books AS ub ON ub.id = ubc.users_books_id ' +

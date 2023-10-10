@@ -52,6 +52,7 @@ export default function PublicCommentsItem({
   rating,
   title,
   profile,
+  status,
 }: CommentsItemType) {
   const navigate = useNavigate();
 
@@ -64,6 +65,7 @@ export default function PublicCommentsItem({
           rating={rating}
           profile={profile}
           created_at={created_at}
+          status={status}
         />
       </Header>
       <Content onClick={() => navigate(`/comments/${comment_id}`)}>

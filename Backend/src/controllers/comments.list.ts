@@ -12,6 +12,7 @@ interface ICommentList extends RowDataPacket {
   title: string;
   name: string;
   profile: string;
+  status: '읽기전' | '다읽음' | '읽는중';
 }
 
 export default async function commentList(req: Request, res: Response, next: NextFunction) {
@@ -25,7 +26,7 @@ export default async function commentList(req: Request, res: Response, next: Nex
       const lastDateCurrentMonth = currentDate.endOf('month');
 
       const COMMENT_LIST_SQL =
-        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile ' +
+        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status ' +
         'FROM users_books_comments AS ubc ' +
         'LEFT JOIN books AS bs ON bs.id = ubc.books_id ' +
         'LEFT JOIN users_books AS ub ON ub.id = ubc.users_books_id ' +

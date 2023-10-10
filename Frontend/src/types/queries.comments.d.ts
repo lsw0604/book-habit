@@ -12,6 +12,7 @@ type CommentsItemType = {
   title: string;
   name: string;
   profile: string;
+  status: '읽는중' | '읽기전' | '다읽음';
 };
 
 // useCommentsLikeListQuery의 타입들
