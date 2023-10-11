@@ -48,7 +48,7 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
       },
     }).then((res) => res.json());
 
-    logging.debug(NAMESPACE, '[kakao_account]', kakao_account.profile.thumbnail_image_url);
+    logging.debug(NAMESPACE, '[kakao_account]', kakao_account);
 
     if (id === undefined)
       return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
@@ -83,48 +83,48 @@ export default async function KakaoCallback(req: Request, res: Response, next: N
           message: '로그인에 성공 하셨습니다.',
           status: 'success',
         });
+      } else {
+        const REGISTER_SQL = 'INSERT INTO users (email, provider, profile) VALUES(?, ?, ?)';
+        const REGISTER_VALUE = [id, 'kakao', kakao_account.profile.thumbnail_image_url];
+
+        const [REGISTER_RESULT] = await connection.query<ResultSetHeader>(
+          REGISTER_SQL,
+          REGISTER_VALUE
+        );
+
+        logging.info(NAMESPACE, '[RESULT_SET_HEADER]', REGISTER_RESULT.insertId);
+
+        const EXIST_SUB_SQL =
+          'SELECT id, email, gender, age, name, provider, profile FROM users WHERE id = ? AND provider = ?';
+        const EXIST_SUB_VALUES = [REGISTER_RESULT.insertId, 'kakao'];
+        const [EXIST_SUB_RESULT] = await connection.query<IQueryResult[]>(
+          EXIST_SUB_SQL,
+          EXIST_SUB_VALUES
+        );
+
+        logging.info(NAMESPACE, '[EXIST_SUB_RESULT]', EXIST_SUB_RESULT[0]);
+
+        const { access_jwt, refresh_jwt } = tokenGenerator({
+          id: REGISTER_RESULT.insertId,
+          name: null,
+          email: id,
+        });
+
+        res.cookie('refresh', refresh_jwt, {
+          maxAge: 1000 * 60 * 60 * 24,
+          httpOnly: true,
+          path: '/',
+        });
+
+        await connection.commit();
+        connection.release();
+        res.status(200).json({
+          ...EXIST_SUB_RESULT[0],
+          access_jwt,
+          message: '카카오 추가정보를 등록해주세요.',
+          status: 'info',
+        });
       }
-
-      const REGISTER_SQL = 'INSERT INTO users (email, provider, profile) VALUES(?, ?, ?)';
-      const REGISTER_VALUE = [id, 'kakao', kakao_account.profile.thumbnail_image_url];
-
-      const [REGISTER_RESULT] = await connection.query<ResultSetHeader>(
-        REGISTER_SQL,
-        REGISTER_VALUE
-      );
-
-      logging.info(NAMESPACE, '[RESULT_SET_HEADER]', REGISTER_RESULT.insertId);
-
-      const EXIST_SUB_SQL =
-        'SELECT id, email, gender, age, name, provider, profile FROM users WHERE id = ? AND provider = ?';
-      const EXIST_SUB_VALUES = [REGISTER_RESULT.insertId, 'kakao'];
-      const [EXIST_SUB_RESULT] = await connection.query<IQueryResult[]>(
-        EXIST_SUB_SQL,
-        EXIST_SUB_VALUES
-      );
-
-      logging.info(NAMESPACE, '[EXIST_SUB_RESULT]', EXIST_SUB_RESULT[0]);
-
-      const { access_jwt, refresh_jwt } = tokenGenerator({
-        id: REGISTER_RESULT.insertId,
-        name: null,
-        email: id,
-      });
-
-      res.cookie('refresh', refresh_jwt, {
-        maxAge: 1000 * 60 * 60,
-        httpOnly: true,
-        path: '/',
-      });
-
-      await connection.commit();
-      connection.release();
-      res.status(200).json({
-        ...EXIST_SUB_RESULT[0],
-        access_jwt,
-        message: '카카오 추가정보를 등록해주세요.',
-        status: 'info',
-      });
     } catch (error) {
       await connection.rollback();
       connection.release();

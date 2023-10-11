@@ -19,6 +19,7 @@ const Container = styled.div`
   padding: 1rem 0;
   margin: 0 auto;
   box-shadow: ${({ theme }) => theme.shadow.md};
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const DetailContainer = styled.div`

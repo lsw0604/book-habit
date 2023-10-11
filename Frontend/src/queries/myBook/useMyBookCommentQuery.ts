@@ -21,10 +21,10 @@ export default function useMyBookCommentQuery(users_books_id: number) {
               comment: comment.comment,
               comment_is_open: comment.comment_is_open,
               created_at: dayjs(comment.created_at).format(
-                'YYYY년 MM월 DD일 HH시 mm분'
+                'YYYY/MM/DD-HH:mm:ss'
               ),
               updated_at: comment.updated_at
-                ? dayjs(comment.updated_at).format('YYYY년 MM월 DD일 HH시 mm분')
+                ? dayjs(comment.updated_at).format('YYYY/MM/DD-HH:mm:ss')
                 : undefined,
               rating: comment.rating,
               status: comment.status,

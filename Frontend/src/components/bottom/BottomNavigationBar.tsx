@@ -14,9 +14,8 @@ const Container = styled.nav`
   z-index: 9998;
   position: fixed;
   bottom: 0;
-  border-radius: 5px 10px 0 0;
+  border-radius: 1rem 1rem 0 0;
   background-color: ${({ theme }) => theme.mode.main};
-  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const Buttons = styled.ul`
@@ -29,6 +28,14 @@ const Buttons = styled.ul`
 const Wrapper = styled.li`
   width: 100%;
   height: 100%;
+  &:first-child {
+    border-radius: 1rem 0 0 0;
+    overflow: hidden;
+  }
+  &:last-child {
+    border-radius: 0 1rem 0 0;
+    overflow: hidden;
+  }
 `;
 
 export default function BottomNavigationBar() {

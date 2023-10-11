@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useState, FormEvent } from 'react';
 import { useRecoilValue } from 'recoil';
-import { AnimatePresence } from 'framer-motion';
 
 import { RadioGroupOptionType } from 'types/style';
 import { IconBook, IconBookMark, IconHeart } from '@style/icons';
@@ -206,12 +205,12 @@ export default function SearchBookRegister() {
           />
         </Stack>
         <Stack>
-          <AnimatePresence>
-            {value === '' && <Skeleton disabled={disabledHandler(data)} />}
-            {value === '다읽음' && <Read />}
-            {value === '읽는중' && <Reading />}
-            {value === '읽고싶음' && <ReadTo />}
-          </AnimatePresence>
+          {value === '' && (
+            <Skeleton key="skeleton" disabled={disabledHandler(data)} />
+          )}
+          {value === '다읽음' && <Read key="read" />}
+          {value === '읽는중' && <Reading key="reading" />}
+          {value === '읽고싶음' && <ReadTo key="readTo" />}
         </Stack>
       </Content>
       <Stack>

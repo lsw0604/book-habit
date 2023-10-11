@@ -97,7 +97,7 @@ export default function DateBox({
   const dataMapped = data[dayObj.add(9, 'hour').toISOString().split('T')[0]];
 
   const startDateDayjs = startDate ? dayjs(startDate) : undefined;
-  const endDateDayjs = endDate ? dayjs(endDate) : dayjs();
+  const endDateDayjs = endDate ? dayjs(endDate) : dayjs().add(-1, 'day');
 
   const historyRegisterModalHandler = () => {
     if (

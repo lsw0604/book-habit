@@ -10,16 +10,25 @@ import CommentReply from 'components/Comments/CommentReply';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   overflow: scroll;
-  padding: 0 1rem;
+  padding: 1rem;
   gap: 1rem;
   @media screen and (min-width: 1280px) {
     padding: 1rem 30%;
   }
+`;
+
+const DetailContainer = styled.div`
+  gap: 1rem;
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+  display: flex;
+  position: relative;
+  border-radius: 1rem;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const Header = styled.div`
@@ -35,6 +44,8 @@ const Comment = styled.div`
   height: auto;
   min-height: 100px;
   line-height: 25px;
+  white-space: pre-line;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 const Bottom = styled.div`
@@ -68,21 +79,26 @@ export default function CommentDetailPage() {
 
   return (
     <Container>
-      <Header>
-        <CommentHeaderInfo
-          name={data.name}
-          title={data.title}
-          profile={data.profile}
-          created_at={data.created_at}
-          rating={data.rating}
-          status={data.status}
-        />
-      </Header>
-      <Comment>{data.comment}</Comment>
-      <Bottom>
-        <CommentHeart comment_id={parseInt(comment_id)} />
-        <CommentReply comment_id={parseInt(comment_id)} />
-      </Bottom>
+      <DetailContainer>
+        <Header>
+          <CommentHeaderInfo
+            name={data.name}
+            title={data.title}
+            profile={data.profile}
+            created_at={data.created_at}
+            rating={data.rating}
+            status={data.status}
+          />
+        </Header>
+        <Comment>{data.comment}</Comment>
+        <Bottom>
+          <CommentHeart comment_id={parseInt(comment_id)} />
+          <CommentReply
+            comment_id={parseInt(comment_id)}
+            isNavigateURI="reply"
+          />
+        </Bottom>
+      </DetailContainer>
     </Container>
   );
 }

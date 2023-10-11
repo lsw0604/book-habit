@@ -28,7 +28,6 @@ const ListContainer = styled.div`
   height: 100%;
   overflow: scroll;
   position: relative;
-  border: 2px solid black;
 `;
 
 const AddContainer = styled.div`

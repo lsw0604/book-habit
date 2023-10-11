@@ -12,8 +12,10 @@ const Container = styled.li`
   width: 100%;
   position: relative;
   display: flex;
-  padding: 8px;
   flex-direction: column;
+  background-color: ${({ theme }) => theme.mode.sub};
+  margin-bottom: 1rem;
+  gap: 8px;
 `;
 
 const ReplyHeaderContainer = styled.div`

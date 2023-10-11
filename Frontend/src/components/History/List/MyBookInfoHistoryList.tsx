@@ -20,6 +20,7 @@ const Container = styled.div`
   align-items: center;
   border-radius: 1rem;
   box-shadow: ${({ theme }) => theme.shadow.md};
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const ItemListContainer = styled.div`

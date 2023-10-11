@@ -47,6 +47,7 @@ const HeaderIconContainerRating = styled.div`
   height: 100%;
   gap: 8px;
   align-items: center;
+  color: ${({ theme }) => theme.mode.typo_main};
   svg {
     height: 1.5rem;
     fill: ${customize.yellow['300']};

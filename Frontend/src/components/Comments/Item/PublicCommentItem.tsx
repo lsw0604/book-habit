@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import CommentHeart from 'components/Comments/CommentHeart';
 import CommentHeaderInfo from 'components/Comments/CommentHeaderInfo';
+import CommentReply from '../CommentReply';
 
 const Container = styled.li`
   box-sizing: border-box;
@@ -32,6 +33,7 @@ const Content = styled.div`
   overflow: hidden;
   -webkit-line-clamp: 4;
   height: 100px;
+  white-space: pre-line;
 `;
 
 const Bottom = styled.div`
@@ -73,6 +75,10 @@ export default function PublicCommentsItem({
       </Content>
       <Bottom>
         <CommentHeart comment_id={comment_id} />
+        <CommentReply
+          comment_id={comment_id}
+          isNavigateURI={`${comment_id}/reply`}
+        />
       </Bottom>
     </Container>
   );

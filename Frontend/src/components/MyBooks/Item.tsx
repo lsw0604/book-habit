@@ -13,7 +13,7 @@ const Container = styled.div`
   gap: 0.5rem;
   padding: 0.5rem;
   border-radius: 5px;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
+  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const Header = styled.div`

@@ -6,7 +6,6 @@ import CommentReplyForm from 'components/Comments/CommentReplyForm';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  overflow: scroll;
   padding: 1rem;
   gap: 1rem;
   @media screen and (min-width: 1280px) {
@@ -14,12 +13,23 @@ const Container = styled.div`
   }
 `;
 
+const ReplyContainer = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  border-radius: 1rem;
+`;
+
 const Wrapper = styled.div`
   height: 80%;
   position: relative;
   width: 100%;
   overflow: scroll;
-  margin-bottom: 8px;
+  margin-bottom: 1rem;
 `;
 
 export default function CommentReplyPage() {
@@ -28,10 +38,12 @@ export default function CommentReplyPage() {
 
   return (
     <Container>
-      <Wrapper>
-        <CommentReplyList />
-      </Wrapper>
-      <CommentReplyForm />
+      <ReplyContainer>
+        <Wrapper>
+          <CommentReplyList />
+        </Wrapper>
+        <CommentReplyForm />
+      </ReplyContainer>
     </Container>
   );
 }

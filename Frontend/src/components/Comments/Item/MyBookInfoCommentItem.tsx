@@ -21,9 +21,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${({ theme }) => theme.mode.sub};
+  background-color: ${({ theme }) => theme.mode.main};
   border-radius: 1rem;
   padding: 1rem;
+  margin-bottom: 8px;
+  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const Header = styled.div`
@@ -37,12 +39,15 @@ const HeaderInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 50%;
 `;
 
 const HeaderIconContainer = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  width: 50%;
+  justify-content: end;
 `;
 
 const Status = styled.h3`
@@ -51,6 +56,7 @@ const Status = styled.h3`
   svg {
     margin-left: 8px;
     height: 0.8rem;
+    fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;
 
@@ -82,7 +88,7 @@ const RatingBox = styled.div`
 const IconBox = styled.div`
   display: flex;
   gap: 1rem;
-  height: 60%;
+  height: 80%;
   border-radius: 50px;
   padding: 5px 10px;
   background-color: ${({ theme }) => theme.mode.sub};
@@ -149,10 +155,10 @@ export default function MyBookInfoCommentItem({
             <IconStar />
             <RatingBox>{rating}</RatingBox>
           </IconBox>
-          <Icon onClick={deleteHandler} icon={<IconTrashCan />}>
+          <Icon onClick={deleteHandler} icon={<IconTrashCan />} mode="text">
             Delete
           </Icon>
-          <Icon onClick={modifyHandler} icon={<IconPencil />}>
+          <Icon onClick={modifyHandler} icon={<IconPencil />} mode="text">
             Modify
           </Icon>
         </HeaderIconContainer>

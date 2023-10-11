@@ -1,12 +1,13 @@
-import styled from 'styled-components';
-import Loader from 'components/common/Loader';
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
-import PublicCommentsItem from 'components/Comments/Item/PublicCommentItem';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { IconRefresh } from '@style/icons';
-import Icon from 'components/common/Button/Icon';
 import { QueryClient } from '@tanstack/react-query';
+import styled from 'styled-components';
+import dayjs from 'dayjs';
+
+import Loader from 'components/common/Loader';
+import Icon from 'components/common/Button/Icon';
+import PublicCommentsItem from 'components/Comments/Item/PublicCommentItem';
+import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
+import { IconRefresh } from '@style/icons';
 
 const Container = styled.ul`
   width: 100%;
@@ -51,6 +52,7 @@ const TimerWord = styled.p`
   margin-right: 8px;
   line-height: 32px;
   text-justify: center;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 export default function CommentsPage() {

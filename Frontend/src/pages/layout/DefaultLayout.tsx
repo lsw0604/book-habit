@@ -13,7 +13,7 @@ const media = css`
 `;
 
 const Layout = styled.div<{ pathname: string }>`
-  background-color: ${({ theme }) => theme.mode.sub};
+  background-color: ${({ theme }) => theme.mode.main};
   width: 100vw;
   height: 100vh;
   padding: 0;

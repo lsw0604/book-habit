@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 interface IProps {
   comment_id: number;
+  isNavigateURI: string;
 }
 
 const Container = styled.div`
@@ -13,9 +14,10 @@ const Container = styled.div`
   width: 50px;
   display: inline-flex;
   gap: 1rem;
+  cursor: pointer;
 `;
 
-const ReplyNumber = styled.p`
+const ReplyNumber = styled.div`
   height: 100%;
   font-size: 100%;
   line-height: 100%;
@@ -25,18 +27,17 @@ const ReplyNumber = styled.p`
 const ReplyIconWrapper = styled.div`
   height: 100%;
   width: 1rem;
-  cursor: pointer;
   svg {
     width: 100%;
     fill: ${({ theme }) => theme.mode.typo_sub};
   }
 `;
 
-export default function CommentReply({ comment_id }: IProps) {
+export default function CommentReply({ comment_id, isNavigateURI }: IProps) {
   const { data, isFetching, isLoading } = useCommentsReplyListQuery(comment_id);
   const navigate = useNavigate();
   return (
-    <Container onClick={() => navigate('reply')}>
+    <Container onClick={() => navigate(`${isNavigateURI}`)}>
       <ReplyIconWrapper>
         <IconCommentDots />
       </ReplyIconWrapper>
