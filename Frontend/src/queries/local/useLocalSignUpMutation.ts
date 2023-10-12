@@ -13,7 +13,7 @@ export default function useLocalSignUpMutation() {
 
   const { isLoading, mutate, data, isSuccess, isError, error } = useMutation<
     LocalSignUpMutationResponseType,
-    AxiosError,
+    AxiosError<{ message: string; status: StatusType }>,
     LocalSignUpMutationRequestType
   >([REACT_QUERY_KEY], signUpAPI);
 
@@ -21,13 +21,16 @@ export default function useLocalSignUpMutation() {
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
-      navigate('/');
+      if (data.message === '회원가입에 성공 하셨습니다.') {
+        navigate('/search');
+      }
     }
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error) {
-      addToast({ message: '회원가입에 실패했습니다.', status: 'error' });
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
+      addToast({ message, status });
     }
   }, [isError, error]);
 

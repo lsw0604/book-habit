@@ -50,8 +50,11 @@ export default function HeaderProfile() {
       ref={hamburgerRef}
       onClick={handleHamburger}
     >
-      <ProfileName>{name}</ProfileName>
-      님 환영합니다.
+      {name ? (
+        <>
+          <ProfileName>{name}</ProfileName>님 환영합니다.
+        </>
+      ) : null}
       <Avatar src={profile} size="3rem" />
       {isHamburger && <HeaderProfileDropdown />}
     </Container>

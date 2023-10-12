@@ -51,7 +51,11 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
   const { pathname } = useLocation();
 
   const logoHandler = (pathname: string) => {
-    if (pathname === '/search' || pathname === '/register/kakao')
+    if (
+      pathname === '/search' ||
+      pathname === '/register/kakao' ||
+      pathname.includes('/login/kakao')
+    )
       return <LogoWrapper>책벌래</LogoWrapper>;
     if (
       pathname.includes('/my_books') ||

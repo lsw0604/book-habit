@@ -15,6 +15,7 @@ interface IQueryResult extends RowDataPacket {
   name: string;
   gender: GenderType;
   provider: ProviderType;
+  profile: string;
   age: number;
 }
 
@@ -44,7 +45,7 @@ export default async function kakaoUpdate(
       await connection.query(KAKAO_REGISTER_SQL, KAKAO_REGISTER_VALUES);
 
       const KAKAO_USER_EXIST_SQL =
-        'SELECT id, name, gender, age, provider, email FROM users WHERE id = ? AND email = ?';
+        'SELECT id, name, gender, age, provider, email, profile FROM users WHERE id = ? AND email = ?';
       const KAKAO_USER_EXIST_VALUES = [id, email];
       const [KAKAO_USER_EXIST_RESULT] = await connection.query<IQueryResult[]>(
         KAKAO_USER_EXIST_SQL,

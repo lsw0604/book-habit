@@ -58,6 +58,14 @@ const Bottom = styled.div`
   }
 `;
 
+const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export default function CommentDetailPage() {
   const { comment_id } = useParams();
 
@@ -65,16 +73,11 @@ export default function CommentDetailPage() {
 
   const { data, isLoading } = useCommentsDetailQuery(parseInt(comment_id));
 
-  if (!data)
+  if (isLoading || !data)
     return (
-      <Container>해당 Comment의 정보를 불러오는데 실패했습니다.</Container>
-    );
-
-  if (isLoading)
-    return (
-      <Container>
+      <LoadingWrapper>
         <Loader size={2} />
-      </Container>
+      </LoadingWrapper>
     );
 
   return (

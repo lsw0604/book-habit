@@ -5,13 +5,11 @@ import { useEffect } from 'react';
 import { kakaoSignupAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
 import useUserStateHook from '@hooks/useUserStateHook';
-import { useNavigate } from 'react-router-dom';
 
 export default function useKakaoSignUpMutation() {
   const REACT_QUERY_KEY = 'USE_KAKAO_SIGNUP_MUTATION';
   const { addToast } = useToastHook();
   const { setUserState } = useUserStateHook();
-  const navigate = useNavigate();
 
   const { isLoading, mutate, data, isSuccess, isError, error } = useMutation<
     KakaoSignUpMutationResponseType,
@@ -23,34 +21,14 @@ export default function useKakaoSignUpMutation() {
     if (isError && error && error.response?.data) {
       const { message, status } = error.response.data;
       addToast({ message, status });
-      navigate('/search');
     }
   }, [isError, error]);
 
   useEffect(() => {
     if (isSuccess && data) {
-      const {
-        message,
-        status,
-        age,
-        email,
-        gender,
-        id,
-        name,
-        provider,
-        profile,
-      } = data;
+      const { message, status } = data;
       addToast({ message, status });
-      setUserState({
-        age,
-        email,
-        name,
-        gender,
-        id,
-        provider,
-        isLogged: true,
-        profile,
-      });
+      setUserState({ ...data, isLogged: true });
     }
   }, [isSuccess, data]);
 

@@ -23,29 +23,9 @@ export default function useKakaoCallbackQuery(code: string) {
 
   useEffect(() => {
     if (isSuccess && data) {
-      const {
-        email,
-        id,
-        gender,
-        age,
-        name,
-        provider,
-        message,
-        status,
-        profile,
-        access_jwt,
-      } = data;
+      const { message, status, access_jwt } = data;
       window.localStorage.setItem('ACCESS', access_jwt);
-      setUserState({
-        email,
-        id,
-        gender,
-        age,
-        name,
-        isLogged: true,
-        provider,
-        profile,
-      });
+      setUserState({ ...data, isLogged: true });
       addToast({ message, status });
     }
   }, [isSuccess, data]);

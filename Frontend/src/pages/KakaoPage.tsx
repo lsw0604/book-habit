@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import useKakaoCallbackQuery from '@queries/kakao/useKakaoCallbackQuery';
 import Loader from 'components/common/Loader';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -15,11 +16,13 @@ export default function KakaoPage() {
   const code = new URLSearchParams(window.location.search).get(
     'code'
   ) as string;
+  const navigate = useNavigate();
 
   const { isLoading, isError } = useKakaoCallbackQuery(code);
 
   if (!code) {
-    return <Container>Code를 불러오지 못 했습니다.</Container>;
+    navigate('/search');
+    return <Container>code가 존재 하지 않습니다.</Container>;
   }
 
   if (isError) {
