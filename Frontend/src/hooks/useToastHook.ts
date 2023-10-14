@@ -33,7 +33,7 @@ export default function useToastHook() {
       if (toastState.length > 0) {
         deleteToast({ id: toastState[0].id });
       }
-    }, 2000);
+    }, 1500);
     return () => clearInterval(interval);
   }, [toastState, deleteToast]);
 

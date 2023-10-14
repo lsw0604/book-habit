@@ -36,6 +36,7 @@ import access from '../controllers/auth.access';
  * * 내 서재에 등록된 책의 독서기록을 삭제하는 API /api/my_book/history/delete/:users_books_history_id
  * * 내 서재에 등록된 책의 한줄평을 삭제하는 API /api/my_book/comment/delete/:comment_id
  * * 내 서재에 등록된 책을 삭제하는 API /api/my_book/list/delete/:users_books_id
+ * * 내 서재에 등록된 책의 한줄평을 수정하는 API /api/my_book/comment/update/:comment_id
  */
 const myBookRouter = express.Router();
 
@@ -57,7 +58,6 @@ myBookRouter.delete('/rating/delete/:users_books_rating_id', access, myBookRatin
 myBookRouter.delete('/comment/delete/:comment_id', access, myBookCommentDelete);
 myBookRouter.delete(`/list/delete/:users_books_id`, access, myBookListDelete);
 // UPDATE
-myBookRouter.put('/update/rating/:users_books_info_id', access);
 myBookRouter.put('/comment/update/:comment_id', access, myBookCommentUpdate);
 
 export default myBookRouter;

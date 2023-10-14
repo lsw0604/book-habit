@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import Icon from './Button/Icon';
+import { motion, AnimatePresence } from 'framer-motion';
+
+import Icon from 'components/common/Button/Icon';
 import {
   IconError,
   IconInfo,
@@ -16,11 +18,11 @@ const icons = {
   info: <IconInfo />,
 };
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   width: 100%;
   position: fixed;
   margin-top: 10px;
-  top: 4rem;
+  top: 1rem;
   height: auto;
   z-index: 9999;
   @media screen and (min-width: 1280px) {
@@ -31,8 +33,8 @@ const Container = styled.div`
   }
 `;
 
-const Item = styled.div`
-  margin: 0 2rem;
+const Item = styled(motion.div)`
+  width: 100%;
   padding: 0.5rem 0.7rem;
   display: flex;
   justify-content: space-between;
@@ -60,24 +62,54 @@ const IconWrapper = styled.div`
 
 export default function Toast() {
   const { toastState, deleteToast } = useToastHook();
+
+  const toastVariants = {
+    initial: {
+      opacity: 0,
+      y: -20,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+    exit: {
+      opacity: 0,
+      y: -20,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
     <Container>
-      {toastState &&
-        toastState.map((toast) => (
-          <Item key={toast.id}>
-            {toast.status !== '' && (
-              <IconWrapper>{icons[toast.status]}</IconWrapper>
-            )}
-            <Span>{toast.message}</Span>
-            <Icon
-              mode="text"
-              onClick={() => deleteToast({ id: toast.id })}
-              icon={<IconClose />}
+      <AnimatePresence>
+        {toastState &&
+          toastState.map((toast) => (
+            <Item
+              key={toast.id}
+              variants={toastVariants}
+              initial="initial"
+              exit="exit"
+              animate="animate"
             >
-              Icon_btn
-            </Icon>
-          </Item>
-        ))}
+              {toast.status !== '' && (
+                <IconWrapper>{icons[toast.status]}</IconWrapper>
+              )}
+              <Span>{toast.message}</Span>
+              <Icon
+                mode="text"
+                onClick={() => deleteToast({ id: toast.id })}
+                icon={<IconClose />}
+              >
+                Icon_btn
+              </Icon>
+            </Item>
+          ))}
+      </AnimatePresence>
     </Container>
   );
 }

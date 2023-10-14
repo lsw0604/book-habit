@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import MyBookInfoHistoryItem from 'components/History/Item/MyBookInfoHistoryItem';
 import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import { IconPlus } from '@style/icons';
+import Icon from 'components/common/Button/Icon';
 
 interface IProps {
   filter: string[];
@@ -33,12 +35,15 @@ const ItemListContainer = styled.div`
 
 const EmptyTag = styled.div`
   width: 100%;
-  height: 7.5rem;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
   color: ${({ theme }) => theme.mode.typo_main};
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 const LoadingContainer = styled.div`
@@ -78,7 +83,10 @@ export default function HistoryList({ filter }: IProps) {
           ))}
         </ItemListContainer>
       ) : (
-        <EmptyTag>검색 결과가 없습니다.</EmptyTag>
+        <EmptyTag>
+          아직 등록된 독서기록이 없습니다.
+          <Icon icon={<IconPlus />}>AddHistory</Icon>
+        </EmptyTag>
       )}
     </Container>
   );

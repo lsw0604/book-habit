@@ -15,7 +15,7 @@ export default function IsAuthLayout({ isAuth }: IProps) {
   return isAuth ? (
     <GuardLayout
       isRouteAccessible={userState.isLogged}
-      redirectUrl={pathname}
+      redirectUrl={userState.isLogged ? 'search' : pathname}
     />
   ) : (
     <GuardLayout

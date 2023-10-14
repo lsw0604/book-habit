@@ -73,7 +73,7 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
 
   return (
     <>
-      {pathname !== '/' ? (
+      {pathname !== '/' && (
         <Container>
           {logoHandler(pathname)}
           <Wrapper>
@@ -90,7 +90,7 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
             )}
           </Wrapper>
         </Container>
-      ) : null}
+      )}
     </>
   );
 }

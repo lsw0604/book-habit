@@ -36,15 +36,14 @@ export default function useAccessHook() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.log('access_hook', err);
       onChangeUserStateInitial();
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (window.localStorage.getItem('ACCESS')) {
-      fetch();
-    }
+    fetch();
   }, []);
 
   return isLoading;

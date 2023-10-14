@@ -18,14 +18,10 @@ export default function HeaderAuth() {
   return (
     <Container>
       <Wrapper>
-        <Button text onClick={() => navigate('/register')}>
-          회원가입
-        </Button>
+        <Button onClick={() => navigate('/register')}>회원가입</Button>
       </Wrapper>
       <Wrapper>
-        <Button text onClick={() => navigate('/login')}>
-          로그인
-        </Button>
+        <Button onClick={() => navigate('/login')}>로그인</Button>
       </Wrapper>
     </Container>
   );

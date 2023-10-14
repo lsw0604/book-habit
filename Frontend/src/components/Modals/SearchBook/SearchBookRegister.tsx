@@ -158,6 +158,15 @@ export default function SearchBookRegister() {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!isLogged) {
+      addToast({ message: '로그인해주세요.', status: 'info' });
+    }
+
+    if (value === '') {
+      addToast({ message: '등록할 유형을 선택해주세요.', status: 'info' });
+    }
+
     if (isLogged) {
       onChangeBookRegisterModalUseValidation(true);
       if (value === '다읽음' && readValidation) {
@@ -180,7 +189,6 @@ export default function SearchBookRegister() {
         return readToMutate(body);
       }
     }
-    addToast({ message: '로그인해주세요.', status: 'info' });
   };
 
   return (

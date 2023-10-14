@@ -11,7 +11,8 @@ import { customize } from '@style/colors';
 import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
 
 const Container = styled.div`
-  height: 100%;
+  height: auto;
+  min-height: 206px;
   width: 100%;
   flex-wrap: wrap;
   border-radius: 1rem;
@@ -40,11 +41,14 @@ const ImageContainer = styled.div`
 
 const LoaderWrapper = styled.div`
   width: 100%;
-  /* height: 100%; */
   min-height: 190px;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  border-radius: 1rem;
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const Publisher = styled.h2`
@@ -70,6 +74,14 @@ const Description = styled.p`
   font-size: 12px;
   width: 100%;
   font-weight: 700;
+  line-height: 20px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-height: 25px;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  height: 100px;
+  white-space: pre-line;
 `;
 
 const A = styled.a`
@@ -91,6 +103,8 @@ const DetailHeaderInfo = styled.div`
 
 const DetailHeaderIconWrapper = styled.div`
   width: 20%;
+  display: flex;
+  justify-content: end;
 `;
 
 const BookMarkWrapper = styled.div`
@@ -121,9 +135,9 @@ export default function InfoBox() {
   };
 
   return (
-    <Container>
+    <>
       {!myBookInfoIsLoading ? (
-        <>
+        <Container>
           <ImageContainer>
             <ImageWrapper
               src={myBookInfoData?.result.thumbnail}
@@ -164,12 +178,12 @@ export default function InfoBox() {
               더보기
             </A>
           </DetailContainer>
-        </>
+        </Container>
       ) : (
         <LoaderWrapper>
           <Loader />
         </LoaderWrapper>
       )}
-    </Container>
+    </>
   );
 }
