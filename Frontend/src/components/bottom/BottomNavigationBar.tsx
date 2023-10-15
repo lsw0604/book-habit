@@ -1,9 +1,9 @@
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 
 import BottomNavigationPaletteButton from 'components/bottom/BottomNavigationPaletteButton';
 import BottomNavigationButton from 'components/bottom/BottomNavigationButton';
 import { IconBook, IconComments, IconPerson, IconSearch } from '@style/icons';
-import { useLocation } from 'react-router-dom';
 
 const Container = styled.nav`
   height: 4rem;
@@ -15,7 +15,7 @@ const Container = styled.nav`
   position: fixed;
   bottom: 0;
   border-radius: 1rem 1rem 0 0;
-  background-color: ${({ theme }) => theme.mode.main};
+  background-color: ${({ theme }) => theme.mode.nav};
 `;
 
 const Buttons = styled.ul`
@@ -40,44 +40,64 @@ const Wrapper = styled.li`
 
 export default function BottomNavigationBar() {
   const { pathname } = useLocation();
+
+  const bottomRoutes = [
+    {
+      title: '검색하기',
+      icon: <IconSearch />,
+      url: '/search',
+      isAuth: false,
+    },
+    {
+      title: '한줄평',
+      icon: <IconComments />,
+      url: '/comments',
+      isAuth: false,
+    },
+    {
+      title: undefined,
+      icon: undefined,
+      url: undefined,
+      isAuth: false,
+    },
+    {
+      title: '내 서재',
+      icon: <IconBook />,
+      url: '/my_books',
+      isAuth: true,
+    },
+    {
+      title: '내 프로필',
+      icon: <IconPerson />,
+      url: '/profile',
+      isAuth: true,
+    },
+  ];
+
   return (
     <>
       {pathname !== '/' ? (
         <Container>
           <Buttons>
-            <Wrapper>
-              <BottomNavigationButton
-                title="검색하기"
-                icon={<IconSearch />}
-                url="/search"
-              />
-            </Wrapper>
-            <Wrapper>
-              <BottomNavigationButton
-                title="한줄평"
-                icon={<IconComments />}
-                url="/comments"
-              />
-            </Wrapper>
-            <Wrapper>
-              <BottomNavigationPaletteButton />
-            </Wrapper>
-            <Wrapper>
-              <BottomNavigationButton
-                isAuth
-                title="내 서재"
-                icon={<IconBook />}
-                url="/my_books"
-              />
-            </Wrapper>
-            <Wrapper>
-              <BottomNavigationButton
-                isAuth
-                title="내 프로필"
-                icon={<IconPerson />}
-                url="/profile"
-              />
-            </Wrapper>
+            {bottomRoutes.map((route, index) => {
+              if (!route.title && !route.icon && !route.url) {
+                return (
+                  <Wrapper key={index}>
+                    <BottomNavigationPaletteButton />
+                  </Wrapper>
+                );
+              }
+              return (
+                <Wrapper key={index}>
+                  <BottomNavigationButton
+                    title={route.title}
+                    icon={route.icon}
+                    url={route.url}
+                    isAuth={route.isAuth}
+                  />
+                </Wrapper>
+              );
+            })}
           </Buttons>
         </Container>
       ) : null}

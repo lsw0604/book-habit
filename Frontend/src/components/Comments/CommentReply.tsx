@@ -1,12 +1,10 @@
 import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 import { IconCommentDots } from '@style/icons';
 import Loader from 'components/common/Loader';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface IProps {
   comment_id: number;
-  isNavigateURI: string;
 }
 
 const Container = styled.div`
@@ -33,11 +31,10 @@ const ReplyIconWrapper = styled.div`
   }
 `;
 
-export default function CommentReply({ comment_id, isNavigateURI }: IProps) {
+export default function CommentReply({ comment_id }: IProps) {
   const { data, isFetching, isLoading } = useCommentsReplyListQuery(comment_id);
-  const navigate = useNavigate();
   return (
-    <Container onClick={() => navigate(`${isNavigateURI}`)}>
+    <Container>
       <ReplyIconWrapper>
         <IconCommentDots />
       </ReplyIconWrapper>

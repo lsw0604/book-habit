@@ -11,22 +11,22 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
       if (!user && info instanceof Error && info.message === 'No auth token') {
         return res
           .status(403)
-          .json({ status: 'error', message: 'No auth token', strategy: 'refresh' });
+          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
       }
       if (!user && info instanceof Error && info.message === 'jwt malformed') {
         return res
           .status(403)
-          .json({ status: 'error', message: 'jwt malformed', strategy: 'refresh' });
+          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
       }
       if (!user && info instanceof Error && info.message === 'jwt expired') {
         return res
           .status(403)
-          .json({ status: 'error', message: 'jwt expired', strategy: 'refresh' });
+          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
       }
       if (!user && info instanceof Error && info.message === 'invalid token') {
         return res
           .status(403)
-          .json({ status: 'error', message: 'invalid token', strategy: 'refresh' });
+          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
       }
 
       if (!user) {

@@ -11,7 +11,7 @@ interface IProps {
   isAuth?: boolean;
 }
 
-const Container = styled.button`
+const Container = styled.div`
   border: none;
   outline: none;
   width: 100%;

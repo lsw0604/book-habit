@@ -12,13 +12,11 @@ const Container = styled(motion.div)`
 const Content = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  height: 74px;
+  display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  gap: 1rem;
   color: ${({ theme }) => theme.mode.typo_main};
   svg {
     height: 100%;
@@ -28,8 +26,11 @@ const Content = styled.div`
 const Message = styled.h1`
   font-size: 25px;
   display: flex;
-  gap: 1rem;
   flex-direction: column;
+  span {
+    font-size: 20px;
+    line-height: 22px;
+  }
 `;
 
 export default function ToRead() {
@@ -67,11 +68,11 @@ export default function ToRead() {
       }}
     >
       <Content>
+        <LogoHeart />
         <Message>
           <span>읽지는 않았지만</span>
           <span>관심있는 책이에요.</span>
         </Message>
-        <LogoHeart />
       </Content>
     </Container>
   );

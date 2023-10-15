@@ -1,3 +1,4 @@
+import { LogoMain } from '@style/icons';
 import Loader from 'components/common/Loader';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,17 +31,29 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
+const LogoWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  svg {
+    width: 10rem;
+  }
+`;
+
 const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
       navigate('search');
-    }, 1500);
+    }, 1000);
   }, []);
 
   return (
     <Container>
+      <LogoWrapper>
+        <LogoMain />
+      </LogoWrapper>
       <SubTitle>부담없이 기록하는 독서기록장</SubTitle>
       <Title>책벌래</Title>
       <LoaderWrapper>

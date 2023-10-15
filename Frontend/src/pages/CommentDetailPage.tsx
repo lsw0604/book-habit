@@ -6,6 +6,8 @@ import CommentHeart from 'components/Comments/CommentHeart';
 import CommentHeaderInfo from 'components/Comments/CommentHeaderInfo';
 import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
 import CommentReply from 'components/Comments/CommentReply';
+import CommentReplyList from 'components/Comments/CommentReplyList';
+import CommentReplyForm from 'components/Comments/CommentReplyForm';
 
 const Container = styled.div`
   width: 100%;
@@ -29,6 +31,7 @@ const DetailContainer = styled.div`
   flex-direction: column;
   background-color: ${({ theme }) => theme.mode.sub};
   box-shadow: ${({ theme }) => theme.shadow.lg};
+  margin-bottom: 1rem;
 `;
 
 const Header = styled.div`
@@ -66,6 +69,25 @@ const LoadingWrapper = styled.div`
   align-items: center;
 `;
 
+const ReplyContainer = styled.div`
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  border-radius: 1rem;
+`;
+
+const Wrapper = styled.div`
+  height: 80%;
+  position: relative;
+  width: 100%;
+  overflow: scroll;
+  margin-bottom: 1rem;
+`;
+
 export default function CommentDetailPage() {
   const { comment_id } = useParams();
 
@@ -96,12 +118,15 @@ export default function CommentDetailPage() {
         <Comment>{data.comment}</Comment>
         <Bottom>
           <CommentHeart comment_id={parseInt(comment_id)} />
-          <CommentReply
-            comment_id={parseInt(comment_id)}
-            isNavigateURI="reply"
-          />
+          <CommentReply comment_id={parseInt(comment_id)} />
         </Bottom>
       </DetailContainer>
+      <ReplyContainer>
+        <Wrapper>
+          <CommentReplyList />
+        </Wrapper>
+        <CommentReplyForm />
+      </ReplyContainer>
     </Container>
   );
 }

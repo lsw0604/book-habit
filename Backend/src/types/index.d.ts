@@ -144,6 +144,42 @@ export type MyBookCommentsListType = {
   updated_at: Date | null;
 } & RowDataPacket;
 
+export type MyBookExistResult = {
+  count: number;
+} & RowDataPacket;
+
+export type BookExistResult = {
+  isbn: string;
+  id: number;
+} & RowDataPacket;
+
+export type MyBookRegisterRequest = {
+  authors: string;
+  publisher: string;
+  thumbnail: string;
+  isbn: string;
+  price: number;
+  status: string;
+  title: string;
+  url: string;
+  contents: string;
+};
+
+export type MyBookReadRegisterRequest = MyBookRegisterRequest & {
+  startDate: string;
+  endDate: string;
+  users_books_id?: number;
+};
+
+export type MyBookReadingRegisterRequest = MyBookRegisterRequest & {
+  startDate: string;
+  users_books_id?: number;
+};
+
+export type MyBOokReadToRegisterRequest = MyBookRegisterRequest & {
+  users_books_id?: number;
+};
+
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';

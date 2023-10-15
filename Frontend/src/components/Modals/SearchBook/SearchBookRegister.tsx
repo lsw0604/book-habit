@@ -19,7 +19,6 @@ import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { userAtom } from 'recoil/user';
 import ImageWrapper from 'components/common/ImageWrapper';
 import useToastHook from '@hooks/useToastHook';
-import useMyBookExistQuery from '@queries/myBook/useMyBookExistQuery';
 
 const Container = styled.form`
   width: 100%;
@@ -147,15 +146,6 @@ export default function SearchBookRegister() {
     url,
   };
 
-  const { data } = isLogged ? useMyBookExistQuery(isbn) : { data: undefined };
-
-  const disabledHandler = (data?: MyBookExistQueryResponseType) => {
-    if (data && data.status === '미등록') {
-      return false;
-    }
-    return true;
-  };
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -206,16 +196,13 @@ export default function SearchBookRegister() {
         <Stack>
           <RadioButton<string>
             label="등록할 유형을 선택해주세요."
-            disabled={disabledHandler(data)}
             value={value}
             options={options}
             onChange={onChange}
           />
         </Stack>
         <Stack>
-          {value === '' && (
-            <Skeleton key="skeleton" disabled={disabledHandler(data)} />
-          )}
+          {value === '' && <Skeleton key="skeleton" />}
           {value === '다읽음' && <Read key="read" />}
           {value === '읽는중' && <Reading key="reading" />}
           {value === '읽고싶음' && <ReadTo key="readTo" />}
@@ -223,7 +210,6 @@ export default function SearchBookRegister() {
       </Content>
       <Stack>
         <Button
-          disabled={disabledHandler(data)}
           type="submit"
           isLoading={readingLoading || readLoading || readToLoading}
         >

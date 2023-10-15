@@ -1,11 +1,5 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useRecoilValue } from 'recoil';
-import { userAtom } from 'recoil/user';
-
-interface IProps {
-  disabled: boolean;
-}
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -29,8 +23,7 @@ const Stack = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function Skeleton({ disabled }: IProps) {
-  const { isLogged } = useRecoilValue(userAtom);
+export default function Skeleton() {
   return (
     <Container
       initial={{ opacity: 0, y: '100%' }}
@@ -43,13 +36,7 @@ export default function Skeleton({ disabled }: IProps) {
         duration: 0.3,
       }}
     >
-      <Stack>
-        {!disabled
-          ? '어떤 책인지 선택해주세요.'
-          : isLogged
-          ? '서재에 등록된 책입니다.'
-          : null}
-      </Stack>
+      <Stack>어떤 책인지 선택해주세요.</Stack>
     </Container>
   );
 }
