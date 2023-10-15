@@ -75,10 +75,7 @@ export default function PublicCommentsItem({
       </Content>
       <Bottom>
         <CommentHeart comment_id={comment_id} />
-        <CommentReply
-          comment_id={comment_id}
-          isNavigateURI={`${comment_id}/reply`}
-        />
+        <CommentReply comment_id={comment_id} />
       </Bottom>
     </Container>
   );
