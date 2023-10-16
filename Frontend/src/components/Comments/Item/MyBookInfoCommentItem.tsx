@@ -21,7 +21,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${({ theme }) => theme.mode.main};
+  background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 8px;
@@ -155,10 +155,10 @@ export default function MyBookInfoCommentItem({
             <IconStar />
             <RatingBox>{rating}</RatingBox>
           </IconBox>
-          <Icon onClick={deleteHandler} icon={<IconTrashCan />} mode="text">
+          <Icon onClick={deleteHandler} icon={<IconTrashCan />}>
             Delete
           </Icon>
-          <Icon onClick={modifyHandler} icon={<IconPencil />} mode="text">
+          <Icon onClick={modifyHandler} icon={<IconPencil />}>
             Modify
           </Icon>
         </HeaderIconContainer>

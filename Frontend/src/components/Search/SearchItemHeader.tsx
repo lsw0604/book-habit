@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { v4 } from 'uuid';
 
 interface IProps {
   title: string;
@@ -32,9 +33,9 @@ export default function SearchItemHeader({ title, query }: IProps) {
 
     return (
       <Container>
-        {splitTitle.map((word, index) =>
+        {splitTitle.map((word) =>
           regExp.test(word) ? (
-            <Highlighted key={index}>{word}</Highlighted>
+            <Highlighted key={v4()}>{word}</Highlighted>
           ) : (
             word
           )

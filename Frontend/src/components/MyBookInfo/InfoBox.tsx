@@ -134,6 +134,8 @@ export default function InfoBox() {
     mutate(parseInt(users_books_id));
   };
 
+  console.log('불필요한 재 렌더링');
+
   return (
     <>
       {!myBookInfoIsLoading ? (

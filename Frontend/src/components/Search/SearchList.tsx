@@ -1,6 +1,7 @@
 import { InfiniteData } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
+import { v4 } from 'uuid';
 
 import Loader from 'components/common/Loader';
 import SearchItem from 'components/Search/SearchItem';
@@ -98,6 +99,7 @@ export default function SearchList({
   setInitialLoadComplete,
 }: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
+  const MemorizedSearchItem = memo(SearchItem);
 
   useEffect(() => {
     const observerOptions = {
@@ -127,9 +129,9 @@ export default function SearchList({
 
   return (
     <Container>
-      {data?.pages.map((page, index) =>
+      {data?.pages.map((page) =>
         page.documents.length === 0 ? (
-          <EmptyPageContainer key={index}>
+          <EmptyPageContainer key={v4()}>
             <div className="empty_page">
               <p className="empty_page_message">
                 <span className="empty_page_message highlight">{search}</span>
@@ -139,9 +141,13 @@ export default function SearchList({
             </div>
           </EmptyPageContainer>
         ) : (
-          <Page key={index}>
+          <Page key={v4()}>
             {page.documents.map((document) => (
-              <SearchItem key={document.isbn} search={search} {...document} />
+              <MemorizedSearchItem
+                key={document.isbn}
+                search={search}
+                {...document}
+              />
             ))}
           </Page>
         )

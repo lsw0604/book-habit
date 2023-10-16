@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
+import { v4 } from 'uuid';
+import { memo } from 'react';
 
 import BottomNavigationPaletteButton from 'components/bottom/BottomNavigationPaletteButton';
 import BottomNavigationButton from 'components/bottom/BottomNavigationButton';
@@ -38,7 +40,7 @@ const Wrapper = styled.li`
   }
 `;
 
-export default function BottomNavigationBar() {
+const bottomNavigationBar = () => {
   const { pathname } = useLocation();
 
   const bottomRoutes = [
@@ -79,16 +81,16 @@ export default function BottomNavigationBar() {
       {pathname !== '/' ? (
         <Container>
           <Buttons>
-            {bottomRoutes.map((route, index) => {
+            {bottomRoutes.map((route) => {
               if (!route.title && !route.icon && !route.url) {
                 return (
-                  <Wrapper key={index}>
+                  <Wrapper key={v4()}>
                     <BottomNavigationPaletteButton />
                   </Wrapper>
                 );
               }
               return (
-                <Wrapper key={index}>
+                <Wrapper key={v4()}>
                   <BottomNavigationButton
                     title={route.title}
                     icon={route.icon}
@@ -103,4 +105,6 @@ export default function BottomNavigationBar() {
       ) : null}
     </>
   );
-}
+};
+
+export const BottomNavigationBar = memo(bottomNavigationBar);

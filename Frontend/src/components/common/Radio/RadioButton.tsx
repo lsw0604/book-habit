@@ -124,8 +124,8 @@ const RadioButton = <T extends string | number>({
         )}
         <Wrapper>
           {options &&
-            options.map((option, index) => (
-              <Label isChecked={option.value === value} key={index}>
+            options.map((option) => (
+              <Label isChecked={option.value === value} key={option.label}>
                 <Input
                   type="radio"
                   id={`radio-${option.value}`}

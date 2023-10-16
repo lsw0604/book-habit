@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, memo } from 'react';
 
 import ErrorMessage from 'components/common/Message/ErrorMessage';
 
@@ -89,4 +89,6 @@ const Index = ({
   );
 };
 
-export default Index;
+const MemorizedInput = memo(Index);
+
+export default MemorizedInput;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, memo, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { RadioGroupOptionType } from 'types/style';
@@ -78,8 +78,8 @@ const Stack = styled.div`
   width: 100%;
   margin-bottom: 8px;
 `;
-
-export default function SearchBookRegister() {
+// export default function SearchBookRegister() {
+const searchBookRegister = () => {
   const [value, setValue] = useState<ModalType>('');
 
   const {
@@ -181,6 +181,19 @@ export default function SearchBookRegister() {
     }
   };
 
+  const memorizedRegisterComponent = useMemo(() => {
+    switch (value) {
+      case '다읽음':
+        return <Read />;
+      case '읽고싶음':
+        return <ReadTo />;
+      case '읽는중':
+        return <Reading />;
+      default:
+        return <Skeleton />;
+    }
+  }, [value]);
+
   return (
     <Container onSubmit={onSubmit}>
       <Header>
@@ -202,10 +215,11 @@ export default function SearchBookRegister() {
           />
         </Stack>
         <Stack>
-          {value === '' && <Skeleton key="skeleton" />}
+          {/* {value === '' && <Skeleton key="skeleton" />}
           {value === '다읽음' && <Read key="read" />}
           {value === '읽는중' && <Reading key="reading" />}
-          {value === '읽고싶음' && <ReadTo key="readTo" />}
+          {value === '읽고싶음' && <ReadTo key="readTo" />} */}
+          {memorizedRegisterComponent}
         </Stack>
       </Content>
       <Stack>
@@ -218,4 +232,8 @@ export default function SearchBookRegister() {
       </Stack>
     </Container>
   );
-}
+};
+
+const SearchBookRegister = memo(searchBookRegister);
+
+export default SearchBookRegister;

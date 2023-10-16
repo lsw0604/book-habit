@@ -212,9 +212,9 @@ export default function Index({
         <ValueContainer>
           <Value>
             {multiple ? (
-              value.map((v, idx) => (
+              value.map((v) => (
                 <ValueTag
-                  key={idx}
+                  key={v}
                   onClick={(event) => onRemoveHandler(event, v)}
                 >
                   {v}
@@ -251,8 +251,8 @@ export default function Index({
               <span>목록이 없습니다.</span>
             </Empty>
           ) : (
-            selects.map((option, index) => (
-              <Option key={index} onClick={(e) => onAddOption(e, option)}>
+            selects.map((option) => (
+              <Option key={option} onClick={(e) => onAddOption(e, option)}>
                 {option}
               </Option>
             ))

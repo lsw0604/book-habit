@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { ReactNode, useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence } from 'framer-motion';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { modalAtom } from 'recoil/modal';
@@ -49,7 +48,7 @@ const ModalPortal = ({ children }: IProps) => {
     return createPortal(
       <Container role="presentation">
         <Background onClick={onModalClose} />
-        <AnimatePresence>{children}</AnimatePresence>
+        {children}
       </Container>,
       ref.current
     );

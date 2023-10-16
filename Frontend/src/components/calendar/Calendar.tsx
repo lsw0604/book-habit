@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { useEffect, useMemo, Dispatch, SetStateAction } from 'react';
+import { useEffect, useMemo, Dispatch, SetStateAction, memo } from 'react';
 
 import CalendarDateBox from 'components/calendar/CalendarDateBox';
 import Icon from 'components/common/Button/Icon';
@@ -114,6 +114,8 @@ export default function Calendar({ filter, setFilter }: IProps) {
     return dayObj.isBefore(dayjs(), 'month');
   }, [endDate, updateMonthYear]);
 
+  const MemorizedDateBox = memo(CalendarDateBox);
+
   useEffect(() => {
     if (myBookTimeData && myBookTimeData.endDate) {
       setCalendarState(getCalendarDetail(dayjs(myBookTimeData.endDate)));
@@ -152,7 +154,7 @@ export default function Calendar({ filter, setFilter }: IProps) {
           previous
         </Icon>
         <CalendarBox numRows={numRows}>
-          <CalendarDateBox
+          <MemorizedDateBox
             startDate={startDate}
             endDate={endDate}
             usersBooksId={parseInt(users_books_id)}
@@ -164,7 +166,7 @@ export default function Calendar({ filter, setFilter }: IProps) {
           />
           {[...Array(calendarState.lastDate)].map((_, i) =>
             i > 0 ? (
-              <CalendarDateBox
+              <MemorizedDateBox
                 startDate={startDate}
                 endDate={endDate}
                 usersBooksId={parseInt(users_books_id)}

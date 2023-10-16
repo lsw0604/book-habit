@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { v4 } from 'uuid';
 
 import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 import Item from 'components/MyBooks/Item';
@@ -97,8 +98,8 @@ export default function List({ status }: IProps) {
       ) : (
         <Container>
           {data && data.pages && data.pages[0].books.length > 0 ? (
-            data.pages.map((page, index) => (
-              <Page key={index}>
+            data.pages.map((page) => (
+              <Page key={v4()}>
                 {page.books.map((book) => (
                   <Item key={book.id} {...book} />
                 ))}

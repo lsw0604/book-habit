@@ -7,7 +7,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const HomePage = () => {
+const SearchPage = () => {
   return (
     <Container>
       <Search />
@@ -15,4 +15,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default SearchPage;

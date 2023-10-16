@@ -6,6 +6,7 @@ import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useToastHook from '@hooks/useToastHook';
 import { IconClose } from '@style/icons';
+import { v4 } from 'uuid';
 
 const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
@@ -129,9 +130,7 @@ export default function DateBox({
         ) : (
           <StatusWrapper>
             {dataMapped &&
-              dataMapped.map((status, index) => (
-                <Status key={index} status={status} />
-              ))}
+              dataMapped.map((status) => <Status key={v4()} status={status} />)}
           </StatusWrapper>
         )}
       </Contents>

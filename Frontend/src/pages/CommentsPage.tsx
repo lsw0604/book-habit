@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { QueryClient } from '@tanstack/react-query';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
@@ -61,6 +61,8 @@ export default function CommentsPage() {
   const [second, setSecond] = useState<number>(59);
   const [minute, setMinute] = useState<number>(2);
 
+  const MemorizedComponent = memo(PublicCommentsItem);
+
   const {
     data: comments,
     isFetching,
@@ -117,7 +119,7 @@ export default function CommentsPage() {
               </LoaderContainer>
             )}
             {comments?.map((comment) => (
-              <PublicCommentsItem key={comment.comment_id} {...comment} />
+              <MemorizedComponent key={comment.comment_id} {...comment} />
             ))}
           </Container>
         )

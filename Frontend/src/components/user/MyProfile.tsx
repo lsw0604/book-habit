@@ -3,56 +3,50 @@ import useProfileInfoQuery from '@queries/profile/useProfileInfoQuery';
 import { IconFemale, IconMale } from '@style/icons';
 import Avatar from 'components/common/Avatar';
 import Loader from 'components/common/Loader';
+import { METHODS } from 'http';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
 
 const Container = styled.div`
+  width: 100%;
+  position: absolute;
   display: flex;
   flex-direction: column;
-  position: relative;
-  max-width: 375px;
-  width: 100%;
-  border-radius: 1rem;
-  height: 50%;
+  bottom: 0;
+  border-radius: 2rem 2rem 0 0;
+  height: 70%;
   gap: 1rem;
-  padding: 2rem;
   background-color: ${({ theme }) => theme.mode.sub};
-  box-shadow: ${({ theme }) => theme.shadow.lg};
   @media screen and (min-width: 1280px) {
     max-width: 500px;
   }
 `;
 
 const ProfileHeader = styled.div`
+  width: 100%;
+  position: absolute;
+  top: -4rem;
   display: flex;
   justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  width: 100%;
-  gap: 1rem;
-  span {
-    font-size: 12px;
-    color: ${({ theme }) => theme.mode.typo_sub};
-  }
-  .name {
-    font-size: 30px;
-    color: ${({ theme }) => theme.mode.typo_main};
-    svg {
-      height: 30px;
-      margin: 0 8px;
-      fill: ${({ theme }) => theme.mode.typo_sub};
-    }
-  }
+  align-items: center;
 `;
 
-const ProfileContent = styled.div`
+const ProfileContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+`;
+
+const ProfileContent = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 5rem 2rem 2rem 2rem;
+  display: flex;
+  justify-content: center;
 `;
 
 const Stack = styled.div`
@@ -92,6 +86,21 @@ export default function MyProfile() {
   const { mutate, isLoading: profileEditIsLoading } = useProfileEditMutation();
   const { profile, age, gender, name } = useRecoilValue(userAtom);
   const { data, isLoading, isFetching } = useProfileInfoQuery();
+
+  const fetchLike = async () => {
+    const response = await fetch('http://localhost:3001/api/auth/like', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${window.localStorage.getItem('ACCESS')}`,
+      },
+    }).then((res) => res.json());
+    console.log(response);
+
+    return response;
+  };
+
   const editPhoto = () => {
     const inputEl: HTMLInputElement = document.createElement('input');
     inputEl.type = 'file';
@@ -105,42 +114,42 @@ export default function MyProfile() {
     };
     inputEl.click();
   };
+
+  fetchLike();
   return (
-    <Container>
-      <ProfileHeader>
-        <Avatar
-          src={profile}
-          size="110px"
-          isLoading={profileEditIsLoading}
-          editProfile={editPhoto}
-        />
-        <span className="name">
-          {name}
-          {genderObj[gender as 'female' | 'male']}
-          {age}
-        </span>
-        <span>프로필 사진을 수정하시려면 프로필 사진을 눌러주세요.</span>
-      </ProfileHeader>
-      <ProfileContent>
-        {isLoading || isFetching ? (
-          <Loader />
-        ) : (
-          <Box>
-            <Stack>
-              <span className="count">{data?.books_count}</span>
-              <span>books</span>
-            </Stack>
-            <Stack>
-              <span className="count">{data?.comments_count}</span>
-              <span>comments</span>
-            </Stack>
-            <Stack>
-              <span className="count">{data?.likes_count}</span>
-              <span>likes</span>
-            </Stack>
-          </Box>
-        )}
-      </ProfileContent>
-    </Container>
+    <>
+      <Container>
+        <ProfileHeader>
+          <Avatar
+            src={profile}
+            size="140px"
+            isLoading={profileEditIsLoading}
+            editProfile={editPhoto}
+          />
+        </ProfileHeader>
+        <ProfileContainer>
+          <ProfileContent>
+            {isLoading || isFetching ? (
+              <Loader />
+            ) : (
+              <Box>
+                <Stack>
+                  <span className="count">{data?.books_count}</span>
+                  <span>books</span>
+                </Stack>
+                <Stack>
+                  <span className="count">{data?.comments_count}</span>
+                  <span>comments</span>
+                </Stack>
+                <Stack>
+                  <span className="count">{data?.likes_count}</span>
+                  <span>likes</span>
+                </Stack>
+              </Box>
+            )}
+          </ProfileContent>
+        </ProfileContainer>
+      </Container>
+    </>
   );
 }

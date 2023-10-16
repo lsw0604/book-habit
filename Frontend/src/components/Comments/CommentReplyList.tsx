@@ -1,8 +1,10 @@
+import { memo } from 'react';
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+
 import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 import Loader from 'components/common/Loader';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import CommentReplyItem from './CommentReplyItem';
+import CommentReplyItem from 'components/Comments/CommentReplyItem';
 
 const Container = styled.ul`
   width: 100%;
@@ -36,12 +38,14 @@ export default function CommentReplyList() {
     parseInt(comment_id)
   );
 
+  const MemorizedReplyItem = memo(CommentReplyItem);
+
   return (
     <Container>
       {isLoading ? (
         <Loader />
       ) : data && data?.length > 0 ? (
-        data.map((v) => <CommentReplyItem key={v.reply_id} {...v} />)
+        data.map((v) => <MemorizedReplyItem key={v.reply_id} {...v} />)
       ) : (
         <EmptyWrapper>아직 등록된 댓글이 없습니다.</EmptyWrapper>
       )}

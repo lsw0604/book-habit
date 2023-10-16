@@ -122,8 +122,8 @@ const Radio = <T extends string | number | boolean>({
         {label && <Heading>{label}</Heading>}
         <Wrapper>
           {options &&
-            options.map((option, index) => (
-              <Label key={index}>
+            options.map((option) => (
+              <Label key={option.label}>
                 <Input
                   type="radio"
                   checked={value === option.value}

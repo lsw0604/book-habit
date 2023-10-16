@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Header from 'components/header/Header';
 import Loader from 'components/common/Loader';
-import BottomNavigationBar from 'components/bottom/BottomNavigationBar';
+import { BottomNavigationBar } from 'components/bottom/BottomNavigationBar';
 import DefaultLayout from '@pages/layout/DefaultLayout';
 import IsAuthLayout from '@pages/layout/IsAuthLayout';
 import Home from '@pages/HomePage';
