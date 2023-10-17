@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
@@ -8,7 +8,23 @@ import HeaderProfile from 'components/header/HeaderProfile';
 import Loader from 'components/common/Loader';
 import { IconLeftArrow } from '@style/icons';
 
-const Container = styled.nav`
+const headerCSSHandler = (isUriProfile: boolean) => {
+  return !isUriProfile
+    ? css`
+        background-color: ${({ theme }) => theme.mode.sub};
+        box-shadow: ${({ theme }) => theme.shadow.md};
+      `
+    : css`
+        background-color: ${({ theme }) => theme.colors.spinner};
+
+        @media screen and (min-width: 1280px) {
+          background-color: ${({ theme }) => theme.mode.sub};
+          box-shadow: ${({ theme }) => theme.shadow.md};
+        }
+      `;
+};
+
+const Container = styled.nav<{ isUriProfile: boolean }>`
   position: fixed;
   height: 4rem;
   width: 100vw;
@@ -16,9 +32,8 @@ const Container = styled.nav`
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background-color: ${({ theme }) => theme.mode.sub};
-  box-shadow: ${({ theme }) => theme.shadow.md};
   z-index: 9998;
+  ${({ isUriProfile }) => headerCSSHandler(isUriProfile)}
 `;
 
 const Wrapper = styled.div`
@@ -68,12 +83,14 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
   return (
     <>
       {pathname !== '/' && (
-        <Container>
+        <Container isUriProfile={pathname === '/profile'}>
           {logoHandler(pathname)}
           <Wrapper>
             {!isLoading ? (
               isLogged ? (
-                <HeaderProfile />
+                pathname === '/profile' ? null : (
+                  <HeaderProfile />
+                )
               ) : (
                 <HeaderAuth />
               )

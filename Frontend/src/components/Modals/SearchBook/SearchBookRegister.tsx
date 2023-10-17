@@ -78,7 +78,7 @@ const Stack = styled.div`
   width: 100%;
   margin-bottom: 8px;
 `;
-// export default function SearchBookRegister() {
+
 const searchBookRegister = () => {
   const [value, setValue] = useState<ModalType>('');
 
@@ -214,13 +214,7 @@ const searchBookRegister = () => {
             onChange={onChange}
           />
         </Stack>
-        <Stack>
-          {/* {value === '' && <Skeleton key="skeleton" />}
-          {value === '다읽음' && <Read key="read" />}
-          {value === '읽는중' && <Reading key="reading" />}
-          {value === '읽고싶음' && <ReadTo key="readTo" />} */}
-          {memorizedRegisterComponent}
-        </Stack>
+        <Stack>{memorizedRegisterComponent}</Stack>
       </Content>
       <Stack>
         <Button

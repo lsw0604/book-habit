@@ -18,7 +18,7 @@ const Layout = styled.div<{ pathname: string }>`
   height: 100vh;
   padding: 0;
   box-sizing: border-box;
-  ${({ pathname }) => pathname !== '/' && media}
+  ${({ pathname }) => pathname !== '/' && media};
 `;
 
 const DefaultLayout = ({ children }: { children: ReactNode }) => {

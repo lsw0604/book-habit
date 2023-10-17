@@ -87,3 +87,10 @@ export const profileInfoAPI = async () => {
   );
   return data;
 };
+
+export const profileLikeListAPI = async (page: number) => {
+  const { data } = await axios.get<ProfileLikeInfinityQueryResponseType>(
+    `/api/auth/like?page=${page}`
+  );
+  return data;
+};

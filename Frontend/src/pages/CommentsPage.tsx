@@ -1,13 +1,11 @@
-import { useEffect, useState, memo } from 'react';
-import { QueryClient } from '@tanstack/react-query';
+import { memo } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import Loader from 'components/common/Loader';
-import Icon from 'components/common/Button/Icon';
 import PublicCommentsItem from 'components/Comments/Item/PublicCommentItem';
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
-import { IconRefresh } from '@style/icons';
+import CommentTimer from 'components/Comments/CommentTimer';
 
 const Container = styled.ul`
   width: 100%;
@@ -40,60 +38,10 @@ const LoaderContainer = styled.div`
   align-items: center;
 `;
 
-const TimerContainer = styled.div`
-  width: 100%;
-  font-size: 12px;
-  display: flex;
-  justify-content: end;
-  height: 32px;
-`;
-
-const TimerWord = styled.p`
-  margin-right: 8px;
-  line-height: 32px;
-  text-justify: center;
-  color: ${({ theme }) => theme.mode.typo_main};
-`;
-
 export default function CommentsPage() {
-  const queryClient = new QueryClient();
-
-  const [second, setSecond] = useState<number>(59);
-  const [minute, setMinute] = useState<number>(2);
-
   const MemorizedComponent = memo(PublicCommentsItem);
 
-  const {
-    data: comments,
-    isFetching,
-    isLoading,
-    refetch,
-  } = useCommentsListQuery();
-
-  const refreshHandler = () => {
-    setMinute(2);
-    setSecond(59);
-    queryClient.invalidateQueries({
-      queryKey: ['USE_COMMENTS_LIST_QUERY'],
-    });
-    refetch();
-  };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSecond((prev) => prev - 1);
-      if (second === 0) {
-        setSecond(60);
-        setMinute((prev) => prev - 1);
-      }
-
-      if (minute === 0 && second === 0) {
-        setMinute(2);
-        setSecond(59);
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [second, setSecond]);
+  const { data: comments, isFetching, isLoading } = useCommentsListQuery();
 
   return (
     <>
@@ -105,14 +53,7 @@ export default function CommentsPage() {
           </EmptyContainer>
         ) : (
           <Container>
-            <TimerContainer>
-              <TimerWord>
-                {minute}분{second}초 후에 새로고침 됩니다.
-              </TimerWord>
-              <Icon icon={<IconRefresh />} onClick={refreshHandler}>
-                refresh
-              </Icon>
-            </TimerContainer>
+            <CommentTimer />
             {isFetching && (
               <LoaderContainer>
                 <Loader />
