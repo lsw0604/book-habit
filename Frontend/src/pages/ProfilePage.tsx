@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import ProfileHeader from 'components/user/Profile/ProfileHeader';
 import ProfileDescription from 'components/user/Profile/ProfileDescription';
+import ProfileList from 'components/user/Profile/ProfileList';
 
 const Container = styled.div`
   width: 100%;
@@ -30,6 +31,8 @@ const ProfileContent = styled.div`
   width: 100%;
   height: 100%;
   padding: 5rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ProfileHeaderBackground = styled.div`
@@ -48,6 +51,7 @@ export default function ProfilePage() {
         <ProfileHeader />
         <ProfileContent>
           <ProfileDescription />
+          <ProfileList />
         </ProfileContent>
       </ProfileContainer>
       <ProfileHeaderBackground />

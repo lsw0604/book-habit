@@ -1,12 +1,10 @@
 import { createGlobalStyle, css } from 'styled-components';
 import reset from 'styled-reset';
-import '@fontsource/noto-sans-kr/700.css';
 
 const globalStyle = css`
   ${reset};
   * {
     box-sizing: border-box;
-    font-family: 'Noto Sans KR', sans-serif;
   }
   body {
     font-family: 'Noto Sans KR', sans-serif;

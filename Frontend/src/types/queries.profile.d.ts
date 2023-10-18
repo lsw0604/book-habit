@@ -13,16 +13,39 @@ type ProfileInfoQueryResponseType = {
   likes_count: number;
 };
 
-// useProfileLikeInfinityQuery의 타입들
-
-type ProfileLikeInfinityQueryResponseType = {
+// useProfileLikeQuery의 타입들
+type ProfileLikeQueryRequestType = number;
+type ProfileLikeQueryResponseType = {
+  page: number;
+  totalPage: number;
+  totalItem: number;
   nextPage?: number;
   prevPage?: number;
-  like_list: ProfileLikeInfinityQueryListType;
+  items: ProfileLikeQueryListType;
 };
-type ProfileLikeInfinityQueryListType = ProfileLikeInfinityQueryItemType[];
-type ProfileLikeInfinityQueryItemType = {
+type ProfileLikeQueryListType = ProfileLikeQueryItemType[];
+type ProfileLikeQueryItemType = {
   like_id: number;
+  status: '다읽음' | '읽는중' | '읽기전';
+  comment_id: number;
+  title: string;
+  profile: string;
+  name: string;
+};
+
+// useProfileReplyQuery의 타입들
+type ProfileReplyQueryRequestType = number;
+type ProfileReplyQueryResponseType = {
+  page: number;
+  totalPage: number;
+  totalItem: number;
+  nextPage?: number;
+  prevPage?: number;
+  items: ProfileReplyQueryListType;
+};
+type ProfileReplyQueryListType = ProfileReplyQueryItemType[];
+type ProfileReplyQueryItemType = {
+  reply_id: number;
   status: '다읽음' | '읽는중' | '읽기전';
   comment_id: number;
   title: string;

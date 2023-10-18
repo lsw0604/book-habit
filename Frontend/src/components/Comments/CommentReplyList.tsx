@@ -22,7 +22,7 @@ const LoaderWrapper = styled.div`
 
 const EmptyWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;

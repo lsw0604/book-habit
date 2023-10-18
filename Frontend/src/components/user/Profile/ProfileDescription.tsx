@@ -3,21 +3,12 @@ import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 import { IconFemale, IconMale } from '@style/icons';
 import { customize } from '@style/colors';
-import ProfileList from './ProfileList';
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Description = styled.div`
-  width: 100%;
   height: auto;
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
   padding: 1rem 0;
@@ -57,15 +48,12 @@ export default function ProfileDescription() {
 
   return (
     <Container>
-      <Description>
-        <p className="name">{name}</p>
-        <p className="email">{email}</p>
-        <p className="age">
-          {genderObj[gender as 'female' | 'male']}
-          {age}
-        </p>
-      </Description>
-      <ProfileList />
+      <p className="name">{name}</p>
+      <p className="email">{email}</p>
+      <p className="age">
+        {genderObj[gender as 'female' | 'male']}
+        {age}
+      </p>
     </Container>
   );
 }

@@ -88,9 +88,18 @@ export const profileInfoAPI = async () => {
   return data;
 };
 
-export const profileLikeListAPI = async (page: number) => {
-  const { data } = await axios.get<ProfileLikeInfinityQueryResponseType>(
+export const profileLikeListAPI = async (page: ProfileLikeQueryRequestType) => {
+  const { data } = await axios.get<ProfileLikeQueryResponseType>(
     `/api/auth/like?page=${page}`
+  );
+  return data;
+};
+
+export const profileReplyListAPI = async (
+  page: ProfileReplyQueryRequestType
+) => {
+  const { data } = await axios.get<ProfileReplyQueryResponseType>(
+    `/api/auth/reply?page=${page}`
   );
   return data;
 };

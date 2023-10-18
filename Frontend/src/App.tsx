@@ -7,6 +7,8 @@ import Toast from 'components/common/Toast';
 import useThemeHook from '@hooks/useThemeHook';
 import useAccessHook from '@hooks/useAccessHook';
 
+import '@fontsource/noto-sans-kr/korean-700.css';
+
 export default function App(): ReactElement {
   const { theme } = useThemeHook();
   const isLoading = useAccessHook();

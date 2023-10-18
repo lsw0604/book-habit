@@ -12,6 +12,16 @@ export default defineConfig({
     include: ['react', 'react-dom'],
   },
   resolve: {
-    alias: [{ find: '@', replacement: path.resolve(__dirname, './scr') }],
+    alias: [{ find: '@', replacement: path.resolve(__dirname, './src') }],
+  },
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      treeshake: true,
+      output: {
+        minifyInternalExports: true,
+        manualChunks: undefined,
+      },
+    },
   },
 });

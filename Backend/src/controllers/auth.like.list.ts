@@ -45,13 +45,20 @@ export default async function authLikeList(req: Request, res: Response, next: Ne
       logging.debug(NAMESPACE, '[AUTH_LIKE_LIST_COUNT_RESULT]', AUTH_LIKE_LIST_COUNT_RESULT);
 
       if (AUTH_LIKE_LIST_COUNT_RESULT[0].count === 0)
-        return res.status(200).json({ nextPage: undefined, totalPage: undefined, like_list: [] });
+        return res.status(200).json({
+          page: 0,
+          totalPage: 0,
+          totalItem: 0,
+          nextPage: undefined,
+          prevPage: undefined,
+          items: [],
+        });
 
-      const totalCount = AUTH_LIKE_LIST_COUNT_RESULT[0].count;
-      const totalPage = Math.ceil(totalCount / 5);
+      const totalItem = AUTH_LIKE_LIST_COUNT_RESULT[0].count;
+      const totalPage = Math.ceil(totalItem / 5);
 
       const AUTH_LIKE_LIST_SQL =
-        'SELECT cl.id AS like_id, ubc.status,ubc.id AS comment_id, bs.title, us.profile, us.name ' +
+        'SELECT cl.id AS like_id, ubc.status, ubc.id AS comment_id, bs.title, us.profile, us.name ' +
         'FROM comments_likes AS cl ' +
         'RIGHT JOIN users_books_comments AS ubc ON cl.users_books_comments_id = ubc.id ' +
         'RIGHT JOIN books AS bs ON ubc.books_id = bs.id ' +
@@ -68,9 +75,12 @@ export default async function authLikeList(req: Request, res: Response, next: Ne
 
       connection.release();
       res.status(200).json({
+        page,
+        totalPage,
+        totalItem,
         nextPage: page >= totalPage ? undefined : page + 1,
         prevPage: page <= 0 ? undefined : page - 1,
-        like_list: AUTH_LIKE_LIST_RESULT,
+        items: AUTH_LIKE_LIST_RESULT,
       });
     } catch (error: any) {
       connection.release();

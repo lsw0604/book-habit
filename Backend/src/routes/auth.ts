@@ -11,6 +11,7 @@ import kakaoUpdate from '../controllers/auth.kakao.update';
 import profileUpdate from '../controllers/auth.profile.update';
 import authInfo from '../controllers/auth.info';
 import authLikeList from '../controllers/auth.like.list';
+import authReplyList from '../controllers/auth.reply.list';
 
 import upload from '../middleware/multer';
 
@@ -39,6 +40,7 @@ authRouter.get('/kakao', kakao);
 authRouter.get('/kakao/callback', KakaoCallback);
 authRouter.get('/info', access, authInfo);
 authRouter.get('/like', access, authLikeList);
+authRouter.get('/reply', access, authReplyList);
 
 authRouter.post('/register', register);
 authRouter.post('/login', local);

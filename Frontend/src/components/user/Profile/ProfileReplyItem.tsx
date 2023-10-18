@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import Avatar from 'components/common/Avatar';
 import { customize } from '@style/colors';
+import Avatar from 'components/common/Avatar';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Container = styled.article`
   display: flex;
@@ -45,13 +45,13 @@ const SubHighLightWord = styled.p`
   }
 `;
 
-export default function ProfileLikeItem({
+export default function ProfileReplyItem({
   name,
   comment_id,
+  profile,
   status,
   title,
-  profile,
-}: ProfileLikeQueryItemType) {
+}: ProfileReplyQueryItemType) {
   const navigate = useNavigate();
 
   const statusObj: Record<'다읽음' | '읽기전' | '읽는중', string> = {
@@ -72,8 +72,8 @@ export default function ProfileLikeItem({
         </SubHighLightWord>
         <p>(을)를&nbsp;</p>
         <p>{statusObj[status]}&nbsp;</p>한줄평에&nbsp;
-        <SubHighLightWord>좋아요</SubHighLightWord>
-        <p>를 남겼어요.</p>
+        <SubHighLightWord>댓글</SubHighLightWord>
+        <p>을 남겼어요.</p>
       </Content>
     </Container>
   );

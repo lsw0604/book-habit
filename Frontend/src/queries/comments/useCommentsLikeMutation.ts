@@ -5,6 +5,7 @@ import useToastHook from '@hooks/useToastHook';
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import { commentsLikeRegisterAPI } from 'lib/api/comments';
 import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
+import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 
 export default function useCommentsLikeMutation(
   comment_id: CommentsLikeMutationRequestType
@@ -12,7 +13,9 @@ export default function useCommentsLikeMutation(
   const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
   const queryClient = new QueryClient();
 
-  const { refetch } = useCommentsLikeListQuery(comment_id);
+  const { refetch: commentsLikeListRefetch } =
+    useCommentsLikeListQuery(comment_id);
+  const { refetch: profileLikeListRefetch } = useProfileLikeQuery(1);
 
   const { addToast } = useToastHook();
 
@@ -20,16 +23,23 @@ export default function useCommentsLikeMutation(
     CommentsLikeMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     CommentsLikeMutationRequestType
-  >([REACT_QUERY_KEY, comment_id], commentsLikeRegisterAPI);
+  >([REACT_QUERY_KEY, comment_id], commentsLikeRegisterAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY', comment_id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['USE_PROFILE_LIKE_QUERY'],
+      });
+      commentsLikeListRefetch();
+      profileLikeListRefetch();
+    },
+  });
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
       addToast({ message, status });
-      queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY', comment_id],
-      });
-      refetch();
     }
   }, [isSuccess, data]);
 

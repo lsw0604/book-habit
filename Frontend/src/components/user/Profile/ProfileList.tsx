@@ -1,25 +1,36 @@
-import styled from 'styled-components';
 import { useState, memo } from 'react';
+import styled from 'styled-components';
+
 import { IconCommentDots, IconHeart } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import RadioButton from 'components/common/Radio/RadioButton';
-import ProfileLikeList from './ProfileLikeList';
-import ProfileReplyList from './ProfileReplyList';
+import ProfileLikeList from 'components/user/Profile/ProfileLikeList';
+import ProfileReplyList from 'components/user/Profile/ProfileReplyList';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: scroll;
+  position: relative;
+  justify-content: space-between;
 `;
 
 const Stack = styled.div`
   width: 100%;
-  position: relative;
-  margin-bottom: 8px;
+  height: auto;
+  margin-bottom: 16px;
   box-shadow: ${({ theme }) => theme.shadow.md};
   padding: 0.5rem;
   border-radius: 1rem;
+`;
+
+const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: auto;
 `;
 
 export default function ProfileList() {
@@ -55,8 +66,10 @@ export default function ProfileList() {
           options={options}
         />
       </Stack>
-      {value === 'like' && <ProfileLikeList />}
-      {value === 'reply' && <ProfileReplyList />}
+      <Content>
+        {value === 'like' && <ProfileLikeList />}
+        {value === 'reply' && <ProfileReplyList />}
+      </Content>
     </Container>
   );
 }

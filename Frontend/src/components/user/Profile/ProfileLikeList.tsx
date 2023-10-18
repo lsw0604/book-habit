@@ -1,29 +1,86 @@
-import useProfileLikeInfinityQuery from '@queries/profile/useProfileLikeInfinityQuery';
 import styled from 'styled-components';
-import ProfileLikeItem from './ProfileLikeItem';
+import { useState } from 'react';
+
+import Loader from 'components/common/Loader';
+import ProfileLikeItem from 'components/user/Profile/ProfileLikeItem';
+import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
+import Pagination from 'components/common/Pagination';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  border: 2px solid red;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
 `;
+
+const EmptyContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
+  position: relative;
+`;
+
+const LikeContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+`;
+
 export default function ProfileLikeList() {
-  const {
-    data,
-    isLoading,
-    isFetching,
-    fetchNextPage,
-    fetchPreviousPage,
-    hasNextPage,
-    hasPreviousPage,
-  } = useProfileLikeInfinityQuery();
+  const [page, setPage] = useState<number>(1);
+  const { data, isFetching, isLoading } = useProfileLikeQuery(page);
+  if (data === undefined)
+    return (
+      <LoadingWrapper>
+        <Loader size={2} />
+      </LoadingWrapper>
+    );
+
+  if (data?.items.length === 0)
+    return (
+      <Container>
+        <EmptyContainer>등록된 좋아요가 없습니다.</EmptyContainer>
+      </Container>
+    );
+
   return (
     <Container>
-      {data?.pages.map((page) =>
-        page.like_list.map((like) => (
-          <ProfileLikeItem key={like.like_id} {...like} />
-        ))
+      {!isLoading || !isFetching ? (
+        <LikeContainer>
+          {data?.items.map((item) => (
+            <ProfileLikeItem key={item.like_id} {...item} />
+          ))}
+        </LikeContainer>
+      ) : (
+        <LoadingWrapper>
+          <Loader size={2} />
+        </LoadingWrapper>
       )}
+      <Pagination
+        page={page}
+        setPage={setPage}
+        totalPage={data.totalPage}
+        nextPage={data.nextPage}
+        prevPage={data.prevPage}
+      />
     </Container>
   );
 }
