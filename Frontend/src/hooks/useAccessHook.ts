@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { accessAPI } from 'lib/api/auth';
 import useUserStateHook from '@hooks/useUserStateHook';
 
 export default function useAccessHook() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setUserState, onChangeUserStateInitial } = useUserStateHook();
 
   const fetch = async () => {
     try {
-      setIsLoading(true);
       const {
         age,
         email,
@@ -32,20 +30,18 @@ export default function useAccessHook() {
           provider,
           profile,
         });
-        setIsLoading(false);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err && err.response && err.response.data) {
         onChangeUserStateInitial();
       }
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetch();
+    if (window.localStorage.getItem('ACCESS')) {
+      fetch();
+    }
   }, []);
-
-  return isLoading;
 }

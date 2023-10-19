@@ -32,11 +32,11 @@ const LoadingWrapper = styled.div`
   align-items: center;
 `;
 
-export default function Router({ isLoading }: { isLoading: boolean }) {
+export default function Router() {
   return (
     <BrowserRouter>
       <header>
-        <Header isLoading={isLoading} />
+        <Header />
       </header>
       <main>
         <section>
@@ -83,17 +83,17 @@ export default function Router({ isLoading }: { isLoading: boolean }) {
       <footer>
         <BottomNavigationBar />
       </footer>
-      <ModalPortal>
-        <Suspense
-          fallback={
-            <LoadingWrapper>
-              <Loader />
-            </LoadingWrapper>
-          }
-        >
+      <Suspense
+        fallback={
+          <LoadingWrapper>
+            <Loader />
+          </LoadingWrapper>
+        }
+      >
+        <ModalPortal>
           <BottomSheet />
-        </Suspense>
-      </ModalPortal>
+        </ModalPortal>
+      </Suspense>
     </BrowserRouter>
   );
 }

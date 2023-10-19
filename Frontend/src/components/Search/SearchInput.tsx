@@ -15,24 +15,22 @@ const Container = styled.form`
   width: 100%;
   display: flex;
   padding: 0 1rem;
+  flex-direction: column;
+  position: relative;
 `;
 
 const IconWrapper = styled.div`
   width: 0px;
   height: 0px;
-  position: relative;
-  top: 5px;
-  right: 35px;
+  position: absolute;
+  top: 30px;
+  right: 55px;
 `;
 
 export default function SearchInput({ search, onChange, onSubmit }: IProps) {
   return (
     <Container onSubmit={onSubmit}>
-      <Input
-        style={{ borderRadius: '5rem', padding: '0 2rem 0 1rem' }}
-        value={search}
-        onChange={onChange}
-      />
+      <Input value={search} onChange={onChange} label="책 검색하기" />
       <IconWrapper>
         <Icon type="submit" icon={<IconSearch />}>
           Search

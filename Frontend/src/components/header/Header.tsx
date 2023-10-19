@@ -5,7 +5,6 @@ import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 import HeaderAuth from 'components/header/HeaderAuth';
 import HeaderProfile from 'components/header/HeaderProfile';
-import Loader from 'components/common/Loader';
 import { IconLeftArrow } from '@style/icons';
 
 const headerCSSHandler = (isUriProfile: boolean) => {
@@ -53,14 +52,7 @@ const LogoWrapper = styled.div`
   }
 `;
 
-const LoaderWrapper = styled.div`
-  width: 140px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export default function Index({ isLoading }: { isLoading: boolean }) {
+export default function Index() {
   const navigate = useNavigate();
   const { isLogged } = useRecoilValue(userAtom);
   const { pathname } = useLocation();
@@ -86,18 +78,12 @@ export default function Index({ isLoading }: { isLoading: boolean }) {
         <Container isUriProfile={pathname === '/profile'}>
           {logoHandler(pathname)}
           <Wrapper>
-            {!isLoading ? (
-              isLogged ? (
-                pathname === '/profile' ? null : (
-                  <HeaderProfile />
-                )
-              ) : (
-                <HeaderAuth />
+            {isLogged ? (
+              pathname === '/profile' ? null : (
+                <HeaderProfile />
               )
             ) : (
-              <LoaderWrapper>
-                <Loader />
-              </LoaderWrapper>
+              <HeaderAuth />
             )}
           </Wrapper>
         </Container>

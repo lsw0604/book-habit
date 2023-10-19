@@ -41,14 +41,12 @@ const Container = styled.div<{ icon: boolean }>`
 `;
 
 const Label = styled.label`
-  span {
-    margin-left: 10px;
-    margin-bottom: 8px;
-    display: block;
-    color: ${({ theme }) => theme.mode.typo_sub};
-    font-size: 14px;
-    line-height: 18px;
-  }
+  margin-left: 10px;
+  margin-bottom: 8px;
+  display: block;
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 14px;
+  line-height: 18px;
 `;
 
 const Icon = styled.div`
@@ -73,11 +71,7 @@ const Index = ({
 }: IProps) => {
   return (
     <>
-      {label && (
-        <Label>
-          <span>{label}</span>
-        </Label>
-      )}
+      {label && <Label>{label}</Label>}
       <Container icon={!!icon}>
         <input {...props} />
         <Icon>{icon}</Icon>
