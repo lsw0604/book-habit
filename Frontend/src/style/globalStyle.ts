@@ -1,5 +1,6 @@
 import { createGlobalStyle, css } from 'styled-components';
 import reset from 'styled-reset';
+import '@fontsource/noto-sans-kr/korean-700.css';
 
 const globalStyle = css`
   ${reset};

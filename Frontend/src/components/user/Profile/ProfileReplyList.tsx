@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import styled from 'styled-components';
+import { useState, useEffect } from 'react';
 
 import Loader from 'components/common/Loader';
-import styled from 'styled-components';
 import ProfileReplyItem from './ProfileReplyItem';
-import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';
 import Pagination from 'components/common/Pagination';
+import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';
 
 const Container = styled.div`
   width: 100%;
@@ -12,7 +12,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  position: relative;
 `;
 
 const EmptyContainer = styled.div`
@@ -33,6 +32,7 @@ const ReplyContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: scroll;
 `;
 
 const LoadingWrapper = styled.div`
@@ -46,7 +46,12 @@ const LoadingWrapper = styled.div`
 
 export default function ProfileReplyList() {
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading, isFetching } = useProfileReplyQuery(page);
+  const { data, isLoading, isFetching, refetch } = useProfileReplyQuery(page);
+
+  useEffect(() => {
+    refetch();
+  }, [page]);
+
   if (data === undefined)
     return (
       <LoadingWrapper>
@@ -57,7 +62,7 @@ export default function ProfileReplyList() {
   if (data?.items.length === 0)
     return (
       <Container>
-        <EmptyContainer>내가 등록한 댓글이 없습니다.</EmptyContainer>
+        <EmptyContainer>등록된 댓글이 없습니다.</EmptyContainer>
       </Container>
     );
 

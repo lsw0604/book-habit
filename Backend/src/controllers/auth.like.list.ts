@@ -44,7 +44,8 @@ export default async function authLikeList(req: Request, res: Response, next: Ne
       );
       logging.debug(NAMESPACE, '[AUTH_LIKE_LIST_COUNT_RESULT]', AUTH_LIKE_LIST_COUNT_RESULT);
 
-      if (AUTH_LIKE_LIST_COUNT_RESULT[0].count === 0)
+      if (AUTH_LIKE_LIST_COUNT_RESULT[0].count === 0) {
+        connection.release();
         return res.status(200).json({
           page: 0,
           totalPage: 0,
@@ -53,6 +54,7 @@ export default async function authLikeList(req: Request, res: Response, next: Ne
           prevPage: undefined,
           items: [],
         });
+      }
 
       const totalItem = AUTH_LIKE_LIST_COUNT_RESULT[0].count;
       const totalPage = Math.ceil(totalItem / 5);

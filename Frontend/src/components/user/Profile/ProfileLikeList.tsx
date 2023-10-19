@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Loader from 'components/common/Loader';
 import ProfileLikeItem from 'components/user/Profile/ProfileLikeItem';
-import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import Pagination from 'components/common/Pagination';
+import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 
 const Container = styled.div`
   width: 100%;
@@ -12,7 +12,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  position: relative;
 `;
 
 const EmptyContainer = styled.div`
@@ -33,6 +32,7 @@ const LikeContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: scroll;
 `;
 
 const LoadingWrapper = styled.div`
@@ -46,7 +46,12 @@ const LoadingWrapper = styled.div`
 
 export default function ProfileLikeList() {
   const [page, setPage] = useState<number>(1);
-  const { data, isFetching, isLoading } = useProfileLikeQuery(page);
+  const { data, isFetching, isLoading, refetch } = useProfileLikeQuery(page);
+
+  useEffect(() => {
+    refetch();
+  }, [page]);
+
   if (data === undefined)
     return (
       <LoadingWrapper>

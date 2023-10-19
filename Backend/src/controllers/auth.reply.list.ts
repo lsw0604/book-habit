@@ -44,7 +44,8 @@ export default async function authReplyList(req: Request, res: Response, next: N
       );
       logging.debug(NAMESPACE, '[AUTH_REPLY_LIST_COUNT_RESULT]', AUTH_REPLY_LIST_COUNT_RESULT);
 
-      if (AUTH_REPLY_LIST_COUNT_RESULT[0].count === 0)
+      if (AUTH_REPLY_LIST_COUNT_RESULT[0].count === 0) {
+        connection.release();
         return res.status(200).json({
           page: 0,
           totalPage: 0,
@@ -53,6 +54,7 @@ export default async function authReplyList(req: Request, res: Response, next: N
           prevPage: undefined,
           items: [],
         });
+      }
 
       const totalItem = AUTH_REPLY_LIST_COUNT_RESULT[0].count;
       const totalPage = Math.ceil(totalItem / 5);

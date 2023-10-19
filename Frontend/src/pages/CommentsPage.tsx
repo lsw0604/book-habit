@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
@@ -39,14 +38,12 @@ const LoaderContainer = styled.div`
 `;
 
 export default function CommentsPage() {
-  const MemorizedComponent = memo(PublicCommentsItem);
-
-  const { data: comments, isFetching, isLoading } = useCommentsListQuery();
+  const { data, isFetching, isLoading } = useCommentsListQuery();
 
   return (
     <>
       {!isLoading ? (
-        comments?.length === 0 ? (
+        data?.comments.length === 0 ? (
           <EmptyContainer>
             {`${parseInt(dayjs().format('MM'))}`}월에 등록된 한줄평이 아직
             없어요.
@@ -59,8 +56,8 @@ export default function CommentsPage() {
                 <Loader />
               </LoaderContainer>
             )}
-            {comments?.map((comment) => (
-              <MemorizedComponent key={comment.comment_id} {...comment} />
+            {data?.comments?.map((comment) => (
+              <PublicCommentsItem key={comment.comment_id} {...comment} />
             ))}
           </Container>
         )

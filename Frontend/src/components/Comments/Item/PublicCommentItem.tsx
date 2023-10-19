@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 import CommentHeart from 'components/Comments/CommentHeart';
+import CommentReply from 'components/Comments/CommentReply';
 import CommentHeaderInfo from 'components/Comments/CommentHeaderInfo';
-import CommentReply from '../CommentReply';
 
 const Container = styled.li`
   box-sizing: border-box;

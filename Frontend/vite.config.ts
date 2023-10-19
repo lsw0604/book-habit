@@ -15,12 +15,9 @@ export default defineConfig({
     alias: [{ find: '@', replacement: path.resolve(__dirname, './src') }],
   },
   build: {
-    target: 'esnext',
     rollupOptions: {
-      treeshake: true,
       output: {
-        minifyInternalExports: true,
-        manualChunks: undefined,
+        format: 'es',
       },
     },
   },

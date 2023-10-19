@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
-import HeaderProfileDropdown from 'components/header/HeaderProfileDropdown';
-import Avatar from 'components/common/Avatar';
 import { userAtom } from 'recoil/user';
+import Avatar from 'components/common/Avatar';
+import HeaderProfileDropdown from 'components/header/HeaderProfileDropdown';
 
 const Container = styled.div<{ isHamburger: boolean }>`
   height: 100%;
@@ -12,6 +12,7 @@ const Container = styled.div<{ isHamburger: boolean }>`
   flex-direction: row;
   gap: 8px;
   align-items: center;
+  cursor: pointer;
   color: ${({ theme }) => theme.mode.typo_sub};
 `;
 

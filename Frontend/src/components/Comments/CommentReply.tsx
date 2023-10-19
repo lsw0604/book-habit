@@ -39,7 +39,7 @@ export default function CommentReply({ comment_id }: IProps) {
         <IconCommentDots />
       </ReplyIconWrapper>
       <ReplyNumber>
-        {isFetching || isLoading ? <Loader /> : data?.length}
+        {isFetching || isLoading ? <Loader /> : data?.reply.length}
       </ReplyNumber>
     </Container>
   );

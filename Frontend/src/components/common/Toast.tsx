@@ -18,13 +18,14 @@ const icons = {
   info: <IconInfo />,
 };
 
-const Container = styled(motion.div)`
+const Container = styled.div`
   width: 100%;
   position: fixed;
   margin-top: 10px;
   top: 1rem;
   height: auto;
   z-index: 9999;
+  padding: 0 1rem;
   @media screen and (min-width: 1280px) {
     display: flex;
     justify-content: center;

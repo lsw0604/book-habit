@@ -14,6 +14,7 @@ export default function useProfileLikeQuery(page: ProfileLikeQueryRequestType) {
   >([REACT_QUERY_KEY, page], () => profileLikeListAPI(page), {
     staleTime: 1 * 60 * 1000,
     cacheTime: 2 * 60 * 1000,
+    enabled: false,
   });
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 
@@ -9,7 +8,6 @@ import CommentReplyItem from 'components/Comments/CommentReplyItem';
 const Container = styled.ul`
   width: 100%;
   height: 100%;
-  overflow: scroll;
   background-color: ${({ theme }) => theme.mode.sub};
 `;
 
@@ -22,7 +20,7 @@ const LoaderWrapper = styled.div`
 
 const EmptyWrapper = styled.div`
   width: 100%;
-  height: 80px;
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,14 +36,20 @@ export default function CommentReplyList() {
     parseInt(comment_id)
   );
 
-  const MemorizedReplyItem = memo(CommentReplyItem);
+  if (data === undefined) {
+    <Container>
+      <Loader />
+    </Container>;
+  }
 
   return (
     <Container>
       {isLoading ? (
         <Loader />
-      ) : data && data?.length > 0 ? (
-        data.map((v) => <MemorizedReplyItem key={v.reply_id} {...v} />)
+      ) : data && data.reply.length > 0 ? (
+        data.reply.map((reply) => (
+          <CommentReplyItem key={reply.reply_id} {...reply} />
+        ))
       ) : (
         <EmptyWrapper>아직 등록된 댓글이 없습니다.</EmptyWrapper>
       )}

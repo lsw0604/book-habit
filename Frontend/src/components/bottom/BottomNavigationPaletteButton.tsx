@@ -1,7 +1,9 @@
 import { IconPalette } from '@style/icons';
-import HeaderPaletteDropdown from 'components/Palette';
-import { useEffect, useRef, useState } from 'react';
+import Loader from 'components/common/Loader';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import styled from 'styled-components';
+
+const HeaderPaletteDropdown = lazy(() => import('components/Palette'));
 
 const Container = styled.div`
   width: 100%;
@@ -11,7 +13,6 @@ const Container = styled.div`
   padding: 0.2rem 0.3rem 0.1rem 0.3rem;
   justify-content: space-around;
   align-items: center;
-  /* background-color: ${({ theme }) => theme.mode.nav}; */
   background-color: ${({ theme }) => theme.mode.nav};
 `;
 
@@ -57,7 +58,11 @@ export default function BottomNavigationPaletteButton() {
 
   return (
     <Container ref={paletteRef}>
-      {isOpen && <HeaderPaletteDropdown />}
+      {isOpen && (
+        <Suspense fallback={<Loader />}>
+          <HeaderPaletteDropdown />
+        </Suspense>
+      )}
       <CircleBtn onClick={handleOpen} aria-label="paletteBtn">
         <IconPalette />
       </CircleBtn>

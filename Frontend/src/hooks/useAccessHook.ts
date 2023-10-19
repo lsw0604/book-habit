@@ -36,8 +36,9 @@ export default function useAccessHook() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log('access_hook', err);
-      onChangeUserStateInitial();
+      if (err && err.response && err.response.data) {
+        onChangeUserStateInitial();
+      }
       setIsLoading(false);
     }
   };

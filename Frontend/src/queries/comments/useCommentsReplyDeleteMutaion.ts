@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import { AxiosError } from 'axios';
-
-import useToastHook from '@hooks/useToastHook';
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { commentsReplyDeleteAPI } from 'lib/api/comments';
-import useCommentsReplyListQuery from './useCommentsReplyListQuery';
+import { AxiosError } from 'axios';
+import { useEffect } from 'react';
+
+import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';
+import { commentsReplyDeleteAPI } from 'lib/api/comments';
+import useToastHook from '@hooks/useToastHook';
 
 export default function useCommentsReplyDeleteMutation(
   reply_id: CommentsReplyDeleteMutationRequestType,
@@ -13,9 +13,10 @@ export default function useCommentsReplyDeleteMutation(
 ) {
   const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_DELETE_MUTATION';
   const queryClient = new QueryClient();
+
+  const { refetch: profileReplyQueryRefetch } = useProfileReplyQuery(1);
   const { refetch: commentReplyListRefetch } =
     useCommentsReplyListQuery(comment_id);
-  const { refetch: profileReplyListRefetch } = useProfileReplyQuery(1);
 
   const { addToast } = useToastHook();
 
@@ -28,18 +29,17 @@ export default function useCommentsReplyDeleteMutation(
       queryClient.invalidateQueries({
         queryKey: ['USE_COMMENTS_REPLY_LIST_QUERY', comment_id],
       });
-      queryClient.invalidateQueries({
-        queryKey: ['USE_PROFILE_REPLY_QUERY'],
-      });
       commentReplyListRefetch();
-      profileReplyListRefetch();
     },
   });
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
-
+      queryClient.invalidateQueries({
+        queryKey: ['USE_PROFILE_REPLY_QUERY'],
+      });
+      profileReplyQueryRefetch();
       addToast({ message, status });
     }
   }, [isSuccess, data]);
@@ -47,7 +47,6 @@ export default function useCommentsReplyDeleteMutation(
   useEffect(() => {
     if (isError && error && error.response && error.response.data) {
       const { message, status } = error.response.data;
-
       addToast({ message, status });
     }
   }, [isError, error]);

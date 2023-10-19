@@ -16,6 +16,7 @@ export default function useProfileReplyQuery(
   >([REACT_QUERY_KEY, page], () => profileReplyListAPI(page), {
     staleTime: 1 * 60 * 1000,
     cacheTime: 2 * 60 * 1000,
+    enabled: false,
   });
 
   useEffect(() => {

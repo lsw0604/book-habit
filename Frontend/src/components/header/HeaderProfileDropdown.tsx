@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
 import { customize } from '@style/colors';
 import { logoutAPI } from 'lib/api/auth';
-import { useRecoilState } from 'recoil';
-import { userAtom } from 'recoil/user';
-import { useNavigate } from 'react-router-dom';
 import useToastHook from '@hooks/useToastHook';
+import useUserStateHook from '@hooks/useUserStateHook';
 
 const Container = styled.div`
   position: absolute;
@@ -54,7 +54,7 @@ const Label = styled.label`
 `;
 
 export default function HeaderProfileDropdown() {
-  const [userState, setUserState] = useRecoilState(userAtom);
+  const { userState, onChangeUserStateInitial } = useUserStateHook();
   const { addToast } = useToastHook();
   const navigate = useNavigate();
 
@@ -62,16 +62,7 @@ export default function HeaderProfileDropdown() {
     if (userState.provider === 'kakao') {
       const { message, status } = await logoutAPI();
       if (status === 'success') {
-        setUserState({
-          id: 0,
-          name: '',
-          email: '',
-          provider: '',
-          isLogged: false,
-          age: 0,
-          gender: '',
-          profile: '',
-        });
+        onChangeUserStateInitial();
         window.localStorage.removeItem('ACCESS');
         window.open(
           `https://kauth.kakao.com/oauth/logout?client_id=${
@@ -84,16 +75,7 @@ export default function HeaderProfileDropdown() {
     } else {
       const { message, status } = await logoutAPI();
       if (status === 'success') {
-        setUserState({
-          id: 0,
-          name: '',
-          email: '',
-          provider: '',
-          isLogged: false,
-          age: 0,
-          gender: '',
-          profile: '',
-        });
+        onChangeUserStateInitial();
         window.localStorage.removeItem('ACCESS');
         addToast({ message, status });
       }

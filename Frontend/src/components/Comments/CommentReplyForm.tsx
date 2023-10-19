@@ -42,8 +42,8 @@ export default function CommentReplyForm() {
           reply,
         },
       });
-      setReply('');
       setUseValidation(false);
+      setReply('');
     }
   };
 
