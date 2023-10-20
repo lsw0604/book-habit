@@ -19,6 +19,7 @@ import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { userAtom } from 'recoil/user';
 import ImageWrapper from 'components/common/ImageWrapper';
 import useToastHook from '@hooks/useToastHook';
+import { customize } from '@style/colors';
 
 const Container = styled.form`
   width: 100%;
@@ -32,6 +33,7 @@ const Header = styled.div`
   height: 190px;
   width: 100%;
   display: flex;
+  flex-direction: row;
   gap: 1rem;
 `;
 
@@ -52,20 +54,33 @@ const HeaderDetailContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 22px;
-  line-height: 20px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.mode.typo_sub};
-  width: 100%;
-  margin-bottom: 8px;
+  font-size: 20px;
+  line-height: 22px;
+  color: ${({ theme }) => theme.colors.sub};
+  height: auto;
 `;
 
-const Description = styled.div`
-  height: 100%;
+const Url = styled.a`
+  height: auto;
+  color: ${customize.gray['400']};
   font-size: 12px;
-  line-height: 12px;
+  line-height: 16px;
+  margin-bottom: 8px;
+  &:hover {
+    color: ${({ theme }) => theme.colors.spinner};
+  }
+`;
+
+const Description = styled.span`
+  height: 100px;
+  font-size: 16px;
+  line-height: 20px;
   color: ${({ theme }) => theme.mode.typo_main};
-  overflow: scroll;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  white-space: pre-line;
 `;
 
 const Content = styled.div`
@@ -202,7 +217,10 @@ const searchBookRegister = () => {
         </HeaderImageWrapper>
         <HeaderDetailContainer>
           <Title>{title}</Title>
-          {contents ? <Description>{contents}...</Description> : null}
+          <Description>{contents}</Description>
+          <Url target="_blank" href={url}>
+            더보기
+          </Url>
         </HeaderDetailContainer>
       </Header>
       <Content>

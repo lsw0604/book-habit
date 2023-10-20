@@ -69,7 +69,16 @@ const Content = styled.div`
 `;
 
 const Comment = styled.span`
-  font-size: 20px;
+  width: 100%;
+  font-size: 18px;
+  color: ${({ theme }) => theme.mode.typo_main};
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-height: 25px;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  height: 100px;
+  white-space: pre-line;
 `;
 
 const DateWrapper = styled.span`

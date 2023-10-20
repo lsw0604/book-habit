@@ -2,6 +2,7 @@ import { customize } from '@style/colors';
 import { IconCalendar, IconStar } from '@style/icons';
 import Avatar from 'components/common/Avatar';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -63,10 +64,13 @@ export default function CommentHeaderInfo({
   status,
 }: Omit<CommentsItemType, 'comment' | 'comment_id'>) {
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
+  const navigate = useNavigate();
   return (
     <Container>
       <HeaderInfoContainer>
-        <HeaderInfoContainerTitleWrapper>
+        <HeaderInfoContainerTitleWrapper
+          onClick={() => navigate(`/books/${title}`)}
+        >
           {title}
         </HeaderInfoContainerTitleWrapper>
         <HeaderInfoContainerDateWrapper>

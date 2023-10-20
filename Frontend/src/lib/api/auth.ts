@@ -58,7 +58,7 @@ export const kakaoLogoutUserAPI = async () => {
     const { data } = await Axios.get(
       `https://kauth.kakao.com/oauth/logout?client_id=${
         import.meta.env.VITE_KAKAO_REST_API
-      }&logout_redirect_uri=http://localhost:5173`
+      }&logout_redirect_uri=${import.meta.env.VITE_KAKAO_LOGOUT_URI}`
     );
     return data;
   } catch (err) {

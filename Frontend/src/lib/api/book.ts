@@ -47,3 +47,14 @@ export const readToBookRegisterAPI = async (body: ReadToBookRegisterType) => {
   const { data } = await axios.post(`/api/books/read_to`, JSON.stringify(body));
   return data;
 };
+
+/**
+ * * 책 정보 조회하는 API
+ */
+
+export const bookInfoAPI = async (body: string) => {
+  const { data } = await axios.get(
+    `/api/books/info?title=${encodeURIComponent(body)}`
+  );
+  return data;
+};

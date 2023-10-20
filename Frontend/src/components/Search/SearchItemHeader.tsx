@@ -10,7 +10,6 @@ const Container = styled.div`
   width: 100%;
   font-size: 18px;
   line-height: 20px;
-  font-weight: 700;
   color: ${({ theme }) => theme.mode.typo_sub};
   margin-bottom: 8px;
   float: left;

@@ -20,9 +20,11 @@ const Login = lazy(() => import('@pages/LoginPage'));
 const Search = lazy(() => import('@pages/SearchPage'));
 const Comments = lazy(() => import('@pages/CommentsPage'));
 const Profile = lazy(() => import('@pages/ProfilePage'));
-const BottomSheet = lazy(() => import('components/common/BottomSheet'));
+const BooksDetail = lazy(() => import('@pages/BooksDetailPage'));
 const CommentDetail = lazy(() => import('@pages/CommentDetailPage'));
 const NotFound = lazy(() => import('@pages/404'));
+
+const BottomSheet = lazy(() => import('components/common/BottomSheet'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -60,6 +62,7 @@ export default function Router() {
                     path="/comments/:comment_id"
                     Component={CommentDetail}
                   />
+                  <Route path="/books/:title" Component={BooksDetail} />
                   <Route element={<IsAuthLayout isAuth={true} />}>
                     <Route path="/profile" Component={Profile} />
                     <Route path="/my_books" Component={MyBooks} />

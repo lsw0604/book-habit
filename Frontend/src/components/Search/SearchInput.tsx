@@ -23,14 +23,18 @@ const IconWrapper = styled.div`
   width: 0px;
   height: 0px;
   position: absolute;
-  top: 30px;
+  top: 5px;
   right: 55px;
 `;
 
 export default function SearchInput({ search, onChange, onSubmit }: IProps) {
   return (
     <Container onSubmit={onSubmit}>
-      <Input value={search} onChange={onChange} label="책 검색하기" />
+      <Input
+        style={{ borderRadius: '2rem', padding: '0 1rem' }}
+        value={search}
+        onChange={onChange}
+      />
       <IconWrapper>
         <Icon type="submit" icon={<IconSearch />}>
           Search
