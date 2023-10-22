@@ -14,9 +14,10 @@ const Container = styled.li`
   padding: 1rem;
   width: 100%;
   background-color: ${({ theme }) => theme.mode.sub};
-  border-radius: 5px;
+  border-radius: 1rem;
   box-shadow: ${({ theme }) => theme.shadow.lg};
   cursor: pointer;
+  scroll-snap-align: start;
 `;
 
 const Header = styled.div`

@@ -1,37 +1,17 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useMemo, lazy, Suspense } from 'react';
+import { useMemo } from 'react';
 
 import NeedLogin from 'components/common/NeedLogin';
-// import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
+import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
 
-// import CommentModify from 'components/Modals/Comment/CommentModify';
-// import CommentRegister from 'components/Modals/Comment/CommentRegister';
-// import CommentDelete from 'components/Modals/Comment/CommentDelete';
-// import HistoryRegister from 'components/Modals/History/HistoryRegister';
-// import HistoryDelete from 'components/Modals/History/HistoryDelete';
+import CommentModify from 'components/Modals/Comment/CommentModify';
+import CommentRegister from 'components/Modals/Comment/CommentRegister';
+import CommentDelete from 'components/Modals/Comment/CommentDelete';
+import HistoryRegister from 'components/Modals/History/HistoryRegister';
+import HistoryDelete from 'components/Modals/History/HistoryDelete';
 
 import useModalHook from '@hooks/useModalHook';
-
-const SearchBookRegister = lazy(
-  () => import('components/Modals/SearchBook/SearchBookRegister')
-);
-
-const CommentModify = lazy(
-  () => import('components/Modals/Comment/CommentModify')
-);
-const CommentRegister = lazy(
-  () => import('components/Modals/Comment/CommentRegister')
-);
-const CommentDelete = lazy(
-  () => import('components/Modals/Comment/CommentDelete')
-);
-const HistoryRegister = lazy(
-  () => import('components/Modals/History/HistoryRegister')
-);
-const HistoryDelete = lazy(
-  () => import('components/Modals/History/HistoryDelete')
-);
 
 const Container = styled(motion.div)`
   position: absolute;
@@ -90,16 +70,7 @@ export default function BottomSheet() {
         duration: 0.3,
       }}
     >
-      {/* {modalStateType === 'isLogin' && <NeedLogin />}
-      {modalStateType === 'registerSearchBook' && <SearchBookRegister />}
-      {modalStateType === 'modifyComment' && <CommentModify />}
-      {modalStateType === 'registerComment' && <CommentRegister />}
-      {modalStateType === 'deleteComment' && <CommentDelete />}
-      {modalStateType === 'registerHistory' && <HistoryRegister />}
-      {modalStateType === 'deleteHistory' && <HistoryDelete />} */}
-      <Suspense fallback={<div>loading...</div>}>
-        {memorizedModalComponent}
-      </Suspense>
+      {memorizedModalComponent}
     </Container>
   );
 }

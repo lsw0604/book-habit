@@ -15,7 +15,7 @@ interface IRegisteredLikesCount extends RowDataPacket {
   likes_count: number;
 }
 
-export default async function authInfo(req: Request, res: Response, next: NextFunction) {
+export default async function authInfo(req: Request, res: Response, _: NextFunction) {
   const NAMESPACE = 'AUTH_INFO';
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined)

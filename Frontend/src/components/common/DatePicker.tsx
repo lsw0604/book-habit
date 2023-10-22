@@ -10,6 +10,7 @@ const Container = styled.div`
 
   input {
     color: ${({ theme }) => theme.mode.typo_main};
+    font-size: 16px;
   }
 
   .react-datepicker-wrapper {

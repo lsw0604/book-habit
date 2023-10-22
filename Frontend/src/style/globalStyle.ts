@@ -1,16 +1,56 @@
-import '@fontsource/noto-sans-kr/korean-700.css';
+import '@fontsource/noto-sans-kr/700.css';
 import { createGlobalStyle, css } from 'styled-components';
-import reset from 'styled-reset';
 
 const globalStyle = css`
-  ${reset};
-
   * {
     box-sizing: border-box;
   }
-  body {
+  html,
+  body,
+  div,
+  span,
+  h1,
+  h2,
+  h3,
+  p,
+  img,
+  i,
+  ul,
+  li,
+  form,
+  label,
+  article,
+  footer,
+  header,
+  main,
+  menu,
+  nav,
+  section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 700;
+  }
+
+  article,
+  footer,
+  header,
+  main,
+  nav,
+  section {
+    display: block;
+  }
+
+  *[hidden] {
+    display: none;
+  }
+
+  ul {
+    list-style: none;
   }
   a {
     text-decoration: none;

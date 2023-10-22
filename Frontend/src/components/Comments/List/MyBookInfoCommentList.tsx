@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
 
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
@@ -9,18 +8,25 @@ import MyBookInfoCommentItem from 'components/Comments/Item/MyBookInfoCommentIte
 import Icon from 'components/common/Button/Icon';
 import Loader from 'components/common/Loader';
 
+interface IProps {
+  users_books_id: number;
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  max-height: 275px;
   box-sizing: border-box;
   position: relative;
   display: flex;
-  padding: 1rem;
   flex-direction: column;
-  gap: 1rem;
+  padding: 1rem 0;
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.mode.sub};
   box-shadow: ${({ theme }) => theme.shadow.md};
+  @media screen and (min-width: 1280px) {
+    max-height: 100%;
+  }
 `;
 
 const ListContainer = styled.div`
@@ -28,6 +34,8 @@ const ListContainer = styled.div`
   height: 100%;
   overflow: scroll;
   position: relative;
+  padding: 0 1rem;
+  scroll-snap-type: y mandatory;
 `;
 
 const AddContainer = styled.div`
@@ -56,28 +64,30 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function MyBookInfoCommentList() {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
-
+export default function MyBookInfoCommentList({ users_books_id }: IProps) {
   const { setModalState } = useModalHook();
   const { onChangeMyBookUsersBooksId } = useMyBookHook();
+
   const commentRegisterModalHandler = () => {
-    onChangeMyBookUsersBooksId(parseInt(users_books_id));
+    onChangeMyBookUsersBooksId(users_books_id);
     setModalState({ isOpen: true, type: 'registerComment' });
   };
 
-  const { data, isLoading, isFetching } = useMyBookCommentQuery(
-    parseInt(users_books_id)
-  );
+  const { data, isLoading, isFetching } = useMyBookCommentQuery(users_books_id);
 
-  return (
-    <Container>
-      {isLoading || isFetching ? (
+  if (!data || isLoading || isFetching) {
+    return (
+      <Container>
         <LoadingContainer>
           <Loader />
         </LoadingContainer>
-      ) : data?.length === 0 ? (
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      {data.length === 0 ? (
         <EmptyTag>
           아직 등록된 한줄평이 없습니다.
           <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
@@ -86,7 +96,7 @@ export default function MyBookInfoCommentList() {
         </EmptyTag>
       ) : (
         <ListContainer>
-          {data?.map((comment) => (
+          {data.map((comment) => (
             <MyBookInfoCommentItem {...comment} key={comment.comment_id} />
           ))}
         </ListContainer>

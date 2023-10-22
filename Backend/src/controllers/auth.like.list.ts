@@ -16,7 +16,7 @@ interface IAuthLikeListCount extends RowDataPacket {
   count: number;
 }
 
-export default async function authLikeList(req: Request, res: Response, next: NextFunction) {
+export default async function authLikeList(req: Request, res: Response, _: NextFunction) {
   const NAMESPACE = 'AUTH_LIKE_LIST';
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined)

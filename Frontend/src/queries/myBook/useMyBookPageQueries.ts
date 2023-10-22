@@ -49,6 +49,7 @@ export default function useMyBookPageQueries(
       {
         queryKey: [REACT_QUERY_KEY.info, users_books_id],
         queryFn: () => myBookInfoAPI(users_books_id),
+        suspense: true,
       },
       {
         queryKey: [REACT_QUERY_KEY.history, users_books_id],
@@ -63,10 +64,12 @@ export default function useMyBookPageQueries(
           }
         },
         staleTime: Infinity,
+        suspense: true,
       },
       {
         queryKey: [REACT_QUERY_KEY.time, users_books_id],
         queryFn: () => myBookTimeRangeAPI(users_books_id),
+        suspense: true,
       },
     ],
   });

@@ -67,6 +67,22 @@ export default function List({ status }: IProps) {
     useMyBookListInfinityQuery(status as SelectorBookType);
   const lastPageRef = useRef<HTMLDivElement>(null);
 
+  if (!data || isLoading) {
+    return (
+      <LoaderContainer>
+        <Loader size={2} />
+      </LoaderContainer>
+    );
+  }
+
+  if (data.pages[0].books.length === 0) {
+    return (
+      <Container>
+        <Empty status={status} />
+      </Container>
+    );
+  }
+
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -90,33 +106,21 @@ export default function List({ status }: IProps) {
   }, [fetchNextPage, hasNextPage, isFetching]);
 
   return (
-    <>
-      {isLoading ? (
-        <LoaderContainer>
+    <Container>
+      {data.pages.map((page) => (
+        <Page key={v4()}>
+          {page.books.map((book) => (
+            <Item key={book.id} {...book} />
+          ))}
+        </Page>
+      ))}
+      {isFetching ? (
+        <FetchLoader>
           <Loader size={2} />
-        </LoaderContainer>
-      ) : (
-        <Container>
-          {data && data.pages && data.pages[0].books.length > 0 ? (
-            data.pages.map((page) => (
-              <Page key={v4()}>
-                {page.books.map((book) => (
-                  <Item key={book.id} {...book} />
-                ))}
-              </Page>
-            ))
-          ) : (
-            <Empty status={status} />
-          )}
-          {isFetching ? (
-            <FetchLoader>
-              <Loader size={2} />
-            </FetchLoader>
-          ) : !hasNextPage ? null : (
-            <Observer ref={lastPageRef} />
-          )}
-        </Container>
+        </FetchLoader>
+      ) : !hasNextPage ? null : (
+        <Observer ref={lastPageRef} />
       )}
-    </>
+    </Container>
   );
 }

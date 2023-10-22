@@ -17,7 +17,7 @@ interface IQueryResult extends RowDataPacket {
   provider: ProviderType;
 }
 
-export default async function KakaoCallback(req: Request, res: Response, next: NextFunction) {
+export default async function KakaoCallback(req: Request, res: Response, _: NextFunction) {
   const NAMESPACE = 'KAKAO_CALLBACK';
 
   const code = req.query.code as string;

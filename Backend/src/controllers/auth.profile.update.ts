@@ -6,7 +6,7 @@ import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function profileUpdate(req: Request, res: Response, next: NextFunction) {
+export default async function profileUpdate(req: Request, res: Response, _: NextFunction) {
   const NAMESPACE = 'PROFILE_UPDATE';
   if (!req.file) return res.status(500).json({ message: '잘못된 접근입니다.', status: 'error' });
   if (!req.user) return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });

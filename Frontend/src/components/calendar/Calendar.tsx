@@ -1,21 +1,33 @@
 import styled from 'styled-components';
-import dayjs from 'dayjs';
-import { useEffect, useMemo, Dispatch, SetStateAction, memo } from 'react';
+import { Dispatch, SetStateAction } from 'react';
+import { Navigate } from 'react-router-dom';
 
 import CalendarDateBox from 'components/calendar/CalendarDateBox';
 import Icon from 'components/common/Button/Icon';
 import Selector from 'components/common/Selector';
 import { IconLeftArrow, IconRightArrow } from '@style/icons';
-import { getCalendarDetail, getNewCalendar } from 'lib/utils/calendar';
-import { useParams } from 'react-router-dom';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
-import { useRecoilState } from 'recoil';
-import { calendarAtom } from 'recoil/calendar';
+import Loader from 'components/common/Loader';
+import useCalendarHook from '@hooks/useCalendarHook';
 
 interface IProps {
   filter: string[];
   setFilter: Dispatch<SetStateAction<string[]>>;
+  users_books_id: number;
 }
+
+const LoadingContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  padding: 1rem;
+  position: relative;
+  box-shadow: ${({ theme }) => theme.shadow.md};
+`;
 
 const Container = styled.div`
   width: 100%;
@@ -48,9 +60,12 @@ const CalendarSelectorWrapper = styled.div`
 
 const CalendarBox = styled.div<{ numRows: number }>`
   width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: ${({ numRows }) => `repeat(${numRows}, 1fr)`};
+  justify-content: center;
+  align-items: center;
 `;
 
 const Contents = styled.div`
@@ -58,77 +73,44 @@ const Contents = styled.div`
   align-items: center;
 `;
 
-export default function Calendar({ filter, setFilter }: IProps) {
+export default function Calendar({
+  filter,
+  setFilter,
+  users_books_id,
+}: IProps) {
   const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
+  if (!users_books_id) return <Navigate to="/404" />;
 
-  const [calendarState, setCalendarState] = useRecoilState(calendarAtom);
+  const {
+    myBookHistoryData,
+    myBookTimeData,
+    myBookTimeIsLoading,
+    myBookHistoryIsLoading,
+  } = useMyBookPageQueries(users_books_id, filter);
 
-  const { myBookHistoryData, myBookTimeData } = useMyBookPageQueries(
-    parseInt(users_books_id),
-    filter
-  );
+  if (
+    !myBookTimeData ||
+    !myBookHistoryData ||
+    myBookTimeIsLoading ||
+    myBookHistoryIsLoading
+  ) {
+    return (
+      <LoadingContainer>
+        <Loader />
+      </LoadingContainer>
+    );
+  }
 
-  const startDate = myBookTimeData?.startDate
-    ? dayjs(myBookTimeData.startDate).add(9, 'hour').format('YYYY-MM-DD')
-    : undefined;
-  const endDate = myBookTimeData?.endDate
-    ? dayjs(myBookTimeData.endDate).add(9, 'hour').format('YYYY-MM-DD')
-    : undefined;
-
-  const dayObj = dayjs()
-    .locale('ko')
-    .year(parseInt(calendarState.year))
-    .month(parseInt(calendarState.month) - 1);
-
-  const numRows = useMemo(() => {
-    return Math.ceil((calendarState.firstDOW + calendarState.lastDate) / 7);
-  }, [calendarState.firstDOW, calendarState.lastDate]);
-
-  const updateMonthYear = (monthIncrement: number): void => {
-    setCalendarState((prev) => getNewCalendar(prev, monthIncrement));
-  };
-
-  const dataByDate = useMemo(() => {
-    const data: CalendarDateByDataType = {};
-    myBookHistoryData?.forEach((item) => {
-      const dateStr = dayjs(item.date).add(9, 'hour').format('YYYY-MM-DD');
-      data[dateStr] = data[dateStr] || [];
-      data[dateStr].push(item.status);
-    });
-    return data;
-  }, [myBookHistoryData]);
-
-  const prevMonthHandler: boolean = useMemo(() => {
-    if (startDate) {
-      return dayObj.isAfter(startDate, 'month');
-    }
-    return true;
-  }, [startDate, updateMonthYear]);
-
-  const nextMonthHandler: boolean = useMemo(() => {
-    if (endDate) {
-      return dayObj.isBefore(endDate, 'month');
-    }
-    return dayObj.isBefore(dayjs(), 'month');
-  }, [endDate, updateMonthYear]);
-
-  const MemorizedDateBox = memo(CalendarDateBox);
-
-  useEffect(() => {
-    if (myBookTimeData && myBookTimeData.endDate) {
-      setCalendarState(getCalendarDetail(dayjs(myBookTimeData.endDate)));
-    }
-
-    if (
-      myBookTimeData &&
-      myBookTimeData.endDate === undefined &&
-      myBookTimeData.startDate
-    ) {
-      setCalendarState(getCalendarDetail(dayjs(myBookTimeData.startDate)));
-    }
-  }, [myBookTimeData, myBookTimeData?.endDate, myBookTimeData?.startDate]);
+  const {
+    updateMonthYear,
+    numRows,
+    startDate,
+    endDate,
+    dataByDate,
+    calendarState,
+    nextMonthHandler,
+    prevMonthHandler,
+  } = useCalendarHook({ myBookHistoryData, myBookTimeData });
 
   return (
     <Container>
@@ -154,10 +136,10 @@ export default function Calendar({ filter, setFilter }: IProps) {
           previous
         </Icon>
         <CalendarBox numRows={numRows}>
-          <MemorizedDateBox
+          <CalendarDateBox
             startDate={startDate}
             endDate={endDate}
-            usersBooksId={parseInt(users_books_id)}
+            usersBooksId={users_books_id}
             data={dataByDate}
             date={1}
             gridColumn={calendarState.firstDOW + 1}
@@ -166,10 +148,10 @@ export default function Calendar({ filter, setFilter }: IProps) {
           />
           {[...Array(calendarState.lastDate)].map((_, i) =>
             i > 0 ? (
-              <MemorizedDateBox
+              <CalendarDateBox
                 startDate={startDate}
                 endDate={endDate}
-                usersBooksId={parseInt(users_books_id)}
+                usersBooksId={users_books_id}
                 data={dataByDate}
                 key={i}
                 date={i + 1}

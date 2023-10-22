@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Loader from 'components/common/Loader';
@@ -10,15 +9,16 @@ import { IconBookMark, IconTrashCan } from '@style/icons';
 import { customize } from '@style/colors';
 import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
 
+interface IProps {
+  users_books_id: number;
+}
+
 const Container = styled.div`
   height: auto;
-  min-height: 206px;
   width: 100%;
-  flex-wrap: wrap;
   border-radius: 1rem;
   display: flex;
   padding: 1rem 0;
-  margin: 0 auto;
   box-shadow: ${({ theme }) => theme.shadow.md};
   background-color: ${({ theme }) => theme.mode.sub};
 `;
@@ -119,73 +119,61 @@ const BookMarkWrapper = styled.div`
   }
 `;
 
-export default function InfoBox() {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접급입니다.</div>;
-
-  const { mutate, isLoading } = useMyBookListDeleteMutation(
-    parseInt(users_books_id)
-  );
-  const { myBookInfoData, myBookInfoIsLoading } = useMyBookPageQueries(
-    parseInt(users_books_id)
-  );
+export default function InfoBox({ users_books_id }: IProps) {
+  const { mutate, isLoading } = useMyBookListDeleteMutation(users_books_id);
+  const { myBookInfoData, myBookInfoIsLoading } =
+    useMyBookPageQueries(users_books_id);
 
   const deleteHandler = () => {
-    mutate(parseInt(users_books_id));
+    mutate(users_books_id);
   };
 
-  console.log('불필요한 재 렌더링');
+  if (!myBookInfoData || myBookInfoIsLoading) {
+    return (
+      <LoaderWrapper>
+        <Loader />
+      </LoaderWrapper>
+    );
+  }
+
+  const { title, thumbnail, publisher, authors, contents, url } =
+    myBookInfoData.result;
 
   return (
-    <>
-      {!myBookInfoIsLoading ? (
-        <Container>
-          <ImageContainer>
-            <ImageWrapper
-              src={myBookInfoData?.result.thumbnail}
-              alt={users_books_id}
-              height={174}
-              width={120}
-            />
-            <BookMarkWrapper>
-              <IconBookMark />
-            </BookMarkWrapper>
-          </ImageContainer>
-          <DetailContainer>
-            <DetailHeader>
-              <DetailHeaderInfo>
-                <Publisher>{myBookInfoData?.result.publisher}</Publisher>
-                <Title>{myBookInfoData?.result.title}</Title>
-                <Authors>{myBookInfoData?.result.authors}</Authors>
-              </DetailHeaderInfo>
-              <DetailHeaderIconWrapper>
-                <Icon
-                  onClick={deleteHandler}
-                  icon={<IconTrashCan />}
-                  isLoading={isLoading}
-                >
-                  Delete
-                </Icon>
-              </DetailHeaderIconWrapper>
-            </DetailHeader>
-            <Divider divider={2} />
-            <Description>
-              {myBookInfoData?.result.contents}&nbsp;...
-            </Description>
-            <A
-              href={myBookInfoData?.result.url}
-              target="_blank"
-              rel="noreferrer"
+    <Container>
+      <ImageContainer>
+        <ImageWrapper src={thumbnail} alt={title} height={174} width={120} />
+        <BookMarkWrapper>
+          <IconBookMark />
+        </BookMarkWrapper>
+      </ImageContainer>
+      <DetailContainer>
+        <DetailHeader>
+          <DetailHeaderInfo>
+            <Publisher>{publisher}</Publisher>
+            <Title>{title}</Title>
+            <Authors>{authors}</Authors>
+          </DetailHeaderInfo>
+          <DetailHeaderIconWrapper>
+            <Icon
+              onClick={deleteHandler}
+              icon={<IconTrashCan />}
+              isLoading={isLoading}
             >
-              더보기
-            </A>
-          </DetailContainer>
-        </Container>
-      ) : (
-        <LoaderWrapper>
-          <Loader />
-        </LoaderWrapper>
-      )}
-    </>
+              Delete
+            </Icon>
+          </DetailHeaderIconWrapper>
+        </DetailHeader>
+        <Divider divider={2} />
+        {contents == '' ? (
+          <Description>등록된 정보가 없습니다.</Description>
+        ) : (
+          <Description>{contents} ...</Description>
+        )}
+        <A href={url} target="_blank" rel="noreferrer">
+          더보기
+        </A>
+      </DetailContainer>
+    </Container>
   );
 }

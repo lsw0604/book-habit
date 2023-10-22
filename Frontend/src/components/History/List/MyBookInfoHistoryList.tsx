@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import MyBookInfoHistoryItem from 'components/History/Item/MyBookInfoHistoryItem';
@@ -9,27 +8,29 @@ import Icon from 'components/common/Button/Icon';
 
 interface IProps {
   filter: string[];
+  users_books_id: number;
 }
 
 const Container = styled.div`
   width: 100%;
-  height: 6rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  max-height: 104px;
+  box-sizing: border-box;
+  overflow: scroll;
   position: relative;
-  justify-content: center;
-  align-items: center;
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
   border-radius: 1rem;
-  box-shadow: ${({ theme }) => theme.shadow.md};
   background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
-const ItemListContainer = styled.div`
-  position: relative;
+const ListContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow: scroll;
+  position: relative;
   scroll-snap-type: y mandatory;
 `;
 
@@ -54,40 +55,38 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function HistoryList({ filter }: IProps) {
-  const { users_books_id } = useParams();
+export default function HistoryList({ filter, users_books_id }: IProps) {
+  const { myBookHistoryData, myBookHistoryIsLoading, myBookHistoryIsFetching } =
+    useMyBookPageQueries(users_books_id, filter);
 
-  if (users_books_id === undefined) {
-    return <div>올바른 접근이 아닙니다.</div>;
-  }
-
-  const {
-    myBookHistoryData,
-    myBookHistoryIsLoading,
-    myBookHistoryIsFetching,
-    myBookHistoryIsSuccess,
-  } = useMyBookPageQueries(parseInt(users_books_id), filter);
-
-  return (
-    <Container>
-      {myBookHistoryIsLoading || myBookHistoryIsFetching ? (
+  if (!myBookHistoryData || myBookHistoryIsLoading || myBookHistoryIsFetching) {
+    return (
+      <Container>
         <LoadingContainer>
           <Loader size={2} />
         </LoadingContainer>
-      ) : myBookHistoryIsSuccess &&
-        myBookHistoryData &&
-        myBookHistoryData.length !== 0 ? (
-        <ItemListContainer>
-          {myBookHistoryData.map((value) => (
-            <MyBookInfoHistoryItem key={value.id} {...value} />
-          ))}
-        </ItemListContainer>
-      ) : (
+      </Container>
+    );
+  }
+
+  if (myBookHistoryData.length === 0) {
+    return (
+      <Container>
         <EmptyTag>
           아직 등록된 독서기록이 없습니다.
           <Icon icon={<IconPlus />}>AddHistory</Icon>
         </EmptyTag>
-      )}
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <ListContainer>
+        {myBookHistoryData.map((value) => (
+          <MyBookInfoHistoryItem key={value.id} {...value} />
+        ))}
+      </ListContainer>
     </Container>
   );
 }

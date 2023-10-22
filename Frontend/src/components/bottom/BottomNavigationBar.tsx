@@ -24,6 +24,7 @@ const Buttons = styled.ul`
   display: flex;
   width: 100%;
   height: 100%;
+  cursor: pointer;
   justify-content: space-between;
 `;
 

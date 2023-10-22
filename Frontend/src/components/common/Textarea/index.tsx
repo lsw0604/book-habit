@@ -21,11 +21,15 @@ const Textarea = styled.textarea`
   max-width: 100%;
   min-height: 70px;
   border: none;
-  padding: 8px;
+  padding: 1rem;
   resize: both;
   background-color: ${({ theme }) => theme.mode.main};
   color: ${({ theme }) => theme.mode.typo_sub};
   overflow-y: hidden;
+  font-size: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  border-radius: 1rem;
   &:focus {
     outline: none;
   }

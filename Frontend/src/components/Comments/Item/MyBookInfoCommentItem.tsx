@@ -24,8 +24,9 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   border-radius: 1rem;
   padding: 1rem;
-  margin-bottom: 8px;
+  margin: 1rem 0;
   box-shadow: ${({ theme }) => theme.shadow.md};
+  scroll-snap-align: start;
 `;
 
 const Header = styled.div`
@@ -103,8 +104,9 @@ const IconBox = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   color: ${({ theme }) => theme.mode.typo_main};
   box-shadow: ${({ theme }) => theme.shadow.md};
+  align-items: center;
   svg {
-    height: 100%;
+    height: 70%;
     fill: ${customize.yellow['400']};
   }
 `;

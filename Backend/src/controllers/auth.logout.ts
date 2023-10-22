@@ -4,7 +4,7 @@ import logging from '../config/logging';
 
 const NAMESPACE = 'LOGOUT';
 
-export default function logout(req: Request, res: Response, next: NextFunction) {
+export default function logout(_: Request, res: Response, next: NextFunction) {
   res.cookie('refresh', {}, { path: '/', maxAge: 0, httpOnly: true });
 
   logging.info(NAMESPACE, ': FINISH');

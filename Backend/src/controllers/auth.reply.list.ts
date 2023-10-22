@@ -16,7 +16,7 @@ interface IAuthReplyListCount extends RowDataPacket {
   count: number;
 }
 
-export default async function authReplyList(req: Request, res: Response, next: NextFunction) {
+export default async function authReplyList(req: Request, res: Response, _: NextFunction) {
   const NAMESPACE = 'AUTH_Reply_LIST';
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined)
