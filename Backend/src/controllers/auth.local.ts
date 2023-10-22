@@ -10,7 +10,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     { session: false },
     (_: any, user: Express.User, info: { message: string }) => {
       if (!user) {
-        return res.status(200).json({ message: info.message, status: 'error' });
+        return res.status(403).json({ message: info.message, status: 'error' });
       }
       const { id, name, email, age, gender, provider, profile } = user as ResponseLoginType;
 
