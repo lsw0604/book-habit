@@ -28,7 +28,6 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
     "@svgr/webpack": "^8.0.1",
     "@tanstack/eslint-plugin-query": "^4.29.25",
     "@types/axios": "^0.14.0",
