@@ -67,22 +67,6 @@ export default function List({ status }: IProps) {
     useMyBookListInfinityQuery(status as SelectorBookType);
   const lastPageRef = useRef<HTMLDivElement>(null);
 
-  if (!data || isLoading) {
-    return (
-      <LoaderContainer>
-        <Loader size={2} />
-      </LoaderContainer>
-    );
-  }
-
-  if (data.pages[0].books.length === 0) {
-    return (
-      <Container>
-        <Empty status={status} />
-      </Container>
-    );
-  }
-
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -104,6 +88,22 @@ export default function List({ status }: IProps) {
       observer.disconnect();
     };
   }, [fetchNextPage, hasNextPage, isFetching]);
+
+  if (!data || isLoading) {
+    return (
+      <LoaderContainer>
+        <Loader size={2} />
+      </LoaderContainer>
+    );
+  }
+
+  if (data.pages[0].books.length === 0) {
+    return (
+      <Container>
+        <Empty status={status} />
+      </Container>
+    );
+  }
 
   return (
     <Container>
