@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import BottomNavigationPaletteButton from 'components/bottom/BottomNavigationPaletteButton';
 import BottomNavigationButton from 'components/bottom/BottomNavigationButton';
@@ -44,38 +44,41 @@ const Wrapper = styled.li`
 const bottomNavigationBar = () => {
   const { pathname } = useLocation();
 
-  const bottomRoutes = [
-    {
-      title: '검색하기',
-      icon: <IconSearch />,
-      url: '/search',
-      isAuth: false,
-    },
-    {
-      title: '한줄평',
-      icon: <IconComments />,
-      url: '/comments',
-      isAuth: false,
-    },
-    {
-      title: undefined,
-      icon: undefined,
-      url: undefined,
-      isAuth: false,
-    },
-    {
-      title: '내 서재',
-      icon: <IconBook />,
-      url: '/my_books',
-      isAuth: true,
-    },
-    {
-      title: '내 프로필',
-      icon: <IconPerson />,
-      url: '/profile',
-      isAuth: true,
-    },
-  ];
+  const bottomRoutes = useMemo(
+    () => [
+      {
+        title: '검색하기',
+        icon: <IconSearch />,
+        url: '/search',
+        isAuth: false,
+      },
+      {
+        title: '한줄평',
+        icon: <IconComments />,
+        url: '/comments',
+        isAuth: false,
+      },
+      {
+        title: undefined,
+        icon: undefined,
+        url: undefined,
+        isAuth: false,
+      },
+      {
+        title: '내 서재',
+        icon: <IconBook />,
+        url: '/my_books',
+        isAuth: true,
+      },
+      {
+        title: '내 프로필',
+        icon: <IconPerson />,
+        url: '/profile',
+        isAuth: true,
+      },
+    ],
+    []
+  );
 
   return (
     <>

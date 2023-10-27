@@ -21,7 +21,7 @@ export default function useBookSearchInfinityQuery(keyword: string) {
             return undefined;
           }
         },
-        enabled: false,
+        // enabled: false,
         staleTime: Infinity,
         cacheTime: 5 * 60 * 1000,
       }

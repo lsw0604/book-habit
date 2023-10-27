@@ -10,7 +10,7 @@ const Container = styled.ul`
   width: 100%;
   height: 100%;
   position: relative;
-  padding: 1rem 0;
+  padding-top: 1rem;
   display: flex;
   flex-direction: column;
   @media screen and (min-width: 1280px) {

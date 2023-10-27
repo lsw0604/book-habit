@@ -84,7 +84,11 @@ export default function HistoryList({ filter, users_books_id }: IProps) {
     <Container>
       <ListContainer>
         {myBookHistoryData.map((value) => (
-          <MyBookInfoHistoryItem key={value.id} {...value} />
+          <MyBookInfoHistoryItem
+            key={value.id}
+            users_books_id={users_books_id}
+            {...value}
+          />
         ))}
       </ListContainer>
     </Container>

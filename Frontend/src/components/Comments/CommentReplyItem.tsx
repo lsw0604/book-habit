@@ -1,10 +1,12 @@
-import useCommentsReplyDeleteMutation from '@queries/comments/useCommentsReplyDeleteMutaion';
 import { IconTrashCan } from '@style/icons';
 import Avatar from 'components/common/Avatar';
 import Icon from 'components/common/Button/Icon';
 import dayjs from 'dayjs';
+import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { modalAtom } from 'recoil/modal';
+import { replyAtom } from 'recoil/reply';
 import { userAtom } from 'recoil/user';
 import styled from 'styled-components';
 
@@ -72,19 +74,26 @@ export default function CommentReplyItem({
   users_id,
 }: CommentsReplyListQueryItemType) {
   const { pathname } = useLocation();
-  const comment_id = pathname.split('/')[2];
+  const commentId = pathname.split('/')[2];
+  const comment_id = parseInt(commentId);
+  const setReplyState = useSetRecoilState(replyAtom);
+  const setModalState = useSetRecoilState(modalAtom);
 
-  const { mutate, isLoading } = useCommentsReplyDeleteMutation(
-    reply_id,
-    parseInt(comment_id)
-  );
+  const modalHandler = useCallback((type: ModalAtomType['type']) => {
+    setModalState({ isOpen: true, type });
+  }, []);
+
+  const replyHandler = useCallback(() => {
+    setReplyState({ comment_id, reply_id });
+  }, []);
 
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
   const { id } = useRecoilValue(userAtom);
   const isAuth = users_id === id ? true : false;
 
   const replyDeleteHandler = () => {
-    mutate(reply_id);
+    replyHandler();
+    modalHandler('deleteReply');
   };
 
   return (
@@ -98,11 +107,7 @@ export default function CommentReplyItem({
           </ReplyHeaderInfoContainer>
         </ReplyIconContainer>
         {isAuth ? (
-          <Icon
-            onClick={replyDeleteHandler}
-            isLoading={isLoading}
-            icon={<IconTrashCan />}
-          >
+          <Icon onClick={replyDeleteHandler} icon={<IconTrashCan />}>
             Delete
           </Icon>
         ) : null}

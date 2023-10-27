@@ -17,9 +17,8 @@ import useReadToBookMutation from '@queries/book/useReadToBookMutation';
 import { searchBookAtom } from 'recoil/searchBook';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import { userAtom } from 'recoil/user';
-import ImageWrapper from 'components/common/ImageWrapper';
 import useToastHook from '@hooks/useToastHook';
-import { customize } from '@style/colors';
+import SearchRegisterHeader from './SearchBookRegister/Header';
 
 const Container = styled.form`
   width: 100%;
@@ -27,60 +26,6 @@ const Container = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const Header = styled.div`
-  height: 190px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-`;
-
-const HeaderImageWrapper = styled.div`
-  width: 120px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const HeaderDetailContainer = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const Title = styled.h1`
-  font-size: 20px;
-  line-height: 22px;
-  color: ${({ theme }) => theme.colors.sub};
-  height: auto;
-`;
-
-const Url = styled.a`
-  height: auto;
-  color: ${customize.gray['400']};
-  font-size: 12px;
-  line-height: 16px;
-  margin-bottom: 8px;
-  &:hover {
-    color: ${({ theme }) => theme.colors.spinner};
-  }
-`;
-
-const Description = styled.span`
-  height: 100px;
-  font-size: 16px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.mode.typo_main};
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  white-space: pre-line;
 `;
 
 const Content = styled.div`
@@ -94,7 +39,7 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
-const searchBookRegister = () => {
+export default function SearchBookRegister() {
   const [value, setValue] = useState<ModalType>('');
 
   const {
@@ -165,7 +110,7 @@ const searchBookRegister = () => {
     event.preventDefault();
 
     if (!isLogged) {
-      addToast({ message: '로그인해주세요.', status: 'info' });
+      addToast({ message: '로그인 해주세요.', status: 'info' });
     }
 
     if (value === '') {
@@ -209,20 +154,11 @@ const searchBookRegister = () => {
     }
   }, [value]);
 
+  const MemorizedSearchHeader = memo(SearchRegisterHeader);
+
   return (
     <Container onSubmit={onSubmit}>
-      <Header>
-        <HeaderImageWrapper>
-          <ImageWrapper src={thumbnail} alt={isbn} height={174} width={120} />
-        </HeaderImageWrapper>
-        <HeaderDetailContainer>
-          <Title>{title}</Title>
-          <Description>{contents}</Description>
-          <Url target="_blank" href={url}>
-            더보기
-          </Url>
-        </HeaderDetailContainer>
-      </Header>
+      <MemorizedSearchHeader />
       <Content>
         <Stack>
           <RadioButton<string>
@@ -244,8 +180,4 @@ const searchBookRegister = () => {
       </Stack>
     </Container>
   );
-};
-
-const SearchBookRegister = memo(searchBookRegister);
-
-export default SearchBookRegister;
+}

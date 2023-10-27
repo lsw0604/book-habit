@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 
 import SearchItemHeader from 'components/Search/SearchItemHeader';
 import { searchBookAtom } from 'recoil/searchBook';
 import ImageWrapper from 'components/common/ImageWrapper';
 import useObserverHook from '@hooks/useObserverHook';
-import useModalHook from '@hooks/useModalHook';
+import { modalAtom } from 'recoil/modal';
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
@@ -18,7 +18,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  border-radius: 5px;
+  border-radius: 1rem;
   box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
@@ -71,14 +71,18 @@ export default function SearchItem({
   const ISBN = isbn.split(' ');
   const itemRef = useRef<HTMLDivElement>(null);
 
-  const { setModalState } = useModalHook();
+  const setModalState = useSetRecoilState(modalAtom);
   const setSearchBookState = useSetRecoilState(searchBookAtom);
 
   const { isVisible } = useObserverHook(itemRef);
 
+  const modalHandler = useCallback((type: ModalAtomType['type']) => {
+    setModalState({ isOpen: true, type });
+  }, []);
+
   useEffect(() => {
     const onClick = () => {
-      setModalState({ isOpen: true, type: 'registerSearchBook' });
+      modalHandler('registerSearchBook');
       setSearchBookState({
         thumbnail,
         authors,

@@ -1,12 +1,13 @@
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 
-import useModalHook from '@hooks/useModalHook';
-import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentQuery from '@queries/myBook/useMyBookCommentQuery';
 import { IconPlus } from '@style/icons';
 import MyBookInfoCommentItem from 'components/Comments/Item/MyBookInfoCommentItem';
 import Icon from 'components/common/Button/Icon';
 import Loader from 'components/common/Loader';
+import { myBookAtom } from 'recoil/myBook';
+import { modalAtom } from 'recoil/modal';
 
 interface IProps {
   users_books_id: number;
@@ -65,12 +66,19 @@ const LoadingContainer = styled.div`
 `;
 
 export default function MyBookInfoCommentList({ users_books_id }: IProps) {
-  const { setModalState } = useModalHook();
-  const { onChangeMyBookUsersBooksId } = useMyBookHook();
+  const setMyBookState = useSetRecoilState(myBookAtom);
+  const setModalState = useSetRecoilState(modalAtom);
+
+  const onChangeMyBookUserBooksId = (users_books_id: number) => {
+    setMyBookState((prev) => ({ ...prev, users_books_id }));
+  };
+  const onChangeModal = (type: ModalAtomType['type']) => {
+    setModalState({ isOpen: true, type });
+  };
 
   const commentRegisterModalHandler = () => {
-    onChangeMyBookUsersBooksId(users_books_id);
-    setModalState({ isOpen: true, type: 'registerComment' });
+    onChangeMyBookUserBooksId(users_books_id);
+    onChangeModal('registerComment');
   };
 
   const { data, isLoading, isFetching } = useMyBookCommentQuery(users_books_id);
@@ -97,7 +105,11 @@ export default function MyBookInfoCommentList({ users_books_id }: IProps) {
       ) : (
         <ListContainer>
           {data.map((comment) => (
-            <MyBookInfoCommentItem {...comment} key={comment.comment_id} />
+            <MyBookInfoCommentItem
+              {...comment}
+              key={comment.comment_id}
+              users_books_id={users_books_id}
+            />
           ))}
         </ListContainer>
       )}

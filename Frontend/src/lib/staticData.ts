@@ -10,6 +10,6 @@ export const StatusColorObj: Record<HistoryStatusType, string> = {
 export const StatusWordObj: Record<HistoryStatusType, string> = {
   읽기시작함: '읽기 시작했어요.',
   다읽음: '다 읽었어요.',
-  읽고싶음: '읽고싶은 책 목록에 찜했어요.',
+  읽고싶음: '찜했어요.',
   읽는중: '읽었어요.',
 };

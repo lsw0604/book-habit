@@ -54,5 +54,6 @@ export default function useCommentsReplyDeleteMutation(
   return {
     mutate,
     isLoading,
+    isSuccess,
   };
 }

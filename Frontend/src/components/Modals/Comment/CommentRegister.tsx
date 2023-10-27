@@ -1,9 +1,9 @@
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, memo, useEffect } from 'react';
 import styled from 'styled-components';
 import { customize } from '@style/colors';
 import { IconBook, IconPencil } from '@style/icons';
 import Button from 'components/common/Button';
-import Comment from 'components/Modals/Comment/CommentAddForm';
+import CommentAddForm from 'components/Modals/Comment/CommentAddForm';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
 import useModalHook from '@hooks/useModalHook';
@@ -58,7 +58,7 @@ const Footer = styled.div`
   position: relative;
 `;
 
-export default function CommentRegister() {
+const commentRegister = () => {
   const {
     myBookComment,
     myBookStatus,
@@ -110,7 +110,7 @@ export default function CommentRegister() {
         </HeaderDescriptionContainer>
       </Header>
       <Content>
-        <Comment />
+        <CommentAddForm />
       </Content>
       <Footer>
         <Button isLoading={isLoading} icon={<IconPencil />}>
@@ -119,4 +119,8 @@ export default function CommentRegister() {
       </Footer>
     </Container>
   );
-}
+};
+
+const CommentRegister = memo(commentRegister);
+
+export default CommentRegister;

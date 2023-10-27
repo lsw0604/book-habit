@@ -2,17 +2,19 @@ import dayjs from 'dayjs';
 import styled from 'styled-components';
 import { customize } from '@style/colors';
 import { StatusColorObj } from 'lib/staticData';
-import useModalHook from '@hooks/useModalHook';
-import useMyBookHook from '@hooks/useMyBookHook';
 import useToastHook from '@hooks/useToastHook';
 import { IconClose } from '@style/icons';
 import { v4 } from 'uuid';
+import { useSetRecoilState } from 'recoil';
+import { myBookAtom } from 'recoil/myBook';
+import { modalAtom } from 'recoil/modal';
 
 const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
   height: 100%;
   position: relative;
   cursor: pointer;
+  border-radius: 8px;
   grid-column-start: ${({ gridColumn }) => gridColumn};
   padding-bottom: 100%;
   box-shadow: ${({ theme }) => theme.shadow.md};
@@ -50,8 +52,8 @@ const StatusWrapper = styled.div`
 `;
 
 const Status = styled.div<{ status: HistoryStatusType }>`
-  width: 20%;
   height: 20%;
+  width: 20%;
   border-radius: 50%;
   margin: 0;
   padding: 0;
@@ -82,6 +84,8 @@ export default function DateBox({
   endDate,
 }: DateBoxType) {
   if (!year || !month || !date) return null;
+  const setMyBookState = useSetRecoilState(myBookAtom);
+  const setModalState = useSetRecoilState(modalAtom);
 
   const dayObj = dayjs()
     .locale('ko')
@@ -89,8 +93,18 @@ export default function DateBox({
     .month(parseInt(month) - 1)
     .date(date);
 
-  const { setModalState } = useModalHook();
-  const { onChangeMyBookUsersBooksId, onChangeMyBookDate } = useMyBookHook();
+  const onChangeMyBookUsersBookId = (users_books_id: number) => {
+    setMyBookState((prev) => ({ ...prev, users_books_id }));
+  };
+
+  const onChangeMyBookDate = (date: Date | null) => {
+    setMyBookState((prev) => ({ ...prev, date }));
+  };
+
+  const onChangeModal = (type: ModalAtomType['type']) => {
+    setModalState({ isOpen: true, type });
+  };
+
   const { addToast } = useToastHook();
 
   const isSaturday = dayObj.day() === 6;
@@ -111,9 +125,9 @@ export default function DateBox({
       });
       return;
     }
-    onChangeMyBookUsersBooksId(usersBooksId);
+    onChangeMyBookUsersBookId(usersBooksId);
     onChangeMyBookDate(dayObj.toDate());
-    setModalState({ isOpen: true, type: 'registerHistory' });
+    onChangeModal('registerHistory');
   };
 
   return (

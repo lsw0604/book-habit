@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import Button from 'components/common/Button';
 import { useEffect } from 'react';
-import useMyBookHistoryDeleteMutation from '@queries/myBook/useMyBookHistoryDeleteMutation';
-import useMyBookHook from '@hooks/useMyBookHook';
 import { IconTrashCan, LogoSad } from '@style/icons';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { replyAtom } from 'recoil/reply';
+import useCommentsReplyDeleteMutation from '@queries/comments/useCommentsReplyDeleteMutation';
 import { modalAtom } from 'recoil/modal';
 
 const Container = styled.div`
@@ -40,23 +40,28 @@ const Stack = styled.div`
   align-items: center;
 `;
 
-export default function HistoryDelete() {
+export default function ReplyDelete() {
+  const [replyState, setReplyState] = useRecoilState(replyAtom);
   const setModalState = useSetRecoilState(modalAtom);
 
-  const { myBookHistoryId, myBookUsersBooksId, onChangeMyBookStateInitial } =
-    useMyBookHook();
-  const { mutate, isLoading, isSuccess } = useMyBookHistoryDeleteMutation(
-    myBookHistoryId as number,
-    myBookUsersBooksId as number
+  const reply_id = replyState.reply_id;
+  const comment_id = replyState.comment_id;
+
+  const { mutate, isLoading, isSuccess } = useCommentsReplyDeleteMutation(
+    reply_id,
+    comment_id
   );
 
   const deleteHandler = () => {
-    mutate(myBookHistoryId as number);
+    mutate(reply_id);
   };
 
   const initHandler = () => {
+    setReplyState({
+      comment_id: 0,
+      reply_id: 0,
+    });
     setModalState({ isOpen: false, type: undefined });
-    onChangeMyBookStateInitial();
   };
 
   useEffect(() => {
@@ -71,7 +76,7 @@ export default function HistoryDelete() {
         <Stack>
           <LogoSad />
         </Stack>
-        <Stack>소중한 독서기록 삭제 하시겠어요?</Stack>
+        <Stack>댓글을 삭제 하시겠어요?</Stack>
       </Header>
       <Footer>
         <Button

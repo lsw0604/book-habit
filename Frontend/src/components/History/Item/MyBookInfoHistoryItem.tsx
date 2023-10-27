@@ -1,15 +1,15 @@
+import { useCallback } from 'react';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { useParams } from 'react-router-dom';
 
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
 import { StatusWordObj, StatusColorObj } from 'lib/staticData';
-import useModalHook from '@hooks/useModalHook';
-import useMyBookHook from '@hooks/useMyBookHook';
-import { useSetRecoilState } from 'recoil';
-import { calendarAtom } from 'recoil/calendar';
 import { getCalendarDetail } from 'lib/utils/calendar';
+import { calendarAtom } from 'recoil/calendar';
+import { myBookAtom } from 'recoil/myBook';
+import { modalAtom } from 'recoil/modal';
 
 const Container = styled.div`
   display: inline-flex;
@@ -67,13 +67,24 @@ export default function MyBookInfoHistoryItem({
   date,
   created_at,
   updated_at,
-}: MyBookPageQueriesHistoryItemType) {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
+  users_books_id,
+}: MyBookPageQueriesHistoryItemType & {
+  users_books_id: number;
+}) {
+  const setModalState = useSetRecoilState(modalAtom);
+  const setMyBookState = useSetRecoilState(myBookAtom);
 
-  const { setModalState } = useModalHook();
-  const { onChangeMyBookUsersBooksId, onChangeMyBookHistoryId } =
-    useMyBookHook();
+  const onChangeUsersBooksId = useCallback((users_books_id: number) => {
+    setMyBookState((prev) => ({ ...prev, users_books_id }));
+  }, []);
+
+  const onChangeHistoryId = useCallback((history_id: number) => {
+    setMyBookState((prev) => ({ ...prev, history_id }));
+  }, []);
+
+  const onChangeModal = useCallback((type: ModalAtomType['type']) => {
+    setModalState({ isOpen: true, type });
+  }, []);
 
   const [year, month, day] = dayjs(date).format('YYYY-MM-DD').split('-');
 
@@ -88,9 +99,9 @@ export default function MyBookInfoHistoryItem({
     : undefined;
 
   const deleteHandler = () => {
-    onChangeMyBookHistoryId(id);
-    onChangeMyBookUsersBooksId(parseInt(users_books_id));
-    setModalState({ isOpen: true, type: 'deleteHistory' });
+    onChangeUsersBooksId(users_books_id);
+    onChangeHistoryId(id);
+    onChangeModal('deleteHistory');
   };
 
   return (

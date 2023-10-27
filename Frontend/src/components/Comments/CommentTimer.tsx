@@ -41,13 +41,17 @@ export default function CommentTimer() {
     const timer = setInterval(() => {
       setSecond((prev) => prev - 1);
       if (second === 0) {
-        setSecond(60);
+        setSecond(59);
         setMinute((prev) => prev - 1);
       }
 
       if (minute === 0 && second === 0) {
         setMinute(2);
         setSecond(59);
+        queryClient.invalidateQueries({
+          queryKey: ['USE_COMMENTS_LIST_QUERY'],
+        });
+        refetch();
       }
     }, 1000);
     return () => clearInterval(timer);

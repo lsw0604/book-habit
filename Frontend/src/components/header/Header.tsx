@@ -52,7 +52,7 @@ const LogoWrapper = styled.div`
   }
 `;
 
-export default function Index() {
+export default function Header() {
   const navigate = useNavigate();
   const { isLogged } = useRecoilValue(userAtom);
   const { pathname } = useLocation();

@@ -6,6 +6,17 @@ import { v4 } from 'uuid';
 import Loader from 'components/common/Loader';
 import SearchItem from 'components/Search/SearchItem';
 
+interface IProps {
+  data: InfiniteData<KakaoSearchResponseType> | undefined;
+  fetchNextPage: () => void;
+  hasNextPage: boolean | undefined;
+  isFetching: boolean;
+  search: string;
+  isLoading: boolean;
+  initialLoadComplete: boolean;
+  setInitialLoadComplete: (ctx: boolean) => void;
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -77,18 +88,7 @@ const Observer = styled.div`
   margin-bottom: 20px;
 `;
 
-interface IProps {
-  data: InfiniteData<KakaoSearchResponseType> | undefined;
-  fetchNextPage: () => void;
-  hasNextPage: boolean | undefined;
-  isFetching: boolean;
-  search: string;
-  isLoading: boolean;
-  initialLoadComplete: boolean;
-  setInitialLoadComplete: (ctx: boolean) => void;
-}
-
-export default function SearchList({
+const searchList = ({
   data,
   fetchNextPage,
   hasNextPage,
@@ -97,9 +97,8 @@ export default function SearchList({
   isLoading,
   initialLoadComplete,
   setInitialLoadComplete,
-}: IProps) {
+}: IProps) => {
   const lastSearchRef = useRef<HTMLDivElement>(null);
-  const MemorizedSearchItem = memo(SearchItem);
 
   useEffect(() => {
     const observerOptions = {
@@ -127,31 +126,43 @@ export default function SearchList({
     };
   }, [fetchNextPage, hasNextPage, isFetching, initialLoadComplete]);
 
+  if (search === '' || !data) {
+    return (
+      <Container>
+        <EmptyPageContainer>
+          <div className="empty_page">
+            <p className="empty_page_message">책 제목을 검색해 주세요.</p>
+          </div>
+        </EmptyPageContainer>
+      </Container>
+    );
+  }
+
+  if (data.pages[0].documents.length === 0) {
+    return (
+      <Container>
+        <EmptyPageContainer>
+          <div className="empty_page">
+            <p className="empty_page_message">
+              <span className="empty_page_message highlight">{search}</span>
+              에 대한
+              <br /> 검색 결과가 없습니다.
+            </p>
+          </div>
+        </EmptyPageContainer>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      {data?.pages.map((page) =>
-        page.documents.length === 0 ? (
-          <EmptyPageContainer key={v4()}>
-            <div className="empty_page">
-              <p className="empty_page_message">
-                <span className="empty_page_message highlight">{search}</span>
-                에 대한
-                <br /> 검색 결과가 없습니다.
-              </p>
-            </div>
-          </EmptyPageContainer>
-        ) : (
-          <Page key={v4()}>
-            {page.documents.map((document) => (
-              <MemorizedSearchItem
-                key={document.isbn}
-                search={search}
-                {...document}
-              />
-            ))}
-          </Page>
-        )
-      )}
+      {data?.pages.map((page) => (
+        <Page key={v4()}>
+          {page.documents.map((document) => (
+            <SearchItem key={document.isbn} search={search} {...document} />
+          ))}
+        </Page>
+      ))}
       {isFetching || isLoading ? (
         <FetchLoader>
           <Loader />
@@ -161,4 +172,8 @@ export default function SearchList({
       ) : null}
     </Container>
   );
-}
+};
+
+const SearchList = memo(searchList);
+
+export default SearchList;

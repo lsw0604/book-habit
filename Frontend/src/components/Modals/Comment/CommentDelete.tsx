@@ -1,10 +1,12 @@
 import styled from 'styled-components';
-import Button from 'components/common/Button';
+import { useSetRecoilState } from 'recoil';
 import { useEffect } from 'react';
-import useMyBookCommentDeleteMutation from '@queries/myBook/useMyBookCommentDeleteMutation';
+
+import Button from 'components/common/Button';
 import useMyBookHook from '@hooks/useMyBookHook';
 import { IconTrashCan, LogoSad } from '@style/icons';
-import useModalHook from '@hooks/useModalHook';
+import { modalAtom } from 'recoil/modal';
+import useMyBookCommentDeleteMutation from '@queries/myBook/useMyBookCommentDeleteMutation';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +28,7 @@ const Header = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
 `;
 
@@ -40,9 +42,10 @@ const Stack = styled.div`
 `;
 
 export default function CommentDelete() {
+  const setModalState = useSetRecoilState(modalAtom);
+
   const { myBookCommentId, myBookUsersBooksId, onChangeMyBookStateInitial } =
     useMyBookHook();
-  const { setModalState } = useModalHook();
   const { mutate, isLoading, isSuccess } = useMyBookCommentDeleteMutation(
     myBookUsersBooksId as number,
     myBookCommentId as number
@@ -52,10 +55,14 @@ export default function CommentDelete() {
     mutate(myBookCommentId as number);
   };
 
+  const initHandler = () => {
+    setModalState({ isOpen: false, type: undefined });
+    onChangeMyBookStateInitial();
+  };
+
   useEffect(() => {
     if (isSuccess) {
-      setModalState({ isOpen: false, type: undefined });
-      onChangeMyBookStateInitial();
+      initHandler();
     }
   }, [isSuccess]);
 
@@ -74,6 +81,9 @@ export default function CommentDelete() {
           icon={<IconTrashCan />}
         >
           네, 삭제해주세요
+        </Button>
+        <Button onClick={initHandler} text>
+          아니요
         </Button>
       </Footer>
     </Container>

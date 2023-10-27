@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
 import {
   IconCalendar,
   IconLock,
@@ -11,8 +10,10 @@ import {
 import Icon from 'components/common/Button/Icon';
 import Divider from 'components/common/Divider';
 import { customize } from '@style/colors';
-import useModalHook from '@hooks/useModalHook';
-import useMyBookHook from '@hooks/useMyBookHook';
+import { useSetRecoilState } from 'recoil';
+import { modalAtom } from 'recoil/modal';
+import { myBookAtom } from 'recoil/myBook';
+import { useCallback } from 'react';
 
 const Container = styled.div`
   gap: 8px;
@@ -119,21 +120,41 @@ export default function MyBookInfoCommentItem({
   status,
   updated_at,
   created_at,
-}: MyBookCommentQueryItemType) {
-  const { users_books_id } = useParams();
-  if (!users_books_id) return <div>잘못된 접근입니다.</div>;
+  users_books_id,
+}: MyBookCommentQueryItemType & {
+  users_books_id: number;
+}) {
+  const setModalState = useSetRecoilState(modalAtom);
+  const setMyBookState = useSetRecoilState(myBookAtom);
 
-  const { setModalState } = useModalHook();
-  const {
-    setMyBookState,
-    onChangeMyBookCommentId,
-    onChangeMyBookUsersBooksId,
-  } = useMyBookHook();
+  const onChangeMyBookCommentId = useCallback(
+    (comment_id: number) => {
+      setMyBookState((prev) => ({
+        ...prev,
+        comment_id,
+      }));
+    },
+    [comment_id]
+  );
+
+  const onChangeMyBookUsersBooksId = useCallback(
+    (users_books_id: number) => {
+      setMyBookState((prev) => ({
+        ...prev,
+        users_books_id,
+      }));
+    },
+    [users_books_id]
+  );
+
+  const onChangeModal = useCallback((type: ModalAtomType['type']) => {
+    setModalState({ isOpen: true, type });
+  }, []);
 
   const deleteHandler = () => {
-    setModalState({ isOpen: true, type: 'deleteComment' });
+    onChangeModal('deleteComment');
     onChangeMyBookCommentId(comment_id);
-    onChangeMyBookUsersBooksId(parseInt(users_books_id));
+    onChangeMyBookUsersBooksId(users_books_id);
   };
 
   const modifyHandler = () => {
@@ -142,9 +163,9 @@ export default function MyBookInfoCommentItem({
       comment,
       rating,
       comment_id,
-      users_books_id: parseInt(users_books_id),
+      users_books_id,
     }));
-    setModalState({ isOpen: true, type: 'modifyComment' });
+    onChangeModal('modifyComment');
   };
 
   return (

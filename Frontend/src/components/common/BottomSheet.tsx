@@ -12,6 +12,7 @@ import HistoryRegister from 'components/Modals/History/HistoryRegister';
 import HistoryDelete from 'components/Modals/History/HistoryDelete';
 
 import useModalHook from '@hooks/useModalHook';
+import ReplyDelete from 'components/Modals/Reply/ReplyDelete';
 
 const Container = styled(motion.div)`
   position: absolute;
@@ -37,7 +38,7 @@ const Container = styled(motion.div)`
 export default function BottomSheet() {
   const { modalStateType } = useModalHook();
 
-  const memorizedModalComponent = useMemo(() => {
+  const SwitchingComponent = useMemo(() => {
     switch (modalStateType) {
       case 'isLogin':
         return <NeedLogin />;
@@ -53,6 +54,8 @@ export default function BottomSheet() {
         return <HistoryRegister />;
       case 'deleteHistory':
         return <HistoryDelete />;
+      case 'deleteReply':
+        return <ReplyDelete />;
       default:
         return null;
     }
@@ -70,7 +73,7 @@ export default function BottomSheet() {
         duration: 0.3,
       }}
     >
-      {memorizedModalComponent}
+      {SwitchingComponent}
     </Container>
   );
 }

@@ -10,7 +10,8 @@ type ModalAtomType = {
     | 'deleteComment'
     | 'registerHistory'
     | 'deleteHistory'
-    | 'deleteMyBook';
+    | 'deleteMyBook'
+    | 'deleteReply';
 };
 
 type ReadBookAtomType = {
