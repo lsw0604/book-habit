@@ -1,13 +1,15 @@
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 
 import Loader from 'components/common/Loader';
-import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import ImageWrapper from 'components/common/ImageWrapper';
 import Divider from 'components/common/Divider';
 import Icon from 'components/common/Button/Icon';
 import { IconBookMark, IconTrashCan } from '@style/icons';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { customize } from '@style/colors';
-import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
+import { modalAtom } from 'recoil/modal';
+import { myBookAtom } from 'recoil/myBook';
 
 interface IProps {
   users_books_id: number;
@@ -120,12 +122,14 @@ const BookMarkWrapper = styled.div`
 `;
 
 export default function InfoBox({ users_books_id }: IProps) {
-  const { mutate, isLoading } = useMyBookListDeleteMutation(users_books_id);
   const { myBookInfoData, myBookInfoIsLoading } =
     useMyBookPageQueries(users_books_id);
+  const setModalState = useSetRecoilState(modalAtom);
+  const setMyBookState = useSetRecoilState(myBookAtom);
 
-  const deleteHandler = () => {
-    mutate(users_books_id);
+  const modalHandler = () => {
+    setMyBookState((prev) => ({ ...prev, users_books_id }));
+    setModalState({ isOpen: true, type: 'deleteMyBook' });
   };
 
   if (!myBookInfoData || myBookInfoIsLoading) {
@@ -155,11 +159,7 @@ export default function InfoBox({ users_books_id }: IProps) {
             <Authors>{authors}</Authors>
           </DetailHeaderInfo>
           <DetailHeaderIconWrapper>
-            <Icon
-              onClick={deleteHandler}
-              icon={<IconTrashCan />}
-              isLoading={isLoading}
-            >
+            <Icon onClick={modalHandler} icon={<IconTrashCan />}>
               Delete
             </Icon>
           </DetailHeaderIconWrapper>

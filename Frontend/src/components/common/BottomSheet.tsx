@@ -10,9 +10,10 @@ import CommentRegister from 'components/Modals/Comment/CommentRegister';
 import CommentDelete from 'components/Modals/Comment/CommentDelete';
 import HistoryRegister from 'components/Modals/History/HistoryRegister';
 import HistoryDelete from 'components/Modals/History/HistoryDelete';
+import ReplyDelete from 'components/Modals/Reply/ReplyDelete';
+import MyBookDelete from 'components/Modals/MyBookDelete';
 
 import useModalHook from '@hooks/useModalHook';
-import ReplyDelete from 'components/Modals/Reply/ReplyDelete';
 
 const Container = styled(motion.div)`
   position: absolute;
@@ -56,6 +57,8 @@ export default function BottomSheet() {
         return <HistoryDelete />;
       case 'deleteReply':
         return <ReplyDelete />;
+      case 'deleteMyBook':
+        return <MyBookDelete />;
       default:
         return null;
     }

@@ -6,7 +6,7 @@ import Button from 'components/common/Button';
 import useMyBookHook from '@hooks/useMyBookHook';
 import { IconTrashCan, LogoSad } from '@style/icons';
 import { modalAtom } from 'recoil/modal';
-import useMyBookCommentDeleteMutation from '@queries/myBook/useMyBookCommentDeleteMutation';
+import useMyBookListDeleteMutation from '@queries/myBook/useMyBookListDeleteMutation';
 
 const Container = styled.div`
   display: flex;
@@ -41,19 +41,17 @@ const Stack = styled.div`
   align-items: center;
 `;
 
-export default function CommentDelete() {
+export default function MyBookDelete() {
   const setModalState = useSetRecoilState(modalAtom);
 
-  const { myBookCommentId, myBookUsersBooksId, onChangeMyBookStateInitial } =
-    useMyBookHook();
+  const { myBookUsersBooksId, onChangeMyBookStateInitial } = useMyBookHook();
 
-  const { mutate, isLoading, isSuccess } = useMyBookCommentDeleteMutation(
-    myBookUsersBooksId as number,
-    myBookCommentId as number
+  const { mutate, isLoading, isSuccess } = useMyBookListDeleteMutation(
+    myBookUsersBooksId as number
   );
 
   const deleteHandler = () => {
-    mutate(myBookCommentId as number);
+    mutate(myBookUsersBooksId as number);
   };
 
   const initHandler = () => {
@@ -73,7 +71,7 @@ export default function CommentDelete() {
         <Stack>
           <LogoSad />
         </Stack>
-        <Stack>소중한 한줄평 삭제 하시겠어요?</Stack>
+        <Stack>나의 서재에 등록된 책을 삭제 하시겠어요?</Stack>
       </Header>
       <Footer>
         <Button

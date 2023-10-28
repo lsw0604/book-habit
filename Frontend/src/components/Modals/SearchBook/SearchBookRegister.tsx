@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, FormEvent, memo, useMemo } from 'react';
+import { useState, FormEvent, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { RadioGroupOptionType } from 'types/style';
@@ -154,11 +154,9 @@ export default function SearchBookRegister() {
     }
   }, [value]);
 
-  const MemorizedSearchHeader = memo(SearchRegisterHeader);
-
   return (
     <Container onSubmit={onSubmit}>
-      <MemorizedSearchHeader />
+      <SearchRegisterHeader />
       <Content>
         <Stack>
           <RadioButton<string>

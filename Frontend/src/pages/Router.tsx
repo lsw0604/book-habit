@@ -21,7 +21,6 @@ const LoginPage = lazy(() => import('@pages/LoginPage'));
 const SearchPage = lazy(() => import('@pages/SearchPage'));
 const CommentsPage = lazy(() => import('@pages/CommentsPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
-const BooksDetailPage = lazy(() => import('@pages/BooksDetailPage'));
 const CommentDetailPage = lazy(() => import('@pages/CommentDetailPage'));
 const NotFound = lazy(() => import('@pages/404'));
 
@@ -63,7 +62,6 @@ export default function Router() {
                     path="/comments/:comment_id"
                     Component={CommentDetailPage}
                   />
-                  <Route path="/books/:title" Component={BooksDetailPage} />
                   <Route element={<IsAuthLayout isAuth={true} />}>
                     <Route path="/profile" Component={ProfilePage} />
                     <Route path="/my_books" Component={MyBooksPage} />

@@ -5,6 +5,7 @@ import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQue
 import { useEffect } from 'react';
 import useToastHook from '@hooks/useToastHook';
 import { useNavigate } from 'react-router-dom';
+import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 
 export default function useMyBookListDeleteMutation(
   users_books_id: MyBookListDeleteMutationRequestType
@@ -13,7 +14,8 @@ export default function useMyBookListDeleteMutation(
   const queryClient = new QueryClient();
   const navigate = useNavigate();
   const { addToast } = useToastHook();
-  const { refetch } = useMyBookListInfinityQuery('전체보기');
+  const { refetch: myBookListRefetch } = useMyBookListInfinityQuery('전체보기');
+  const { refetch: commentsListRefetch } = useCommentsListQuery();
   const { mutate, isLoading, isSuccess, isError, error, data } = useMutation<
     MyBookListDeleteMutationResponseType,
     AxiosError,
@@ -26,7 +28,11 @@ export default function useMyBookListDeleteMutation(
         queryClient.invalidateQueries({
           queryKey: ['USE_MY_BOOK_LIST_INFINITY_QUERY'],
         });
-        refetch();
+        queryClient.invalidateQueries({
+          queryKey: ['USE_COMMENTS_LIST_QUERY'],
+        });
+        myBookListRefetch();
+        commentsListRefetch();
       },
     }
   );
