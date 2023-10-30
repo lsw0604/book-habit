@@ -1,10 +1,12 @@
-import '@fontsource/noto-sans-kr/700.css';
 import { createGlobalStyle, css } from 'styled-components';
 
 const globalStyle = css`
-  * {
+  *,
+  ::after,
+  ::before {
     box-sizing: border-box;
   }
+
   html,
   body,
   div,
