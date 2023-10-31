@@ -5,6 +5,8 @@ import Loader from 'components/common/Loader';
 import PublicCommentsItem from 'components/Comments/Item/PublicCommentItem';
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import CommentTimer from 'components/Comments/CommentTimer';
+import CommentHashTag from 'components/Comments/CommentHashTag';
+import { useState } from 'react';
 
 const Container = styled.ul`
   width: 100%;
@@ -24,6 +26,22 @@ const EmptyContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+  .empty_page {
+    background-color: rgba(0, 0, 0, 0.05);
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .empty_page_message {
+    font-size: 20px;
+    line-height: 24px;
+    color: ${({ theme }) => theme.mode.typo_sub};
+  }
 `;
 
 const LoaderContainer = styled.div`
@@ -54,10 +72,16 @@ const ListContainer = styled.div`
 
 const TimerWrapper = styled.div`
   padding: 0 1rem;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 1rem;
 `;
 
 export default function CommentsPage() {
-  const { data, isFetching, isLoading } = useCommentsListQuery();
+  const [filter, setFilter] = useState<string[]>([]);
+  const { data, isFetching, isLoading } = useCommentsListQuery(filter);
 
   if (data === undefined || isLoading) {
     return (
@@ -67,12 +91,15 @@ export default function CommentsPage() {
     );
   }
 
-  const { comments } = data;
-
-  if (comments.length === 0) {
+  if (data.comments.length === 0) {
     return (
       <EmptyContainer>
-        {`${parseInt(dayjs().format('MM'))}`}월에 등록된 한줄평이 아직 없어요.
+        <div className="empty_page">
+          <p className="empty_page_message">
+            {`${parseInt(dayjs().format('MM'))}`}월에 등록된 한줄평이 아직
+            없어요.
+          </p>
+        </div>
       </EmptyContainer>
     );
   }
@@ -81,6 +108,7 @@ export default function CommentsPage() {
     <Container>
       <TimerWrapper>
         <CommentTimer />
+        <CommentHashTag />
       </TimerWrapper>
       {isFetching && (
         <FetchContainer>
@@ -88,7 +116,7 @@ export default function CommentsPage() {
         </FetchContainer>
       )}
       <ListContainer>
-        {data?.comments?.map((comment) => (
+        {data?.comments.map((comment) => (
           <PublicCommentsItem key={comment.comment_id} {...comment} />
         ))}
       </ListContainer>

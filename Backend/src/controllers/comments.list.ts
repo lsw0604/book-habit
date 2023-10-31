@@ -35,13 +35,15 @@ export default async function commentList(req: Request, res: Response, next: Nex
         'ORDER BY created_at DESC';
       const COMMENT_LIST_VALUE = [
         firstDateCurrentMonth.format('YYYY-MM-DD'),
-        lastDateCurrentMonth.format('YYYY-MM-DD'),
+        lastDateCurrentMonth.add(1, 'day').format('YYYY-MM-DD'),
       ];
       const [COMMENT_LIST_RESULT] = await connection.query<ICommentList[]>(
         COMMENT_LIST_SQL,
         COMMENT_LIST_VALUE
       );
       logging.debug(NAMESPACE, '[COMMENT_LIST_RESULT]', COMMENT_LIST_RESULT);
+      logging.debug(NAMESPACE, '[COMMENT_LIST_VALUE]', COMMENT_LIST_VALUE);
+
       connection.release();
       res.status(200).json({
         comments: COMMENT_LIST_RESULT,
