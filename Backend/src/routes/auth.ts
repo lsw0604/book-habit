@@ -20,8 +20,10 @@ import upload from '../middleware/multer';
  * * access jwt를 verify하는 API /api/auth/access
  * * refresh jwt를 verify하는 API /api/auth/refresh
  * * kakao redirect URL을 요청하는 API /api/auth/kakao
- * * kakao OAuth를 로직을 수행하는 API /api/auth/callback?code={카카오로 인가 받은 code}
+ * * kakao OAuth 로직을 수행하는 API /api/auth/callback?code={카카오로 인가 받은 code}
  * * user의 정보를 불러오는 API /api/auth/info
+ * * user의 좋아요 리스트를 불러오는 API /api/auth/like
+ * * user의 댓글 리스트를 불러오는 API /api/auth/reply
  * * local 회원가입 API /api/auth/register
  * * login API /api/auth/login
  * * kakao 회원정보를 수정하는 API /api/auth/kakao/register
@@ -29,6 +31,7 @@ import upload from '../middleware/multer';
  */
 const authRouter = express.Router();
 
+// READ
 authRouter.get('/logout', logout);
 authRouter.get('/access', access, (req, res) => {
   res.status(200).json({ ...req.user, status: 'success', message: 'ACCESS_TOKEN_VERIFIED' });
@@ -41,10 +44,10 @@ authRouter.get('/kakao/callback', KakaoCallback);
 authRouter.get('/info', access, authInfo);
 authRouter.get('/like', access, authLikeList);
 authRouter.get('/reply', access, authReplyList);
-
+// CREATE
 authRouter.post('/register', register);
 authRouter.post('/login', local);
-
+// UPDATE
 authRouter.put('/kakao/register', access, kakaoUpdate);
 authRouter.put('/profile', access, upload.single('profile'), profileUpdate);
 

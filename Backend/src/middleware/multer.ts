@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 
 const upload = multer({
   storage: multer.diskStorage({
-    filename: (req, file, cb) => {
+    filename: (_, file, cb) => {
       const date = dayjs().format('YYYYMMDD_HHmmSS');
       const splitFilename = file.originalname.split('.');
       const fileName = `${date}_${v4()}.${splitFilename[1]}`;

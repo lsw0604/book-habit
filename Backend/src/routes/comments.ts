@@ -15,9 +15,14 @@ import access from '../controllers/auth.access';
 
 /**
  * * Comment 리스트를 불러오는 API /api/comments/list
- * * Comment에 좋아요를 등록한 유저의 리스트를 불러오는 API /api/comments/like/list/:comment_id
+ * * Comment의 detail info 불러오는 API /api/comments/detail/:comment_id
+ * * Comment에 등록한 좋아요 리스트를 불러오는 API /api/comments/like/list/:comment_id
+ * * Comment에 등록된 댓글 리스트를 불러오는 API /api/comments/reply/list/:comment_id
  * * Comment에 좋아요를 등록하는 API /api/comments/like/register
+ * * Comment에 댓글을 등록하는 API /api/comments/reply/register
  * * Comment에 등록된 좋아요를 삭제하는 API /api/comments/like/delete/:comment_id
+ * * Comment에 등록된 댓글을 삭제하는 API /api/comments/reply/delete/:reply_id
+ *
  */
 const commentsRouter = express.Router();
 

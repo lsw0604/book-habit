@@ -15,7 +15,7 @@ export default function useMyBookListDeleteMutation(
   const navigate = useNavigate();
   const { addToast } = useToastHook();
   const { refetch: myBookListRefetch } = useMyBookListInfinityQuery('전체보기');
-  const { refetch: commentsListRefetch } = useCommentsListQuery();
+  const { refetch: commentsListRefetch } = useCommentsListQuery([]);
   const { mutate, isLoading, isSuccess, isError, error, data } = useMutation<
     MyBookListDeleteMutationResponseType,
     AxiosError,

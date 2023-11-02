@@ -1,9 +1,12 @@
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import { IconRefresh } from '@style/icons';
 import { QueryClient } from '@tanstack/react-query';
 import Icon from 'components/common/Button/Icon';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
+interface IProps {
+  refetch: () => void;
+}
 
 const Container = styled.div`
   width: 100%;
@@ -20,13 +23,11 @@ const Time = styled.p`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function CommentTimer() {
-  const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
+export default function CommentTimer({ refetch }: IProps) {
   const [second, setSecond] = useState<number>(59);
   const [minute, setMinute] = useState<number>(2);
-
-  const { refetch } = useCommentsListQuery();
 
   const refreshHandler = () => {
     setMinute(2);
@@ -46,12 +47,7 @@ export default function CommentTimer() {
       }
 
       if (minute === 0 && second === 0) {
-        setMinute(2);
-        setSecond(59);
-        queryClient.invalidateQueries({
-          queryKey: ['USE_COMMENTS_LIST_QUERY'],
-        });
-        refetch();
+        refreshHandler();
       }
     }, 1000);
     return () => clearInterval(timer);

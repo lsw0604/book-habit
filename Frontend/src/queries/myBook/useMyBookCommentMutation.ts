@@ -14,7 +14,7 @@ export default function useMyBookCommentMutation(users_books_id: number) {
   const { onChangeMyBookStateInitial } = useMyBookHook();
   const { refetch: myBookCommentRefetch } =
     useMyBookCommentQuery(users_books_id);
-  const { refetch: commentListRefetch } = useCommentsListQuery();
+  const { refetch: commentListRefetch } = useCommentsListQuery([]);
 
   const { isLoading, mutate, isSuccess, data, isError, error } = useMutation<
     MyBookCommentMutationResponseType,

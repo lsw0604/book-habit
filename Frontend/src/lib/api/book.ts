@@ -1,6 +1,8 @@
 import { axios } from './';
 import Axios from 'axios';
 
+// READ
+
 /**
  * * 책 검색하는 API
  */
@@ -17,6 +19,16 @@ export const booksSearchAPI = async (body: string, page: number) => {
   );
   return data;
 };
+
+/**
+ * * 책 정보 조회하는 API
+ */
+export const bookInfoAPI = async (title: string) => {
+  const { data } = await axios.get(`/api/books/info?title=${title}`);
+  return data;
+};
+
+// CREATE
 
 /**
  * * 읽은 책 등록하는 API
@@ -39,14 +51,5 @@ export const readingBookRegisterAPI = async (body: ReadingBookRegisterType) => {
  */
 export const readToBookRegisterAPI = async (body: ReadToBookRegisterType) => {
   const { data } = await axios.post(`/api/books/read_to`, JSON.stringify(body));
-  return data;
-};
-
-/**
- * * 책 정보 조회하는 API
- */
-
-export const bookInfoAPI = async (title: string) => {
-  const { data } = await axios.get(`/api/books/info?title=${title}`);
   return data;
 };

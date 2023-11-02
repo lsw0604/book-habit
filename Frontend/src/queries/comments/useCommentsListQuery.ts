@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { commentsListAPI } from 'lib/api/comments';
 import { useEffect } from 'react';
 
-export default function useCommentsListQuery(filter?: string[]) {
+export default function useCommentsListQuery(filter: string[]) {
   const REACT_QUERY_KEY = 'USE_COMMENTS_LIST_QUERY';
   const queryClient = new QueryClient();
   const { addToast } = useToastHook();
@@ -21,10 +21,8 @@ export default function useCommentsListQuery(filter?: string[]) {
         staleTime: 3 * 60 * 1000,
         cacheTime: 3 * 60 * 1000,
         select: ({ comments }) => {
-          if (!filter) {
-            return {
-              comments: [],
-            };
+          if (filter.length === 0) {
+            return { comments };
           } else {
             return {
               comments: comments.filter(

@@ -52,17 +52,19 @@ export default function Router() {
             >
               <Routes>
                 <Route path="/" Component={HomePage} />
-                <Route element={<IsKakaoAuthLayout isKakaoRegister={true} />}>
+                <Route element={<IsKakaoAuthLayout needKakaoRegister={true} />}>
                   <Route path="/register/kakao" Component={KakaoRegisterPage} />
                 </Route>
-                <Route element={<IsKakaoAuthLayout isKakaoRegister={false} />}>
+                <Route
+                  element={<IsKakaoAuthLayout needKakaoRegister={false} />}
+                >
                   <Route path="/search" Component={SearchPage} />
                   <Route path="/comments" Component={CommentsPage} />
                   <Route
                     path="/comments/:comment_id"
                     Component={CommentDetailPage}
                   />
-                  <Route element={<IsAuthLayout isAuth={true} />}>
+                  <Route element={<IsAuthLayout needLogin={true} />}>
                     <Route path="/profile" Component={ProfilePage} />
                     <Route path="/my_books" Component={MyBooksPage} />
                     <Route
@@ -70,7 +72,7 @@ export default function Router() {
                       Component={MyBookInfoPage}
                     />
                   </Route>
-                  <Route element={<IsAuthLayout isAuth={false} />}>
+                  <Route element={<IsAuthLayout needLogin={false} />}>
                     <Route path="/login" Component={LoginPage} />
                     <Route path="/login/kakao" Component={KakaoPage} />
                     <Route path="/register" Component={RegisterPage} />

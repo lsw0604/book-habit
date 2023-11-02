@@ -4,7 +4,6 @@ import App from './App';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import '@fontsource/noto-sans-kr/700.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,20 +1,29 @@
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import { customize } from '@style/colors';
 import styled from 'styled-components';
-import { v4 } from 'uuid';
+
+interface IProps {
+  filter: string[];
+  addFilter: (tag: string) => void;
+  removeFilter: (tag: string) => void;
+}
 
 const Container = styled.ul`
   width: 100%;
   height: auto;
+  max-height: 95px;
   overflow: scroll;
   display: flex;
+  flex-direction: row;
   gap: 5px;
-  padding: 8px 0;
+  padding: 5px 0;
   flex-wrap: wrap;
   position: relative;
+  scroll-snap-type: y mandatory;
 `;
 
-const Tag = styled.li`
+const Tag = styled.li<{ isOn: boolean }>`
+  scroll-snap-align: start;
   margin-left: 8px;
   font-size: 12px;
   border-radius: 1rem;
@@ -27,11 +36,29 @@ const Tag = styled.li`
   align-items: center;
   height: 25px;
   line-height: 14px;
-  color: ${customize.gray['400']};
+  cursor: pointer;
+  color: ${({ isOn }) =>
+    isOn ? ({ theme }) => theme.colors.spinner : customize.gray['400']};
 `;
 
-export default function CommentHashTag() {
-  const { data } = useCommentsListQuery();
+export default function CommentHashTag({
+  filter,
+  addFilter,
+  removeFilter,
+}: IProps) {
+  const { data } = useCommentsListQuery([]);
+
+  const filterHandler = (tag: string) => {
+    if (filter.includes(tag)) {
+      removeFilter(tag);
+    } else {
+      addFilter(tag);
+    }
+  };
+
+  const isOn = (tag: string) => {
+    return filter.includes(tag);
+  };
 
   if (!data) return null;
   const hashTag: string[] = [];
@@ -48,8 +75,8 @@ export default function CommentHashTag() {
   return (
     <Container>
       {hashTag.map((tag) => (
-        <Tag onClick={() => console.log(tag)} key={tag}>
-          #{tag}
+        <Tag key={tag} onClick={() => filterHandler(tag)} isOn={isOn(tag)}>
+          #&nbsp;{tag}
         </Tag>
       ))}
     </Container>

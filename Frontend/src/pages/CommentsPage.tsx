@@ -8,7 +8,7 @@ import CommentTimer from 'components/Comments/CommentTimer';
 import CommentHashTag from 'components/Comments/CommentHashTag';
 import { useState } from 'react';
 
-const Container = styled.ul`
+const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
@@ -27,6 +27,9 @@ const EmptyContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  @media screen and (min-width: 1280px) {
+    padding: 1rem 30%;
+  }
   .empty_page {
     background-color: rgba(0, 0, 0, 0.05);
     width: 100%;
@@ -81,7 +84,19 @@ const TimerWrapper = styled.div`
 
 export default function CommentsPage() {
   const [filter, setFilter] = useState<string[]>([]);
-  const { data, isFetching, isLoading } = useCommentsListQuery(filter);
+  const { data, isFetching, isLoading, refetch } = useCommentsListQuery(filter);
+
+  const addFilter = (tag: string) => {
+    if (!filter.includes(tag)) {
+      setFilter((prev) => [...prev, tag]);
+    }
+  };
+
+  const removeFilter = (tag: string) => {
+    if (filter.includes(tag)) {
+      setFilter((prev) => prev.filter((v) => v !== tag));
+    }
+  };
 
   if (data === undefined || isLoading) {
     return (
@@ -107,8 +122,12 @@ export default function CommentsPage() {
   return (
     <Container>
       <TimerWrapper>
-        <CommentTimer />
-        <CommentHashTag />
+        <CommentTimer refetch={refetch} />
+        <CommentHashTag
+          addFilter={addFilter}
+          removeFilter={removeFilter}
+          filter={filter}
+        />
       </TimerWrapper>
       {isFetching && (
         <FetchContainer>
