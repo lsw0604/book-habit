@@ -1,5 +1,5 @@
-import { createGlobalStyle, css } from 'styled-components';
 import '@fontsource/noto-sans-kr/700.css';
+import { createGlobalStyle, css } from 'styled-components';
 
 const globalStyle = css`
   *,
@@ -32,13 +32,10 @@ const globalStyle = css`
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
     vertical-align: baseline;
-  }
-
-  body {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 700;
+    font-size: 100%;
   }
 
   article,

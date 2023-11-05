@@ -27,8 +27,6 @@ const Textarea = styled.textarea`
   color: ${({ theme }) => theme.mode.typo_sub};
   overflow-y: hidden;
   font-size: 16px;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: 700;
   border-radius: 1rem;
   &:focus {
     outline: none;
