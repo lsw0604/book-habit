@@ -12,13 +12,15 @@ export default function useKakaoCallbackQuery(code: string) {
   const { addToast } = useToastHook();
   const { setUserState } = useUserStateHook();
 
-  const { isLoading, data, isSuccess, isError, error } = useQuery<
+  const { isLoading, data, isSuccess, isError, error, refetch } = useQuery<
     KakaoCallbackQueryResponseType,
-    AxiosError
+    AxiosError<{ status: StatusType; message: string }>
   >([REACT_QUERY_KEY], () => kakaoCallbackAPI(code), {
     onError: () => {
       queryClient.refetchQueries([REACT_QUERY_KEY]);
     },
+    retry: 0,
+    enabled: false,
   });
 
   useEffect(() => {
@@ -31,10 +33,11 @@ export default function useKakaoCallbackQuery(code: string) {
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error) {
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
       addToast({
-        message: '카카오 로그인에 오류가 발생했습니다.',
-        status: 'error',
+        message,
+        status,
       });
     }
   }, [isError, error]);
@@ -45,5 +48,6 @@ export default function useKakaoCallbackQuery(code: string) {
     error,
     isLoading,
     data,
+    refetch,
   };
 }

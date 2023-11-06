@@ -25,17 +25,19 @@ const Container = styled.ul`
 const Tag = styled.li<{ isOn: boolean }>`
   scroll-snap-align: start;
   margin-left: 8px;
-  font-size: 12px;
+  font-size: 10px;
   border-radius: 1rem;
-  padding: 0 1rem;
+  padding: 5px 1rem;
+  max-width: 100%;
   min-width: 50px;
   box-shadow: ${({ theme }) => theme.shadow.md};
   background-color: ${({ theme }) => theme.mode.sub};
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 25px;
-  line-height: 14px;
+  min-height: 25px;
+  max-height: auto;
+  line-height: 12px;
   cursor: pointer;
   color: ${({ isOn }) =>
     isOn ? ({ theme }) => theme.colors.spinner : customize.gray['400']};

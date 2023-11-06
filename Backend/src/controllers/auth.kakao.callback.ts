@@ -38,7 +38,9 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
     }).then((response) => response.json());
 
     if (access_token === undefined)
-      return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
+      return res
+        .status(403)
+        .json({ message: 'access_token이 존재하지 않습니다..', status: 'error' });
 
     const { id, kakao_account } = await fetch('https://kapi.kakao.com/v2/user/me', {
       method: 'GET',
@@ -51,7 +53,7 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
     logging.debug(NAMESPACE, '[kakao_account]', kakao_account);
 
     if (id === undefined)
-      return res.status(403).json({ message: '잘못된 접근입니다.', status: 'error' });
+      return res.status(403).json({ message: 'kakao_id가 존재하지 않습니다.', status: 'error' });
 
     const connection = await connectionPool.getConnection();
     try {

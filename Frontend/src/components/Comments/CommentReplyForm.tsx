@@ -11,7 +11,6 @@ const Container = styled.form`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   flex-direction: column;
 `;
 

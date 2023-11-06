@@ -12,6 +12,7 @@ const Container = styled.article`
   margin-bottom: 8px;
   min-height: 80px;
   gap: 8px;
+  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 const AvatarWrapper = styled.div`
@@ -23,7 +24,7 @@ const AvatarWrapper = styled.div`
 `;
 
 const Content = styled.div`
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -31,7 +32,7 @@ const Content = styled.div`
 
 const SubHighLightWord = styled.p`
   color: ${customize.gray['400']};
-  width: auto;
+  min-width: auto;
   max-width: 50%;
   overflow: hidden;
   text-overflow: ellipsis;
