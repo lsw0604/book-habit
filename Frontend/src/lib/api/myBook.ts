@@ -49,16 +49,6 @@ export const myBookInfoAPI = async (
 };
 
 /**
- * * 내 서재에 등록된 책인지 확인하는 API
- */
-export const myBookExistAPI = async (isbn: MyBookExistQueryRequestType) => {
-  const { data } = await axios.get<MyBookExistQueryResponseType>(
-    `/api/my_book/exist/${isbn}`
-  );
-  return data;
-};
-
-/**
  * * 내 서재에 등록된 책의 시간 범위를 확인하는 API
  */
 export const myBookTimeRangeAPI = async (

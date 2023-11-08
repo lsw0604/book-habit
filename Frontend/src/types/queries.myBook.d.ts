@@ -20,12 +20,6 @@ type MyBookCommentQueryItemType = {
 };
 type MyBookCommentQueryRequestType = number;
 
-// useMyBookExistQuery의 타입들
-type MyBookExistQueryResponseType = {
-  status: '등록' | '미등록';
-};
-type MyBookExistQueryRequestType = string;
-
 // useMyBookCommentDeleteMutation의 타입들
 type MyBookCommentDeleteMutationResponseType = MutationResponse;
 type MyBOokCommentDeleteMutationRequestType = number;

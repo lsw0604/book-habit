@@ -4,7 +4,6 @@ import myBookTimeRange from '../controllers/myBook.time.range';
 import myBookList from '../controllers/myBook.list';
 import myBookHistoryList from '../controllers/myBook.history.list';
 import myBookCommentsList from '../controllers/myBook.comments.list';
-import myBookExist from '../controllers/myBook.exist';
 import myBookInfo from '../controllers/myBook.info';
 
 import myBookHistoryRegister from '../controllers/myBook.history.register';
@@ -23,7 +22,6 @@ import access from '../controllers/auth.access';
  * * 내 서재에 등록된 책의 독서기록을 불러오는 API /api/my_book/history/list/:users_books_id
  * * 내 서재에 등록된 책의 한줄평을 불러오는 API /api/my_book/comments/list/:users_books_id
  * * 내 서재에 등록된 책의 정보를 불러오는 API /api/my_book/info/:users_books_id
- * * 내 서재에 등록된 책인지 확인하는 API /api/my_book/exist/:isbn
  * * 내 서재에 등록된 책의 시간 범위를 확인하는 API /api/my_book/time_range/:users_books_id
  * * 내 서재에 등록된 책에 독서기록을 등록하는 API /api/my_book/history/register
  * * 내 서제에 등록된 책에 한줄평을 등록하는 API /api/my_book/comments/register
@@ -39,7 +37,6 @@ myBookRouter.get('/list', access, myBookList);
 myBookRouter.get('/history/list/:users_books_id', access, myBookHistoryList);
 myBookRouter.get('/comments/list/:users_books_id', access, myBookCommentsList);
 myBookRouter.get('/info/:users_books_id', access, myBookInfo);
-myBookRouter.get('/exist/:isbn', access, myBookExist);
 myBookRouter.get('/time_range/:users_books_id', access, myBookTimeRange);
 // CREATE
 myBookRouter.post('/history/register', access, myBookHistoryRegister);
