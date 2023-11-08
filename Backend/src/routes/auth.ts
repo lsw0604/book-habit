@@ -9,7 +9,6 @@ import kakao from '../controllers/auth.kakao.login';
 import KakaoCallback from '../controllers/auth.kakao.callback';
 import kakaoUpdate from '../controllers/auth.kakao.update';
 import profileUpdate from '../controllers/auth.profile.update';
-import authInfo from '../controllers/auth.info';
 import authLikeList from '../controllers/auth.like.list';
 import authReplyList from '../controllers/auth.reply.list';
 
@@ -21,7 +20,6 @@ import upload from '../middleware/multer';
  * * refresh jwt를 verify하는 API /api/auth/refresh
  * * kakao redirect URL을 요청하는 API /api/auth/kakao
  * * kakao OAuth 로직을 수행하는 API /api/auth/callback?code={카카오로 인가 받은 code}
- * * user의 정보를 불러오는 API /api/auth/info
  * * user의 좋아요 리스트를 불러오는 API /api/auth/like
  * * user의 댓글 리스트를 불러오는 API /api/auth/reply
  * * local 회원가입 API /api/auth/register
@@ -41,7 +39,6 @@ authRouter.get('/refresh', refresh, (req, res) => {
 });
 authRouter.get('/kakao', kakao);
 authRouter.get('/kakao/callback', KakaoCallback);
-authRouter.get('/info', access, authInfo);
 authRouter.get('/like', access, authLikeList);
 authRouter.get('/reply', access, authReplyList);
 // CREATE

@@ -28,16 +28,6 @@ export const logoutAPI = async () => {
 };
 
 /**
- * * user의 정보를 불러오는 API
- */
-export const profileInfoAPI = async () => {
-  const { data } = await axios.get<ProfileInfoQueryResponseType>(
-    `/api/auth/info`
-  );
-  return data;
-};
-
-/**
  * * user의 좋아요 리스트를 불러오는 API
  */
 export const profileLikeListAPI = async (page: ProfileLikeQueryRequestType) => {

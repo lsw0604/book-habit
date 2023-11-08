@@ -5,14 +5,6 @@ type ProfileEditMutationResponseType = MutationResponse & {
 };
 type ProfileEditMutationRequestType = FormData;
 
-// useProfileInfoQuery의 타입들
-
-type ProfileInfoQueryResponseType = {
-  comments_count: number;
-  books_count: number;
-  likes_count: number;
-};
-
 // useProfileLikeQuery의 타입들
 type ProfileLikeQueryRequestType = number;
 type ProfileLikeQueryResponseType = {
