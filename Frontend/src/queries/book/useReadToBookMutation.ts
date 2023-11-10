@@ -10,7 +10,11 @@ import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 import { userAtom } from 'recoil/user';
 
+const REACT_QUERY_KEY = 'USE_READ_TO_BOOK_REGISTER_KEY';
+
 export default function useReadToBookMutation() {
+  const queryClient = new QueryClient();
+
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
   const { isLogged } = useRecoilValue(userAtom);
@@ -19,8 +23,6 @@ export default function useReadToBookMutation() {
     ? useMyBookListInfinityQuery('전체보기')
     : { refetch: () => undefined };
 
-  const queryClient = new QueryClient();
-  const REACT_QUERY_KEY = 'USE_READ_TO_BOOK_REGISTER_KEY';
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     useReadToBookMutationResponseType,
     AxiosError,

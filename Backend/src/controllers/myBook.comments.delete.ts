@@ -3,14 +3,13 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function myBookCommentsDelete(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const NAMESPACE = 'MY_BOOK_COMMENTS_DELETE';
+const NAMESPACE = 'MY_BOOK_COMMENTS_DELETE';
+
+export default async function myBookCommentsDelete(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
+
   const { comment_id } = req.params;
+
   try {
     const connection = await connectionPool.getConnection();
     try {

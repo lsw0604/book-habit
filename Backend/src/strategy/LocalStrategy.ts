@@ -4,7 +4,7 @@ import { RowDataPacket } from 'mysql2';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { GenderType, ISelectAllFromUsersWhereEmail, ProviderType } from '../types';
+import { GenderType, ProviderType } from '../types';
 
 interface IQueryResult extends RowDataPacket {
   id: number;

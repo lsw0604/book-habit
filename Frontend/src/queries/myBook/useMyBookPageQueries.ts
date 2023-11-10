@@ -7,17 +7,18 @@ import {
 } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = {
+  info: 'MY_BOOK_INFO',
+  history: 'MY_BOOK_HISTORY',
+  rating: 'MY_BOOK_RATING',
+  time: 'MY_BOOK_TIME',
+  comments: 'MY_BOOK_COMMENTS',
+};
+
 export default function useMyBookPageQueries(
   users_books_id: number,
   filtered?: string[]
 ) {
-  const REACT_QUERY_KEY = {
-    info: 'MY_BOOK_INFO',
-    history: 'MY_BOOK_HISTORY',
-    rating: 'MY_BOOK_RATING',
-    time: 'MY_BOOK_TIME',
-    comments: 'MY_BOOK_COMMENTS',
-  };
   const { addToast } = useToastHook();
 
   const [

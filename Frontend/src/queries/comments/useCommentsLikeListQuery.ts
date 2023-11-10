@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { commentsLikeListAPI } from 'lib/api/comments';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_LIST_QUERY';
+
 export default function useCommentsLikeListQuery(
   comment_id: CommentsLikeListRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_LIST_QUERY';
-
   const { data, isFetching, isLoading, refetch } = useQuery<
     CommentsLikeListQueryResponseType,
     AxiosError,

@@ -7,10 +7,11 @@ import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import { commentsLikeRegisterAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
+
 export default function useCommentsLikeMutation(
   comment_id: CommentsLikeMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch: profileLikeQueryRefetch } = useProfileLikeQuery(1);

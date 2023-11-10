@@ -6,10 +6,12 @@ import { userAtom } from 'recoil/user';
 import useToastHook from '@hooks/useToastHook';
 import { AxiosError } from 'axios';
 
+const REACT_QUERY_KEY = 'USE_PROFILE_EDIT_MUTATION';
+
 export default function useProfileEditMutation() {
-  const REACT_QUERY_KEY = 'USE_PROFILE_EDIT_MUTATION';
   const { addToast } = useToastHook();
   const setUserState = useSetRecoilState(userAtom);
+
   const { mutate, isLoading, isError, isSuccess, data, error } = useMutation<
     ProfileEditMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,

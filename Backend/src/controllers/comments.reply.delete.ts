@@ -3,8 +3,9 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function commentsReplyDelete(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENTS_REPLY_DELETE';
+const NAMESPACE = 'COMMENTS_REPLY_DELETE';
+
+export default async function commentsReplyDelete(req: Request, res: Response, _: NextFunction) {
   logging.debug(NAMESPACE, '[START]');
 
   if (req.user === undefined)

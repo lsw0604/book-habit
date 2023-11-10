@@ -8,8 +8,9 @@ interface IProps extends RowDataPacket {
   endDate: Date;
 }
 
-export default async function myBookTimeRange(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'MY_BOOK_TIME_RANGE';
+const NAMESPACE = 'MY_BOOK_TIME_RANGE';
+
+export default async function myBookTimeRange(req: Request, res: Response, _: NextFunction) {
   const { users_books_id } = req.params;
 
   logging.info(NAMESPACE, '[START]');

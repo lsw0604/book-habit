@@ -7,10 +7,11 @@ import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import { commentsLikeDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_DELETE_MUTATION';
+
 export default function useCommentsLikeDeleteMutation(
   comment_id: CommentsLikeDeleteMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_DELETE_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch: profileLikeQueryRefetch } = useProfileLikeQuery(1);

@@ -6,9 +6,11 @@ import useToastHook from '@hooks/useToastHook';
 import { AxiosError } from 'axios';
 import useUserStateHook from '@hooks/useUserStateHook';
 
+const REACT_QUERY_KEY = 'USE_KAKAO_CALLBACK_QUERY';
+
 export default function useKakaoCallbackQuery(code: string) {
-  const REACT_QUERY_KEY = 'USE_KAKAO_CALLBACK_QUERY';
   const queryClient = useQueryClient();
+
   const { addToast } = useToastHook();
   const { setUserState } = useUserStateHook();
 

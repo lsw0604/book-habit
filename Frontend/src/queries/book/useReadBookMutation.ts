@@ -10,6 +10,8 @@ import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQue
 import { readBookRegisterAPI } from 'lib/api/book';
 import { userAtom } from 'recoil/user';
 
+const REACT_QUERY_KEY = 'USE_READ_BOOK_MUTATION';
+
 export default function useReadBookMutation() {
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
@@ -20,7 +22,6 @@ export default function useReadBookMutation() {
     ? useMyBookListInfinityQuery('전체보기')
     : { refetch: () => undefined };
 
-  const REACT_QUERY_KEY = 'USE_READ_BOOK_MUTATION';
   const queryClient = new QueryClient();
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<

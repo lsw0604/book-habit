@@ -4,10 +4,11 @@ import { AxiosError } from 'axios';
 import { commentsDetailAPI } from 'lib/api/comments';
 import { useEffect } from 'react';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_DETAIL_QUERY';
+
 export default function useCommentsDetailQuery(
   comment_id: CommentsDetailQueryRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_DETAIL_QUERY';
   const { addToast } = useToastHook();
 
   const { data, isLoading, isFetching, error, isError, refetch } = useQuery<

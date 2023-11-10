@@ -5,8 +5,9 @@ import dayjs from 'dayjs';
 import { commentsListAPI } from 'lib/api/comments';
 import { useEffect } from 'react';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_LIST_QUERY';
+
 export default function useCommentsListQuery(filter: string[]) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_LIST_QUERY';
   const queryClient = new QueryClient();
   const { addToast } = useToastHook();
 

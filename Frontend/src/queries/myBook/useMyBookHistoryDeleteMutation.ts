@@ -7,11 +7,12 @@ import { myBookHistoryDeleteAPI } from 'lib/api/myBook';
 import useMyBookListInfinityQuery from './useMyBookListInfinityQuery';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_DELETE_MUTATION';
+
 export default function useMyBookHistoryDeleteMutation(
   users_books_history_id: number,
   users_books_id: number
 ) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_DELETE_MUTATION';
   const queryClient = new QueryClient();
 
   const { myBookHistoryRefetch, myBookTimeRefetch } =

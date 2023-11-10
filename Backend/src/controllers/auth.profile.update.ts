@@ -1,17 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
-import logging from '../config/logging';
 import sharp from 'sharp';
-import S3 from '../config/s3';
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
-import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
+import logging from '@/config/logging';
+import S3 from '@/config/s3';
+import { connectionPool } from '@/config/database';
+
+const NAMESPACE = 'PROFILE_UPDATE';
+
 export default async function profileUpdate(req: Request, res: Response, _: NextFunction) {
-  const NAMESPACE = 'PROFILE_UPDATE';
   if (!req.file) return res.status(500).json({ message: '잘못된 접근입니다.', status: 'error' });
   if (!req.user) return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
-  logging.debug(NAMESPACE, '[START]', req.file);
+
+  logging.debug(NAMESPACE, '[REQ.FILE]', req.file);
+
   const { id } = req.user;
+
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -27,7 +32,11 @@ export default async function profileUpdate(req: Request, res: Response, _: Next
       const s3Url = `https://${process.env.S3_BUCKET_NAME}.s3.amazonaws.com/${req.file.filename}`;
       const s3UploadCommand = new PutObjectCommand(uploadParams);
 
-      await S3.send(s3UploadCommand);
+      await S3.send(s3UploadCommand).catch((resolve) => {
+        logging.error(NAMESPACE, '[S3_ERROR]', resolve);
+      });
+
+      logging.debug(NAMESPACE, '[S3_SEND]');
 
       const PROFILE_UPDATE_SQL = 'UPDATE users SET profile = ? WHERE id = ?';
       const PROFILE_UPDATE_VALUE = [s3Url, id];

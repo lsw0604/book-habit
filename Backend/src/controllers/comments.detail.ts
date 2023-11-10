@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import logging from '@config/logging';
+import { connectionPool } from '@config/database';
 import { RowDataPacket } from 'mysql2';
 
 interface ICommentDetail extends RowDataPacket {
@@ -14,8 +14,9 @@ interface ICommentDetail extends RowDataPacket {
   status: '다읽음' | '읽는중' | '읽기전';
 }
 
-export default async function commentsDetail(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENT_DETAIL';
+const NAMESPACE = 'COMMENT_DETAIL';
+
+export default async function commentsDetail(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   const { comment_id } = req.params;
   if (!comment_id) return res.status(400).json({ message: '잘못된 접근입니다.', status: 'error' });

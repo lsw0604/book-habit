@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 
-import tokenGenerator from '../utils/token';
+import tokenGenerator from '@/utils/token';
 
 const refresh = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(

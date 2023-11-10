@@ -1,26 +1,17 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
-import { RowDataPacket } from 'mysql2';
 
-interface IAuthReplyList extends RowDataPacket {
-  like_id: number;
-  status: '읽는중' | '다읽음' | '읽기전';
-  comment_id: number;
-  title: string;
-  profile: string;
-  name: string;
-}
+import logging from '@/config/logging';
+import { connectionPool } from '@/config/database';
+import { AuthReplyListCountType, AuthReplyListType } from '@/types';
 
-interface IAuthReplyListCount extends RowDataPacket {
-  count: number;
-}
+const NAMESPACE = 'AUTH_REPLY_LIST';
 
 export default async function authReplyList(req: Request, res: Response, _: NextFunction) {
-  const NAMESPACE = 'AUTH_Reply_LIST';
   logging.info(NAMESPACE, '[START]');
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
   const { id } = req.user;
 
   try {
@@ -38,7 +29,7 @@ export default async function authReplyList(req: Request, res: Response, _: Next
         'LEFT JOIN users AS us ON us.id = ub.users_id ' +
         'WHERE pcr.users_id = ?';
       const AUTH_REPLY_LIST_COUNT_VALUE = [id];
-      const [AUTH_REPLY_LIST_COUNT_RESULT] = await connection.query<IAuthReplyListCount[]>(
+      const [AUTH_REPLY_LIST_COUNT_RESULT] = await connection.query<AuthReplyListCountType[]>(
         AUTH_REPLY_LIST_COUNT_SQL,
         AUTH_REPLY_LIST_COUNT_VALUE
       );
@@ -69,7 +60,7 @@ export default async function authReplyList(req: Request, res: Response, _: Next
         'WHERE pcr.users_id = ? ' +
         'LIMIT 5 OFFSET ?';
       const AUTH_REPLY_LIST_VALUE = [id, startPage];
-      const [AUTH_REPLY_LIST_RESULT] = await connection.query<IAuthReplyList[]>(
+      const [AUTH_REPLY_LIST_RESULT] = await connection.query<AuthReplyListType[]>(
         AUTH_REPLY_LIST_SQL,
         AUTH_REPLY_LIST_VALUE
       );

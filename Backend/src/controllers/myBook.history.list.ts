@@ -1,13 +1,26 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookHistoryType } from '../types';
+import { RowDataPacket } from 'mysql2';
+import { StatusType } from '../types';
 
-export default async function myBookHistoryList(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'BOOKS_MY_BOOK_HISTORY_LIST';
+interface IMyBookHistory extends RowDataPacket {
+  id: number;
+  status: StatusType;
+  date: Date;
+  page: number | null;
+  created_at: Date;
+  updated_at: Date | null;
+}
+
+const NAMESPACE = 'BOOKS_MY_BOOK_HISTORY_LIST';
+
+export default async function myBookHistoryList(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
   const { id } = req.user;
   const { users_books_id } = req.params;
   try {
@@ -20,7 +33,7 @@ export default async function myBookHistoryList(req: Request, res: Response, nex
         'WHERE ub.users_id = ? AND ub.id = ? ' +
         'ORDER BY date DESC';
       const BOOKS_MY_BOOK_HISTORY_LIST_VALUE = [id, users_books_id];
-      const [BOOKS_MY_BOOK_HISTORY_LIST_RESULT] = await connection.query<MyBookHistoryType[]>(
+      const [BOOKS_MY_BOOK_HISTORY_LIST_RESULT] = await connection.query<IMyBookHistory[]>(
         BOOKS_MY_BOOK_HISTORY_LIST_SQL,
         BOOKS_MY_BOOK_HISTORY_LIST_VALUE
       );

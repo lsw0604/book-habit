@@ -1,19 +1,18 @@
-import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import { Response, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 import dayjs from 'dayjs';
-import { MyBookReadingRegisterRequest } from '../types';
 
-interface IRequest<T> extends Request {
-  body: T;
-}
+import logging from '@/config/logging';
+import { connectionPool } from '@/config/database';
+import { MyBookReadingRegisterRequest, IRequest } from '@/types';
+
+const NAMESPACE = 'READING_BOOK_REGISTER';
+
 export default async function readingBook(
   req: IRequest<MyBookReadingRegisterRequest>,
   res: Response,
-  next: NextFunction
+  _: NextFunction
 ) {
-  const NAMESPACE = 'READING_BOOK_REGISTER';
   logging.info(NAMESPACE, '[START]');
 
   const { startDate, users_books_id } = req.body;

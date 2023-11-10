@@ -1,157 +1,96 @@
 import { RowDataPacket } from 'mysql2';
+import { Request } from 'express';
 
-export interface IUserAllInfo extends RowDataPacket {
-  id?: number;
-  email: string;
-  name: string;
-  password: string;
-  gender: GenderType;
-  birthday: Date;
-  provider: ProviderType;
-  refresh_token: string;
-  created_at: Date;
+interface IRequest<T> extends Request {
+  body: T;
 }
 
-export interface IUserEmailInfo extends RowDataPacket {
-  id?: number;
-  email: string;
-}
+// auth.kakao.callback
 
-export interface IRequestBodyRegister {
-  email: string;
-  name: string;
-  gender: string;
-  birthday: Date;
-  password: string;
-}
-
-export interface ISelectFromJWTPayload extends RowDataPacket {
+export type KakaoCallbackKakaoIdExistType = {
   id: number;
-  email: string;
   name: string;
-  age: number;
-  gender: GenderType;
-  provider: ProviderType;
-}
-
-export interface ISelectAllFromUsersWhereEmail extends RowDataPacket {
-  id: number;
-  email: string;
-  name: string;
-  password: string;
   gender: GenderType;
   age: number;
-  provider: ProviderType;
-}
-
-interface IMyBooksInfo extends RowDataPacket {
-  status: '다읽음' | '읽는중' | '읽고싶음';
-  start_date: Date | null;
-  end_date: Date | null;
-  created_at: Date;
-  updated_at: Date | null;
-  page: number | null;
-  rating: number | null;
-  isbn: string;
-  title: string;
-}
-
-export interface IMyBooksResponse extends RowDataPacket {
-  books_id: number;
-  id: number;
-  isbn: string;
-  status: string;
-  thumbnail: string;
-  start_date: Date;
-  end_date: Date;
-  rating: number;
-  page: number;
-  created_at: Date;
-}
-
-export interface IMyBookInfoProps extends RowDataPacket {
-  status: '다읽음' | '읽는중' | '읽고싶음';
-  start_date: Date | null;
-  end_date: Date | null;
-  created_at: Date;
-  updated_at: Date | null;
-  page: number | null;
-  rating: number | null;
-}
-
-export type ResponseLoginType = {
-  id: number;
-  name: string;
   email: string;
+  profile?: string;
+  provider: ProviderType;
+} & RowDataPacket;
+
+// auth.kakao.update
+
+export type KakaoRegisterKakaoUserInfoType = {
+  id: number;
+  email: string;
+  name: string;
   gender: GenderType;
-  age: number;
+  provider: ProviderType;
   profile: string;
-  provider: ProviderType;
-};
-
-export type MyBookListCountResponseType = {
-  count: number;
+  age: number;
 } & RowDataPacket;
 
-export type MyBookListResponseType = {
-  id: number;
-  isbn: string;
-  title: string;
-  thumbnail?: string;
-  status: '다읽음' | '읽는중' | '읽고싶음';
-  created_at: Date;
-} & RowDataPacket;
+export interface IKakaoRegisterRequest {
+  name: string;
+  gender: GenderType;
+  age: number;
+}
 
-export type MyBookExistResponseType = {
-  count: number;
-} & RowDataPacket;
+// auth.like.list
 
-export type MyBookHistoryType = {
-  id: number;
-  status: '읽기시작함' | '다읽음' | '읽고싶음' | '읽는중';
-  date: Date;
-  page: number | null;
-  created_at: Date;
-  updated_at: Date | null;
-} & RowDataPacket;
-
-export type MyBookRatingType = {
-  status: '읽기전' | '다읽음' | '읽는중';
-  created_at: Date;
-  rating: number;
-} & RowDataPacket;
-
-export type MyBookInfoType = {
-  thumbnail?: string;
-  title: string;
-  url: string;
-  contents: string;
-  publisher: string;
-  authors: string;
-} & RowDataPacket;
-
-export type MyBookRatingExistType = {
-  status: '읽기전' | '다읽음' | '읽는중';
-} & RowDataPacket;
-
-export type MyBookCommentsListType = {
+export type AuthLikeListType = {
+  like_id: number;
+  comment_status: CommentStatusType;
   comment_id: number;
-  comment: string;
-  rating: number;
-  status: '읽기전' | '다읽음' | '읽는중';
-  comment_is_open: boolean;
-  created_at: Date;
-  updated_at: Date | null;
+  title: string;
+  profile: string;
+  name: string;
 } & RowDataPacket;
 
-export type MyBookExistResult = {
+export type AuthLikeListCountType = {
   count: number;
 } & RowDataPacket;
 
-export type BookExistResult = {
+// auth.register
+
+export interface IAuthLocalRegisterRequest {
+  email: string;
+  name: string;
+  password: string;
+  gender: GenderType;
+  age: number;
+}
+
+export type AuthLocalRegisterEmailCheckType = {
+  email?: string;
+} & RowDataPacket;
+
+// auth.reply.list
+
+export type AuthReplyListType = {
+  like_id: number;
+  status: '읽는중' | '다읽음' | '읽기전';
+  comment_id: number;
+  title: string;
+  profile: string;
+  name: string;
+} & RowDataPacket;
+
+export type AuthReplyListCountType = {
+  count: number;
+} & RowDataPacket;
+
+// book.exist
+
+export type MyBookExistCountType = {
+  count: number;
+} & RowDataPacket;
+
+export type BookExistType = {
   isbn: string;
   id: number;
 } & RowDataPacket;
+
+// book.*
 
 export type MyBookRegisterRequest = {
   authors: string;
@@ -180,9 +119,33 @@ export type MyBOokReadToRegisterRequest = MyBookRegisterRequest & {
   users_books_id?: number;
 };
 
+// comment.detail
+
+export interface IRequestBodyRegister {
+  email: string;
+  name: string;
+  gender: string;
+  birthday: Date;
+  password: string;
+}
+
+export type ResponseLoginType = {
+  id: number;
+  name: string;
+  email: string;
+  gender: GenderType;
+  age: number;
+  profile: string;
+  provider: ProviderType;
+};
+
 type GenderType = 'male' | 'female';
 
 type ProviderType = 'local' | 'kakao';
+
+type CommentStatusType = '읽는중' | '다읽음' | '읽기전';
+
+type StatusType = '읽기시작함' | '다읽음' | '읽고싶음' | '읽는중';
 
 declare module 'express-session' {
   interface SessionData {

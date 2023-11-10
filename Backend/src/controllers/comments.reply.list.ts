@@ -12,8 +12,9 @@ interface ICommentsReplyList extends RowDataPacket {
   profile: string;
 }
 
-export default async function commentsReplyList(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENTS_REPLY_LIST';
+const NAMESPACE = 'COMMENTS_REPLY_LIST';
+
+export default async function commentsReplyList(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   try {
     const connection = await connectionPool.getConnection();

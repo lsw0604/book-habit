@@ -22,12 +22,13 @@ interface IReadRequest {
   date: Date;
 }
 
+const NAMESPACE = 'MY_BOOK_REGISTER';
+
 export default async function myBookHistoryRegister(
   req: IRequest<IReadRequest>,
   res: Response,
-  next: NextFunction
+  _: NextFunction
 ) {
-  const NAMESPACE = 'MY_BOOK_REGISTER';
   logging.debug(NAMESPACE, '[START]');
 
   const { status, date, users_books_id } = req.body;

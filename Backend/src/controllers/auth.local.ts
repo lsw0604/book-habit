@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 
-import tokenGenerator from '../utils/token';
-import { ResponseLoginType } from '../types';
+import tokenGenerator from '@/utils/token';
+import { ResponseLoginType } from '@/types';
 
 const login = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(

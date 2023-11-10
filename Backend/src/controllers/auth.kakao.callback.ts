@@ -1,25 +1,18 @@
 import { Response, Request, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
 import qs from 'qs';
 
-import { connectionPool } from '../config/database';
-import logging from '../config/logging';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import tokenGenerator from '../utils/token';
-import { GenderType, ProviderType } from '../types';
+import { connectionPool } from '@/config/database';
+import logging from '@/config/logging';
+import tokenGenerator from '@/utils/token';
+import { KakaoCallbackKakaoIdExistType } from '@/types';
 
-interface IQueryResult extends RowDataPacket {
-  id: number;
-  name: string;
-  gender: GenderType;
-  age: number;
-  email: string;
-  profile?: string;
-  provider: ProviderType;
-}
+const NAMESPACE = 'KAKAO_CALLBACK';
+
+const K_AUTH_FETCH_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+const K_API_FETCH_ME_URL = 'https://kapi.kakao.com/v2/user/me';
 
 export default async function KakaoCallback(req: Request, res: Response, _: NextFunction) {
-  const NAMESPACE = 'KAKAO_CALLBACK';
-
   const code = req.query.code as string;
   const body = qs.stringify({
     grant_type: 'authorization_code',
@@ -28,21 +21,24 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
     code,
   });
 
-  logging.debug(NAMESPACE, body);
+  logging.debug(NAMESPACE, '[BODY]', body);
 
   try {
-    const { access_token } = await fetch('https://kauth.kakao.com/oauth/token', {
+    const { access_token } = await fetch(K_AUTH_FETCH_TOKEN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body,
     }).then((response) => response.json());
 
-    if (access_token === undefined)
+    if (access_token === undefined) {
+      logging.error(NAMESPACE, '[access_token이 존재하지 않습니다.]');
+
       return res
         .status(403)
         .json({ message: 'access_token이 존재하지 않습니다..', status: 'error' });
+    }
 
-    const { id, kakao_account } = await fetch('https://kapi.kakao.com/v2/user/me', {
+    const { id, kakao_account } = await fetch(K_API_FETCH_ME_URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;',
@@ -62,7 +58,7 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
       const KAKAO_ID_EXIST_SQL =
         'SELECT id, email, gender, age, name, provider, profile FROM users WHERE email = ? AND provider = ?';
       const KAKAO_ID_EXIST_VALUE = [id, 'kakao'];
-      const [KAKAO_ID_EXIST_RESULT] = await connection.query<IQueryResult[]>(
+      const [KAKAO_ID_EXIST_RESULT] = await connection.query<KakaoCallbackKakaoIdExistType[]>(
         KAKAO_ID_EXIST_SQL,
         KAKAO_ID_EXIST_VALUE
       );
@@ -99,7 +95,7 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
         const EXIST_SUB_SQL =
           'SELECT id, email, gender, age, name, provider, profile FROM users WHERE id = ? AND provider = ?';
         const EXIST_SUB_VALUES = [REGISTER_RESULT.insertId, 'kakao'];
-        const [EXIST_SUB_RESULT] = await connection.query<IQueryResult[]>(
+        const [EXIST_SUB_RESULT] = await connection.query<KakaoCallbackKakaoIdExistType[]>(
           EXIST_SUB_SQL,
           EXIST_SUB_VALUES
         );

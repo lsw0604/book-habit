@@ -4,10 +4,11 @@ import { AxiosError } from 'axios';
 import { profileReplyListAPI } from 'lib/api/auth';
 import { useEffect } from 'react';
 
+const REACT_QUERY_KEY = 'USE_PROFILE_REPLY_QUERY';
+
 export default function useProfileReplyQuery(
   page: ProfileReplyQueryRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_PROFILE_REPLY_QUERY';
   const { addToast } = useToastHook();
 
   const { data, isFetching, isLoading, isError, error, refetch } = useQuery<

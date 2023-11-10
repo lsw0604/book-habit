@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
-import logging from '../config/logging';
+import logging from '@/config/logging';
 
 const NAMESPACE = 'LOGOUT';
 
-export default function logout(_: Request, res: Response, next: NextFunction) {
+export default function logout(_: Request, res: Response, __: NextFunction) {
   res.cookie('refresh', {}, { path: '/', maxAge: 0, httpOnly: true });
 
   logging.info(NAMESPACE, ': FINISH');

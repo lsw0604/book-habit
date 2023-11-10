@@ -5,8 +5,9 @@ import { useEffect } from 'react';
 import useToastHook from '@hooks/useToastHook';
 import useUserStateHook from '@hooks/useUserStateHook';
 
+const REACT_QUERY_KEY = 'USE_LOCAL_LOGIN_MUTATION';
+
 export default function useLocalLoginMutation() {
-  const REACT_QUERY_KEY = 'USE_LOCAL_LOGIN_MUTATION';
   const { addToast } = useToastHook();
   const { setUserState } = useUserStateHook();
   const { isLoading, data, mutate, isSuccess, isError, error } = useMutation<

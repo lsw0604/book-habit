@@ -6,8 +6,9 @@ import { kakaoSignupAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
 import useUserStateHook from '@hooks/useUserStateHook';
 
+const REACT_QUERY_KEY = 'USE_KAKAO_SIGNUP_MUTATION';
+
 export default function useKakaoSignUpMutation() {
-  const REACT_QUERY_KEY = 'USE_KAKAO_SIGNUP_MUTATION';
   const { addToast } = useToastHook();
   const { setUserState } = useUserStateHook();
 

@@ -3,8 +3,9 @@ import { myBookCommentsAPI } from 'lib/api/myBook';
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_QUERY';
+
 export default function useMyBookCommentQuery(users_books_id: number) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_QUERY';
   const { data, isSuccess, error, isError, refetch, isFetching, isLoading } =
     useQuery<
       MyBookCommentQueryResponseType,

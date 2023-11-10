@@ -5,11 +5,12 @@ import useToastHook from '@hooks/useToastHook';
 import { AxiosError } from 'axios';
 import useMyBookCommentQuery from './useMyBookCommentQuery';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_DELETE_MUTATION';
+
 export default function useMyBookCommentDeleteMutation(
   users_books_id: number,
   comment_id: number
 ) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_DELETE_MUTATION';
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();

@@ -7,11 +7,12 @@ import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';
 import { commentsReplyDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_DELETE_MUTATION';
+
 export default function useCommentsReplyDeleteMutation(
   reply_id: CommentsReplyDeleteMutationRequestType,
   comment_id: CommentsReplyDeleteMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_DELETE_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch: profileReplyQueryRefetch } = useProfileReplyQuery(1);

@@ -1,19 +1,31 @@
 import { Response, Request, NextFunction } from 'express';
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookInfoType } from '../types';
+import { RowDataPacket } from 'mysql2';
 
-export default async function myBookInfo(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'MY_BOOK_INFO';
+interface IMyBookInfo extends RowDataPacket {
+  thumbnail?: string;
+  title: string;
+  url: string;
+  contents: string;
+  publisher: string;
+  authors: string;
+}
+
+const NAMESPACE = 'MY_BOOK_INFO';
+
+export default async function myBookInfo(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
+
   const { users_books_id } = req.params;
+
   try {
     const connection = await connectionPool.getConnection();
     try {
       const MY_BOOK_INFO_SQL =
         'SELECT bs.thumbnail, bs.title, bs.url, bs.contents, bs.publisher, bs.authors FROM users_books ub RIGHT JOIN books bs ON ub.books_id = bs.id WHERE ub.id = ? LIMIT 1';
       const MY_BOOK_INFO_VALUES = [users_books_id];
-      const [MY_BOOK_INFO_RESULT] = await connection.query<MyBookInfoType[]>(
+      const [MY_BOOK_INFO_RESULT] = await connection.query<IMyBookInfo[]>(
         MY_BOOK_INFO_SQL,
         MY_BOOK_INFO_VALUES
       );

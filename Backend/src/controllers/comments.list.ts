@@ -15,8 +15,9 @@ interface ICommentList extends RowDataPacket {
   status: '읽기전' | '다읽음' | '읽는중';
 }
 
-export default async function commentList(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENT_LIST';
+const NAMESPACE = 'COMMENT_LIST';
+
+export default async function commentList(_: Request, res: Response, __: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   try {
     const connection = await connectionPool.getConnection();

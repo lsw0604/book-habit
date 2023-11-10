@@ -5,9 +5,11 @@ import { useEffect } from 'react';
 import { myBookListAPI } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_LIST_INFINITY_QUERY';
+
 export default function useMyBookListInfinityQuery(status: SelectorBookType) {
   const { addToast } = useToastHook();
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_LIST_INFINITY_QUERY';
+
   const {
     data,
     fetchNextPage,

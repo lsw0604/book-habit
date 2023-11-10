@@ -1,29 +1,16 @@
 import bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
-import { RowDataPacket } from 'mysql2';
+import { NextFunction, Response } from 'express';
 
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import logging from '@/config/logging';
+import { connectionPool } from '@/config/database';
+import { AuthLocalRegisterEmailCheckType, IAuthLocalRegisterRequest, IRequest } from '@/types';
 
-interface IRequest<T> extends Request {
-  body: T;
-}
-
-interface IQueryIdCheck extends RowDataPacket {
-  email?: string;
-}
-
-const NAMESPACE = 'REGISTER';
+const NAMESPACE = 'AUTH_LOCAL_REGISTER';
 
 const register = async (
-  req: IRequest<{
-    email: string;
-    name: string;
-    password: string;
-    gender: 'female' | 'male';
-    age: number;
-  }>,
-  res: Response
+  req: IRequest<IAuthLocalRegisterRequest>,
+  res: Response,
+  _: NextFunction
 ) => {
   const { email, name, password, gender, age } = req.body;
   logging.debug(NAMESPACE, '[START]');
@@ -35,9 +22,13 @@ const register = async (
       const ID_CHECK_SQL = 'SELECT email FROM users WHERE email = ?';
       const ID_CHECK_VALUE = [email];
 
-      const [IdCheckResult] = await connection.query<IQueryIdCheck[]>(ID_CHECK_SQL, ID_CHECK_VALUE);
+      const [IdCheckResult] = await connection.query<AuthLocalRegisterEmailCheckType[]>(
+        ID_CHECK_SQL,
+        ID_CHECK_VALUE
+      );
 
       if (!!IdCheckResult[0]) {
+        logging.debug(NAMESPACE, '[이미 존재하는 email입니다.]');
         connection.release();
         return res.status(200).json({ status: 'error', message: '이미 존재하는 email입니다.' });
       }
@@ -49,11 +40,11 @@ const register = async (
         'INSERT INTO users (email, name, password, gender, age, provider) VALUES(?, ?, ?, ?, ?, ?)';
       const ID_REGISTER_VALUE = [email, name, encryptedPassword, gender, age, 'local'];
 
-      await connection.query(ID_REGISTER_SQL, ID_REGISTER_VALUE);
+      const [ID_REGISTER_RESULT] = await connection.query(ID_REGISTER_SQL, ID_REGISTER_VALUE);
       await connection.commit();
       connection.release();
 
-      logging.debug(NAMESPACE, '[FINISH]');
+      logging.debug(NAMESPACE, '[ID_REGISTER_RESULT]', ID_REGISTER_RESULT);
 
       res.status(200).json({
         status: 'success',

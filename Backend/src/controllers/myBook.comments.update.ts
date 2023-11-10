@@ -12,12 +12,13 @@ interface IComment {
   rating: number;
 }
 
+const NAMESPACE = 'MY_BOOK_COMMENTS_UPDATE';
+
 export default async function myBookCommentUpdate(
   req: IRequest<IComment>,
   res: Response,
-  next: NextFunction
+  _: NextFunction
 ) {
-  const NAMESPACE = 'MY_BOOK_COMMENTS_UPDATE';
   logging.debug(NAMESPACE, '[START]');
 
   const { comment, rating } = req.body;

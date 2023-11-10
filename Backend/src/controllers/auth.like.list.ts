@@ -1,26 +1,19 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
-import { RowDataPacket } from 'mysql2';
 
-interface IAuthLikeList extends RowDataPacket {
-  like_id: number;
-  comment_status: '읽는중' | '다읽음' | '읽기전';
-  comment_id: number;
-  title: string;
-  profile: string;
-  name: string;
-}
+import logging from '@/config/logging';
+import { connectionPool } from '@/config/database';
+import { AuthLikeListCountType, AuthLikeListType } from '@/types';
 
-interface IAuthLikeListCount extends RowDataPacket {
-  count: number;
-}
+const NAMESPACE = 'AUTH_LIKE_LIST';
 
 export default async function authLikeList(req: Request, res: Response, _: NextFunction) {
-  const NAMESPACE = 'AUTH_LIKE_LIST';
   logging.info(NAMESPACE, '[START]');
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
+
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
+
   const { id } = req.user;
 
   try {
@@ -38,7 +31,7 @@ export default async function authLikeList(req: Request, res: Response, _: NextF
         'RIGHT JOIN users AS us ON ub.users_id = us.id ' +
         'WHERE cl.users_id = ?';
       const AUTH_LIKE_LIST_COUNT_VALUE = [id];
-      const [AUTH_LIKE_LIST_COUNT_RESULT] = await connection.query<IAuthLikeListCount[]>(
+      const [AUTH_LIKE_LIST_COUNT_RESULT] = await connection.query<AuthLikeListCountType[]>(
         AUTH_LIKE_LIST_COUNT_SQL,
         AUTH_LIKE_LIST_COUNT_VALUE
       );
@@ -69,7 +62,7 @@ export default async function authLikeList(req: Request, res: Response, _: NextF
         'WHERE cl.users_id = ? ' +
         'LIMIT 5 OFFSET ?';
       const AUTH_LIKE_LIST_VALUE = [id, startPage];
-      const [AUTH_LIKE_LIST_RESULT] = await connection.query<IAuthLikeList[]>(
+      const [AUTH_LIKE_LIST_RESULT] = await connection.query<AuthLikeListType[]>(
         AUTH_LIKE_LIST_SQL,
         AUTH_LIKE_LIST_VALUE
       );

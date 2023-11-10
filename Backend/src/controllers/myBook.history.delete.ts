@@ -4,10 +4,13 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function myBookHistoryDelete(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'MY_BOOK_HISTORY_DELETE';
+const NAMESPACE = 'MY_BOOK_HISTORY_DELETE';
+
+export default async function myBookHistoryDelete(req: Request, res: Response, _: NextFunction) {
   const { users_books_history_id } = req.params;
+
   logging.info(NAMESPACE, '[START]', users_books_history_id);
+
   try {
     const connection = await connectionPool.getConnection();
     try {

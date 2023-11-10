@@ -1,14 +1,15 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import logging from '@config/logging';
+import { connectionPool } from '@config/database';
 import { RowDataPacket } from 'mysql2';
 
 interface ICommentLikeList extends RowDataPacket {
   users_id: number;
 }
 
-export default async function commentsLikeList(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENT_LIKE_LIST';
+const NAMESPACE = 'COMMENT_LIKE_LIST';
+
+export default async function commentsLikeList(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   const { comment_id } = req.params;
   try {

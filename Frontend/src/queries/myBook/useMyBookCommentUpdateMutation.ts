@@ -7,8 +7,9 @@ import useMyBookCommentQuery from './useMyBookCommentQuery';
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_UPDATE_MUTATION';
+
 export default function useMyBookCommentUpdateMutation(users_books_id: number) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_UPDATE_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch } = useMyBookCommentQuery(users_books_id);

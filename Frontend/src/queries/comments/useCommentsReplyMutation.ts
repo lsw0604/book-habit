@@ -7,10 +7,11 @@ import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';
 import { commentsReplyRegisterAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_MUTATION';
+
 export default function useCommentsReplyMutation(
   comment_id: CommentsReplyMutationRequestType['comment_id']
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_MUTATION';
   const queryClient = new QueryClient();
 
   const { refetch: profileReplyQueryRefetch } = useProfileReplyQuery(1);

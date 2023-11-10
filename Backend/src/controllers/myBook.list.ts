@@ -1,11 +1,26 @@
 import { Response, Request, NextFunction } from 'express';
+import { RowDataPacket } from 'mysql2';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookListResponseType, MyBookListCountResponseType } from '../types';
+import { StatusType } from '../types';
+
+interface IMyBookListCount extends RowDataPacket {
+  count: number;
+}
+
+interface IMyBookList extends RowDataPacket {
+  id: number;
+  isbn: string;
+  title: string;
+  thumbnail?: string;
+  status: '다읽음' | '읽는중' | '읽고싶음';
+  created_at: Date;
+}
 
 const NAMESPACE = 'BOOKS_MY_BOOK';
 
-export default async function myBookList(req: Request, res: Response, next: NextFunction) {
+export default async function myBookList(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   if (req.user === undefined) return res.status(403);
   const { id } = req.user;
@@ -40,7 +55,7 @@ export default async function myBookList(req: Request, res: Response, next: Next
           'WHERE ub.users_id = ?';
 
         const COUNT_TOTAL_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id];
-        const [COUNT_TOTAL_RESULT] = await connection.query<MyBookListCountResponseType[]>(
+        const [COUNT_TOTAL_RESULT] = await connection.query<IMyBookListCount[]>(
           COUNT_TOTAL_SQL,
           COUNT_TOTAL_VALUES
         );
@@ -75,7 +90,7 @@ export default async function myBookList(req: Request, res: Response, next: Next
           'WHERE ub.users_id = ? ' +
           'LIMIT 10 OFFSET ?';
         const TOTAL_LIST_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id, startPage];
-        const [TOTAL_LIST_RESULT] = await connection.query<MyBookListResponseType[]>(
+        const [TOTAL_LIST_RESULT] = await connection.query<IMyBookList[]>(
           TOTAL_LIST_SQL,
           TOTAL_LIST_VALUES
         );
@@ -113,7 +128,7 @@ export default async function myBookList(req: Request, res: Response, next: Next
         'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +
         'WHERE ub.users_id = ? AND ls.status = ?';
       const COUNT_STATUS_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id, status];
-      const [COUNT_STATUS_RESULT] = await connection.query<MyBookListCountResponseType[]>(
+      const [COUNT_STATUS_RESULT] = await connection.query<IMyBookListCount[]>(
         COUNT_STATUS_SQL,
         COUNT_STATUS_VALUES
       );
@@ -148,7 +163,7 @@ export default async function myBookList(req: Request, res: Response, next: Next
         'WHERE ub.users_id = ? AND ls.status = ?' +
         'LIMIT 10 OFFSET ?';
       const STATUS_LIST_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id, status, startPage];
-      const [STATUS_LIST_RESULT] = await connection.query<MyBookListResponseType[]>(
+      const [STATUS_LIST_RESULT] = await connection.query<IMyBookList[]>(
         STATUS_LIST_SQL,
         STATUS_LIST_VALUES
       );

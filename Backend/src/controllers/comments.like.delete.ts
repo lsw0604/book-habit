@@ -1,14 +1,18 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import logging from '@config/logging';
+import { connectionPool } from '@config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function commentLikeDelete(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENT_LIKE_DELETE';
+const NAMESPACE = 'COMMENT_LIKE_DELETE';
+
+export default async function commentLikeDelete(req: Request, res: Response, _: NextFunction) {
   logging.debug(NAMESPACE, '[START]');
 
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
+
   const { id } = req.user;
   const { comment_id } = req.params;
   try {

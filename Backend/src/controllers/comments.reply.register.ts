@@ -9,12 +9,9 @@ interface IRequest extends Request {
   };
 }
 
-export default async function commentsReplyRegister(
-  req: IRequest,
-  res: Response,
-  next: NextFunction
-) {
-  const NAMESPACE = 'COMMENTS_REPLY_REGISTER';
+const NAMESPACE = 'COMMENTS_REPLY_REGISTER';
+
+export default async function commentsReplyRegister(req: IRequest, res: Response, _: NextFunction) {
   logging.debug(NAMESPACE, '[START]');
 
   if (req.user === undefined)

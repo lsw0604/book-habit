@@ -1,19 +1,17 @@
-import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
-import { BookExistResult, MyBookExistResult, MyBookReadRegisterRequest } from '../types';
+import { Response, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 
-interface IRequest<T> extends Request {
-  body: T;
-}
+import logging from '@config/logging';
+import { connectionPool } from '@config/database';
+import { MyBookReadRegisterRequest, IRequest, MyBookExistCountType, BookExistType } from '@/types';
+
+const NAMESPACE = 'BOOK_EXIST';
 
 export default async function bookExist(
   req: IRequest<MyBookReadRegisterRequest>,
   res: Response,
   next: NextFunction
 ) {
-  const NAMESPACE = 'BOOK_EXIST';
   if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인 필요합니다.' });
   const { id } = req.user;
@@ -27,7 +25,7 @@ export default async function bookExist(
 
       const BOOK_EXIST_SQL = 'SELECT isbn, id FROM books WHERE isbn = ?';
       const BOOK_EXIST_VALUE = [isbn];
-      const [BOOK_EXIST_RESULT] = await connection.query<BookExistResult[]>(
+      const [BOOK_EXIST_RESULT] = await connection.query<BookExistType[]>(
         BOOK_EXIST_SQL,
         BOOK_EXIST_VALUE
       );
@@ -75,7 +73,7 @@ export default async function bookExist(
           'RIGHT JOIN books AS bs ON ub.books_id = bs.id ' +
           'WHERE isbn = ? AND ub.users_id = ?';
         const MY_BOOK_EXIST_VALUE = [isbn, id];
-        const [MY_BOOK_EXIST_RESULT] = await connection.query<MyBookExistResult[]>(
+        const [MY_BOOK_EXIST_RESULT] = await connection.query<MyBookExistCountType[]>(
           MY_BOOK_EXIST_SQL,
           MY_BOOK_EXIST_VALUE
         );

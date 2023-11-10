@@ -3,8 +3,9 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function myBookList(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'BOOK_LIST_DELETE';
+const NAMESPACE = 'BOOK_LIST_DELETE';
+
+export default async function myBookList(req: Request, res: Response, _: NextFunction) {
   const { users_books_id } = req.params;
   logging.info(NAMESPACE, '[REQ.PARAMS]', users_books_id);
   try {

@@ -3,8 +3,9 @@ import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { ResultSetHeader } from 'mysql2';
 
-export default async function commentLikeRegister(req: Request, res: Response, next: NextFunction) {
-  const NAMESPACE = 'COMMENT_LIKE_REGISTER';
+const NAMESPACE = 'COMMENT_LIKE_REGISTER';
+
+export default async function commentLikeRegister(req: Request, res: Response, _: NextFunction) {
   logging.debug(NAMESPACE, '[START]');
 
   if (req.user === undefined)

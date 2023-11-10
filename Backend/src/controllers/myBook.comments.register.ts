@@ -19,12 +19,13 @@ interface IFindBookResult extends RowDataPacket {
   books_id: number;
 }
 
+const NAMESPACE = 'MY_BOOK_COMMENTS_REGISTER';
+
 export default async function myBookCommentsRegister(
   req: IRequest<IComment>,
   res: Response,
-  next: NextFunction
+  _: NextFunction
 ) {
-  const NAMESPACE = 'MY_BOOK_COMMENTS_REGISTER';
   logging.debug(NAMESPACE, '[START]');
   const { comment, users_books_id, rating, status, comment_is_open } = req.body;
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);

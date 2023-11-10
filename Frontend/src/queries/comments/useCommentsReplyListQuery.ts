@@ -4,10 +4,11 @@ import { useEffect } from 'react';
 import { commentsReplyListAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_LIST_QUERY';
+
 export default function useCommentsReplyListQuery(
   comment_id: CommentsReplyListQueryRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_LIST_QUERY';
   const { addToast } = useToastHook();
 
   const { data, isError, isLoading, error, refetch, isFetching } = useQuery<

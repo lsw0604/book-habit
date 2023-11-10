@@ -7,10 +7,11 @@ import useToastHook from '@hooks/useToastHook';
 import { useNavigate } from 'react-router-dom';
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_DELETE_MUTATION';
+
 export default function useMyBookListDeleteMutation(
   users_books_id: MyBookListDeleteMutationRequestType
 ) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_DELETE_MUTATION';
   const queryClient = new QueryClient();
   const navigate = useNavigate();
   const { addToast } = useToastHook();

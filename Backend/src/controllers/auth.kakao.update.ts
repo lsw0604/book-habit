@@ -1,33 +1,15 @@
-import { Request, Response } from 'express';
-import { RowDataPacket } from 'mysql2';
+import { NextFunction, Response } from 'express';
 
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
-import { GenderType, ProviderType } from '../types';
-
-interface IRequest<T> extends Request {
-  body: T;
-}
-
-interface IQueryResult extends RowDataPacket {
-  id: number;
-  email: string;
-  name: string;
-  gender: GenderType;
-  provider: ProviderType;
-  profile: string;
-  age: number;
-}
+import logging from '@/config/logging';
+import { connectionPool } from '@/config/database';
+import { IKakaoRegisterRequest, KakaoRegisterKakaoUserInfoType, IRequest } from '@/types';
 
 const NAMESPACE = 'KAKAO_REGISTER';
 
 export default async function kakaoUpdate(
-  req: IRequest<{
-    name: string;
-    gender: 'female' | 'male';
-    age: number;
-  }>,
-  res: Response
+  req: IRequest<IKakaoRegisterRequest>,
+  res: Response,
+  _: NextFunction
 ) {
   const { name, gender, age } = req.body;
   const { id, email } = req.user as { id: number; email: string };
@@ -47,10 +29,12 @@ export default async function kakaoUpdate(
       const KAKAO_USER_EXIST_SQL =
         'SELECT id, name, gender, age, provider, email, profile FROM users WHERE id = ? AND email = ?';
       const KAKAO_USER_EXIST_VALUES = [id, email];
-      const [KAKAO_USER_EXIST_RESULT] = await connection.query<IQueryResult[]>(
+      const [KAKAO_USER_EXIST_RESULT] = await connection.query<KakaoRegisterKakaoUserInfoType[]>(
         KAKAO_USER_EXIST_SQL,
         KAKAO_USER_EXIST_VALUES
       );
+
+      logging.debug(NAMESPACE, '[KAKAO_USER_EXIST_RESULT]', [KAKAO_USER_EXIST_RESULT][0]);
 
       await connection.commit();
       connection.release();

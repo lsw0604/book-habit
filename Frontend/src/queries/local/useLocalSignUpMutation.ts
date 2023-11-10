@@ -6,8 +6,9 @@ import { AxiosError } from 'axios';
 import { signUpAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
 
+const REACT_QUERY_KEY = 'USE_LOCAL_SIGNUP_MUTATION';
+
 export default function useLocalSignUpMutation() {
-  const REACT_QUERY_KEY = 'USE_LOCAL_SIGNUP_MUTATION';
   const { addToast } = useToastHook();
   const navigate = useNavigate();
 

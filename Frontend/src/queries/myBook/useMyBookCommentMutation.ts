@@ -7,8 +7,9 @@ import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookCommentQuery from './useMyBookCommentQuery';
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 
+const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_MUTATION';
+
 export default function useMyBookCommentMutation(users_books_id: number) {
-  const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_MUTATION';
   const queryClient = new QueryClient();
   const { addToast } = useToastHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();

@@ -4,8 +4,9 @@ import { AxiosError } from 'axios';
 import { profileLikeListAPI } from 'lib/api/auth';
 import { useEffect } from 'react';
 
+const REACT_QUERY_KEY = 'USE_PROFILE_LIKE_QUERY';
+
 export default function useProfileLikeQuery(page: ProfileLikeQueryRequestType) {
-  const REACT_QUERY_KEY = 'USE_PROFILE_LIKE_QUERY';
   const { addToast } = useToastHook();
 
   const { data, isFetching, isLoading, isError, error, refetch } = useQuery<
