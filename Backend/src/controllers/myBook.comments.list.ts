@@ -1,17 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { RowDataPacket } from 'mysql2';
-
-interface IMyBookCommentList extends RowDataPacket {
-  comment_id: number;
-  comment: string;
-  rating: number;
-  status: '읽기전' | '다읽음' | '읽는중';
-  comment_is_open: boolean;
-  created_at: Date;
-  updated_at: Date | null;
-}
+import { MyBookCommentsListType } from '../types';
 
 const NAMESPACE = 'MY_BOOK_COMMENTS_LIST';
 
@@ -24,7 +15,7 @@ export default async function myBookCommentsList(req: Request, res: Response, _:
       const MY_BOOK_COMMENTS_LIST_SQL =
         'SELECT id as comment_id, comment, created_at, rating, status, updated_at, comment_is_open FROM users_books_comments WHERE users_books_id = ? ';
       const MY_BOOK_COMMENTS_LIST_VALUE = [users_books_id];
-      const [MY_BOOK_COMMENTS_LIST_RESULT] = await connection.query<IMyBookCommentList[]>(
+      const [MY_BOOK_COMMENTS_LIST_RESULT] = await connection.query<MyBookCommentsListType[]>(
         MY_BOOK_COMMENTS_LIST_SQL,
         MY_BOOK_COMMENTS_LIST_VALUE
       );

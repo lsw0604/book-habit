@@ -1,29 +1,21 @@
 import { Response, Request, NextFunction } from 'express';
-import { RowDataPacket } from 'mysql2';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { StatusType } from '../types';
-
-interface IMyBookListCount extends RowDataPacket {
-  count: number;
-}
-
-interface IMyBookList extends RowDataPacket {
-  id: number;
-  isbn: string;
-  title: string;
-  thumbnail?: string;
-  status: '다읽음' | '읽는중' | '읽고싶음';
-  created_at: Date;
-}
+import { MyBookListCountType, MyBookListType } from '../types';
 
 const NAMESPACE = 'BOOKS_MY_BOOK';
 
 export default async function myBookList(req: Request, res: Response, _: NextFunction) {
   logging.info(NAMESPACE, '[START]');
-  if (req.user === undefined) return res.status(403);
+
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
+    return res.status(403).json({ message: '로그인이 필요합니다.', status: 'error' });
+  }
+
   const { id } = req.user;
+
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -55,7 +47,7 @@ export default async function myBookList(req: Request, res: Response, _: NextFun
           'WHERE ub.users_id = ?';
 
         const COUNT_TOTAL_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id];
-        const [COUNT_TOTAL_RESULT] = await connection.query<IMyBookListCount[]>(
+        const [COUNT_TOTAL_RESULT] = await connection.query<MyBookListCountType[]>(
           COUNT_TOTAL_SQL,
           COUNT_TOTAL_VALUES
         );
@@ -90,7 +82,7 @@ export default async function myBookList(req: Request, res: Response, _: NextFun
           'WHERE ub.users_id = ? ' +
           'LIMIT 10 OFFSET ?';
         const TOTAL_LIST_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id, startPage];
-        const [TOTAL_LIST_RESULT] = await connection.query<IMyBookList[]>(
+        const [TOTAL_LIST_RESULT] = await connection.query<MyBookListType[]>(
           TOTAL_LIST_SQL,
           TOTAL_LIST_VALUES
         );
@@ -128,7 +120,7 @@ export default async function myBookList(req: Request, res: Response, _: NextFun
         'LEFT JOIN LatestStatus ls ON ub.id = ls.users_books_id AND ls.rn = 1 ' +
         'WHERE ub.users_id = ? AND ls.status = ?';
       const COUNT_STATUS_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id, status];
-      const [COUNT_STATUS_RESULT] = await connection.query<IMyBookListCount[]>(
+      const [COUNT_STATUS_RESULT] = await connection.query<MyBookListCountType[]>(
         COUNT_STATUS_SQL,
         COUNT_STATUS_VALUES
       );
@@ -163,7 +155,7 @@ export default async function myBookList(req: Request, res: Response, _: NextFun
         'WHERE ub.users_id = ? AND ls.status = ?' +
         'LIMIT 10 OFFSET ?';
       const STATUS_LIST_VALUES = ['없음', '다읽음', '읽는중', '읽기시작함', id, status, startPage];
-      const [STATUS_LIST_RESULT] = await connection.query<IMyBookList[]>(
+      const [STATUS_LIST_RESULT] = await connection.query<MyBookListType[]>(
         STATUS_LIST_SQL,
         STATUS_LIST_VALUES
       );

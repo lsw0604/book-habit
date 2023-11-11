@@ -3,9 +3,9 @@ import sharp from 'sharp';
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import { ResultSetHeader } from 'mysql2';
 
-import logging from '@/config/logging';
-import S3 from '@/config/s3';
-import { connectionPool } from '@/config/database';
+import logging from '../config/logging';
+import S3 from '../config/s3';
+import { connectionPool } from '../config/database';
 
 const NAMESPACE = 'PROFILE_UPDATE';
 

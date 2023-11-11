@@ -1,14 +1,7 @@
 import { sign } from 'jsonwebtoken';
+import { TokenGeneratorType } from '../types';
 
-interface IProps {
-  id?: number;
-  email?: string;
-  name?: string | null;
-  kakao_access?: string;
-  kakao_refresh?: string;
-}
-
-export default function tokenGenerator({ id, email, name }: IProps): {
+export default function tokenGenerator({ id, email, name }: TokenGeneratorType): {
   access_jwt: string;
   refresh_jwt: string;
 } {

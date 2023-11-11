@@ -2,10 +2,10 @@ import { Response, Request, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 import qs from 'qs';
 
-import { connectionPool } from '@/config/database';
-import logging from '@/config/logging';
-import tokenGenerator from '@/utils/token';
-import { KakaoCallbackKakaoIdExistType } from '@/types';
+import { connectionPool } from '../config/database';
+import logging from '../config/logging';
+import tokenGenerator from '../utils/token';
+import { KakaoCallbackKakaoIdExistType } from '../types';
 
 const NAMESPACE = 'KAKAO_CALLBACK';
 

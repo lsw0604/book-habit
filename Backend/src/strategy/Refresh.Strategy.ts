@@ -1,18 +1,8 @@
 import { StrategyOptions, VerifyCallback } from 'passport-jwt';
-import { RowDataPacket } from 'mysql2';
 
 import { connectionPool } from '../config/database';
 import logging from '../config/logging';
-import { GenderType, ProviderType } from '../types';
-
-interface IProps extends RowDataPacket {
-  id: number;
-  email: string;
-  name: string;
-  gender: GenderType;
-  age: number;
-  provider: ProviderType;
-}
+import { RefreshStrategyType } from '../types';
 
 const RefreshJWTStrategyOptions: StrategyOptions = {
   jwtFromRequest: (req) => {
@@ -35,7 +25,7 @@ const RefreshVerify: VerifyCallback = async (payload, done) => {
       const SQL = 'SELECT id, email, name, age, gender, provider FROM users WHERE id = ?';
       const VALUE = [payload.id];
 
-      const [rows] = await connection.query<IProps[]>(SQL, VALUE);
+      const [rows] = await connection.query<RefreshStrategyType[]>(SQL, VALUE);
 
       if (rows[0] !== undefined) {
         const { id, age, gender, name, email, provider } = rows[0];

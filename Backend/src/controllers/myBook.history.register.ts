@@ -1,41 +1,36 @@
-import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { Response, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
 import dayjs from 'dayjs';
 
-interface IProps extends RowDataPacket {
-  status: '다읽음' | '읽기시작함' | '읽는중';
-}
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import {
+  IRequest,
+  MyBookHistoryRegisterHistoryExistType,
+  MyBookHistoryRegisterRequestType,
+  MyBookHistoryRegisterStatusExistType,
+} from '../types';
 
-interface IHistoryExist extends RowDataPacket {
-  count: number;
-}
-
-interface IRequest<T> extends Request {
-  body: T;
-}
-
-interface IReadRequest {
-  users_books_id: number;
-  status: '다읽음' | '읽기시작함' | '읽는중';
-  date: Date;
-}
-
-const NAMESPACE = 'MY_BOOK_REGISTER';
+const NAMESPACE = 'MY_BOOK_HISTORY_REGISTER';
 
 export default async function myBookHistoryRegister(
-  req: IRequest<IReadRequest>,
+  req: IRequest<MyBookHistoryRegisterRequestType>,
   res: Response,
   _: NextFunction
 ) {
   logging.debug(NAMESPACE, '[START]');
 
   const { status, date, users_books_id } = req.body;
+
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
-  if (req.user === undefined)
+
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
+
   const { id } = req.user;
+
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -49,10 +44,9 @@ export default async function myBookHistoryRegister(
           dayjs(date).format('YYYY-MM-DD'),
           users_books_id,
         ];
-        const [MY_BOOK_HISTORY_EXIST_RESULT] = await connection.query<IHistoryExist[]>(
-          MY_BOOK_HISTORY_EXIST_SQL,
-          MY_BOOK_HISTORY_EXIST_VALUE
-        );
+        const [MY_BOOK_HISTORY_EXIST_RESULT] = await connection.query<
+          MyBookHistoryRegisterHistoryExistType[]
+        >(MY_BOOK_HISTORY_EXIST_SQL, MY_BOOK_HISTORY_EXIST_VALUE);
         logging.debug(NAMESPACE, '[MY_BOOK_HISTORY_EXIST_RESULT]', MY_BOOK_HISTORY_EXIST_RESULT);
 
         if (MY_BOOK_HISTORY_EXIST_RESULT[0].count !== 0) {
@@ -90,10 +84,9 @@ export default async function myBookHistoryRegister(
           'RIGHT JOIN users_books_history ubh ON ubh.users_books_id = ub.id ' +
           'WHERE users_books_id = ? AND status = ? AND users_id = ?';
         const EXIST_MY_BOOK_HISTORY_VALUES = [users_books_id, status, id];
-        const [EXIST_MY_BOOK_HISTORY_RESULT] = await connection.query<IProps[]>(
-          EXIST_MY_BOOK_HISTORY_SQL,
-          EXIST_MY_BOOK_HISTORY_VALUES
-        );
+        const [EXIST_MY_BOOK_HISTORY_RESULT] = await connection.query<
+          MyBookHistoryRegisterStatusExistType[]
+        >(EXIST_MY_BOOK_HISTORY_SQL, EXIST_MY_BOOK_HISTORY_VALUES);
 
         logging.debug(NAMESPACE, '[EXIST_READ_STATUS_RESULT]', EXIST_MY_BOOK_HISTORY_RESULT);
 

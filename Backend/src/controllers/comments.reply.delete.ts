@@ -1,15 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ResultSetHeader } from 'mysql2';
 
 const NAMESPACE = 'COMMENTS_REPLY_DELETE';
 
 export default async function commentsReplyDelete(req: Request, res: Response, _: NextFunction) {
   logging.debug(NAMESPACE, '[START]');
 
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
 
   const { reply_id } = req.params;
   const { id } = req.user;

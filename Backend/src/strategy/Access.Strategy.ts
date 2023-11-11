@@ -1,19 +1,8 @@
 import { ExtractJwt, StrategyOptions, VerifyCallback } from 'passport-jwt';
-import { RowDataPacket } from 'mysql2';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { GenderType, ProviderType } from '../types';
-
-interface IProps extends RowDataPacket {
-  id: number;
-  email: string;
-  name: string;
-  gender: GenderType;
-  age: number;
-  provider: ProviderType;
-  profile: string;
-}
+import { AccessStrategyType } from '../types';
 
 const AccessJWTStrategyOptions: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -30,7 +19,7 @@ const AccessVerify: VerifyCallback = async (payload, done) => {
       const SQL = 'SELECT id, email, name, gender, age, provider, profile FROM users WHERE id = ?';
       const VALUES = [payload.id];
 
-      const [rows] = await connection.query<IProps[]>(SQL, VALUES);
+      const [rows] = await connection.query<AccessStrategyType[]>(SQL, VALUES);
 
       if (rows[0] !== undefined) {
         const { id, name, email, gender, age, provider, profile } = rows[0];

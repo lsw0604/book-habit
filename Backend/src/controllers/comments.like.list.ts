@@ -1,11 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '@config/logging';
-import { connectionPool } from '@config/database';
-import { RowDataPacket } from 'mysql2';
 
-interface ICommentLikeList extends RowDataPacket {
-  users_id: number;
-}
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { CommentLikeListType } from '../types';
 
 const NAMESPACE = 'COMMENT_LIKE_LIST';
 
@@ -18,7 +15,7 @@ export default async function commentsLikeList(req: Request, res: Response, _: N
       const COMMENT_LIKE_LIST_SQL =
         'SELECT users_id FROM comments_likes WHERE users_books_comments_id = ?';
       const COMMENT_LIKE_LIST_VALUE = [comment_id];
-      const [COMMENT_LIKE_LIST_RESULT] = await connection.query<ICommentLikeList[]>(
+      const [COMMENT_LIKE_LIST_RESULT] = await connection.query<CommentLikeListType[]>(
         COMMENT_LIKE_LIST_SQL,
         COMMENT_LIKE_LIST_VALUE
       );

@@ -1,36 +1,28 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
-
-interface IRequest<T> extends Request {
-  body: T;
-}
-
-interface IComment {
-  rating: number;
-  status: string;
-  comment: string;
-  comment_is_open: boolean;
-  users_books_id: number;
-}
-
-interface IFindBookResult extends RowDataPacket {
-  books_id: number;
-}
+import {
+  IRequest,
+  MyBookCommentsRegisterFindBookType,
+  MyBookCommentsRegisterRequestType,
+} from '../types';
 
 const NAMESPACE = 'MY_BOOK_COMMENTS_REGISTER';
 
 export default async function myBookCommentsRegister(
-  req: IRequest<IComment>,
+  req: IRequest<MyBookCommentsRegisterRequestType>,
   res: Response,
   _: NextFunction
 ) {
   logging.debug(NAMESPACE, '[START]');
   const { comment, users_books_id, rating, status, comment_is_open } = req.body;
   logging.debug(NAMESPACE, '[REQ.BODY]', req.body);
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -38,7 +30,7 @@ export default async function myBookCommentsRegister(
 
       const FIND_BOOK_ID_SQL = 'SELECT books_id FROM users_books WHERE id = ?';
       const FIND_BOOK_ID_VALUE = [users_books_id];
-      const [FIND_BOOK_ID_RESULT] = await connection.query<IFindBookResult[]>(
+      const [FIND_BOOK_ID_RESULT] = await connection.query<MyBookCommentsRegisterFindBookType[]>(
         FIND_BOOK_ID_SQL,
         FIND_BOOK_ID_VALUE
       );

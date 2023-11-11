@@ -1,17 +1,22 @@
 import { Response, Request, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ResultSetHeader } from 'mysql2';
 
 const NAMESPACE = 'COMMENT_LIKE_REGISTER';
 
 export default async function commentLikeRegister(req: Request, res: Response, _: NextFunction) {
   logging.debug(NAMESPACE, '[START]');
 
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
+
   const { id } = req.user;
   const { comment_id } = req.params;
+
   try {
     const connection = await connectionPool.getConnection();
     try {

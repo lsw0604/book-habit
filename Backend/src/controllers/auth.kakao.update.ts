@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express';
 
-import logging from '@/config/logging';
-import { connectionPool } from '@/config/database';
-import { IKakaoRegisterRequest, KakaoRegisterKakaoUserInfoType, IRequest } from '@/types';
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { IKakaoRegisterRequest, KakaoRegisterKakaoUserInfoType, IRequest } from '../types';
 
 const NAMESPACE = 'KAKAO_REGISTER';
 

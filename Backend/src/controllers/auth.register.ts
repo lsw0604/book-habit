@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Response } from 'express';
 
-import logging from '@/config/logging';
-import { connectionPool } from '@/config/database';
-import { AuthLocalRegisterEmailCheckType, IAuthLocalRegisterRequest, IRequest } from '@/types';
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { AuthLocalRegisterEmailCheckType, IAuthLocalRegisterRequest, IRequest } from '../types';
 
 const NAMESPACE = 'AUTH_LOCAL_REGISTER';
 

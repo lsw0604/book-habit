@@ -1,21 +1,14 @@
-import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import { Response, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 
-interface IRequest<T> extends Request {
-  body: T;
-}
-
-interface IComment {
-  comment: string;
-  rating: number;
-}
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { IRequest, MyBookCommentsUpdateRequestType } from '../types';
 
 const NAMESPACE = 'MY_BOOK_COMMENTS_UPDATE';
 
 export default async function myBookCommentUpdate(
-  req: IRequest<IComment>,
+  req: IRequest<MyBookCommentsUpdateRequestType>,
   res: Response,
   _: NextFunction
 ) {

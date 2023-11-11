@@ -1,8 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 
-import logging from '@/config/logging';
-import { connectionPool } from '@/config/database';
-import { AuthLikeListCountType, AuthLikeListType } from '@/types';
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { AuthLikeListCountType, AuthLikeListType } from '../types';
 
 const NAMESPACE = 'AUTH_LIKE_LIST';
 

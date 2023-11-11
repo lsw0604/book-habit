@@ -1,19 +1,9 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
-import { RowDataPacket } from 'mysql2';
 import dayjs from 'dayjs';
 
-interface ICommentList extends RowDataPacket {
-  comment_id: number;
-  comment: string;
-  created_at: Date;
-  rating: number;
-  title: string;
-  name: string;
-  profile: string;
-  status: '읽기전' | '다읽음' | '읽는중';
-}
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { CommentListType } from '../types';
 
 const NAMESPACE = 'COMMENT_LIST';
 
@@ -38,12 +28,12 @@ export default async function commentList(_: Request, res: Response, __: NextFun
         firstDateCurrentMonth.format('YYYY-MM-DD'),
         lastDateCurrentMonth.add(1, 'day').format('YYYY-MM-DD'),
       ];
-      const [COMMENT_LIST_RESULT] = await connection.query<ICommentList[]>(
+      const [COMMENT_LIST_RESULT] = await connection.query<CommentListType[]>(
         COMMENT_LIST_SQL,
         COMMENT_LIST_VALUE
       );
+
       logging.debug(NAMESPACE, '[COMMENT_LIST_RESULT]', COMMENT_LIST_RESULT);
-      logging.debug(NAMESPACE, '[COMMENT_LIST_VALUE]', COMMENT_LIST_VALUE);
 
       connection.release();
       res.status(200).json({

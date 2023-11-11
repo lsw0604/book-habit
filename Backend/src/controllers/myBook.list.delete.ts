@@ -1,7 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
+import { ResultSetHeader } from 'mysql2';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { ResultSetHeader } from 'mysql2';
 
 const NAMESPACE = 'BOOK_LIST_DELETE';
 

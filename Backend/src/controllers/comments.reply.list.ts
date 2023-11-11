@@ -1,16 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { RowDataPacket } from 'mysql2';
-
-interface ICommentsReplyList extends RowDataPacket {
-  reply_id: number;
-  reply: string;
-  created_at: Date;
-  users_id: number;
-  name: string;
-  profile: string;
-}
+import { CommentReplyListType } from '../types';
 
 const NAMESPACE = 'COMMENTS_REPLY_LIST';
 
@@ -20,13 +12,14 @@ export default async function commentsReplyList(req: Request, res: Response, _: 
     const connection = await connectionPool.getConnection();
     try {
       const { comment_id } = req.params;
+
       const COMMENTS_REPLY_LIST_SQL =
         'SELECT pcr.id AS reply_id, reply, created_at, pcr.users_id, users.name, users.profile ' +
         'FROM public_comments_reply AS pcr ' +
         'LEFT JOIN users ON pcr.users_id = users.id ' +
         'WHERE pcr.users_books_comments_id = ?';
       const COMMENTS_REPLY_LIST_VALUE = [comment_id];
-      const [COMMENTS_REPLY_LIST_RESULT] = await connection.query<ICommentsReplyList[]>(
+      const [COMMENTS_REPLY_LIST_RESULT] = await connection.query<CommentReplyListType[]>(
         COMMENTS_REPLY_LIST_SQL,
         COMMENTS_REPLY_LIST_VALUE
       );

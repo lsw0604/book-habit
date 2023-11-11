@@ -2,9 +2,9 @@ import { Response, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 import dayjs from 'dayjs';
 
-import logging from '@/config/logging';
-import { connectionPool } from '@/config/database';
-import { MyBOokReadToRegisterRequest, IRequest } from '@/types';
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { MyBOokReadToRegisterRequest, IRequest } from '../types';
 
 const NAMESPACE = 'READ_TO_BOOK_REGISTER';
 

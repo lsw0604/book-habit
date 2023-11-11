@@ -1,12 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
+
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { RowDataPacket } from 'mysql2';
-
-interface IProps extends RowDataPacket {
-  startDate: Date;
-  endDate: Date;
-}
+import { MyBookTimeRangeType } from '../types';
 
 const NAMESPACE = 'MY_BOOK_TIME_RANGE';
 
@@ -36,7 +32,7 @@ export default async function myBookTimeRange(req: Request, res: Response, _: Ne
         'FROM users_books_history ' +
         'WHERE users_books_id = ?';
       const VALUE = [parseInt(users_books_id)];
-      const [RESULT] = await connection.query<IProps[]>(SQL, VALUE);
+      const [RESULT] = await connection.query<MyBookTimeRangeType[]>(SQL, VALUE);
       logging.debug(NAMESPACE, '[RESULT]', RESULT);
 
       connection.release();

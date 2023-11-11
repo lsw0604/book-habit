@@ -1,21 +1,24 @@
-import { Request, Response, NextFunction } from 'express';
-import logging from '../config/logging';
-import { connectionPool } from '../config/database';
+import { Response, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 
-interface IRequest extends Request {
-  body: {
-    reply: string;
-  };
-}
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { CommentReplyRegisterType, IRequest } from '../types';
 
 const NAMESPACE = 'COMMENTS_REPLY_REGISTER';
 
-export default async function commentsReplyRegister(req: IRequest, res: Response, _: NextFunction) {
+export default async function commentsReplyRegister(
+  req: IRequest<CommentReplyRegisterType>,
+  res: Response,
+  _: NextFunction
+) {
   logging.debug(NAMESPACE, '[START]');
 
-  if (req.user === undefined)
+  if (req.user === undefined) {
+    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
+
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
+  }
 
   const { comment_id } = req.params;
   const { reply } = req.body;

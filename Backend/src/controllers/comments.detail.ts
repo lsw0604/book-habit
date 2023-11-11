@@ -1,18 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '@config/logging';
-import { connectionPool } from '@config/database';
-import { RowDataPacket } from 'mysql2';
 
-interface ICommentDetail extends RowDataPacket {
-  comment_id: number;
-  comment: string;
-  created_at: Date;
-  rating: number;
-  title: string;
-  name: string;
-  profile: string;
-  status: '다읽음' | '읽는중' | '읽기전';
-}
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { CommentDetailType } from '../types';
 
 const NAMESPACE = 'COMMENT_DETAIL';
 
@@ -31,7 +21,7 @@ export default async function commentsDetail(req: Request, res: Response, _: Nex
         'LEFT JOIN users AS us ON us.id = ub.users_id ' +
         'WHERE ubc.id = ?';
       const COMMENT_DETAIL_VALUE = [comment_id];
-      const [COMMENT_DETAIL_RESULT] = await connection.query<ICommentDetail[]>(
+      const [COMMENT_DETAIL_RESULT] = await connection.query<CommentDetailType[]>(
         COMMENT_DETAIL_SQL,
         COMMENT_DETAIL_VALUE
       );

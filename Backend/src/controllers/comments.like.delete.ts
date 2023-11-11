@@ -1,7 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
-import logging from '@config/logging';
-import { connectionPool } from '@config/database';
 import { ResultSetHeader } from 'mysql2';
+
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
 
 const NAMESPACE = 'COMMENT_LIKE_DELETE';
 

@@ -1,9 +1,9 @@
 import { Response, NextFunction } from 'express';
 import { ResultSetHeader } from 'mysql2';
 
-import logging from '@config/logging';
-import { connectionPool } from '@config/database';
-import { MyBookReadRegisterRequest, IRequest, MyBookExistCountType, BookExistType } from '@/types';
+import logging from '../config/logging';
+import { connectionPool } from '../config/database';
+import { MyBookReadRegisterRequest, IRequest, MyBookExistCountType, BookExistType } from '../types';
 
 const NAMESPACE = 'BOOK_EXIST';
 

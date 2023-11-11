@@ -1,30 +1,18 @@
 import { VerifyFunction as LocalVerify } from 'passport-local';
 import bcrypt from 'bcrypt';
-import { RowDataPacket } from 'mysql2';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { GenderType, ProviderType } from '../types';
-
-interface IQueryResult extends RowDataPacket {
-  id: number;
-  email: string;
-  name: string;
-  password: string;
-  gender: GenderType;
-  age: number;
-  provider: ProviderType;
-  profile: string;
-}
+import { LocalStrategyType } from '../types';
 
 const localOptions = {
   usernameField: 'email',
   passwordField: 'password',
 };
 
-const LocalVerify: LocalVerify = async (email, password, done) => {
-  const NAMESPACE = 'LOCAL_STRATEGY';
+const NAMESPACE = 'LOCAL_STRATEGY';
 
+const LocalVerify: LocalVerify = async (email, password, done) => {
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -34,7 +22,7 @@ const LocalVerify: LocalVerify = async (email, password, done) => {
         'SELECT id, email, name, password, gender, age, provider, profile FROM users WHERE email = ?';
       const VALUE = [email];
 
-      const [rows] = await connection.query<IQueryResult[]>(SQL, VALUE);
+      const [rows] = await connection.query<LocalStrategyType[]>(SQL, VALUE);
 
       if (rows[0] === undefined) {
         logging.info(NAMESPACE, '존재하지 않는 사용자입니다.');
