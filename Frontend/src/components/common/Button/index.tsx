@@ -1,6 +1,7 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode, memo } from 'react';
 import styled from 'styled-components';
-import Loader from '../Loader';
+
+import Loader from 'components/common/Loader';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
@@ -50,13 +51,7 @@ const Span = styled.span`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function Button({
-  text,
-  children,
-  icon,
-  isLoading,
-  ...props
-}: IProps) {
+function button({ text, children, icon, isLoading, ...props }: IProps) {
   return (
     <Container text={!text} {...props}>
       {isLoading ? (
@@ -72,3 +67,7 @@ export default function Button({
     </Container>
   );
 }
+
+const Button = memo(button);
+
+export default Button;

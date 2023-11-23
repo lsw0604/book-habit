@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { ReactNode } from 'react';
 
 import NeedLogin from 'components/common/NeedLogin';
 import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
@@ -36,33 +36,29 @@ const Container = styled(motion.div)`
   }
 `;
 
+interface IBottomSheetObj {
+  [key: string]: ReactNode;
+}
+
+const bottomSheetComponent: IBottomSheetObj = {
+  isLogin: <NeedLogin />,
+  registerSearchBook: <SearchBookRegister />,
+  modifyComment: <CommentModify />,
+  registerComment: <CommentRegister />,
+  deleteComment: <CommentDelete />,
+  registerHistory: <HistoryRegister />,
+  deleteHistory: <HistoryDelete />,
+  deleteReply: <ReplyDelete />,
+  deleteMyBook: <MyBookDelete />,
+};
+
+const onChangeBottomSheetComponent = (ctx?: ModalBottomSheetType) => {
+  if (ctx === undefined || !bottomSheetComponent[ctx]) return null;
+  return bottomSheetComponent[ctx];
+};
+
 export default function BottomSheet() {
   const { modalStateType } = useModalHook();
-
-  const SwitchingComponent = useMemo(() => {
-    switch (modalStateType) {
-      case 'isLogin':
-        return <NeedLogin />;
-      case 'registerSearchBook':
-        return <SearchBookRegister />;
-      case 'modifyComment':
-        return <CommentModify />;
-      case 'registerComment':
-        return <CommentRegister />;
-      case 'deleteComment':
-        return <CommentDelete />;
-      case 'registerHistory':
-        return <HistoryRegister />;
-      case 'deleteHistory':
-        return <HistoryDelete />;
-      case 'deleteReply':
-        return <ReplyDelete />;
-      case 'deleteMyBook':
-        return <MyBookDelete />;
-      default:
-        return null;
-    }
-  }, [modalStateType]);
 
   return (
     <Container
@@ -76,7 +72,7 @@ export default function BottomSheet() {
         duration: 0.3,
       }}
     >
-      {SwitchingComponent}
+      {onChangeBottomSheetComponent(modalStateType)}
     </Container>
   );
 }

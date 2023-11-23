@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ChangeEvent, useCallback, useEffect, useMemo } from 'react';
+import { ChangeEvent, useCallback, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 import Textarea from 'components/common/Textarea';
@@ -25,6 +25,19 @@ const Box = styled.div`
 const Stack = styled.div<{ conWid: string }>`
   width: ${({ conWid }) => conWid};
 `;
+
+const options: RadioGroupOptionType<boolean>[] = [
+  {
+    label: '비공개',
+    value: false,
+    icon: <IconLock />,
+  },
+  {
+    label: '공개',
+    value: true,
+    icon: <IconLockOpen />,
+  },
+];
 
 export default function CommentAddForm() {
   const [myBookState, setMyBookState] = useRecoilState(myBookAtom);
@@ -59,22 +72,6 @@ export default function CommentAddForm() {
   useEffect(() => {
     initialBookState();
   }, []);
-
-  const options: RadioGroupOptionType<boolean>[] = useMemo(
-    () => [
-      {
-        label: '비공개',
-        value: false,
-        icon: <IconLock />,
-      },
-      {
-        label: '공개',
-        value: true,
-        icon: <IconLockOpen />,
-      },
-    ],
-    []
-  );
 
   return (
     <Container>

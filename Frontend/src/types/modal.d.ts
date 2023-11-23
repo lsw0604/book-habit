@@ -1,18 +1,18 @@
 type ModalAtomType = {
   isOpen: boolean;
-  type?:
-    | 'isLogin'
-    | 'registerSearchBook'
-    | 'modify'
-    | 'myBook'
-    | 'modifyComment'
-    | 'registerComment'
-    | 'deleteComment'
-    | 'registerHistory'
-    | 'deleteHistory'
-    | 'deleteMyBook'
-    | 'deleteReply';
+  type?: ModalBottomSheetType;
 };
+
+type ModalBottomSheetType =
+  | 'isLogin'
+  | 'registerSearchBook'
+  | 'modifyComment'
+  | 'registerComment'
+  | 'deleteComment'
+  | 'registerHistory'
+  | 'deleteHistory'
+  | 'deleteMyBook'
+  | 'deleteReply';
 
 type ReadBookAtomType = {
   startDate: Date | null;
