@@ -59,11 +59,23 @@ export default function HistoryList({ filter, users_books_id }: IProps) {
   const { myBookHistoryData, myBookHistoryIsLoading, myBookHistoryIsFetching } =
     useMyBookPageQueries(users_books_id, filter);
 
-  if (!myBookHistoryData || myBookHistoryIsLoading || myBookHistoryIsFetching) {
+  if (!myBookHistoryData) return null;
+
+  if (myBookHistoryIsLoading || myBookHistoryIsFetching) {
     return (
       <Container>
         <LoadingContainer>
           <Loader size={2} />
+        </LoadingContainer>
+      </Container>
+    );
+  }
+
+  if (filter.length === 0) {
+    return (
+      <Container>
+        <LoadingContainer>
+          <EmptyTag>찾고자하는 상태를 선택해주세요.</EmptyTag>
         </LoadingContainer>
       </Container>
     );

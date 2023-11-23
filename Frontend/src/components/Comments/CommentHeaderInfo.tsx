@@ -61,7 +61,10 @@ export default function CommentHeaderInfo({
   rating,
   profile,
   status,
-}: Omit<CommentsItemType, 'comment' | 'comment_id'>) {
+}: Omit<
+  CommentsItemType,
+  'comment' | 'comment_id' | 'age_category' | 'gender'
+>) {
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
 
   return (
