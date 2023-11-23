@@ -13,6 +13,15 @@ type CommentsItemType = {
   name: string;
   profile: string;
   status: '읽는중' | '읽기전' | '다읽음';
+  age_category:
+    | '어린이'
+    | '10대'
+    | '20대'
+    | '30대'
+    | '40대'
+    | '50대'
+    | '60대 이상';
+  gender: GenderType;
 };
 
 // useCommentsLikeListQuery의 타입들

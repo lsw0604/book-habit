@@ -17,7 +17,16 @@ export default async function commentList(_: Request, res: Response, __: NextFun
       const lastDateCurrentMonth = currentDate.endOf('month');
 
       const COMMENT_LIST_SQL =
-        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status ' +
+        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status, us.gender, ' +
+        'CASE ' +
+        "WHEN us.age BETWEEN 0 AND 9 THEN '어린이' " +
+        "WHEN us.age BETWEEN 10 AND 19 THEN '10대' " +
+        "WHEN us.age BETWEEN 20 AND 29 THEN '20대' " +
+        "WHEN us.age BETWEEN 30 AND 39 THEN '30대' " +
+        "WHEN us.age BETWEEN 40 AND 49 THEN '40대' " +
+        "WHEN us.age BETWEEN 50 AND 59 THEN '50대' " +
+        "ELSE '60대 이상'" +
+        'END AS age_category ' +
         'FROM users_books_comments AS ubc ' +
         'LEFT JOIN books AS bs ON bs.id = ubc.books_id ' +
         'LEFT JOIN users_books AS ub ON ub.id = ubc.users_books_id ' +

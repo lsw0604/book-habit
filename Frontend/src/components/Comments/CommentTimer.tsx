@@ -1,3 +1,4 @@
+import { customize } from '@style/colors';
 import { IconRefresh } from '@style/icons';
 import { QueryClient } from '@tanstack/react-query';
 import Icon from 'components/common/Button/Icon';
@@ -10,7 +11,6 @@ interface IProps {
 
 const Container = styled.div`
   width: 100%;
-  font-size: 12px;
   display: flex;
   justify-content: end;
   height: 32px;
@@ -19,8 +19,10 @@ const Container = styled.div`
 const Time = styled.p`
   margin-right: 8px;
   line-height: 32px;
+  font-size: 10px;
   text-justify: center;
-  color: ${({ theme }) => theme.mode.typo_main};
+  text-align: center;
+  color: ${customize.gray['400']};
 `;
 
 const queryClient = new QueryClient();

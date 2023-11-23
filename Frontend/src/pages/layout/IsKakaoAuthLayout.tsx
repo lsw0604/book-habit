@@ -24,7 +24,7 @@ export default function IsKakaoAuthLayout({
       isLogged &&
       provider === 'kakao' &&
       (age === null || name === null || gender === null);
-    redirectUrl = pathname === '/register/kakao' ? '/404' : pathname;
+    redirectUrl = pathname === '/register/kakao' ? '/search' : pathname;
   } else {
     isRouteAccessible = !(
       isLogged &&

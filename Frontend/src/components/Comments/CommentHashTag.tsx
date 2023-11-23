@@ -43,12 +43,16 @@ const Tag = styled.li<{ isOn: boolean }>`
     isOn ? ({ theme }) => theme.colors.spinner : customize.gray['400']};
 `;
 
+const hashTag: string[] = [];
+
 export default function CommentHashTag({
-  filter,
+  filter = [],
   addFilter,
   removeFilter,
 }: IProps) {
-  const { data } = useCommentsListQuery([]);
+  const { data } = useCommentsListQuery(filter);
+
+  if (!data) return null;
 
   const filterHandler = (tag: string) => {
     if (filter.includes(tag)) {
@@ -62,15 +66,18 @@ export default function CommentHashTag({
     return filter.includes(tag);
   };
 
-  if (!data) return null;
-  const hashTag: string[] = [];
-
   data.comments.forEach((comment) => {
     if (!hashTag.includes(comment.title)) {
       hashTag.push(comment.title);
     }
     if (!hashTag.includes(comment.status)) {
       hashTag.push(comment.status);
+    }
+    if (!hashTag.includes(comment.gender)) {
+      hashTag.push(comment.gender);
+    }
+    if (!hashTag.includes(comment.age_category)) {
+      hashTag.push(comment.age_category);
     }
   });
 

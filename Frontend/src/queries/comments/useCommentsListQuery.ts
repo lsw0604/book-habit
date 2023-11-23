@@ -24,15 +24,17 @@ export default function useCommentsListQuery(filter: string[]) {
         select: ({ comments }) => {
           if (filter.length === 0) {
             return { comments };
-          } else {
-            return {
-              comments: comments.filter(
-                (comment) =>
-                  filter.includes(comment.title) ||
-                  filter.includes(comment.status)
-              ),
-            };
           }
+
+          return {
+            comments: comments.filter(
+              (comment) =>
+                filter.includes(comment.title) ||
+                filter.includes(comment.status) ||
+                filter.includes(comment.gender) ||
+                filter.includes(comment.age_category)
+            ),
+          };
         },
       }
     );

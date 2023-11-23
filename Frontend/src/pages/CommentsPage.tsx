@@ -86,19 +86,9 @@ export default function CommentsPage() {
   const [filter, setFilter] = useState<string[]>([]);
   const { data, isFetching, isLoading, refetch } = useCommentsListQuery(filter);
 
-  const addFilter = (tag: string) => {
-    if (!filter.includes(tag)) {
-      setFilter((prev) => [...prev, tag]);
-    }
-  };
+  if (data === undefined) return null;
 
-  const removeFilter = (tag: string) => {
-    if (filter.includes(tag)) {
-      setFilter((prev) => prev.filter((v) => v !== tag));
-    }
-  };
-
-  if (data === undefined || isLoading) {
+  if (isLoading) {
     return (
       <LoaderContainer>
         <Loader size={2} />
@@ -119,6 +109,17 @@ export default function CommentsPage() {
     );
   }
 
+  const addFilter = (tag: string) => {
+    if (!filter.includes(tag)) {
+      setFilter((prev) => [...prev, tag]);
+    }
+  };
+
+  const removeFilter = (tag: string) => {
+    if (filter.includes(tag)) {
+      setFilter((prev) => prev.filter((v) => v !== tag));
+    }
+  };
   return (
     <Container>
       <TimerWrapper>
