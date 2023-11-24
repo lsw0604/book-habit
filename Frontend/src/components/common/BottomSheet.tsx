@@ -12,6 +12,7 @@ import HistoryRegister from 'components/Modals/History/HistoryRegister';
 import HistoryDelete from 'components/Modals/History/HistoryDelete';
 import ReplyDelete from 'components/Modals/Reply/ReplyDelete';
 import MyBookDelete from 'components/Modals/MyBookDelete';
+import ProfileModify from 'components/Modals/Profile/ProfileModify';
 
 import useModalHook from '@hooks/useModalHook';
 
@@ -50,6 +51,7 @@ const bottomSheetComponent: IBottomSheetObj = {
   deleteHistory: <HistoryDelete />,
   deleteReply: <ReplyDelete />,
   deleteMyBook: <MyBookDelete />,
+  modifyProfile: <ProfileModify />,
 };
 
 const onChangeBottomSheetComponent = (ctx?: ModalBottomSheetType) => {

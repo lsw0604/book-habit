@@ -108,8 +108,8 @@ const Title = styled.h1<{ isDescription: boolean }>`
 const Description = styled.span`
   width: 100%;
   display: inline-block;
-  font-size: 4px;
-  line-height: 10px;
+  font-size: 12px;
+  line-height: 14px;
   color: ${customize.gray['400']};
   overflow: hidden;
   text-overflow: ellipsis;

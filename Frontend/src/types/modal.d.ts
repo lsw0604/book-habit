@@ -12,7 +12,8 @@ type ModalBottomSheetType =
   | 'registerHistory'
   | 'deleteHistory'
   | 'deleteMyBook'
-  | 'deleteReply';
+  | 'deleteReply'
+  | 'modifyProfile';
 
 type ReadBookAtomType = {
   startDate: Date | null;

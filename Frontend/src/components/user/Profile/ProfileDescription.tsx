@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userAtom } from 'recoil/user';
-import { IconFemale, IconMale } from '@style/icons';
+import { IconFemale, IconMale, IconPencil } from '@style/icons';
 import { customize } from '@style/colors';
+import { modalAtom } from 'recoil/modal';
 
 const Container = styled.div`
   width: 100%;
@@ -23,6 +24,9 @@ const Container = styled.div`
   .name {
     font-size: 20px;
     color: ${({ theme }) => theme.mode.typo_main};
+    svg {
+      height: 16px;
+    }
   }
   .email {
     font-size: 12px;
@@ -38,17 +42,23 @@ const Container = styled.div`
   }
 `;
 
+const genderObj: Record<'female' | 'male', JSX.Element> = {
+  male: <IconMale />,
+  female: <IconFemale />,
+};
+
 export default function ProfileDescription() {
   const { name, gender, email, age } = useRecoilValue(userAtom);
-
-  const genderObj: Record<'female' | 'male', JSX.Element> = {
-    male: <IconMale />,
-    female: <IconFemale />,
-  };
+  const setModalState = useSetRecoilState(modalAtom);
 
   return (
     <Container>
-      <p className="name">{name}</p>
+      <p className="name">
+        {name}&nbsp;
+        <IconPencil
+          onClick={() => setModalState({ isOpen: true, type: 'modifyProfile' })}
+        />
+      </p>
       <p className="email">{email}</p>
       <p className="age">
         {genderObj[gender as 'female' | 'male']}
