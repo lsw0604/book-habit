@@ -103,22 +103,22 @@ export default function MyBookInfoCommentList({ users_books_id }: IProps) {
           </Icon>
         </EmptyTag>
       ) : (
-        <ListContainer>
-          {data.map((comment) => (
-            <MyBookInfoCommentItem
-              {...comment}
-              key={comment.comment_id}
-              users_books_id={users_books_id}
-            />
-          ))}
-        </ListContainer>
-      )}
-      {data?.length !== 0 && (
-        <AddContainer>
-          <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
-            AddComment
-          </Icon>
-        </AddContainer>
+        <>
+          <ListContainer>
+            {data.map((comment) => (
+              <MyBookInfoCommentItem
+                {...comment}
+                key={comment.comment_id}
+                users_books_id={users_books_id}
+              />
+            ))}
+          </ListContainer>
+          <AddContainer>
+            <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
+              AddComment
+            </Icon>
+          </AddContainer>
+        </>
       )}
     </Container>
   );

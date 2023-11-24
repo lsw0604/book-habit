@@ -56,10 +56,10 @@ const Footer = styled.p`
 `;
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [useValidation, setUseValidation] = useState(false);
-  const [eyeOpen, setEyeOpen] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [useValidation, setUseValidation] = useState<boolean>(false);
+  const [eyeOpen, setEyeOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const { isLoading, mutate } = useLocalLoginMutation();

@@ -73,14 +73,14 @@ const Contents = styled.div`
   align-items: center;
 `;
 
+const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
+
 export default function Calendar({
   filter,
   setFilter,
   users_books_id,
 }: IProps) {
-  const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
   if (!users_books_id) return <Navigate to="/404" />;
-
   const {
     myBookHistoryData,
     myBookTimeData,
@@ -88,12 +88,11 @@ export default function Calendar({
     myBookHistoryIsLoading,
   } = useMyBookPageQueries(users_books_id, filter);
 
-  if (
-    !myBookTimeData ||
-    !myBookHistoryData ||
-    myBookTimeIsLoading ||
-    myBookHistoryIsLoading
-  ) {
+  if (!myBookTimeData || !myBookHistoryData) {
+    return <Navigate to="/404" />;
+  }
+
+  if (myBookTimeIsLoading || myBookHistoryIsLoading) {
     return (
       <LoadingContainer>
         <Loader />

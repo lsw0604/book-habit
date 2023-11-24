@@ -60,78 +60,83 @@ const Footer = styled.p`
   }
 `;
 
+const registerGenderOptions: RadioGroupOptionType<'male' | 'female' | ''>[] = [
+  {
+    label: '남자',
+    icon: <IconMale />,
+    value: 'male',
+    description: 'male',
+  },
+  {
+    label: '여자',
+    icon: <IconFemale />,
+    value: 'female',
+    description: 'female',
+  },
+];
+
 export default function Register() {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [checkedPassword, setCheckedPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [checkedPassword, setCheckedPassword] = useState<string>('');
   const [gender, setGender] = useState<'female' | 'male' | ''>('');
   const [age, setAge] = useState<number | ''>('');
 
-  const [useValidation, setUseValidation] = useState(false);
-
-  const [focusedPassword, setFocusedPassword] = useState(false);
+  const [useValidation, setUseValidation] = useState<boolean>(false);
+  const [focusedPassword, setFocusedPassword] = useState<boolean>(false);
 
   const onFocusPassword = useCallback(() => {
     setFocusedPassword(true);
   }, []);
 
-  const onChangeEmail = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  }, []);
+  const onChangeEmail = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setEmail(event.target.value);
+    },
+    [email, setEmail]
+  );
 
-  const onChangeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  }, []);
+  const onChangeName = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setName(event.target.value);
+    },
+    [name, setName]
+  );
 
   const onChangePassword = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setPassword(event.target.value);
     },
-    []
+    [password, setPassword]
   );
 
   const onChangeCheckedPassword = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setCheckedPassword(event.target.value);
     },
-    []
+    [checkedPassword, setCheckedPassword]
   );
 
   const onChangeGender = (ctx: 'male' | 'female' | '') => {
     setGender(ctx);
   };
 
-  const onChangeAge = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const isValid = /^\d+$/.test(value);
+  const onChangeAge = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      const isValid = /^\d+$/.test(value);
 
-    if (isValid) {
+      if (!isValid) return setAge('');
+
       setAge(parseInt(value, 10));
-    } else {
-      setAge('');
-    }
-  }, []);
+    },
+    [setAge]
+  );
 
   const navigate = useNavigate();
   const { mutate, isLoading } = useLocalSignUpMutation();
   const { addToast } = useToastHook();
-
-  const registerGenderOptions: RadioGroupOptionType<'male' | 'female' | ''>[] =
-    [
-      {
-        label: '남자',
-        icon: <IconMale />,
-        value: 'male',
-        description: 'male',
-      },
-      {
-        label: '여자',
-        icon: <IconFemale />,
-        value: 'female',
-        description: 'female',
-      },
-    ];
 
   const {
     validate,
@@ -149,13 +154,14 @@ export default function Register() {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUseValidation(true);
-    if (validate) {
-      if (email && name && password && gender && age) {
-        return mutate({ email, name, password, gender, age });
-      }
-    } else {
-      addToast({ status: 'error', message: '회원가입 폼을 지켜주세요.' });
+    if (!validate) {
+      return addToast({
+        status: 'error',
+        message: '회원가입 폼을 지켜주세요.',
+      });
     }
+
+    return mutate({ email, name, password, gender, age: age as number });
   };
 
   return (
@@ -265,3 +271,5 @@ export default function Register() {
     </Container>
   );
 }
+
+Register.displayName = 'register_form';

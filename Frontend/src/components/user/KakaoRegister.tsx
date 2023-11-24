@@ -39,7 +39,7 @@ const Stack = styled.div`
 `;
 
 export default function KakaoRegister() {
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string>('');
   const [gender, setGender] = useState<'female' | 'male' | ''>('');
   const [age, setAge] = useState<number | ''>('');
   const [useValidation, setUseValidation] = useState(false);
@@ -57,11 +57,9 @@ export default function KakaoRegister() {
     const value = event.target.value;
     const isValid = /^\d+$/.test(value);
 
-    if (isValid) {
-      setAge(parseInt(value, 10));
-    } else {
-      setAge('');
-    }
+    if (!isValid) return setAge('');
+
+    return setAge(parseInt(value, 10));
   }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
