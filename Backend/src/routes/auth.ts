@@ -9,6 +9,7 @@ import kakao from '../controllers/auth.kakao.login';
 import KakaoCallback from '../controllers/auth.kakao.callback';
 import kakaoUpdate from '../controllers/auth.kakao.update';
 import profileUpdate from '../controllers/auth.profile.update';
+import profileInfoUpdate from '../controllers/auth.profile.info.update';
 import authLikeList from '../controllers/auth.like.list';
 import authReplyList from '../controllers/auth.reply.list';
 
@@ -26,6 +27,7 @@ import upload from '../middleware/multer';
  * * login API /api/auth/login
  * * kakao 회원정보를 수정하는 API /api/auth/kakao/register
  * * 유저 프로필 사진을 수정하는 API /api/auth/profile
+ * * 유저 프로필 정보를 수정하는 API /api/auth/info
  */
 const authRouter = express.Router();
 
@@ -47,5 +49,6 @@ authRouter.post('/login', local);
 // UPDATE
 authRouter.put('/kakao/register', access, kakaoUpdate);
 authRouter.put('/profile', access, upload.single('profile'), profileUpdate);
+authRouter.put('/info', access, profileInfoUpdate);
 
 export default authRouter;

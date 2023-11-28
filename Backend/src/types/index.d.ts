@@ -5,6 +5,14 @@ interface IRequest<T> extends Request {
   body: T;
 }
 
+// auth.profile.info.update
+
+export type ProfileInfoUpdateType = {
+  name?: string;
+  age?: number;
+  gender: GenderType;
+} & RowDataPacket;
+
 // auth.kakao.callback
 
 export type KakaoCallbackKakaoIdExistType = {
