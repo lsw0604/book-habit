@@ -138,3 +138,16 @@ export const profileUpdateAPI = async (
   );
   return data;
 };
+
+/**
+ * * user 프로필 정보를 수정하는 API
+ */
+export const profileInfoUpdateAPI = async (
+  body: ProfileInfoEditMutationRequestType
+) => {
+  const { data } = await axios.put<ProfileInfoEditMutationResponseType>(
+    '/api/auth/info',
+    body
+  );
+  return data;
+};

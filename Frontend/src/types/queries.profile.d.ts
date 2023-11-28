@@ -1,3 +1,16 @@
+// useProfileInfoEditMutation의 타입들
+
+type ProfileInfoEditMutationResponseType = MutationResponse & {
+  age: number;
+  name: string;
+  gender: GenderType;
+};
+type ProfileInfoEditMutationRequestType = {
+  age: number | '';
+  name?: string;
+  gender?: GenderType;
+};
+
 // useProfileEditMutation의 타입들
 
 type ProfileEditMutationResponseType = MutationResponse & {

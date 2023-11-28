@@ -13,8 +13,15 @@ import CheckBoxGroup from 'components/common/CheckBox';
 import RadioGroup from 'components/common/Radio';
 
 import { CheckBoxOptionType, RadioGroupOptionType } from 'types/style';
-import { IconFemale, IconMale, IconNumber, IconPerson } from '@style/icons';
+import {
+  IconFemale,
+  IconMale,
+  IconNumber,
+  IconPencil,
+  IconPerson,
+} from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
+import useProfileInfoEditMutation from '@queries/profile/useProfileInfoEditMutation';
 
 const Container = styled.form`
   width: 100%;
@@ -86,6 +93,7 @@ const RADIO_OPTIONS: RadioGroupOptionType<'male' | 'female' | ''>[] = [
 
 export default function ProfileModify() {
   const { addToast } = useToastHook();
+  const { mutate, isLoading } = useProfileInfoEditMutation();
   const [selectedOptions, setSelectedOptions] = useState<
     CheckBoxOptionType<string>[]
   >([]);
@@ -130,7 +138,7 @@ export default function ProfileModify() {
     setAge(parseInt(value, 10));
   }, []);
 
-  const modifyObj = {
+  const modifyObj: ProfileInfoEditMutationRequestType = {
     age,
     name,
     gender,
@@ -155,7 +163,8 @@ export default function ProfileModify() {
       return addToast({ message: '빈칸을 채워주세요.', status: 'info' });
     }
 
-    console.log(modifyObj);
+    setUseValidation(false);
+    mutate(modifyObj);
   };
 
   useEffect(() => {
@@ -227,7 +236,9 @@ export default function ProfileModify() {
         )}
       </Content>
       <Footer>
-        <Button>수정하기</Button>
+        <Button isLoading={isLoading} icon={<IconPencil />}>
+          수정하기
+        </Button>
       </Footer>
     </Container>
   );
