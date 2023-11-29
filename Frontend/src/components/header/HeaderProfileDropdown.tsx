@@ -70,7 +70,7 @@ export default function HeaderProfileDropdown() {
 
   const navigateSearchUrl = () => navigate('/search');
 
-  const navigateMyBookUrl = () => navigate('/my_book');
+  const navigateMyBookUrl = () => navigate('/my_books');
 
   const openWindow = () => window.open(KAKAO_LOGOUT_URL, '_self');
 
