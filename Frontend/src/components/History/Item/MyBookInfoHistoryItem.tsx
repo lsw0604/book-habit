@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 import Icon from 'components/common/Button/Icon';
 import { IconTrashCan } from '@style/icons';
-import { StatusWordObj, StatusColorObj } from 'lib/staticData';
+import { STATUS_WORD_OBJECT, STATUS_COLOR_OBJECT } from 'lib/staticData';
 import { getCalendarDetail } from 'lib/utils/calendar';
 import { calendarAtom } from 'recoil/calendar';
 import { myBookAtom } from 'recoil/myBook';
@@ -52,7 +52,7 @@ const ContentDate = styled.p`
 const Line = styled.div<{ status: HistoryStatusType }>`
   width: 0.3rem;
   height: auto;
-  background-color: ${({ status }) => StatusColorObj[status]};
+  background-color: ${({ status }) => STATUS_COLOR_OBJECT[status]};
 `;
 
 const IconWrapper = styled.div`
@@ -132,7 +132,7 @@ export default function MyBookInfoHistoryItem({
         <ContentDate>
           {year}년 {month}월 {day}일&nbsp;
         </ContentDate>
-        <ContentMessage>{StatusWordObj[status]}</ContentMessage>
+        <ContentMessage>{STATUS_WORD_OBJECT[status]}</ContentMessage>
       </Content>
       <IconWrapper>
         <Icon icon={<IconTrashCan />} onClick={deleteHandler}>

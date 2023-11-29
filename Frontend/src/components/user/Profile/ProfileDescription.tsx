@@ -42,7 +42,7 @@ const Container = styled.div`
   }
 `;
 
-const genderObj: Record<'female' | 'male', JSX.Element> = {
+const GENDER_OBJECT: Record<'female' | 'male', JSX.Element> = {
   male: <IconMale />,
   female: <IconFemale />,
 };
@@ -61,8 +61,8 @@ export default function ProfileDescription() {
       </p>
       <p className="email">{email}</p>
       <p className="age">
-        {genderObj[gender as 'female' | 'male']}
-        {age}
+        {GENDER_OBJECT[gender as 'female' | 'male']}
+        {age}살
       </p>
     </Container>
   );

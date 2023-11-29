@@ -33,23 +33,23 @@ const Content = styled.div`
   overflow: auto;
 `;
 
+const RADIO_OPTIONS: RadioGroupOptionType<string>[] = [
+  {
+    label: 'LIKE',
+    value: 'like',
+    icon: <IconHeart />,
+    description: '내가 누른 좋아요',
+  },
+  {
+    label: 'REPLY',
+    value: 'reply',
+    icon: <IconCommentDots />,
+    description: '내가 단 댓글',
+  },
+];
+
 export default function ProfileList() {
   const [value, setValue] = useState<'like' | 'reply'>('like');
-
-  const options: RadioGroupOptionType<string>[] = [
-    {
-      label: 'LIKE',
-      value: 'like',
-      icon: <IconHeart />,
-      description: '내가 누른 좋아요',
-    },
-    {
-      label: 'REPLY',
-      value: 'reply',
-      icon: <IconCommentDots />,
-      description: '내가 단 댓글',
-    },
-  ];
 
   const onChange = (value: string) => {
     setValue(value as 'like' | 'reply');
@@ -63,7 +63,7 @@ export default function ProfileList() {
         <MemorizedRadioButton
           onChange={onChange}
           value={value}
-          options={options}
+          options={RADIO_OPTIONS}
         />
       </Stack>
       <Content>

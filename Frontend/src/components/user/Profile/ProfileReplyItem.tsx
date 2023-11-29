@@ -2,6 +2,7 @@ import { customize } from '@style/colors';
 import Avatar from 'components/common/Avatar';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { STATUS_OBJECT } from 'lib/staticData';
 
 const Container = styled.article`
   display: flex;
@@ -55,12 +56,6 @@ export default function ProfileReplyItem({
 }: ProfileReplyQueryItemType) {
   const navigate = useNavigate();
 
-  const statusObj: Record<'다읽음' | '읽기전' | '읽는중', string> = {
-    다읽음: '다 읽고서 남긴',
-    읽는중: '읽는중에 남긴',
-    읽기전: '읽기전에 남긴',
-  };
-
   return (
     <Container>
       <AvatarWrapper>
@@ -72,7 +67,7 @@ export default function ProfileReplyItem({
           {title}
         </SubHighLightWord>
         <p>(을)를&nbsp;</p>
-        <p>{statusObj[status]}&nbsp;</p>한줄평에&nbsp;
+        <p>{STATUS_OBJECT[status]}&nbsp;</p>한줄평에&nbsp;
         <SubHighLightWord>댓글</SubHighLightWord>
         <p>을 남겼어요.</p>
       </Content>

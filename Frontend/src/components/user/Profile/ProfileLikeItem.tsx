@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+
+import { STATUS_OBJECT } from 'lib/staticData';
 import Avatar from 'components/common/Avatar';
 import { customize } from '@style/colors';
 import { useNavigate } from 'react-router-dom';
@@ -55,12 +57,6 @@ export default function ProfileLikeItem({
 }: ProfileLikeQueryItemType) {
   const navigate = useNavigate();
 
-  const statusObj: Record<'다읽음' | '읽기전' | '읽는중', string> = {
-    다읽음: '다 읽고서 남긴',
-    읽는중: '읽는중에 남긴',
-    읽기전: '읽기전에 남긴',
-  };
-
   return (
     <Container>
       <AvatarWrapper>
@@ -72,7 +68,7 @@ export default function ProfileLikeItem({
           {title}
         </SubHighLightWord>
         <p>(을)를&nbsp;</p>
-        <p>{statusObj[status]}&nbsp;</p>한줄평에&nbsp;
+        <p>{STATUS_OBJECT[status]}&nbsp;</p>한줄평에&nbsp;
         <SubHighLightWord>좋아요</SubHighLightWord>
         <p>를 남겼어요.</p>
       </Content>

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 import { customize } from '@style/colors';
-import { StatusColorObj } from 'lib/staticData';
+import { STATUS_COLOR_OBJECT } from 'lib/staticData';
 import useToastHook from '@hooks/useToastHook';
 import { IconClose } from '@style/icons';
 import { v4 } from 'uuid';
@@ -58,7 +58,7 @@ const Status = styled.div<{ status: HistoryStatusType }>`
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: ${({ status }) => StatusColorObj[status]};
+  background-color: ${({ status }) => STATUS_COLOR_OBJECT[status]};
 `;
 
 const IconWrapper = styled.div`
