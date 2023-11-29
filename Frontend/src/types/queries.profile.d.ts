@@ -6,7 +6,7 @@ type ProfileInfoEditMutationResponseType = MutationResponse & {
   gender: GenderType;
 };
 type ProfileInfoEditMutationRequestType = {
-  age: number | '';
+  age?: number | '';
   name?: string;
   gender?: GenderType;
 };

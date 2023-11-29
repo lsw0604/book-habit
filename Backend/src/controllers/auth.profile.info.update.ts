@@ -8,7 +8,7 @@ import { GenderType, IRequest, ProfileInfoUpdateType } from '../types';
 const NAMESPACE = 'PROFILE_INFO_UPDATE';
 
 export default async function profileInfoUpdate(
-  req: IRequest<{ name?: string; age?: number | ''; gender: GenderType | '' }>,
+  req: IRequest<{ name?: string; age?: number; gender?: GenderType }>,
   res: Response,
   _: NextFunction
 ) {
@@ -25,19 +25,19 @@ export default async function profileInfoUpdate(
     const connection = await connectionPool.getConnection();
     try {
       let PROFILE_INFO_UPDATE_SQL = 'UPDATE users SET ';
-      const PROFILE_INFO_UPDATE_VALUE: GenderType | number | string[] = [];
+      const PROFILE_INFO_UPDATE_VALUE: Array<GenderType | number | string> = [];
 
-      if (name === '') {
+      if (name !== undefined) {
         PROFILE_INFO_UPDATE_SQL += 'name = ?, ';
         PROFILE_INFO_UPDATE_VALUE.push(name);
       }
 
-      if (age === '') {
+      if (age !== undefined) {
         PROFILE_INFO_UPDATE_SQL += 'age = ?, ';
         PROFILE_INFO_UPDATE_VALUE.push(age);
       }
 
-      if (gender === '') {
+      if (gender !== undefined) {
         PROFILE_INFO_UPDATE_SQL += 'gender = ?, ';
         PROFILE_INFO_UPDATE_VALUE.push(gender);
       }
@@ -45,7 +45,7 @@ export default async function profileInfoUpdate(
       PROFILE_INFO_UPDATE_SQL = PROFILE_INFO_UPDATE_SQL.slice(0, -2);
 
       PROFILE_INFO_UPDATE_SQL += ' WHERE id = ?';
-      PROFILE_INFO_UPDATE_VALUE.push(id as any);
+      PROFILE_INFO_UPDATE_VALUE.push(id);
 
       const [PROFILE_INFO_UPDATE_RESULT] = await connection.query<ResultSetHeader>(
         PROFILE_INFO_UPDATE_SQL,

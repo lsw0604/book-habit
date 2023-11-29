@@ -139,9 +139,9 @@ export default function ProfileModify() {
   }, []);
 
   const modifyObj: ProfileInfoEditMutationRequestType = {
-    age,
-    name,
-    gender,
+    age: age !== '' ? age : undefined,
+    name: name !== '' ? name : undefined,
+    gender: gender !== '' ? gender : undefined,
   };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
