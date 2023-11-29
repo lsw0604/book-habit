@@ -5,6 +5,8 @@ import { customize } from '@style/colors';
 import { logoutAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
 import useUserStateHook from '@hooks/useUserStateHook';
+import { useSetRecoilState } from 'recoil';
+import { modalAtom } from 'recoil/modal';
 
 const Container = styled.div`
   position: absolute;
@@ -53,53 +55,65 @@ const Label = styled.label`
   width: 100%;
 `;
 
+const KAKAO_LOGOUT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${
+  import.meta.env.VITE_KAKAO_REST_API
+}&logout_redirect_uri=${import.meta.env.VITE_KAKAO_LOGOUT_URI}`;
+
 export default function HeaderProfileDropdown() {
   const { userState, onChangeUserStateInitial } = useUserStateHook();
+  const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
   const navigate = useNavigate();
 
+  const handleModal = () =>
+    setModalState({ type: 'modifyProfile', isOpen: true });
+
+  const navigateSearchUrl = () => navigate('/search');
+
+  const navigateMyBookUrl = () => navigate('/my_book');
+
+  const openWindow = () => window.open(KAKAO_LOGOUT_URL, '_self');
+
   const handleLogout = async () => {
     if (userState.provider === 'kakao') {
-      const { message, status } = await logoutAPI();
-      if (status === 'success') {
-        onChangeUserStateInitial();
-        window.localStorage.removeItem('ACCESS');
-        window.open(
-          `https://kauth.kakao.com/oauth/logout?client_id=${
-            import.meta.env.VITE_KAKAO_REST_API
-          }&logout_redirect_uri=${import.meta.env.VITE_KAKAO_LOGOUT_URI}`,
-          '_self'
-        );
-        addToast({ message, status });
-      }
-    } else {
-      const { message, status } = await logoutAPI();
-      if (status === 'success') {
-        onChangeUserStateInitial();
-        window.localStorage.removeItem('ACCESS');
-        addToast({ message, status });
-      }
+      openWindow();
     }
+    const { message, status } = await logoutAPI();
+
+    onChangeUserStateInitial();
+    window.localStorage.removeItem('ACCESS');
+    addToast({ message, status });
   };
+
+  const DROPDOWN_OPTIONS = [
+    {
+      label: '나의 서재',
+      onClick: navigateMyBookUrl,
+    },
+    {
+      label: '책 검색하기',
+      onClick: navigateSearchUrl,
+    },
+    {
+      label: '프로필 수정',
+      onClick: handleModal,
+    },
+    {
+      label: '로그아웃',
+      onClick: handleLogout,
+    },
+  ];
 
   return (
     <Container>
       <Ul>
-        <Li onClick={() => navigate(`/my_books`)}>
-          <Label>
-            <span>나의 서재</span>
-          </Label>
-        </Li>
-        <Li onClick={() => navigate('/search')}>
-          <Label>
-            <span>서재에 책 꽂기</span>
-          </Label>
-        </Li>
-        <Li onClick={handleLogout}>
-          <Label>
-            <span>로그아웃</span>
-          </Label>
-        </Li>
+        {DROPDOWN_OPTIONS.map((option) => (
+          <Li onClick={option.onClick} key={option.label}>
+            <Label>
+              <span>{option.label}</span>
+            </Label>
+          </Li>
+        ))}
       </Ul>
     </Container>
   );
