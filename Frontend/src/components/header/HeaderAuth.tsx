@@ -15,14 +15,33 @@ const Wrapper = styled.div`
 
 export default function HeaderAuth() {
   const navigate = useNavigate();
+
+  const navigateRegister = () => {
+    navigate('/register');
+  };
+
+  const navigateLogin = () => {
+    navigate('/login');
+  };
+
+  const DROPDOWN_OPTIONS = [
+    {
+      label: '회원가입',
+      onClick: navigateRegister,
+    },
+    {
+      label: '로그인',
+      onClick: navigateLogin,
+    },
+  ];
+
   return (
     <Container>
-      <Wrapper>
-        <Button onClick={() => navigate('/register')}>회원가입</Button>
-      </Wrapper>
-      <Wrapper>
-        <Button onClick={() => navigate('/login')}>로그인</Button>
-      </Wrapper>
+      {DROPDOWN_OPTIONS.map((option) => (
+        <Wrapper key={option.label}>
+          <Button onClick={option.onClick}>{option.label}</Button>
+        </Wrapper>
+      ))}
     </Container>
   );
 }

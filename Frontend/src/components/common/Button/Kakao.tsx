@@ -2,13 +2,13 @@ import { customize } from '@style/colors';
 import { IconKakao } from '@style/icons';
 import Button from 'components/common/Button';
 
-export default function Kakao() {
-  const CLIENT_ID = import.meta.env.VITE_KAKAO_REST_API;
-  const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-  const url = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+const CLIENT_ID = import.meta.env.VITE_KAKAO_REST_API;
+const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+const URL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
+export default function Kakao() {
   const kakaoPageHandler = () => {
-    window.location.href = url;
+    window.location.href = URL;
   };
 
   return (

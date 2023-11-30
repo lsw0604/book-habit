@@ -44,11 +44,12 @@ const Title = styled.div<{ isOn: boolean }>`
 
 export default function NavBtn({ title, icon, url, isAuth }: IProps) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
   const setModalState = useSetRecoilState(modalAtom);
   const { isLogged } = useRecoilValue(userAtom);
-  const isOn: boolean = pathname === url || pathname.startsWith(url);
 
-  const navigate = useNavigate();
+  const isOn: boolean = pathname === url || pathname.startsWith(url);
 
   const onChangeModal = useCallback((type: ModalAtomType['type']) => {
     setModalState({ isOpen: true, type });

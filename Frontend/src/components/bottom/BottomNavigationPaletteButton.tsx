@@ -1,9 +1,8 @@
-import { IconPalette } from '@style/icons';
-import Loader from 'components/common/Loader';
-import { useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import styled from 'styled-components';
 
-const HeaderPaletteDropdown = lazy(() => import('components/Palette'));
+import HeaderPaletteDropdown from 'components/Palette';
+import { IconPalette } from '@style/icons';
 
 const Container = styled.div`
   width: 100%;
@@ -33,37 +32,34 @@ const CircleBtn = styled.button`
 `;
 
 export default function BottomNavigationPaletteButton() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const paletteRef = useRef<HTMLDivElement>(null);
 
-  const handleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
+  const openHandler = useCallback(() => setIsOpen((prev) => !prev), []);
 
-  useEffect(() => {
-    const handlePaletteOutside = (event: MouseEvent) => {
+  const handlePaletteOutside = useCallback(
+    (event: MouseEvent) => {
       if (
         paletteRef.current &&
         !paletteRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        openHandler();
       }
-    };
+    },
+    [openHandler]
+  );
 
+  useEffect(() => {
     document.addEventListener('mousedown', handlePaletteOutside);
     return () => {
       document.removeEventListener('mousedown', handlePaletteOutside);
     };
-  }, [isOpen]);
+  }, [handlePaletteOutside]);
 
   return (
     <Container ref={paletteRef}>
-      {isOpen && (
-        <Suspense fallback={<Loader />}>
-          <HeaderPaletteDropdown />
-        </Suspense>
-      )}
-      <CircleBtn onClick={handleOpen} aria-label="paletteBtn">
+      {isOpen && <HeaderPaletteDropdown />}
+      <CircleBtn onClick={openHandler}>
         <IconPalette />
       </CircleBtn>
     </Container>

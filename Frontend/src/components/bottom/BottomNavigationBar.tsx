@@ -76,33 +76,24 @@ const bottomRoutes = [
 export default function BottomNavigationBar() {
   const { pathname } = useLocation();
 
-  return (
-    <>
-      {pathname !== '/' ? (
-        <Container>
-          <Buttons>
-            {bottomRoutes.map((route) => {
-              if (!route.title && !route.icon && !route.url) {
-                return (
-                  <Wrapper key={v4()}>
-                    <BottomNavigationPaletteButton />
-                  </Wrapper>
-                );
-              }
-              return (
-                <Wrapper key={v4()}>
-                  <BottomNavigationButton
-                    title={route.title}
-                    icon={route.icon}
-                    url={route.url}
-                    isAuth={route.isAuth}
-                  />
-                </Wrapper>
-              );
-            })}
-          </Buttons>
-        </Container>
-      ) : null}
-    </>
-  );
+  return pathname !== '/' ? (
+    <Container>
+      <Buttons>
+        {bottomRoutes.map((route) => (
+          <Wrapper key={v4()}>
+            {!route.url && !route.icon && !route.title ? (
+              <BottomNavigationPaletteButton />
+            ) : (
+              <BottomNavigationButton
+                title={route.title}
+                icon={route.icon}
+                url={route.url}
+                isAuth={route.isAuth}
+              />
+            )}
+          </Wrapper>
+        ))}
+      </Buttons>
+    </Container>
+  ) : null;
 }

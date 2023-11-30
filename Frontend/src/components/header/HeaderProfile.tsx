@@ -23,6 +23,7 @@ const ProfileName = styled.p`
 
 export default function HeaderProfile() {
   const [isHamburger, setIsHamburger] = useState<boolean>(false);
+
   const hamburgerRef = useRef<HTMLDivElement>(null);
   const { profile, name } = useRecoilValue(userAtom);
 

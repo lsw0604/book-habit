@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import Toggle from 'components/common/Toggle';
 import HeaderPaletteColorBox from 'components/Palette/ColorBox';
@@ -6,6 +6,15 @@ import { ColorType } from 'types/style';
 import { customize } from '@style/colors';
 import { IconCloudyParty, IconSunny } from '@style/icons';
 import useThemeHook from '@hooks/useThemeHook';
+
+const ThemeCSS = css`
+  margin-bottom: 10px;
+`;
+
+const ColorCSS = css`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Container = styled.div`
   position: absolute;
@@ -30,7 +39,7 @@ const Ul = styled.ul`
   padding: 5px;
 `;
 
-const Li = styled.li`
+const Li = styled.li<{ mode: 'theme' | 'color' }>`
   border-radius: 0.5rem;
   padding: 10px;
   width: 100%;
@@ -39,6 +48,8 @@ const Li = styled.li`
   display: inline-flex;
   justify-content: space-between;
   align-items: center;
+  ${({ mode }) => mode === 'theme' && ThemeCSS}
+  ${({ mode }) => mode === 'color' && ColorCSS}
 `;
 
 const Label = styled.label`
@@ -61,32 +72,24 @@ const ColorButton = styled.div<{ btnColor: ColorType }>`
   align-items: center;
 `;
 
+const ICONS = [
+  <IconSunny key="sunny" style={{ fill: customize.yellow['300'] }} />,
+  <IconCloudyParty key="cloudy" style={{ fill: customize.yellow['300'] }} />,
+];
+
 export default function Index() {
   const { isOn, toggleHandler, color } = useThemeHook();
 
   return (
     <Container>
       <Ul>
-        <Li style={{ marginBottom: '10px' }}>
+        <Li mode="theme">
           <Label>
             <span>테마</span>
-            <Toggle
-              isOn={isOn}
-              toggleHandler={toggleHandler}
-              icons={[
-                <IconSunny
-                  key="sunny"
-                  style={{ fill: customize.yellow['300'] }}
-                />,
-                <IconCloudyParty
-                  key="cloudy"
-                  style={{ fill: customize.yellow['300'] }}
-                />,
-              ]}
-            />
+            <Toggle isOn={isOn} toggleHandler={toggleHandler} icons={ICONS} />
           </Label>
         </Li>
-        <Li style={{ display: 'flex', flexDirection: 'column' }}>
+        <Li mode="color">
           <Label>
             <span>색상</span>
             <ColorButton btnColor={color} />
