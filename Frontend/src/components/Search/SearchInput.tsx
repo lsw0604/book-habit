@@ -17,6 +17,15 @@ const Container = styled.form`
   padding: 0 1rem;
   flex-direction: column;
   position: relative;
+
+  .circle_btn {
+    &::placeholder {
+      line-height: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: ${({ theme }) => theme.mode.typo_sub};
+    }
+  }
 `;
 
 const IconWrapper = styled.div`
@@ -31,9 +40,11 @@ export default function SearchInput({ search, onChange, onSubmit }: IProps) {
   return (
     <Container onSubmit={onSubmit}>
       <Input
+        className="circle_btn"
         style={{ borderRadius: '2rem', padding: '0 1rem' }}
         value={search}
         onChange={onChange}
+        placeholder="찾고자하는 책 제목을 입력해주세요."
       />
       <IconWrapper>
         <Icon type="submit" icon={<IconSearch />}>

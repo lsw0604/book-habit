@@ -56,7 +56,7 @@ export default function BottomNavigationPaletteButton() {
   return (
     <Container ref={paletteRef}>
       {isOpen && <HeaderPaletteDropdown />}
-      <CircleBtn onClick={openHandler}>
+      <CircleBtn onClick={openHandler} aria-label="circle_btn">
         <IconPalette />
       </CircleBtn>
     </Container>

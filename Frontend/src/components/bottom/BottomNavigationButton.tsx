@@ -29,7 +29,7 @@ const Icon = styled.div<{ isOn: boolean }>`
   svg {
     fill: ${({ isOn }) =>
       isOn
-        ? ({ theme }) => theme.colors.spinner
+        ? ({ theme }) => theme.colors.main
         : ({ theme }) => theme.mode.typo_main};
     width: 1rem;
   }

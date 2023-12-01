@@ -13,23 +13,23 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   padding: 0 1rem;
+  margin-top: 1rem;
 `;
 
+const SELECTOR_OPTIONS: SelectorBookType[] = [
+  '전체보기',
+  '다읽음',
+  '읽는중',
+  '읽고싶음',
+];
+
 export default function Index() {
-  const options: SelectorBookType[] = [
-    '전체보기',
-    '다읽음',
-    '읽는중',
-    '읽고싶음',
-  ];
-
   const [status, setStatus] = useState<string | undefined>('전체보기');
-
   return (
     <Container>
       <Wrapper>
         <Selector
-          options={options}
+          options={SELECTOR_OPTIONS}
           value={status}
           onChange={(e) => setStatus(e)}
         />

@@ -1,20 +1,14 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
+import { ReactNode, lazy } from 'react';
 
 import NeedLogin from 'components/common/NeedLogin';
 import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
-
-import CommentModify from 'components/Modals/Comment/CommentModify';
-import CommentRegister from 'components/Modals/Comment/CommentRegister';
-import CommentDelete from 'components/Modals/Comment/CommentDelete';
-import HistoryRegister from 'components/Modals/History/HistoryRegister';
-import HistoryDelete from 'components/Modals/History/HistoryDelete';
-import ReplyDelete from 'components/Modals/Reply/ReplyDelete';
-import MyBookDelete from 'components/Modals/MyBookDelete';
-import ProfileModify from 'components/Modals/Profile/ProfileModify';
-
 import useModalHook from '@hooks/useModalHook';
+
+interface IBottomSheetObj {
+  [key: string]: ReactNode;
+}
 
 const Container = styled(motion.div)`
   position: absolute;
@@ -37,9 +31,26 @@ const Container = styled(motion.div)`
   }
 `;
 
-interface IBottomSheetObj {
-  [key: string]: ReactNode;
-}
+const CommentModify = lazy(
+  () => import('components/Modals/Comment/CommentModify')
+);
+const CommentRegister = lazy(
+  () => import('components/Modals/Comment/CommentRegister')
+);
+const CommentDelete = lazy(
+  () => import('components/Modals/Comment/CommentDelete')
+);
+const HistoryRegister = lazy(
+  () => import('components/Modals/History/HistoryRegister')
+);
+const HistoryDelete = lazy(
+  () => import('components/Modals/History/HistoryDelete')
+);
+const ReplyDelete = lazy(() => import('components/Modals/Reply/ReplyDelete'));
+const MyBookDelete = lazy(() => import('components/Modals/MyBookDelete'));
+const ProfileModify = lazy(
+  () => import('components/Modals/Profile/ProfileModify')
+);
 
 const bottomSheetComponent: IBottomSheetObj = {
   isLogin: <NeedLogin />,

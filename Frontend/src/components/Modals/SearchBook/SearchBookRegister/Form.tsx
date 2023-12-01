@@ -24,7 +24,6 @@ interface IRenderRegisterComponent {
 
 const Container = styled.form`
   position: relative;
-  margin-bottom: 1rem;
 `;
 
 const Stack = styled.div`
