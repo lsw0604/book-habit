@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { ReactNode, lazy } from 'react';
+import { ReactNode, lazy, Suspense } from 'react';
 
 import NeedLogin from 'components/common/NeedLogin';
 import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
 import useModalHook from '@hooks/useModalHook';
+import Loader from './Loader';
 
 interface IBottomSheetObj {
   [key: string]: ReactNode;
@@ -29,6 +30,14 @@ const Container = styled(motion.div)`
     width: 30%;
     border-radius: 1rem;
   }
+`;
+
+const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const CommentModify = lazy(
@@ -85,7 +94,15 @@ export default function BottomSheet() {
         duration: 0.3,
       }}
     >
-      {onChangeBottomSheetComponent(modalStateType)}
+      <Suspense
+        fallback={
+          <LoadingWrapper>
+            <Loader size={2} />
+          </LoadingWrapper>
+        }
+      >
+        {onChangeBottomSheetComponent(modalStateType)}
+      </Suspense>
     </Container>
   );
 }

@@ -10,7 +10,6 @@ import DefaultLayout from '@pages/layout/DefaultLayout';
 import IsAuthLayout from '@pages/layout/IsAuthLayout';
 import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 
-import BottomSheet from 'components/common/BottomSheet';
 import HomePage from '@pages/HomePage';
 
 const MyBooksPage = lazy(() => import('@pages/MyBooksPage'));
@@ -24,6 +23,7 @@ const CommentsPage = lazy(() => import('@pages/CommentsPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
 const CommentDetailPage = lazy(() => import('@pages/CommentDetailPage'));
 const NotFound = lazy(() => import('@pages/404'));
+const BottomSheet = lazy(() => import('components/common/BottomSheet'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
