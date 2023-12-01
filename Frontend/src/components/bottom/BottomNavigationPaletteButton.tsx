@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
 import HeaderPaletteDropdown from 'components/Palette';
@@ -37,24 +37,21 @@ export default function BottomNavigationPaletteButton() {
 
   const openHandler = useCallback(() => setIsOpen((prev) => !prev), []);
 
-  const handlePaletteOutside = useCallback(
-    (event: MouseEvent) => {
-      if (
-        paletteRef.current &&
-        !paletteRef.current.contains(event.target as Node)
-      ) {
-        openHandler();
-      }
-    },
-    [openHandler]
-  );
+  const handlePaletteOutside = useCallback((event: MouseEvent) => {
+    if (
+      paletteRef.current &&
+      !paletteRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  }, []);
 
   useEffect(() => {
     document.addEventListener('mousedown', handlePaletteOutside);
     return () => {
       document.removeEventListener('mousedown', handlePaletteOutside);
     };
-  }, [handlePaletteOutside]);
+  }, [isOpen]);
 
   return (
     <Container ref={paletteRef}>

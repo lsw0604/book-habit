@@ -11,7 +11,7 @@ import IsAuthLayout from '@pages/layout/IsAuthLayout';
 import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 
 import HomePage from '@pages/HomePage';
-
+// const BottomNavigationBar = memo(bottomNavigationBar);
 const MyBooksPage = lazy(() => import('@pages/MyBooksPage'));
 const MyBookInfoPage = lazy(() => import('@pages/MyBooksInfoPage'));
 const KakaoPage = lazy(() => import('@pages/KakaoPage'));
