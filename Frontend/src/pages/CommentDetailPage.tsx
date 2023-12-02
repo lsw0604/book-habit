@@ -8,6 +8,7 @@ import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
 import CommentReply from 'components/Comments/CommentReply';
 import CommentReplyList from 'components/Comments/CommentReplyList';
 import CommentReplyForm from 'components/Comments/CommentReplyForm';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
@@ -101,31 +102,40 @@ export default function CommentDetailPage() {
       </LoadingWrapper>
     );
 
+  const HELMET_PROVIDER_OPTIONS = {
+    title: `${data.title}`,
+    description: `${data.name}님이 ${data.title}을 읽고 남긴 한줄 평을 보여주는 페이지 입니다.`,
+    keywords: [data.title],
+  };
+
   return (
-    <Container>
-      <DetailContainer>
-        <Header>
-          <CommentHeaderInfo
-            name={data.name}
-            title={data.title}
-            profile={data.profile}
-            created_at={data.created_at}
-            rating={data.rating}
-            status={data.status}
-          />
-        </Header>
-        <Comment>{data.comment}</Comment>
-        <Bottom>
-          <CommentHeart comment_id={parseInt(comment_id)} />
-          <CommentReply comment_id={parseInt(comment_id)} />
-        </Bottom>
-      </DetailContainer>
-      <ReplyContainer>
-        <Wrapper>
-          <CommentReplyList />
-        </Wrapper>
-        <CommentReplyForm />
-      </ReplyContainer>
-    </Container>
+    <>
+      <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
+      <Container>
+        <DetailContainer>
+          <Header>
+            <CommentHeaderInfo
+              name={data.name}
+              title={data.title}
+              profile={data.profile}
+              created_at={data.created_at}
+              rating={data.rating}
+              status={data.status}
+            />
+          </Header>
+          <Comment>{data.comment}</Comment>
+          <Bottom>
+            <CommentHeart comment_id={parseInt(comment_id)} />
+            <CommentReply comment_id={parseInt(comment_id)} />
+          </Bottom>
+        </DetailContainer>
+        <ReplyContainer>
+          <Wrapper>
+            <CommentReplyList />
+          </Wrapper>
+          <CommentReplyForm />
+        </ReplyContainer>
+      </Container>
+    </>
   );
 }
