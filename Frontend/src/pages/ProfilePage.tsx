@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import ProfileHeader from 'components/user/Profile/ProfileHeader';
 import ProfileDescription from 'components/user/Profile/ProfileDescription';
 import ProfileList from 'components/user/Profile/ProfileList';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
@@ -44,17 +45,25 @@ const ProfileHeaderBackground = styled.div`
   }
 `;
 
+const HELMET_PROVIDER_OPTIONS = {
+  title: '내 정보',
+  description: '내 정보를 보여주는 페이지입니다.',
+};
+
 export default function ProfilePage() {
   return (
-    <Container>
-      <ProfileContainer>
-        <ProfileHeader />
-        <ProfileContent>
-          <ProfileDescription />
-          <ProfileList />
-        </ProfileContent>
-      </ProfileContainer>
-      <ProfileHeaderBackground />
-    </Container>
+    <>
+      <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
+      <Container>
+        <ProfileContainer>
+          <ProfileHeader />
+          <ProfileContent>
+            <ProfileDescription />
+            <ProfileList />
+          </ProfileContent>
+        </ProfileContainer>
+        <ProfileHeaderBackground />
+      </Container>
+    </>
   );
 }

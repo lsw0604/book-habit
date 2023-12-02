@@ -7,6 +7,7 @@ import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import CommentTimer from 'components/Comments/CommentTimer';
 import CommentHashTag from 'components/Comments/CommentHashTag';
 import { useState } from 'react';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
@@ -82,6 +83,12 @@ const TimerWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
+const HELMET_PROVIDER_OPTIONS = {
+  title: '한줄평',
+  description:
+    '척벌래 이용하는 유저들이 공개 등록한 한줄평을 보여주는 페이지입니다.',
+};
+
 export default function CommentsPage() {
   const [filter, setFilter] = useState<string[]>([]);
   const { data, isFetching, isLoading, refetch } = useCommentsListQuery(filter);
@@ -121,25 +128,28 @@ export default function CommentsPage() {
     }
   };
   return (
-    <Container>
-      <TimerWrapper>
-        <CommentTimer refetch={refetch} />
-        <CommentHashTag
-          addFilter={addFilter}
-          removeFilter={removeFilter}
-          filter={filter}
-        />
-      </TimerWrapper>
-      {isFetching && (
-        <FetchContainer>
-          <Loader />
-        </FetchContainer>
-      )}
-      <ListContainer>
-        {data?.comments.map((comment) => (
-          <PublicCommentsItem key={comment.comment_id} {...comment} />
-        ))}
-      </ListContainer>
-    </Container>
+    <>
+      <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
+      <Container>
+        <TimerWrapper>
+          <CommentTimer refetch={refetch} />
+          <CommentHashTag
+            addFilter={addFilter}
+            removeFilter={removeFilter}
+            filter={filter}
+          />
+        </TimerWrapper>
+        {isFetching && (
+          <FetchContainer>
+            <Loader />
+          </FetchContainer>
+        )}
+        <ListContainer>
+          {data?.comments.map((comment) => (
+            <PublicCommentsItem key={comment.comment_id} {...comment} />
+          ))}
+        </ListContainer>
+      </Container>
+    </>
   );
 }

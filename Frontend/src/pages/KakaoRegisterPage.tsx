@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import KakaoRegister from 'components/user/KakaoRegister';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   display: flex;
@@ -18,10 +19,18 @@ const Container = styled.div`
   }
 `;
 
+const HELMET_PROVIDER_OPTIONS = {
+  title: '유저 정보 등록',
+  description: '유저 정보를 등록하는 페이지를 보여줍니다.',
+};
+
 export default function KakaoRegisterPage() {
   return (
-    <Container>
-      <KakaoRegister />
-    </Container>
+    <>
+      <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
+      <Container>
+        <KakaoRegister />
+      </Container>
+    </>
   );
 }
