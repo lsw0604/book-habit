@@ -25,6 +25,7 @@ const CommentsPage = lazy(() => import('@pages/CommentsPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
 const CommentDetailPage = lazy(() => import('@pages/CommentDetailPage'));
 const NotFound = lazy(() => import('@pages/404'));
+const UserGuide = lazy(() => import('@pages/UserGuide'));
 const BottomSheet = lazy(() => import('components/common/BottomSheet'));
 
 const LoadingWrapper = styled.div`
@@ -53,6 +54,7 @@ export default function Router() {
             >
               <Routes>
                 <Route path="/" Component={HomePage} />
+                <Route path="/user_guide" Component={UserGuide} />
                 <Route element={<IsKakaoAuthLayout needKakaoRegister={true} />}>
                   <Route path="/register/kakao" Component={KakaoRegisterPage} />
                 </Route>

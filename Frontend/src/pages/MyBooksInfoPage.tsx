@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 
 import InfoBox from 'components/MyBookInfo/InfoBox';
@@ -58,11 +58,6 @@ export default function MyBookInfoPage() {
 
   const parseIntUserBookId = parseInt(users_books_id);
 
-  const MemorizedInfoBox = memo(InfoBox);
-  const MemorizedCalendar = memo(Calendar);
-  const MemorizedHistory = memo(MyBookInfoHistoryList);
-  const MemorizedComment = memo(MyBookInfoCommentList);
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -70,20 +65,23 @@ export default function MyBookInfoPage() {
   return (
     <Container>
       <Wrapper className="info">
-        <MemorizedInfoBox users_books_id={parseIntUserBookId} />
+        <InfoBox users_books_id={parseIntUserBookId} />
       </Wrapper>
       <Wrapper className="calendar">
-        <MemorizedCalendar
+        <Calendar
           users_books_id={parseIntUserBookId}
           filter={filter}
           setFilter={setFilter}
         />
       </Wrapper>
       <Wrapper className="history">
-        <MemorizedHistory users_books_id={parseIntUserBookId} filter={filter} />
+        <MyBookInfoHistoryList
+          users_books_id={parseIntUserBookId}
+          filter={filter}
+        />
       </Wrapper>
       <Wrapper className="comment">
-        <MemorizedComment users_books_id={parseIntUserBookId} />
+        <MyBookInfoCommentList users_books_id={parseIntUserBookId} />
       </Wrapper>
     </Container>
   );
