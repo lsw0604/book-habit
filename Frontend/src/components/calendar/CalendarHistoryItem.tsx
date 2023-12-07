@@ -61,7 +61,7 @@ const IconWrapper = styled.div`
   align-items: center;
 `;
 
-export default function MyBookInfoHistoryItem({
+export default function CalendarHistoryItem({
   id,
   status,
   date,

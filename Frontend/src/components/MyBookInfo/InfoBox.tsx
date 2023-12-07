@@ -131,7 +131,10 @@ export default function InfoBox({ users_books_id }: IProps) {
   const { name } = useRecoilValue(userAtom);
 
   const modalHandler = () => {
-    setMyBookState((prev) => ({ ...prev, users_books_id }));
+    setMyBookState((prev) => ({
+      ...prev,
+      users_books_id,
+    }));
     setModalState({ isOpen: true, type: 'deleteMyBook' });
   };
 

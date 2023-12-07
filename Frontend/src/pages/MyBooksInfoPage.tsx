@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, memo } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 
 import InfoBox from 'components/MyBookInfo/InfoBox';
-import Calendar from 'components/calendar/Calendar';
+import Calendar from 'components/calendar';
 import MyBookInfoCommentList from 'components/Comments/List/MyBookInfoCommentList';
-import MyBookInfoHistoryList from 'components/History/List/MyBookInfoHistoryList';
 
 const Container = styled.div`
   width: 100%;
@@ -15,7 +14,7 @@ const Container = styled.div`
 
   .info {
     @media screen and (min-width: 1280px) {
-      grid-area: 1 / 1 / 5 / 3;
+      grid-area: 1 / 1 / 4 / 3;
     }
   }
 
@@ -25,15 +24,9 @@ const Container = styled.div`
     }
   }
 
-  .history {
-    @media screen and (min-width: 1280px) {
-      grid-area: 11 / 1 / 12 / 3;
-    }
-  }
-
   .comment {
     @media screen and (min-width: 1280px) {
-      grid-area: 5 / 1 / 11 / 3;
+      grid-area: 4 / 1 / 12 / 3;
     }
   }
 
@@ -52,36 +45,28 @@ const Wrapper = styled.div`
 
 export default function MyBookInfoPage() {
   const { users_books_id } = useParams();
+
   if (!users_books_id) return <Navigate to="/404" />;
 
-  const [filter, setFilter] = useState<string[]>(['전체보기']);
-
-  const parseIntUserBookId = parseInt(users_books_id);
+  const USERS_BOOKS_ID = parseInt(users_books_id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const MemorizedInfoBox = memo(InfoBox);
+  const MemorizedCommentList = memo(MyBookInfoCommentList);
+
   return (
     <Container>
       <Wrapper className="info">
-        <InfoBox users_books_id={parseIntUserBookId} />
+        <MemorizedInfoBox users_books_id={USERS_BOOKS_ID} />
       </Wrapper>
       <Wrapper className="calendar">
-        <Calendar
-          users_books_id={parseIntUserBookId}
-          filter={filter}
-          setFilter={setFilter}
-        />
-      </Wrapper>
-      <Wrapper className="history">
-        <MyBookInfoHistoryList
-          users_books_id={parseIntUserBookId}
-          filter={filter}
-        />
+        <Calendar users_books_id={USERS_BOOKS_ID} />
       </Wrapper>
       <Wrapper className="comment">
-        <MyBookInfoCommentList users_books_id={parseIntUserBookId} />
+        <MemorizedCommentList users_books_id={USERS_BOOKS_ID} />
       </Wrapper>
     </Container>
   );

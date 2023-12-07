@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import MyBookInfoHistoryItem from 'components/History/Item/MyBookInfoHistoryItem';
+import CalendarHistoryItem from 'components/calendar/CalendarHistoryItem';
 import Loader from 'components/common/Loader';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { IconPlus } from '@style/icons';
@@ -19,11 +19,9 @@ const Container = styled.div`
   overflow: scroll;
   position: relative;
   display: flex;
-  padding: 1rem;
+  padding: 1rem 0;
   flex-direction: column;
-  border-radius: 1rem;
   background-color: ${({ theme }) => theme.mode.sub};
-  box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
 const ListContainer = styled.div`
@@ -55,7 +53,10 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function HistoryList({ filter, users_books_id }: IProps) {
+export default function CalendarHistoryList({
+  filter,
+  users_books_id,
+}: IProps) {
   const { myBookHistoryData, myBookHistoryIsLoading, myBookHistoryIsFetching } =
     useMyBookPageQueries(users_books_id, filter);
 
@@ -96,7 +97,7 @@ export default function HistoryList({ filter, users_books_id }: IProps) {
     <Container>
       <ListContainer>
         {myBookHistoryData.map((value) => (
-          <MyBookInfoHistoryItem
+          <CalendarHistoryItem
             key={value.id}
             users_books_id={users_books_id}
             {...value}
