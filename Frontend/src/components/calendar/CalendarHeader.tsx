@@ -11,10 +11,13 @@ interface IProps {
   myBookTimeData: MyBookPageQueriesTimeRangeResponseType;
   filter: string[];
   setFilter: Dispatch<SetStateAction<string[]>>;
+  options: string[];
 }
 
 const Container = styled.div`
-  min-height: 60px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
@@ -29,24 +32,16 @@ const Header = styled.div`
 `;
 
 const Wrapper = styled.div`
-  display: flex;
   width: 100%;
-  padding: 1rem 0;
+  display: flex;
 `;
-
-const SELECTOR_OPTIONS = [
-  '전체보기',
-  '읽는중',
-  '읽기시작함',
-  '읽고싶음',
-  '다읽음',
-];
 
 export default function CalendarHeader({
   myBookHistoryData,
   myBookTimeData,
   filter,
   setFilter,
+  options,
 }: IProps) {
   const { calendarState, prevMonthHandler, nextMonthHandler, updateMonthYear } =
     useCalendarHook({
@@ -78,7 +73,7 @@ export default function CalendarHeader({
           multiple
           value={filter}
           onChange={(e) => setFilter(e)}
-          options={SELECTOR_OPTIONS}
+          options={options}
         />
       </Wrapper>
     </Container>

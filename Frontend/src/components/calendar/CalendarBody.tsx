@@ -10,8 +10,11 @@ interface IProps {
 }
 
 const Container = styled.div`
+  width: 100%;
+  height: 80%;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
 `;
 
 const Box = styled.div<{ numRows: number }>`
@@ -22,6 +25,10 @@ const Box = styled.div<{ numRows: number }>`
   grid-template-rows: ${({ numRows }) => `repeat(${numRows}, 1fr)`};
   justify-content: center;
   align-items: center;
+  @media screen and (min-width: 1280px) {
+    width: 85%;
+    height: 85%;
+  }
 `;
 
 export default function CalendarBody({

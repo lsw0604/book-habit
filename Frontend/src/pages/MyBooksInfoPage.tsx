@@ -20,20 +20,20 @@ const Container = styled.div`
 
   .calendar {
     @media screen and (min-width: 1280px) {
-      grid-area: 1 / 3 / 12 / 6;
+      grid-area: 1 / 3 / 20 / 6;
     }
   }
 
   .comment {
     @media screen and (min-width: 1280px) {
-      grid-area: 4 / 1 / 12 / 3;
+      grid-area: 7 / 1 / 20 / 3;
     }
   }
 
   @media screen and (min-width: 1280px) {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(11, 1fr);
+    grid-template-rows: repeat(19, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
   }

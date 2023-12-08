@@ -20,8 +20,6 @@ const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  gap: 1rem;
   box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
@@ -46,6 +44,8 @@ const EmptyContainer = styled.div`
   align-items: center;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
+
+const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
 
 export default function Calendar({ users_books_id }: IProps) {
   const [filter, setFilter] = useState(['전체보기']);
@@ -80,6 +80,7 @@ export default function Calendar({ users_books_id }: IProps) {
         myBookTimeData={myBookTimeData}
         setFilter={setFilter}
         filter={filter}
+        options={options}
       />
       <CalendarBody
         myBookHistoryData={myBookHistoryData}

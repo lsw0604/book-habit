@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { v4 } from 'uuid';
 
 import CalendarHistoryItem from 'components/calendar/CalendarHistoryItem';
 import Loader from 'components/common/Loader';
@@ -98,7 +99,7 @@ export default function CalendarHistoryList({
       <ListContainer>
         {myBookHistoryData.map((value) => (
           <CalendarHistoryItem
-            key={value.id}
+            key={v4()}
             users_books_id={users_books_id}
             {...value}
           />
