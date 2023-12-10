@@ -49,6 +49,7 @@ export default function CommentHashTag({
   removeFilter,
 }: IProps) {
   const { data } = useCommentsListQuery(filter);
+  const hashTag: string[] = [];
 
   if (!data) return null;
 
@@ -64,16 +65,20 @@ export default function CommentHashTag({
     return filter.includes(tag);
   };
 
-  const hashTag = Array.from(
-    new Set(
-      data.comments.flatMap((comment) => [
-        comment.title,
-        comment.status,
-        comment.gender,
-        comment.age_category,
-      ])
-    )
-  );
+  data.comments.forEach((comment) => {
+    if (!hashTag.includes(comment.title)) {
+      hashTag.push(comment.title);
+    }
+    if (!hashTag.includes(comment.status)) {
+      hashTag.push(comment.status);
+    }
+    if (!hashTag.includes(comment.gender)) {
+      hashTag.push(comment.gender);
+    }
+    if (!hashTag.includes(comment.age_category)) {
+      hashTag.push(comment.age_category);
+    }
+  });
 
   return (
     <Container>

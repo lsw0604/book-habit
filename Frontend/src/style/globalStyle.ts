@@ -4,8 +4,6 @@ const globalStyle = css`
   body {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 700;
-    font-size: 100%;
-    font-style: normal;
   }
   *,
   ::after,
