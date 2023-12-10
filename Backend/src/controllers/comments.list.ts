@@ -6,16 +6,15 @@ import { connectionPool } from '../config/database';
 import { CommentListType } from '../types';
 
 const NAMESPACE = 'COMMENT_LIST';
+const CURRENT_DATE = dayjs();
+const FIRST_DATE_CURRENT_MONTH = CURRENT_DATE.startOf('month');
+const LAST_DATE_CURRENT_MONTH = CURRENT_DATE.endOf('month');
 
 export default async function commentList(_: Request, res: Response, __: NextFunction) {
   logging.info(NAMESPACE, '[START]');
   try {
     const connection = await connectionPool.getConnection();
     try {
-      const currentDate = dayjs();
-      const firstDateCurrentMonth = currentDate.startOf('month');
-      const lastDateCurrentMonth = currentDate.endOf('month');
-
       const COMMENT_LIST_SQL =
         'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status, us.gender, ' +
         'CASE ' +
@@ -34,8 +33,8 @@ export default async function commentList(_: Request, res: Response, __: NextFun
         'WHERE comment_is_open = true AND ubc.created_at BETWEEN ? AND ? ' +
         'ORDER BY created_at DESC';
       const COMMENT_LIST_VALUE = [
-        firstDateCurrentMonth.format('YYYY-MM-DD'),
-        lastDateCurrentMonth.add(1, 'day').format('YYYY-MM-DD'),
+        FIRST_DATE_CURRENT_MONTH.format('YYYY-MM-DD'),
+        LAST_DATE_CURRENT_MONTH.add(1, 'day').format('YYYY-MM-DD'),
       ];
       const [COMMENT_LIST_RESULT] = await connection.query<CommentListType[]>(
         COMMENT_LIST_SQL,

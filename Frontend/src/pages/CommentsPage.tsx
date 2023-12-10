@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import dayjs from 'dayjs';
 
-import Loader from 'components/common/Loader';
-import PublicCommentsItem from 'components/Comments/Item/PublicCommentItem';
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import CommentTimer from 'components/Comments/CommentTimer';
 import CommentHashTag from 'components/Comments/CommentHashTag';
-import { useState } from 'react';
+import CommentsListPublic from 'components/Comments/CommentListPublic';
 import HelmetProvider from 'components/common/HelmetProvider';
+import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
+import useCommentsPageHook from '@hooks/useCommentsPageHook';
+import CommentEmpty from 'components/Comments/CommentEmpty';
+import CommentLoading from 'components/Comments/CommentLoading';
 
 const Container = styled.div`
   width: 100%;
@@ -21,60 +21,7 @@ const Container = styled.div`
   }
 `;
 
-const EmptyContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  @media screen and (min-width: 1280px) {
-    padding: 1rem 30%;
-  }
-  .empty_page {
-    background-color: rgba(0, 0, 0, 0.05);
-    width: 100%;
-    height: 100%;
-    border-radius: 1rem;
-    padding: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .empty_page_message {
-    font-size: 20px;
-    line-height: 24px;
-    color: ${({ theme }) => theme.mode.typo_sub};
-  }
-`;
-
-const LoaderContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const FetchContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ListContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  overflow: auto;
-  scroll-snap-type: y mandatory;
-`;
-
-const TimerWrapper = styled.div`
+const Header = styled.div`
   padding: 0 1rem;
   height: auto;
   display: flex;
@@ -90,65 +37,29 @@ const HELMET_PROVIDER_OPTIONS = {
 };
 
 export default function CommentsPage() {
-  const [filter, setFilter] = useState<string[]>([]);
+  const { filter, addFilter, removeFilter } = useCommentsPageHook();
   const { data, isFetching, isLoading, refetch } = useCommentsListQuery(filter);
 
   if (data === undefined) return null;
 
-  if (isLoading) {
-    return (
-      <LoaderContainer>
-        <Loader size={2} />
-      </LoaderContainer>
-    );
-  }
+  if (isLoading) return <CommentLoading isLoading />;
 
-  if (data.comments.length === 0) {
-    return (
-      <EmptyContainer>
-        <div className="empty_page">
-          <p className="empty_page_message">
-            {`${parseInt(dayjs().format('MM'))}`}월에 등록된 한줄평이 아직
-            없어요.
-          </p>
-        </div>
-      </EmptyContainer>
-    );
-  }
+  if (data.comments.length === 0) return <CommentEmpty />;
 
-  const addFilter = (tag: string) => {
-    if (!filter.includes(tag)) {
-      setFilter((prev) => [...prev, tag]);
-    }
-  };
-
-  const removeFilter = (tag: string) => {
-    if (filter.includes(tag)) {
-      setFilter((prev) => prev.filter((v) => v !== tag));
-    }
-  };
   return (
     <>
       <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
       <Container>
-        <TimerWrapper>
+        <Header>
           <CommentTimer refetch={refetch} />
           <CommentHashTag
             addFilter={addFilter}
             removeFilter={removeFilter}
             filter={filter}
           />
-        </TimerWrapper>
-        {isFetching && (
-          <FetchContainer>
-            <Loader />
-          </FetchContainer>
-        )}
-        <ListContainer>
-          {data?.comments.map((comment) => (
-            <PublicCommentsItem key={comment.comment_id} {...comment} />
-          ))}
-        </ListContainer>
+        </Header>
+        {isFetching && <CommentLoading isLoading={false} />}
+        <CommentsListPublic comments={data.comments} />
       </Container>
     </>
   );

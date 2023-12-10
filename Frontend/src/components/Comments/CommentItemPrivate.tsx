@@ -15,6 +15,11 @@ import { modalAtom } from 'recoil/modal';
 import { myBookAtom } from 'recoil/myBook';
 import { useCallback } from 'react';
 
+interface IProps {
+  item: MyBookCommentQueryItemType;
+  users_books_id: number;
+}
+
 const Container = styled.div`
   gap: 8px;
   width: 100%;
@@ -112,18 +117,16 @@ const IconBox = styled.div`
   }
 `;
 
-export default function MyBookInfoCommentItem({
-  comment_id,
-  comment,
-  comment_is_open,
-  rating,
-  status,
-  updated_at,
-  created_at,
-  users_books_id,
-}: MyBookCommentQueryItemType & {
-  users_books_id: number;
-}) {
+export default function CommentItemPrivate({ item, users_books_id }: IProps) {
+  const {
+    comment_id,
+    comment,
+    rating,
+    comment_is_open,
+    updated_at,
+    created_at,
+  } = item;
+
   const setModalState = useSetRecoilState(modalAtom);
   const setMyBookState = useSetRecoilState(myBookAtom);
 

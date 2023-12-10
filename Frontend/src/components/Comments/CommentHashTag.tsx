@@ -43,8 +43,6 @@ const Tag = styled.li<{ isOn: boolean }>`
     isOn ? ({ theme }) => theme.colors.spinner : customize.gray['400']};
 `;
 
-const hashTag: string[] = [];
-
 export default function CommentHashTag({
   filter = [],
   addFilter,
@@ -66,20 +64,16 @@ export default function CommentHashTag({
     return filter.includes(tag);
   };
 
-  data.comments.forEach((comment) => {
-    if (!hashTag.includes(comment.title)) {
-      hashTag.push(comment.title);
-    }
-    if (!hashTag.includes(comment.status)) {
-      hashTag.push(comment.status);
-    }
-    if (!hashTag.includes(comment.gender)) {
-      hashTag.push(comment.gender);
-    }
-    if (!hashTag.includes(comment.age_category)) {
-      hashTag.push(comment.age_category);
-    }
-  });
+  const hashTag = Array.from(
+    new Set(
+      data.comments.flatMap((comment) => [
+        comment.title,
+        comment.status,
+        comment.gender,
+        comment.age_category,
+      ])
+    )
+  );
 
   return (
     <Container>

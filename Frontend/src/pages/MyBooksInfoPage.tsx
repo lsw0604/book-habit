@@ -4,7 +4,7 @@ import { useParams, Navigate } from 'react-router-dom';
 
 import InfoBox from 'components/MyBookInfo/InfoBox';
 import Calendar from 'components/calendar';
-import MyBookInfoCommentList from 'components/Comments/List/MyBookInfoCommentList';
+import CommentListPrivate from 'components/Comments/CommentListPrivate';
 
 const Container = styled.div`
   width: 100%;
@@ -55,7 +55,7 @@ export default function MyBookInfoPage() {
   }, []);
 
   const MemorizedInfoBox = memo(InfoBox);
-  const MemorizedCommentList = memo(MyBookInfoCommentList);
+  const MemorizedCommentList = memo(CommentListPrivate);
 
   return (
     <Container>

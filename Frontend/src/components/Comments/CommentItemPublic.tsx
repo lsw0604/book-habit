@@ -5,6 +5,10 @@ import CommentHeart from 'components/Comments/CommentHeart';
 import CommentReply from 'components/Comments/CommentReply';
 import CommentHeaderInfo from 'components/Comments/CommentHeaderInfo';
 
+interface IProps {
+  item: Omit<CommentsItemType, 'age_category' | 'gender'>;
+}
+
 const Container = styled.li`
   box-sizing: border-box;
   gap: 8px;
@@ -47,17 +51,19 @@ const Bottom = styled.div`
   }
 `;
 
-export default function PublicCommentsItem({
-  comment,
-  comment_id,
-  created_at,
-  name,
-  rating,
-  title,
-  profile,
-  status,
-}: CommentsItemType) {
+const CommentsItemPublic: React.FC<IProps> = ({ item }) => {
   const navigate = useNavigate();
+
+  const {
+    comment_id,
+    comment,
+    created_at,
+    rating,
+    title,
+    name,
+    profile,
+    status,
+  } = item;
 
   return (
     <Container>
@@ -80,4 +86,6 @@ export default function PublicCommentsItem({
       </Bottom>
     </Container>
   );
-}
+};
+
+export default CommentsItemPublic;
