@@ -4,6 +4,13 @@ import Avatar from 'components/common/Avatar';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 
+interface IProps {
+  item: Omit<
+    CommentsItemType,
+    'comment' | 'comment_id' | 'age_category' | 'gender'
+  >;
+}
+
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -54,17 +61,9 @@ const HeaderIconContainerRating = styled.div`
   }
 `;
 
-export default function CommentHeaderInfo({
-  title,
-  created_at,
-  name,
-  rating,
-  profile,
-  status,
-}: Omit<
-  CommentsItemType,
-  'comment' | 'comment_id' | 'age_category' | 'gender'
->) {
+export default function CommentHeaderPublic({ item }: IProps) {
+  const { created_at, title, status, name, rating, profile } = item;
+
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
 
   return (

@@ -12,3 +12,15 @@ type DateBoxType = {
 type CalendarDateByDataType = {
   [date: string]: HistoryStatusType[];
 };
+
+type CalendarHeaderType = {
+  myBookHistoryData: MyBookPageQueriesHistoryListType;
+  myBookTimeData: MyBookPageQueriesTimeRangeResponseType;
+  filter: string[];
+  setFilter: Dispatch<SetStateAction<string[]>>;
+  options: string[];
+};
+
+type CalendarHeaderButtonsType = {
+  children: ReactNode;
+} & Pick<CalendarHeaderType, 'myBookHistoryData' | 'myBookTimeData'>;

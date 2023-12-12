@@ -46,6 +46,7 @@ const Icon = styled.div`
 
 const Span = styled.span`
   font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 1rem;
   line-height: 1.2rem;
   color: ${({ theme }) => theme.mode.typo_main};

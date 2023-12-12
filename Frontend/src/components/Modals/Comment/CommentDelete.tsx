@@ -73,7 +73,7 @@ export default function CommentDelete() {
         <Stack>
           <LogoSad />
         </Stack>
-        <Stack>소중한 한줄평 삭제 하시겠어요?</Stack>
+        <Stack>한줄평 삭제 하시겠어요?</Stack>
       </Header>
       <Footer>
         <Button
@@ -81,7 +81,7 @@ export default function CommentDelete() {
           isLoading={isLoading}
           icon={<IconTrashCan />}
         >
-          네, 삭제해주세요
+          네
         </Button>
         <Button onClick={initHandler} text>
           아니요

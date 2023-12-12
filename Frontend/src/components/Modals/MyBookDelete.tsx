@@ -79,7 +79,7 @@ export default function MyBookDelete() {
           isLoading={isLoading}
           icon={<IconTrashCan />}
         >
-          네, 삭제해주세요
+          네
         </Button>
         <Button onClick={initHandler} text>
           아니요

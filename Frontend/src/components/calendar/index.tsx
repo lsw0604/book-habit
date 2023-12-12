@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
-import Loader from 'components/common/Loader';
 import CalendarHeader from 'components/calendar/CalendarHeader';
 import CalendarHistoryList from 'components/calendar/CalendarHistoryList';
 import CalendarBody from 'components/calendar/CalendarBody';
+import CalendarSkeleton from './CalendarSkeleton';
 
 interface IProps {
   users_books_id: number;
@@ -23,29 +23,7 @@ const Container = styled.div`
   box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
-const LoadingContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1rem;
-  background-color: ${({ theme }) => theme.mode.sub};
-  padding: 1rem;
-  position: relative;
-  box-shadow: ${({ theme }) => theme.shadow.md};
-`;
-
-const EmptyContainer = styled.div`
-  height: 5rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${({ theme }) => theme.mode.typo_main};
-`;
-
-const options = ['전체보기', '읽는중', '읽기시작함', '읽고싶음', '다읽음'];
+const options = ['읽는중', '읽기시작함', '읽고싶음', '다읽음'];
 
 export default function Calendar({ users_books_id }: IProps) {
   const [filter, setFilter] = useState(['전체보기']);
@@ -57,21 +35,11 @@ export default function Calendar({ users_books_id }: IProps) {
     myBookHistoryIsLoading,
   } = useMyBookPageQueries(users_books_id, filter);
 
-  if (!myBookTimeData || !myBookHistoryData) {
-    return (
-      <Container>
-        <EmptyContainer>데이터를 불러오는데 실패 했습니다.</EmptyContainer>
-      </Container>
-    );
-  }
+  if (!myBookTimeData || !myBookHistoryData)
+    return <CalendarSkeleton mode="empty" />;
 
-  if (myBookTimeIsLoading || myBookHistoryIsLoading) {
-    return (
-      <LoadingContainer>
-        <Loader />
-      </LoadingContainer>
-    );
-  }
+  if (myBookTimeIsLoading || myBookHistoryIsLoading)
+    return <CalendarSkeleton mode="loading" />;
 
   return (
     <Container>

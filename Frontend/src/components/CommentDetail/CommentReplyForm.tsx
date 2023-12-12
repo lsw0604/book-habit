@@ -55,7 +55,7 @@ export default function CommentReplyForm() {
         useValidation={useValidation}
         errorMessage="댓글을 입력해주세요."
       />
-      <Button>Submit</Button>
+      <Button>등록하기</Button>
     </Container>
   );
 }

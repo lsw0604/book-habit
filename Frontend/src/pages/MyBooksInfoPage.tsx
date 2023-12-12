@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, memo } from 'react';
+import { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 
 import InfoBox from 'components/MyBookInfo/InfoBox';
@@ -54,19 +54,16 @@ export default function MyBookInfoPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  const MemorizedInfoBox = memo(InfoBox);
-  const MemorizedCommentList = memo(CommentListPrivate);
-
   return (
     <Container>
       <Wrapper className="info">
-        <MemorizedInfoBox users_books_id={USERS_BOOKS_ID} />
+        <InfoBox users_books_id={USERS_BOOKS_ID} />
       </Wrapper>
       <Wrapper className="calendar">
         <Calendar users_books_id={USERS_BOOKS_ID} />
       </Wrapper>
       <Wrapper className="comment">
-        <MemorizedCommentList users_books_id={USERS_BOOKS_ID} />
+        <CommentListPrivate users_books_id={USERS_BOOKS_ID} />
       </Wrapper>
     </Container>
   );

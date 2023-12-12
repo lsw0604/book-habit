@@ -43,13 +43,14 @@ const Tag = styled.li<{ isOn: boolean }>`
     isOn ? ({ theme }) => theme.colors.spinner : customize.gray['400']};
 `;
 
+const hashTag: string[] = [];
+
 export default function CommentHashTag({
   filter = [],
   addFilter,
   removeFilter,
 }: IProps) {
   const { data } = useCommentsListQuery(filter);
-  const hashTag: string[] = [];
 
   if (!data) return null;
 

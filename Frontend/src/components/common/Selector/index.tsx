@@ -212,9 +212,9 @@ export default function Index({
         <ValueContainer>
           <Value>
             {multiple ? (
-              value.map((v) => (
+              value.map((v, i) => (
                 <ValueTag
-                  key={v}
+                  key={i}
                   onClick={(event) => onRemoveHandler(event, v)}
                 >
                   {v}

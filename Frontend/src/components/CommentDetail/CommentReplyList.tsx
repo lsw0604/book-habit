@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 import Loader from 'components/common/Loader';
-import CommentReplyItem from 'components/Comments/CommentReplyItem';
+import CommentReplyItem from 'components/CommentDetail/CommentReplyItem';
 
 const Container = styled.ul`
   width: 100%;

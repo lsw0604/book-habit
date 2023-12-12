@@ -1,34 +1,8 @@
-import styled from 'styled-components';
-
 import CommentTimer from 'components/Comments/CommentTimer';
-import CommentHashTag from 'components/Comments/CommentHashTag';
-import CommentsListPublic from 'components/Comments/CommentListPublic';
 import HelmetProvider from 'components/common/HelmetProvider';
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import useCommentsPageHook from '@hooks/useCommentsPageHook';
-import CommentEmpty from 'components/Comments/CommentEmpty';
-import CommentLoading from 'components/Comments/CommentLoading';
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  padding-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  @media screen and (min-width: 1280px) {
-    padding: 1rem 30%;
-  }
-`;
-
-const Header = styled.div`
-  padding: 0 1rem;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  margin-bottom: 1rem;
-`;
+import CommentFilterProvider from 'components/Comments/CommentFilterProvider';
 
 const HELMET_PROVIDER_OPTIONS = {
   title: '한줄평',
@@ -37,30 +11,15 @@ const HELMET_PROVIDER_OPTIONS = {
 };
 
 export default function CommentsPage() {
-  const { filter, addFilter, removeFilter } = useCommentsPageHook();
-  const { data, isFetching, isLoading, refetch } = useCommentsListQuery(filter);
-
-  if (data === undefined) return null;
-
-  if (isLoading) return <CommentLoading isLoading />;
-
-  if (data.comments.length === 0) return <CommentEmpty />;
+  const { filter } = useCommentsPageHook();
+  const { refetch } = useCommentsListQuery(filter);
 
   return (
     <>
       <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
-      <Container>
-        <Header>
-          <CommentTimer refetch={refetch} />
-          <CommentHashTag
-            addFilter={addFilter}
-            removeFilter={removeFilter}
-            filter={filter}
-          />
-        </Header>
-        {isFetching && <CommentLoading isLoading={false} />}
-        <CommentsListPublic comments={data.comments} />
-      </Container>
+      <CommentFilterProvider>
+        <CommentTimer refetch={refetch} />
+      </CommentFilterProvider>
     </>
   );
 }

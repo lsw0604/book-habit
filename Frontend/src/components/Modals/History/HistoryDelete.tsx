@@ -71,7 +71,7 @@ export default function HistoryDelete() {
         <Stack>
           <LogoSad />
         </Stack>
-        <Stack>소중한 독서기록 삭제 하시겠어요?</Stack>
+        <Stack>독서기록을 삭제 하시겠어요?</Stack>
       </Header>
       <Footer>
         <Button
@@ -79,7 +79,7 @@ export default function HistoryDelete() {
           isLoading={isLoading}
           icon={<IconTrashCan />}
         >
-          네, 삭제해주세요
+          네
         </Button>
         <Button onClick={initHandler} text>
           아니요
