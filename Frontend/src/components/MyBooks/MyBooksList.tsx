@@ -2,10 +2,11 @@ import { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { v4 } from 'uuid';
 
-import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
-import Item from 'components/MyBooks/Item';
 import Loader from 'components/common/Loader';
-import Empty from 'components/MyBooks/Empty';
+import MyBooksPage from 'components/MyBooks/MyBooksPage';
+import MyBooksSkeleton from 'components/MyBooks/MyBooksSkeleton';
+
+import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 
 interface IProps {
   status?: string;
@@ -17,36 +18,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem;
-`;
-
-const LoaderContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Page = styled.div`
-  width: 100%;
-  display: grid;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-
-  &:last-child {
-    margin-bottom: 0px;
-  }
-
-  @media screen and (min-width: 514px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
-  @media screen and (min-width: 714px) {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1rem;
-  }
 `;
 
 const FetchLoader = styled.div`
@@ -65,6 +36,7 @@ const Observer = styled.div`
 export default function List({ status }: IProps) {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useMyBookListInfinityQuery(status as SelectorBookType);
+
   const lastPageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -89,30 +61,13 @@ export default function List({ status }: IProps) {
     };
   }, [fetchNextPage, hasNextPage, isFetching]);
 
-  if (!data || isLoading) {
-    return (
-      <LoaderContainer>
-        <Loader size={2} />
-      </LoaderContainer>
-    );
-  }
-
-  if (data.pages[0].books.length === 0) {
-    return (
-      <Container>
-        <Empty status={status} />
-      </Container>
-    );
-  }
+  if (!data || isLoading) return <MyBooksSkeleton isLoading />;
+  if (data.pages[0].books.length === 0) return <MyBooksSkeleton />;
 
   return (
     <Container>
       {data.pages.map((page) => (
-        <Page key={v4()}>
-          {page.books.map((book) => (
-            <Item key={book.id} {...book} />
-          ))}
-        </Page>
+        <MyBooksPage page={page} key={v4()} />
       ))}
       {isFetching ? (
         <FetchLoader>

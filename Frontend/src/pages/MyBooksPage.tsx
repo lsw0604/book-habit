@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-
-import MyBooks from 'components/MyBooks';
-import HelmetProvider from 'components/common/HelmetProvider';
 import { useRecoilValue } from 'recoil';
+
+import MyBooks from 'components/MyBooks/MyBooks';
+import HelmetProvider from 'components/common/HelmetProvider';
+
 import { userAtom } from 'recoil/user';
 
 const Container = styled.div`

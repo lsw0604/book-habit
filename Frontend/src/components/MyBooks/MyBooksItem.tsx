@@ -55,7 +55,7 @@ const DateTime = styled.p`
 const formatDateTime = (date: string) =>
   dayjs(date).add(9, 'hour').format('YYYY  MM DD');
 
-export default function Item({
+export default function MyBooksItem({
   isbn,
   thumbnail,
   status,

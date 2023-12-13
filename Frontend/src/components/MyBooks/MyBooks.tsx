@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 import Selector from 'components/common/Selector';
-import List from 'components/MyBooks/List';
+import MyBooksList from 'components/MyBooks/MyBooksList';
 
 const Container = styled.div`
   width: 100%;
@@ -12,8 +12,14 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding: 0 1rem;
-  margin-top: 1rem;
+  padding: 1rem;
+`;
+
+const Box = styled.div`
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const SELECTOR_OPTIONS: SelectorBookType[] = [
@@ -23,18 +29,20 @@ const SELECTOR_OPTIONS: SelectorBookType[] = [
   '읽고싶음',
 ];
 
-export default function Index() {
+export default function MyBooks() {
   const [status, setStatus] = useState<string | undefined>('전체보기');
   return (
     <Container>
       <Wrapper>
-        <Selector
-          options={SELECTOR_OPTIONS}
-          value={status}
-          onChange={(e) => setStatus(e)}
-        />
+        <Box>
+          <Selector
+            options={SELECTOR_OPTIONS}
+            value={status}
+            onChange={(e) => setStatus(e)}
+          />
+        </Box>
       </Wrapper>
-      <List status={status} />
+      <MyBooksList status={status} />
     </Container>
   );
 }
