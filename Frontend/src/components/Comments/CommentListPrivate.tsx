@@ -21,10 +21,6 @@ const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
-  border-radius: 1rem;
-  background-color: ${({ theme }) => theme.mode.sub};
-  box-shadow: ${({ theme }) => theme.shadow.md};
   @media screen and (min-width: 1280px) {
     max-height: 100%;
   }
@@ -93,33 +89,35 @@ export default function CommentListPrivate({ users_books_id }: IProps) {
     );
   }
 
-  return (
-    <Container>
-      {data.length === 0 ? (
+  if (data.length === 0) {
+    return (
+      <Container>
         <EmptyTag>
-          아직 등록된 한줄평이 없습니다.
+          아직 등록된 한줄 평이 없습니다.
           <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
             AddComment
           </Icon>
         </EmptyTag>
-      ) : (
-        <>
-          <ListContainer>
-            {data.map((item) => (
-              <CommentItemPrivate
-                item={item}
-                key={item.comment_id}
-                users_books_id={users_books_id}
-              />
-            ))}
-          </ListContainer>
-          <AddContainer>
-            <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
-              AddComment
-            </Icon>
-          </AddContainer>
-        </>
-      )}
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <ListContainer>
+        {data.map((item) => (
+          <CommentItemPrivate
+            item={item}
+            key={item.comment_id}
+            users_books_id={users_books_id}
+          />
+        ))}
+      </ListContainer>
+      <AddContainer>
+        <Icon onClick={commentRegisterModalHandler} icon={<IconPlus />}>
+          AddComment
+        </Icon>
+      </AddContainer>
     </Container>
   );
 }

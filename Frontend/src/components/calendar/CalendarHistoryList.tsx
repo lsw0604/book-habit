@@ -16,13 +16,11 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   max-height: 104px;
-  box-sizing: border-box;
   overflow: scroll;
   position: relative;
   display: flex;
   padding: 1rem 0;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const ListContainer = styled.div`

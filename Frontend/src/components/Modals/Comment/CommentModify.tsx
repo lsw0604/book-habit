@@ -6,6 +6,7 @@ import { IconPencil } from '@style/icons';
 import { ChangeEvent } from 'react';
 import Button from 'components/common/Button';
 import useMyBookCommentUpdateMutation from '@queries/myBook/useMyBookCommentUpdateMutation';
+import ModalHeader from '../ModalHeader';
 
 const Container = styled.form`
   width: 100%;
@@ -13,28 +14,22 @@ const Container = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const Header = styled.div`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 1rem;
-  svg {
-    height: 50%;
-    fill: ${({ theme }) => theme.mode.typo_main};
-  }
 `;
 
 const Content = styled.div`
   position: relative;
-  margin-bottom: 1rem;
 `;
 
 const Footer = styled.div`
   position: relative;
 `;
+
+const HEADER_OPTION = {
+  title: '한줄평 수정하기',
+  sub: '등록된 한줄평의 평점과 평가 내용을 수정해주세요.',
+  icon: <IconPencil />,
+};
 
 export default function CommentModify() {
   const {
@@ -46,8 +41,8 @@ export default function CommentModify() {
     onChangeMyBookComment,
   } = useMyBookHook();
 
-  if (!myBookCommentId) return <div>잘못된 접근입니다.</div>;
-  if (!myBookUsersBooksId) return <div>잘못된 접근입니다.</div>;
+  if (!myBookCommentId) return null;
+  if (!myBookUsersBooksId) return null;
 
   const body: MyBookCommentUpdateMutationBodyType = {
     rating: myBookRating,
@@ -64,7 +59,7 @@ export default function CommentModify() {
 
   return (
     <Container onSubmit={onSubmit}>
-      <Header>수정하시겠습니까?</Header>
+      <ModalHeader {...HEADER_OPTION} />
       <Content>
         <StarRating rating={myBookRating} onChange={onChangeMyBookRating} />
         <Textarea
@@ -74,9 +69,7 @@ export default function CommentModify() {
         />
       </Content>
       <Footer>
-        <Button isLoading={isLoading} icon={<IconPencil />}>
-          수정하기
-        </Button>
+        <Button isLoading={isLoading}>수정하기</Button>
       </Footer>
     </Container>
   );

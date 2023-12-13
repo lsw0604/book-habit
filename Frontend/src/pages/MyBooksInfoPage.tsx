@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 
@@ -6,29 +6,41 @@ import InfoBox from 'components/MyBookInfo/InfoBox';
 import Calendar from 'components/calendar';
 import CommentListPrivate from 'components/Comments/CommentListPrivate';
 
+const WRAPPER_MEDIA_CSS_OBJ = {
+  info: css`
+    @media screen and (min-width: 1280px) {
+      grid-area: 1 / 1 / 7 / 3;
+    }
+  `,
+  calendar: css`
+    @media screen and (min-width: 1280px) {
+      grid-area: 1 / 3 / 20 / 6;
+    }
+  `,
+  comment: css`
+    @media screen and (min-width: 1280px) {
+      grid-area: 7 / 1 / 20 / 3;
+    }
+  `,
+};
+
+const BOX_CSS_OBJ = {
+  info: css`
+    padding: 1rem 0;
+  `,
+  calendar: css`
+    padding: 1rem;
+  `,
+  comment: css`
+    padding: 1rem 0;
+  `,
+};
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
   overflow: scroll;
-
-  .info {
-    @media screen and (min-width: 1280px) {
-      grid-area: 1 / 1 / 4 / 3;
-    }
-  }
-
-  .calendar {
-    @media screen and (min-width: 1280px) {
-      grid-area: 1 / 3 / 20 / 6;
-    }
-  }
-
-  .comment {
-    @media screen and (min-width: 1280px) {
-      grid-area: 7 / 1 / 20 / 3;
-    }
-  }
 
   @media screen and (min-width: 1280px) {
     display: grid;
@@ -39,8 +51,19 @@ const Container = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ mode: 'info' | 'calendar' | 'comment' }>`
   padding: 1rem;
+  ${({ mode }) => WRAPPER_MEDIA_CSS_OBJ[mode]}
+`;
+
+const Box = styled.div<{ mode: 'info' | 'calendar' | 'comment' }>`
+  height: 100%;
+  width: 100%;
+  border-radius: 1rem;
+  display: flex;
+  ${({ mode }) => BOX_CSS_OBJ[mode]};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 export default function MyBookInfoPage() {
@@ -56,14 +79,20 @@ export default function MyBookInfoPage() {
 
   return (
     <Container>
-      <Wrapper className="info">
-        <InfoBox users_books_id={USERS_BOOKS_ID} />
+      <Wrapper mode="info">
+        <Box mode="info">
+          <InfoBox users_books_id={USERS_BOOKS_ID} />
+        </Box>
       </Wrapper>
-      <Wrapper className="calendar">
-        <Calendar users_books_id={USERS_BOOKS_ID} />
+      <Wrapper mode="calendar">
+        <Box mode="calendar">
+          <Calendar users_books_id={USERS_BOOKS_ID} />
+        </Box>
       </Wrapper>
-      <Wrapper className="comment">
-        <CommentListPrivate users_books_id={USERS_BOOKS_ID} />
+      <Wrapper mode="comment">
+        <Box mode="comment">
+          <CommentListPrivate users_books_id={USERS_BOOKS_ID} />
+        </Box>
       </Wrapper>
     </Container>
   );

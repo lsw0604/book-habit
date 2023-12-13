@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 
-import StartDate from 'components/Modals/SearchBook/SearchBookRegister/StartDate';
-import EndDate from 'components/Modals/SearchBook/SearchBookRegister/EndDate';
+import StartDate from 'components/SearchBookRegister/StartDate';
+import EndDate from 'components/SearchBookRegister/EndDate';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 
 const Container = styled(motion.div)`

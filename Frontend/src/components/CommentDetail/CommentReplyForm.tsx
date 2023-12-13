@@ -1,10 +1,20 @@
 import styled from 'styled-components';
-import { useCallback, useState, ChangeEvent, FormEvent } from 'react';
+import {
+  useCallback,
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+} from 'react';
 
 import TextArea from 'components/common/Textarea';
 import Button from 'components/common/Button';
+
 import useCommentsReplyMutation from '@queries/comments/useCommentsReplyMutation';
-import { useParams } from 'react-router-dom';
+
+interface IProps {
+  comment_id: string;
+}
 
 const Container = styled.form`
   width: 100%;
@@ -14,14 +24,13 @@ const Container = styled.form`
   flex-direction: column;
 `;
 
-export default function CommentReplyForm() {
-  const { comment_id } = useParams();
-  if (!comment_id) return <Container>잘못된 접근입니다.</Container>;
-
+export default function CommentReplyForm({ comment_id }: IProps) {
   const [reply, setReply] = useState<string>('');
   const [useValidation, setUseValidation] = useState<boolean>(false);
 
-  const { mutate } = useCommentsReplyMutation(parseInt(comment_id));
+  const COMMENT_ID = parseInt(comment_id);
+
+  const { mutate } = useCommentsReplyMutation(COMMENT_ID);
 
   const replyHandler = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -33,18 +42,23 @@ export default function CommentReplyForm() {
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     setUseValidation(true);
+    if (reply === '') return null;
 
-    if (reply !== '') {
-      mutate({
-        comment_id: parseInt(comment_id),
-        body: {
-          reply,
-        },
-      });
-      setUseValidation(false);
-      setReply('');
-    }
+    mutate({
+      comment_id: COMMENT_ID,
+      body: {
+        reply,
+      },
+    });
+    setUseValidation(false);
+    setReply('');
   };
+
+  useEffect(() => {
+    if (!reply) setReply('');
+
+    setUseValidation(false);
+  }, [reply]);
 
   return (
     <Container onSubmit={onSubmit}>

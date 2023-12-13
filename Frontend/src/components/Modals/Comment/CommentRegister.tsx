@@ -1,12 +1,14 @@
-import { ChangeEvent, memo, useEffect } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import styled from 'styled-components';
-import { customize } from '@style/colors';
-import { IconBook, IconPencil } from '@style/icons';
+
 import Button from 'components/common/Button';
 import CommentAddForm from 'components/Modals/Comment/CommentAddForm';
+import ModalHeader from 'components/Modals/ModalHeader';
+import { IconPencil } from '@style/icons';
+
 import useMyBookHook from '@hooks/useMyBookHook';
-import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
 import useModalHook from '@hooks/useModalHook';
+import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
 
 const Container = styled.form`
   width: 100%;
@@ -14,39 +16,6 @@ const Container = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const Header = styled.div`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const HeaderIconWrapper = styled.div`
-  height: 100%;
-  display: flex;
-  align-items: center;
-  svg {
-    height: 50%;
-    fill: ${({ theme }) => theme.mode.typo_main};
-  }
-`;
-
-const HeaderDescriptionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const HeaderDescriptionMain = styled.span`
-  color: ${({ theme }) => theme.mode.typo_main};
-  font-size: 20px;
-`;
-
-const HeaderDescriptionSub = styled.span`
-  font-size: 12px;
-  color: ${customize.gray['400']};
 `;
 
 const Content = styled.div`
@@ -58,7 +27,13 @@ const Footer = styled.div`
   position: relative;
 `;
 
-const commentRegister = () => {
+const HEADER_OPTION = {
+  title: '한줄평 등록하기',
+  sub: '내 서재에 등록된 책의 상태에 따라 한줄평을 등록해주세요.',
+  icon: <IconPencil />,
+};
+
+export default function CommentRegister() {
   const {
     myBookComment,
     myBookStatus,
@@ -85,9 +60,9 @@ const commentRegister = () => {
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     onChangeMyBookUseValidation(true);
-    if (useMyBookCommentValidation) {
-      mutate(body);
-    }
+    if (!useMyBookCommentValidation) return null;
+    mutate(body);
+    onChangeMyBookUseValidation(false);
   };
 
   useEffect(() => {
@@ -98,29 +73,13 @@ const commentRegister = () => {
 
   return (
     <Container onSubmit={onSubmit}>
-      <Header>
-        <HeaderIconWrapper>
-          <IconBook />
-        </HeaderIconWrapper>
-        <HeaderDescriptionContainer>
-          <HeaderDescriptionMain>한줄평을 등록해요</HeaderDescriptionMain>
-          <HeaderDescriptionSub>
-            한줄평을 읽은 상태에 상관없이 등록해주세요.
-          </HeaderDescriptionSub>
-        </HeaderDescriptionContainer>
-      </Header>
+      <ModalHeader {...HEADER_OPTION} />
       <Content>
         <CommentAddForm />
       </Content>
       <Footer>
-        <Button isLoading={isLoading} icon={<IconPencil />}>
-          등록하기
-        </Button>
+        <Button isLoading={isLoading}>등록하기</Button>
       </Footer>
     </Container>
   );
-};
-
-const CommentRegister = memo(commentRegister);
-
-export default CommentRegister;
+}

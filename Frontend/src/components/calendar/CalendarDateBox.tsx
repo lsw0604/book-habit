@@ -8,6 +8,7 @@ import { v4 } from 'uuid';
 import { useSetRecoilState } from 'recoil';
 import { myBookAtom } from 'recoil/myBook';
 import { modalAtom } from 'recoil/modal';
+import { useCallback } from 'react';
 
 const Container = styled.div<{ gridColumn?: number }>`
   width: 100%;
@@ -93,13 +94,19 @@ export default function DateBox({
     .month(parseInt(month) - 1)
     .date(date);
 
-  const onChangeMyBookUsersBookId = (users_books_id: number) => {
-    setMyBookState((prev) => ({ ...prev, users_books_id }));
-  };
+  const onChangeMyBookUsersBookId = useCallback(
+    (users_books_id: number) => {
+      setMyBookState((prev) => ({ ...prev, users_books_id }));
+    },
+    [usersBooksId]
+  );
 
-  const onChangeMyBookDate = (date: Date | null) => {
-    setMyBookState((prev) => ({ ...prev, date }));
-  };
+  const onChangeMyBookDate = useCallback(
+    (date: Date | null) => {
+      setMyBookState((prev) => ({ ...prev, date }));
+    },
+    [date]
+  );
 
   const onChangeModal = (type: ModalAtomType['type']) => {
     setModalState({ isOpen: true, type });

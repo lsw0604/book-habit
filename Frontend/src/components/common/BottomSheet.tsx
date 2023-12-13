@@ -56,7 +56,9 @@ const HistoryDelete = lazy(
   () => import('components/Modals/History/HistoryDelete')
 );
 const ReplyDelete = lazy(() => import('components/Modals/Reply/ReplyDelete'));
-const MyBookDelete = lazy(() => import('components/Modals/MyBookDelete'));
+const MyBookDelete = lazy(
+  () => import('components/Modals/MyBook/MyBookDelete')
+);
 const ProfileModify = lazy(
   () => import('components/Modals/Profile/ProfileModify')
 );

@@ -3,10 +3,10 @@ import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
 import Button from 'components/common/Button';
-import Read from 'components/Modals/SearchBook/SearchBookRegister/Read';
-import Reading from 'components/Modals/SearchBook/SearchBookRegister/Reading';
-import ReadTo from 'components/Modals/SearchBook/SearchBookRegister/ReadTo';
-import Skeleton from 'components/Modals/SearchBook/SearchBookRegister/Skeleton';
+import Read from 'components/SearchBookRegister/Read';
+import Reading from 'components/SearchBookRegister/Reading';
+import ReadTo from 'components/SearchBookRegister/ReadTo';
+import Skeleton from 'components/SearchBookRegister/Skeleton';
 import RadioButton from 'components/common/Radio/RadioButton';
 import { searchBookAtom } from 'recoil/searchBook';
 import { userAtom } from 'recoil/user';

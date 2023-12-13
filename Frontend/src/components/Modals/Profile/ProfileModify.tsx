@@ -20,7 +20,6 @@ import {
   IconPencil,
   IconPerson,
 } from '@style/icons';
-import useToastHook from '@hooks/useToastHook';
 import useProfileInfoEditMutation from '@queries/profile/useProfileInfoEditMutation';
 
 const Container = styled.form`
@@ -92,7 +91,6 @@ const RADIO_OPTIONS: RadioGroupOptionType<'male' | 'female' | ''>[] = [
 ];
 
 export default function ProfileModify() {
-  const { addToast } = useToastHook();
   const { mutate, isLoading } = useProfileInfoEditMutation();
   const [selectedOptions, setSelectedOptions] = useState<
     CheckBoxOptionType<string>[]
@@ -149,10 +147,7 @@ export default function ProfileModify() {
     setUseValidation(true);
 
     if (selectedOptions.length === 0) {
-      return addToast({
-        message: '수정할 항목을 선택해주세요.',
-        status: 'info',
-      });
+      return null;
     }
 
     if (
@@ -160,7 +155,7 @@ export default function ProfileModify() {
       (hasSelectedOptionAge && age === '') ||
       (hasSelectedOptionGender && gender === '')
     ) {
-      return addToast({ message: '빈칸을 채워주세요.', status: 'info' });
+      return null;
     }
 
     setUseValidation(false);

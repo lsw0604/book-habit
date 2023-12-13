@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import ProfileHeader from 'components/user/Profile/ProfileHeader';
-import ProfileDescription from 'components/user/Profile/ProfileDescription';
-import ProfileList from 'components/user/Profile/ProfileList';
+import ProfileHeader from 'components/Profile/ProfileHeader';
+import ProfileDescription from 'components/Profile/ProfileDescription';
+import ProfileList from 'components/Profile/ProfileList';
 import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`

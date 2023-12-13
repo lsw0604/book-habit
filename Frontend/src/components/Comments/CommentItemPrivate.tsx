@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+
 import Divider from 'components/common/Divider';
+import CommentHeaderPrivate from 'components/Comments/CommentHeaderPrivate';
 
 interface IProps {
   item: MyBookCommentQueryItemType;
@@ -47,7 +49,7 @@ export default function CommentItemPrivate({ item, users_books_id }: IProps) {
 
   return (
     <Container>
-      <CommentItemPrivate item={item} users_books_id={users_books_id} />
+      <CommentHeaderPrivate item={item} users_books_id={users_books_id} />
       <Divider divider={2} />
       <Content>
         <Comment>{comment}</Comment>

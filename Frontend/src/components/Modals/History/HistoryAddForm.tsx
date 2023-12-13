@@ -43,7 +43,7 @@ const options: RadioGroupOptionType<string>[] = [
   },
 ];
 
-export default function History() {
+export default function HistoryAddForm() {
   const {
     myBookDate,
     myBookStatus,

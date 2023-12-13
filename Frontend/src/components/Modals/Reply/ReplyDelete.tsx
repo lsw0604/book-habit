@@ -1,11 +1,15 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import Button from 'components/common/Button';
-import { useEffect } from 'react';
-import { IconTrashCan, LogoSad } from '@style/icons';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+
+import ModalHeader from 'components/Modals/ModalHeader';
+import ModalDeleteBody from 'components/Modals/ModalLogoBody';
+
 import { replyAtom } from 'recoil/reply';
-import useCommentsReplyDeleteMutation from '@queries/comments/useCommentsReplyDeleteMutation';
 import { modalAtom } from 'recoil/modal';
+import { IconTrashCan, LogoSad } from '@style/icons';
+import useCommentsReplyDeleteMutation from '@queries/comments/useCommentsReplyDeleteMutation';
 
 const Container = styled.div`
   display: flex;
@@ -16,29 +20,22 @@ const Container = styled.div`
   line-height: 22px;
 `;
 
-const Header = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 0 10px;
-  svg {
-    width: 100%;
-  }
-`;
-
 const Footer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
 `;
 
-const Stack = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const HEADER_OPTION = {
+  title: '댓글을 삭제하시겠어요?',
+  sub: '한번 삭제하면 복구 할 수 없습니다.',
+  icon: <IconTrashCan />,
+};
+
+const BODY_OPTION = {
+  icon: <LogoSad />,
+  message: '삭제하시겠어요?',
+};
 
 export default function ReplyDelete() {
   const [replyState, setReplyState] = useRecoilState(replyAtom);
@@ -72,19 +69,11 @@ export default function ReplyDelete() {
 
   return (
     <Container>
-      <Header>
-        <Stack>
-          <LogoSad />
-        </Stack>
-        <Stack>댓글을 삭제 하시겠어요?</Stack>
-      </Header>
+      <ModalHeader {...HEADER_OPTION} />
+      <ModalDeleteBody {...BODY_OPTION} />
       <Footer>
-        <Button
-          onClick={deleteHandler}
-          isLoading={isLoading}
-          icon={<IconTrashCan />}
-        >
-          네
+        <Button onClick={deleteHandler} isLoading={isLoading}>
+          삭제할게요.
         </Button>
         <Button onClick={initHandler} text>
           아니요

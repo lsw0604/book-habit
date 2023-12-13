@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { IconCommentDots, IconHeart } from '@style/icons';
 import { RadioGroupOptionType } from 'types/style';
 import RadioButton from 'components/common/Radio/RadioButton';
-import ProfileLikeList from 'components/user/Profile/ProfileLikeList';
-import ProfileReplyList from 'components/user/Profile/ProfileReplyList';
+import ProfileLikeList from 'components/Profile/ProfileLikeList';
+import ProfileReplyList from 'components/Profile/ProfileReplyList';
 
 const Container = styled.div`
   width: 100%;

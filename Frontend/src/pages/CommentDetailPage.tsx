@@ -54,7 +54,7 @@ export default function CommentDetailPage() {
           <Wrapper>
             <CommentReplyList />
           </Wrapper>
-          <CommentReplyForm />
+          <CommentReplyForm comment_id={comment_id} />
         </ReplyContainer>
       </Container>
     </>

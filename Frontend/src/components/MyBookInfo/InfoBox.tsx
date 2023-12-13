@@ -20,11 +20,7 @@ interface IProps {
 const Container = styled.div`
   height: auto;
   width: 100%;
-  border-radius: 1rem;
   display: flex;
-  padding: 1rem 0;
-  box-shadow: ${({ theme }) => theme.shadow.md};
-  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const DetailContainer = styled.div`

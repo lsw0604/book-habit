@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 
 import PublicCommentsItem from 'components/Comments/CommentItemPublic';
+import CommentLoading from './CommentLoading';
 
 interface IProps {
   comments: CommentsListType;
+  isLoading: boolean;
+  isFetching: boolean;
 }
 
 const Container = styled.ul`
@@ -17,7 +20,13 @@ const Container = styled.ul`
   scroll-snap-type: y mandatory;
 `;
 
-export default function CommentListPublic({ comments }: IProps) {
+export default function CommentListPublic({
+  comments,
+  isLoading,
+  isFetching,
+}: IProps) {
+  if (isLoading || isFetching) return <CommentLoading height="100%" />;
+
   return (
     <Container>
       {comments.map((comment) => (

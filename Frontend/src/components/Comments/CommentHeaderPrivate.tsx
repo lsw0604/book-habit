@@ -8,7 +8,6 @@ import {
   IconTrashCan,
 } from '@style/icons';
 import Icon from 'components/common/Button/Icon';
-import { useCallback } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { modalAtom } from 'recoil/modal';
 import { myBookAtom } from 'recoil/myBook';
@@ -94,29 +93,23 @@ export default function CommentHeaderPrivate({ item, users_books_id }: IProps) {
   const setModalState = useSetRecoilState(modalAtom);
   const setMyBookState = useSetRecoilState(myBookAtom);
 
-  const onChangeMyBookCommentId = useCallback(
-    (comment_id: number) => {
-      setMyBookState((prev) => ({
-        ...prev,
-        comment_id,
-      }));
-    },
-    [comment_id]
-  );
+  const onChangeMyBookCommentId = (comment_id: number) => {
+    setMyBookState((prev) => ({
+      ...prev,
+      comment_id,
+    }));
+  };
 
-  const onChangeMyBookUsersBooksId = useCallback(
-    (users_books_id: number) => {
-      setMyBookState((prev) => ({
-        ...prev,
-        users_books_id,
-      }));
-    },
-    [users_books_id]
-  );
+  const onChangeMyBookUsersBooksId = (users_books_id: number) => {
+    setMyBookState((prev) => ({
+      ...prev,
+      users_books_id,
+    }));
+  };
 
-  const modalHandler = useCallback((type: ModalAtomType['type']) => {
+  const modalHandler = (type: ModalAtomType['type']) => {
     setModalState({ isOpen: true, type });
-  }, []);
+  };
 
   const deleteHandler = () => {
     modalHandler('deleteComment');
@@ -151,13 +144,13 @@ export default function CommentHeaderPrivate({ item, users_books_id }: IProps) {
         <IconBox>
           <IconStar />
           <IconRating>{rating}</IconRating>
-          <Icon onClick={deleteHandler} icon={<IconTrashCan />}>
-            Delete
-          </Icon>
-          <Icon onClick={modifyHandler} icon={<IconPencil />}>
-            Modify
-          </Icon>
         </IconBox>
+        <Icon onClick={deleteHandler} icon={<IconTrashCan />}>
+          Delete
+        </Icon>
+        <Icon onClick={modifyHandler} icon={<IconPencil />}>
+          Modify
+        </Icon>
       </IconContainer>
     </Container>
   );
