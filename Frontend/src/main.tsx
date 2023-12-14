@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -26,13 +25,11 @@ const domNode: HTMLElement = document.getElementById('root') as HTMLElement;
 
 ReactDOM.createRoot(domNode).render(
   <React.StrictMode>
-    {/* <HelmetProvider> */}
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <App />
       </RecoilRoot>
       <ReactQueryDevtools position="top-right" />
     </QueryClientProvider>
-    {/* </HelmetProvider> */}
   </React.StrictMode>
 );
