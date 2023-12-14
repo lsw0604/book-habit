@@ -23,6 +23,7 @@ import { RefreshJWTStrategyOptions, RefreshVerify } from './strategy/Refresh.Str
 
 const NAMESPACE = 'INDEX';
 const app = express();
+
 dbConfig();
 
 const corsOptions: CorsOptions = {
@@ -49,8 +50,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/my_book', myBookRouter);
 app.use('/api/comments', commentsRouter);
 
-const httpSever = http.createServer(app);
+const httpServer = http.createServer(app);
 
-httpSever.listen(config.server.port, () =>
+httpServer.listen(config.server.port, () =>
   logging.debug(NAMESPACE, `Server is running ${config.server.hostname}:${config.server.port}`)
 );

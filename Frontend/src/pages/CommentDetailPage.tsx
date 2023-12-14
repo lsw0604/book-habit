@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import CommentReplyList from 'components/CommentDetail/CommentReplyList';
 import CommentReplyForm from 'components/CommentDetail/CommentReplyForm';
-import HelmetProvider from 'components/common/HelmetProvider';
+// import HelmetProvider from 'components/common/HelmetProvider';
 import CommentDetail from 'components/CommentDetail/CommentDetail';
 
 const Container = styled.div`
@@ -35,10 +35,10 @@ const Wrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const HELMET_PROVIDER_OPTIONS = {
-  title: '자세히보기',
-  description: '책을 읽고 남긴 한줄평과 댓글을 보여주는 페이지 입니다.',
-};
+// const HELMET_PROVIDER_OPTIONS = {
+//   title: '자세히보기',
+//   description: '책을 읽고 남긴 한줄평과 댓글을 보여주는 페이지 입니다.',
+// };
 
 export default function CommentDetailPage() {
   const { comment_id } = useParams();
@@ -47,7 +47,7 @@ export default function CommentDetailPage() {
 
   return (
     <>
-      <HelmetProvider {...HELMET_PROVIDER_OPTIONS} />
+      {/* <HelmetProvider {...HELMET_PROVIDER_OPTIONS} /> */}
       <Container>
         <CommentDetail comment_id={comment_id} />
         <ReplyContainer>
