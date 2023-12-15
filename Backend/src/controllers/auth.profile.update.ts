@@ -38,8 +38,10 @@ export default async function profileUpdate(req: Request, res: Response, _: Next
 
       logging.debug(NAMESPACE, '[S3_SEND]');
 
+      const cloudFrontUrl = `https://pic.lsw0604.store/${req.file.filename}`;
+
       const PROFILE_UPDATE_SQL = 'UPDATE users SET profile = ? WHERE id = ?';
-      const PROFILE_UPDATE_VALUE = [s3Url, id];
+      const PROFILE_UPDATE_VALUE = [cloudFrontUrl, id];
       const [PROFILE_UPDATE_RESULT] = await connection.query<ResultSetHeader>(
         PROFILE_UPDATE_SQL,
         PROFILE_UPDATE_VALUE

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 interface IProps {
   icon: ReactNode;
   message: string;
+  highlight?: string;
 }
 
 const Container = styled.div`
@@ -20,14 +21,29 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-export default function ModalLogoBody({ icon, message }: IProps) {
+const Title = styled.p`
+  color: ${({ theme }) => theme.mode.typo_sub};
+  font-size: 20px;
+`;
+
+const HighLight = styled.span`
+  color: ${({ theme }) => theme.colors.main};
+`;
+
+export default function ModalLogoBody({ icon, message, highlight }: IProps) {
   return (
     <Container>
-      <Wrapper>{message}</Wrapper>
+      <Wrapper>
+        <Title>
+          {highlight && <HighLight>{highlight}</HighLight>}
+          {message}
+        </Title>
+      </Wrapper>
       <Wrapper>{icon}</Wrapper>
     </Container>
   );

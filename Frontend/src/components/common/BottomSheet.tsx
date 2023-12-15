@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { ReactNode, lazy, Suspense } from 'react';
 
-import NeedLogin from 'components/common/NeedLogin';
 import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
 import useModalHook from '@hooks/useModalHook';
 import Loader from './Loader';
+import LoginMessage from 'components/Modals/Login/LoginMessage';
 
 interface IBottomSheetObj {
   [key: string]: ReactNode;
@@ -64,7 +64,7 @@ const ProfileModify = lazy(
 );
 
 const bottomSheetComponent: IBottomSheetObj = {
-  isLogin: <NeedLogin />,
+  isLogin: <LoginMessage />,
   registerSearchBook: <SearchBookRegister />,
   modifyComment: <CommentModify />,
   registerComment: <CommentRegister />,
