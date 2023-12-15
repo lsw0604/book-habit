@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import Login from 'components/user/Login';
+
 import HelmetProvider from 'components/common/HelmetProvider';
+import LoginForm from 'components/user/LoginForm';
 
 const Container = styled.div`
   width: 100%;
@@ -14,7 +15,7 @@ export default function LoginPage() {
   return (
     <HelmetProvider title="로그인" description="로그인 페이지입니다.">
       <Container>
-        <Login />
+        <LoginForm />
       </Container>
     </HelmetProvider>
   );

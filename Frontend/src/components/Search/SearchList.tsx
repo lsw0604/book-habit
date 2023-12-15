@@ -1,10 +1,11 @@
 import { InfiniteData } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { useEffect, useRef, memo } from 'react';
+import { useEffect, useRef } from 'react';
 import { v4 } from 'uuid';
 
 import Loader from 'components/common/Loader';
 import SearchItem from 'components/Search/SearchItem';
+import SearchSkeleton from './SearchSkeleton';
 
 interface IProps {
   data: InfiniteData<KakaoSearchResponseType> | undefined;
@@ -50,33 +51,6 @@ const Page = styled.div`
   }
 `;
 
-const EmptyPageContainer = styled.div`
-  padding: 1rem;
-  width: 100%;
-  height: 100%;
-  .empty_page {
-    background-color: rgba(0, 0, 0, 0.05);
-    width: 100%;
-    height: 100%;
-    border-radius: 1rem;
-    padding: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .empty_page_message {
-    font-size: 20px;
-    line-height: 24px;
-    color: ${({ theme }) => theme.mode.typo_sub};
-  }
-
-  .highlight {
-    font-size: 24px;
-    line-height: 28px;
-    color: ${({ theme }) => theme.colors.sub};
-  }
-`;
-
 const FetchLoader = styled.div`
   display: flex;
   justify-content: center;
@@ -88,7 +62,7 @@ const Observer = styled.div`
   margin-bottom: 20px;
 `;
 
-const searchList = ({
+export default function SearchList({
   data,
   fetchNextPage,
   hasNextPage,
@@ -97,7 +71,7 @@ const searchList = ({
   isLoading,
   initialLoadComplete,
   setInitialLoadComplete,
-}: IProps) => {
+}: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -126,33 +100,10 @@ const searchList = ({
     };
   }, [fetchNextPage, hasNextPage, isFetching, initialLoadComplete]);
 
-  if (search === '' || !data) {
-    return (
-      <Container>
-        <EmptyPageContainer>
-          <div className="empty_page">
-            <p className="empty_page_message">책 제목을 검색해 주세요.</p>
-          </div>
-        </EmptyPageContainer>
-      </Container>
-    );
-  }
+  if (search === '' || !data) return <SearchSkeleton search={search} />;
 
-  if (data.pages[0].documents.length === 0) {
-    return (
-      <Container>
-        <EmptyPageContainer>
-          <div className="empty_page">
-            <p className="empty_page_message">
-              <span className="empty_page_message highlight">{search}</span>
-              에 대한
-              <br /> 검색 결과가 없습니다.
-            </p>
-          </div>
-        </EmptyPageContainer>
-      </Container>
-    );
-  }
+  if (data.pages[0].documents.length === 0)
+    return <SearchSkeleton search={search} />;
 
   return (
     <Container>
@@ -172,8 +123,4 @@ const searchList = ({
       ) : null}
     </Container>
   );
-};
-
-const SearchList = memo(searchList);
-
-export default SearchList;
+}

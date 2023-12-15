@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import KakaoRegister from 'components/user/KakaoRegister';
+import KakaoRegisterForm from 'components/user/KakaoRegisterForm';
 import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
@@ -26,7 +26,7 @@ export default function KakaoRegisterPage() {
       description="카카오로 로그인 후 사용자 정보를 등록하는 페이지입니다."
     >
       <Container>
-        <KakaoRegister />
+        <KakaoRegisterForm />
       </Container>
     </HelmetProvider>
   );

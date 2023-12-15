@@ -38,7 +38,7 @@ const Stack = styled.div`
   margin-bottom: 8px;
 `;
 
-export default function KakaoRegister() {
+export default function KakaoRegisterForm() {
   const [name, setName] = useState<string>('');
   const [gender, setGender] = useState<'female' | 'male' | ''>('');
   const [age, setAge] = useState<number | ''>('');

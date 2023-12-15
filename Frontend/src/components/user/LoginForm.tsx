@@ -55,7 +55,7 @@ const Footer = styled.p`
   }
 `;
 
-export default function Login() {
+export default function LoginForm() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [useValidation, setUseValidation] = useState<boolean>(false);

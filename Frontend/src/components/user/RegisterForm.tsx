@@ -75,7 +75,7 @@ const registerGenderOptions: RadioGroupOptionType<'male' | 'female' | ''>[] = [
   },
 ];
 
-export default function Register() {
+export default function RegisterForm() {
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -272,4 +272,4 @@ export default function Register() {
   );
 }
 
-Register.displayName = 'register_form';
+RegisterForm.displayName = 'register_form';
