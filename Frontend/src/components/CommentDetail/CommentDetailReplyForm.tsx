@@ -24,7 +24,7 @@ const Container = styled.form`
   flex-direction: column;
 `;
 
-export default function CommentReplyForm({ comment_id }: IProps) {
+export default function CommentDetailReplyForm({ comment_id }: IProps) {
   const [reply, setReply] = useState<string>('');
   const [useValidation, setUseValidation] = useState<boolean>(false);
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 import Loader from 'components/common/Loader';
-import CommentReplyItem from 'components/CommentDetail/CommentReplyItem';
+import CommentDetailReplyItem from 'components/CommentDetail/CommentDetailReplyItem';
 
 const Container = styled.ul`
   width: 100%;
@@ -28,7 +28,7 @@ const EmptyWrapper = styled.div`
   border-radius: 1rem;
 `;
 
-export default function CommentReplyList() {
+export default function CommentDetailReplyList() {
   const { comment_id } = useParams();
   if (!comment_id) return <Container>잘못된 접근입니다.</Container>;
 
@@ -48,7 +48,7 @@ export default function CommentReplyList() {
         <Loader />
       ) : data && data.reply.length > 0 ? (
         data.reply.map((reply) => (
-          <CommentReplyItem key={reply.reply_id} {...reply} />
+          <CommentDetailReplyItem key={reply.reply_id} {...reply} />
         ))
       ) : (
         <EmptyWrapper>아직 등록된 댓글이 없습니다.</EmptyWrapper>

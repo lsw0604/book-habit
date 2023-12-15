@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import PublicCommentsItem from 'components/Comments/CommentItemPublic';
-import CommentLoading from './CommentLoading';
+import CommentLoading from 'components/Comments/CommentLoading';
 
 interface IProps {
   comments: CommentsListType;

@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import CommentHeart from 'components/Comments/CommentHeart';
-import CommentReply from 'components/CommentDetail/CommentReply';
 import CommentHeaderPublic from 'components/Comments/CommentHeaderPublic';
+import CommentReply from 'components/Comments/CommentReply';
+import CommentHeart from 'components/Comments/CommentHeart';
 
 interface IProps {
   item: Omit<CommentsItemType, 'age_category' | 'gender'>;
@@ -54,7 +54,7 @@ const Bottom = styled.div`
 export default function CommentsItemPublic({ item }: IProps) {
   const navigate = useNavigate();
 
-  const { comment_id, comment } = item;
+  const { comment_id, comment, reply_user_id, like_user_id } = item;
 
   const navigateCommentDetailPage = () => navigate(`/comments/${comment_id}`);
 
@@ -65,8 +65,8 @@ export default function CommentsItemPublic({ item }: IProps) {
       </Header>
       <Content onClick={navigateCommentDetailPage}>{comment}</Content>
       <Bottom>
-        <CommentHeart comment_id={comment_id} />
-        <CommentReply comment_id={comment_id} btn />
+        <CommentHeart comment_id={comment_id} like_user_id={like_user_id} />
+        <CommentReply comment_id={comment_id} reply_user_id={reply_user_id} />
       </Bottom>
     </Container>
   );

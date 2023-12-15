@@ -65,7 +65,7 @@ const ReplyWrapper = styled.div`
   color: ${({ theme }) => theme.mode.typo_sub};
 `;
 
-export default function CommentReplyItem({
+export default function CommentDetailReplyItem({
   created_at,
   name,
   profile,

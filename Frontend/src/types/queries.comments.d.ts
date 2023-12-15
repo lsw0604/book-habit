@@ -22,6 +22,8 @@ type CommentsItemType = {
     | '50대'
     | '60대 이상';
   gender: GenderType;
+  like_user_id: { user_id: number }[];
+  reply_user_id: { user_id: number }[];
 };
 
 // useCommentsLikeListQuery의 타입들

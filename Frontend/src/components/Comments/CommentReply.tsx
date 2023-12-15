@@ -1,12 +1,10 @@
-import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
-import { IconCommentDots } from '@style/icons';
-import Loader from 'components/common/Loader';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { IconCommentDots } from '@style/icons';
 
 interface IProps {
   comment_id: number;
-  btn?: true;
+  reply_user_id: { user_id: number }[];
 }
 
 const Container = styled.div`
@@ -33,22 +31,16 @@ const ReplyIconWrapper = styled.div`
   }
 `;
 
-export default function CommentReply({ comment_id, btn }: IProps) {
+export default function CommentReply({ reply_user_id, comment_id }: IProps) {
   const navigate = useNavigate();
-  const { data, isFetching, isLoading } = useCommentsReplyListQuery(comment_id);
-
-  const navigateReply = () => {
-    if (btn) navigate(`/comments/${comment_id}`);
-  };
+  const navigateCommentDetail = () => navigate(`/comments/${comment_id}`);
 
   return (
-    <Container onClick={navigateReply}>
+    <Container onClick={navigateCommentDetail}>
       <ReplyIconWrapper>
         <IconCommentDots />
       </ReplyIconWrapper>
-      <ReplyNumber>
-        {isFetching || isLoading ? <Loader /> : data?.reply.length}
-      </ReplyNumber>
+      <ReplyNumber>{reply_user_id.length}</ReplyNumber>
     </Container>
   );
 }

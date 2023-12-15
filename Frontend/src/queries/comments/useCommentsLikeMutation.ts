@@ -9,11 +9,11 @@ import useToastHook from '@hooks/useToastHook';
 
 const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
 
+const queryClient = new QueryClient();
+
 export default function useCommentsLikeMutation(
   comment_id: CommentsLikeMutationRequestType
 ) {
-  const queryClient = new QueryClient();
-
   const { refetch: profileLikeQueryRefetch } = useProfileLikeQuery(1);
   const { refetch: commentsLikeListRefetch } =
     useCommentsLikeListQuery(comment_id);

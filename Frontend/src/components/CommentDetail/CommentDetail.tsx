@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import CommentHeaderPublic from 'components/Comments/CommentHeaderPublic';
 import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
 
-import CommentHeart from 'components/Comments/CommentHeart';
-import CommentReply from 'components/CommentDetail/CommentReply';
+import CommentDetailHeart from 'components/CommentDetail/CommentDetailHeart';
+import CommentDetailReply from 'components/CommentDetail/CommentDetailReply';
 import CommentDetailSkeleton from 'components/CommentDetail/CommentDetailSkeleton';
 
 interface IProps {
@@ -70,8 +70,8 @@ export default function CommentDetail({ comment_id }: IProps) {
       </Header>
       <Comment>{data.comment}</Comment>
       <Footer>
-        <CommentHeart comment_id={COMMENT_ID} />
-        <CommentReply comment_id={COMMENT_ID} />
+        <CommentDetailHeart comment_id={COMMENT_ID} />
+        <CommentDetailReply comment_id={COMMENT_ID} />
       </Footer>
     </Container>
   );

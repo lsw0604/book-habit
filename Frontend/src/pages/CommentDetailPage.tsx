@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Navigate, useParams } from 'react-router-dom';
 
-import CommentReplyList from 'components/CommentDetail/CommentReplyList';
-import CommentReplyForm from 'components/CommentDetail/CommentReplyForm';
+import CommentDetailReplyList from 'components/CommentDetail/CommentDetailReplyList';
+import CommentDetailReplyForm from 'components/CommentDetail/CommentDetailReplyForm';
 import CommentDetail from 'components/CommentDetail/CommentDetail';
 import HelmetProvider from 'components/common/HelmetProvider';
 
@@ -49,9 +49,9 @@ export default function CommentDetailPage() {
         <CommentDetail comment_id={comment_id} />
         <ReplyContainer>
           <Wrapper>
-            <CommentReplyList />
+            <CommentDetailReplyList />
           </Wrapper>
-          <CommentReplyForm comment_id={comment_id} />
+          <CommentDetailReplyForm comment_id={comment_id} />
         </ReplyContainer>
       </Container>
     </HelmetProvider>

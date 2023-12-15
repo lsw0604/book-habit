@@ -1,18 +1,17 @@
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
-import { userAtom } from 'recoil/user';
 
-import Loader from 'components/common/Loader';
+import useToastHook from '@hooks/useToastHook';
+import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
+import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
+import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
 import { customize } from '@style/colors';
 import { IconHeart, IconHeartFill } from '@style/icons';
-
-import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
-import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
-import useToastHook from '@hooks/useToastHook';
+import { userAtom } from 'recoil/user';
+import Loader from 'components/common/Loader';
 
 interface IProps {
   comment_id: number;
-  like_user_id: { user_id: number }[];
 }
 
 const Container = styled.div`
@@ -40,11 +39,9 @@ const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
   }
 `;
 
-export default function CommentHeart({ comment_id, like_user_id }: IProps) {
+export default function CommentDetailHeart({ comment_id }: IProps) {
   const { isLogged, id } = useRecoilValue(userAtom);
   const { addToast } = useToastHook();
-
-  const isLiked = like_user_id?.some((like) => like.user_id === id);
 
   const {
     mutate: commentLikeRegisterMutation,
@@ -66,19 +63,33 @@ export default function CommentHeart({ comment_id, like_user_id }: IProps) {
       commentLikeDeleteMutation(comment_id);
     }
   };
+  const {
+    data: commentsLikeArray,
+    isLoading: commentsLikeLoading,
+    isFetching: commentsLikeFetching,
+  } = useCommentsLikeListQuery(comment_id);
+
+  const isLiked = commentsLikeArray?.some((like) => like.users_id === id);
 
   return (
     <Container>
-      <HeartIconWrapper isLiked={isLiked}>
-        {commentLikeMutationIsLoading || commentLikeDeleteMutationIsLoading ? (
-          <Loader />
-        ) : isLiked ? (
-          <IconHeartFill onClick={() => commentLikeHandler(false)} />
-        ) : (
-          <IconHeart onClick={() => commentLikeHandler(true)} />
-        )}
-      </HeartIconWrapper>
-      <HeartNumber>{like_user_id.length}</HeartNumber>
+      {commentsLikeLoading || commentsLikeFetching ? (
+        <Loader />
+      ) : (
+        <>
+          <HeartIconWrapper isLiked={isLiked}>
+            {commentLikeMutationIsLoading ||
+            commentLikeDeleteMutationIsLoading ? (
+              <Loader />
+            ) : isLiked ? (
+              <IconHeartFill onClick={() => commentLikeHandler(false)} />
+            ) : (
+              <IconHeart onClick={() => commentLikeHandler(true)} />
+            )}
+          </HeartIconWrapper>
+          <HeartNumber>{commentsLikeArray?.length}</HeartNumber>
+        </>
+      )}
     </Container>
   );
 }
