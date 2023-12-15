@@ -66,7 +66,7 @@ const Box = styled.div<{ mode: 'info' | 'calendar' | 'comment' }>`
   background-color: ${({ theme }) => theme.mode.sub};
 `;
 
-export default function MyBookInfoPage() {
+export default function MyBookDetailPage() {
   const { users_books_id } = useParams();
 
   if (!users_books_id) return <Navigate to="/404" />;

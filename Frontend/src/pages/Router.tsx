@@ -15,7 +15,7 @@ import IsKakaoAuthLayout from '@pages/layout/IsKakaoAuthLayout';
 import HomePage from '@pages/HomePage';
 
 const MyBooksPage = lazy(() => import('@pages/MyBooksPage'));
-const MyBookInfoPage = lazy(() => import('@pages/MyBooksInfoPage'));
+const MyBookDetailPage = lazy(() => import('@pages/MyBookDetailPage'));
 const KakaoPage = lazy(() => import('@pages/KakaoPage'));
 const KakaoRegisterPage = lazy(() => import('@pages/KakaoRegisterPage'));
 const RegisterPage = lazy(() => import('@pages/RegisterPage'));
@@ -70,7 +70,7 @@ export default function Router() {
                     <Route path="/my_books" Component={MyBooksPage} />
                     <Route
                       path="/my_books/:users_books_id"
-                      Component={MyBookInfoPage}
+                      Component={MyBookDetailPage}
                     />
                   </Route>
                   <Route element={<IsAuthLayout needLogin={false} />}>

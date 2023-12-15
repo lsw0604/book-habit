@@ -41,16 +41,18 @@ const Number = styled.p`
 `;
 
 export default function KakaoPage() {
-  const [second, setSecond] = useState<number>(0);
+  const [second, setSecond] = useState<number>(3);
+
   const navigate = useNavigate();
+
   const code = new URLSearchParams(window.location.search).get(
     'code'
   ) as string;
+
   const { isLoading, isError, error, refetch } = useKakaoCallbackQuery(code);
 
   useEffect(() => {
     refetch();
-    setSecond(3);
   }, []);
 
   useEffect(() => {
@@ -87,6 +89,4 @@ export default function KakaoPage() {
       </Container>
     );
   }
-
-  return <Container>카카오 로그인 성공 했습니다.</Container>;
 }

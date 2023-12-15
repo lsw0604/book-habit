@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import KakaoRegister from 'components/user/KakaoRegister';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   display: flex;
@@ -20,8 +21,13 @@ const Container = styled.div`
 
 export default function KakaoRegisterPage() {
   return (
-    <Container>
-      <KakaoRegister />
-    </Container>
+    <HelmetProvider
+      title="내 정보등록하기"
+      description="카카오로 로그인 후 사용자 정보를 등록하는 페이지입니다."
+    >
+      <Container>
+        <KakaoRegister />
+      </Container>
+    </HelmetProvider>
   );
 }

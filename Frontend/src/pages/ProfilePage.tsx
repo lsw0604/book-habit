@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import ProfileHeader from 'components/Profile/ProfileHeader';
 import ProfileDescription from 'components/Profile/ProfileDescription';
 import ProfileList from 'components/Profile/ProfileList';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
@@ -46,15 +47,20 @@ const ProfileHeaderBackground = styled.div`
 
 export default function ProfilePage() {
   return (
-    <Container>
-      <ProfileContainer>
-        <ProfileHeader />
-        <ProfileContent>
-          <ProfileDescription />
-          <ProfileList />
-        </ProfileContent>
-      </ProfileContainer>
-      <ProfileHeaderBackground />
-    </Container>
+    <HelmetProvider
+      title="내 정보"
+      description="내 정보를 보여주는 페이지입니다."
+    >
+      <Container>
+        <ProfileContainer>
+          <ProfileHeader />
+          <ProfileContent>
+            <ProfileDescription />
+            <ProfileList />
+          </ProfileContent>
+        </ProfileContainer>
+        <ProfileHeaderBackground />
+      </Container>
+    </HelmetProvider>
   );
 }

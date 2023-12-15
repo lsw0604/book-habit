@@ -1,4 +1,5 @@
 import { LogoSad } from '@style/icons';
+import HelmetProvider from 'components/common/HelmetProvider';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -50,21 +51,26 @@ const Link = styled.p`
 export default function NotFound() {
   const navigate = useNavigate();
   return (
-    <Container>
-      <Content>
-        <MessageContainer>
-          <Title>404</Title>
-          <Message>해당 페이지를 찾을 수 없습니다.</Message>
-          <Link
-            onClick={() => {
-              navigate('/search');
-            }}
-          >
-            홈으로 가기
-          </Link>
-        </MessageContainer>
-        <LogoSad />
-      </Content>
-    </Container>
+    <HelmetProvider
+      title="페이지를 찾을 수 없습니다."
+      description="404 Error 페이지입니다."
+    >
+      <Container>
+        <Content>
+          <MessageContainer>
+            <Title>404</Title>
+            <Message>해당 페이지를 찾을 수 없습니다.</Message>
+            <Link
+              onClick={() => {
+                navigate('/search');
+              }}
+            >
+              홈으로 가기
+            </Link>
+          </MessageContainer>
+          <LogoSad />
+        </Content>
+      </Container>
+    </HelmetProvider>
   );
 }

@@ -10,6 +10,7 @@ import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { customize } from '@style/colors';
 import { modalAtom } from 'recoil/modal';
 import { myBookAtom } from 'recoil/myBook';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 interface IProps {
   users_books_id: number;
@@ -143,36 +144,41 @@ export default function InfoBox({ users_books_id }: IProps) {
     myBookInfoData.result;
 
   return (
-    <Container>
-      <ImageContainer>
-        <ImageWrapper src={thumbnail} alt={title} height={174} width={120} />
-        <BookMarkWrapper>
-          <IconBookMark />
-        </BookMarkWrapper>
-      </ImageContainer>
-      <DetailContainer>
-        <DetailHeader>
-          <DetailHeaderInfo>
-            <Publisher>{publisher}</Publisher>
-            <Title>{title}</Title>
-            <Authors>{authors}</Authors>
-          </DetailHeaderInfo>
-          <DetailHeaderIconWrapper>
-            <Icon onClick={modalHandler} icon={<IconTrashCan />}>
-              Delete
-            </Icon>
-          </DetailHeaderIconWrapper>
-        </DetailHeader>
-        <Divider divider={2} />
-        {contents == '' ? (
-          <Description>등록된 정보가 없습니다.</Description>
-        ) : (
-          <Description>{contents} ...</Description>
-        )}
-        <A href={url} target="_blank" rel="noreferrer">
-          더보기
-        </A>
-      </DetailContainer>
-    </Container>
+    <HelmetProvider
+      title={title}
+      description="해당 책의 정보를 보여주는 페이지입니다."
+    >
+      <Container>
+        <ImageContainer>
+          <ImageWrapper src={thumbnail} alt={title} height={174} width={120} />
+          <BookMarkWrapper>
+            <IconBookMark />
+          </BookMarkWrapper>
+        </ImageContainer>
+        <DetailContainer>
+          <DetailHeader>
+            <DetailHeaderInfo>
+              <Publisher>{publisher}</Publisher>
+              <Title>{title}</Title>
+              <Authors>{authors}</Authors>
+            </DetailHeaderInfo>
+            <DetailHeaderIconWrapper>
+              <Icon onClick={modalHandler} icon={<IconTrashCan />}>
+                Delete
+              </Icon>
+            </DetailHeaderIconWrapper>
+          </DetailHeader>
+          <Divider divider={2} />
+          {contents == '' ? (
+            <Description>등록된 정보가 없습니다.</Description>
+          ) : (
+            <Description>{contents} ...</Description>
+          )}
+          <A href={url} target="_blank" rel="noreferrer">
+            더보기
+          </A>
+        </DetailContainer>
+      </Container>
+    </HelmetProvider>
   );
 }

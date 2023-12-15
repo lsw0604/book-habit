@@ -4,6 +4,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import CommentReplyList from 'components/CommentDetail/CommentReplyList';
 import CommentReplyForm from 'components/CommentDetail/CommentReplyForm';
 import CommentDetail from 'components/CommentDetail/CommentDetail';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
@@ -40,14 +41,19 @@ export default function CommentDetailPage() {
   if (!comment_id) return <Navigate to="/404" />;
 
   return (
-    <Container>
-      <CommentDetail comment_id={comment_id} />
-      <ReplyContainer>
-        <Wrapper>
-          <CommentReplyList />
-        </Wrapper>
-        <CommentReplyForm comment_id={comment_id} />
-      </ReplyContainer>
-    </Container>
+    <HelmetProvider
+      title="댓글"
+      description="한줄평에 달린 댓글을 보는 페이지입니다."
+    >
+      <Container>
+        <CommentDetail comment_id={comment_id} />
+        <ReplyContainer>
+          <Wrapper>
+            <CommentReplyList />
+          </Wrapper>
+          <CommentReplyForm comment_id={comment_id} />
+        </ReplyContainer>
+      </Container>
+    </HelmetProvider>
   );
 }

@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
 import SearchInput from 'components/Search/SearchInput';
 import SearchList from 'components/Search/SearchList';
+import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
@@ -44,22 +45,28 @@ export default function SearchPage() {
   };
 
   return (
-    <Container>
-      <Wrapper>
-        <SearchInput onChange={onChange} search={search} onSubmit={onSubmit} />
-      </Wrapper>
-      <Contents>
-        <SearchList
-          initialLoadComplete={initialLoadComplete}
-          setInitialLoadComplete={setInitialLoadComplete}
-          search={query}
-          data={data}
-          isLoading={isLoading}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetching={isFetching}
-        />
-      </Contents>
-    </Container>
+    <HelmetProvider title="책 검색" description="책 검색하는 페이지입니다.">
+      <Container>
+        <Wrapper>
+          <SearchInput
+            onChange={onChange}
+            search={search}
+            onSubmit={onSubmit}
+          />
+        </Wrapper>
+        <Contents>
+          <SearchList
+            initialLoadComplete={initialLoadComplete}
+            setInitialLoadComplete={setInitialLoadComplete}
+            search={query}
+            data={data}
+            isLoading={isLoading}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetching={isFetching}
+          />
+        </Contents>
+      </Container>
+    </HelmetProvider>
   );
 }
