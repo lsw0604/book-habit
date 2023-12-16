@@ -1,39 +1,48 @@
-import useToastHook from '@hooks/useToastHook';
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { myBookCommentsRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
+
+import useToastHook from '@hooks/useToastHook';
 import useMyBookHook from '@hooks/useMyBookHook';
-import useMyBookCommentQuery from './useMyBookCommentQuery';
+import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
+import { myBookCommentsRegisterAPI } from 'lib/api/myBook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_MUTATION';
+const { comments, myBook } = queriesKey;
 
-export default function useMyBookCommentMutation(users_books_id: number) {
+export default function useMyBookCommentRegisterMutation(
+  users_books_id: number
+) {
   const queryClient = new QueryClient();
   const { addToast } = useToastHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();
+
   const { refetch: myBookCommentRefetch } =
-    useMyBookCommentQuery(users_books_id);
+    useMyBookCommentListQuery(users_books_id);
   const { refetch: commentListRefetch } = useCommentsListQuery([]);
 
   const { isLoading, mutate, isSuccess, data, isError, error } = useMutation<
     MyBookCommentMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     MyBookCommentMutationRequestType
-  >([REACT_QUERY_KEY, users_books_id], myBookCommentsRegisterAPI, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['USE_MY_BOOK_COMMENT_QUERY'],
-        exact: true,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIST_QUERY'],
-      });
-      myBookCommentRefetch();
-      commentListRefetch();
-    },
-  });
+  >(
+    [myBook.useMyBookCommentRegisterMutationKey, users_books_id],
+    myBookCommentsRegisterAPI,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [myBook.useMyBookCommentListQueryKey],
+          exact: true,
+        });
+        queryClient.invalidateQueries({
+          queryKey: [comments.useCommentsListQueryKey],
+        });
+        myBookCommentRefetch();
+        commentListRefetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (isSuccess && data) {

@@ -6,8 +6,9 @@ import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery
 import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import { commentsLikeDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_DELETE_MUTATION';
+const { profile, comments } = queriesKey;
 
 export default function useCommentsLikeDeleteMutation(
   comment_id: CommentsLikeDeleteMutationRequestType
@@ -24,20 +25,24 @@ export default function useCommentsLikeDeleteMutation(
     CommentsLikeDeleteMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     CommentsLikeDeleteMutationRequestType
-  >([REACT_QUERY_KEY, comment_id], commentsLikeDeleteAPI, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY', comment_id],
-      });
-      commentsLikeListRefetch();
-    },
-  });
+  >(
+    [comments.useCommentsLikeDeleteMutationKey, comment_id],
+    commentsLikeDeleteAPI,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [comments.useCommentsLikeListQueryKey, comment_id],
+        });
+        commentsLikeListRefetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
       queryClient.invalidateQueries({
-        queryKey: ['USE_PROFILE_LIKE_QUERY'],
+        queryKey: [profile.useProfileLikeQueryKey],
       });
       profileLikeQueryRefetch();
       addToast({ message, status });

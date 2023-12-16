@@ -3,7 +3,7 @@ import { QueryClient, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { myBookCommentUpdateAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
-import useMyBookCommentQuery from './useMyBookCommentQuery';
+import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
 
@@ -12,7 +12,8 @@ const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_UPDATE_MUTATION';
 export default function useMyBookCommentUpdateMutation(users_books_id: number) {
   const queryClient = new QueryClient();
 
-  const { refetch } = useMyBookCommentQuery(users_books_id);
+  const { refetch } = useMyBookCommentListQuery(users_books_id);
+
   const { addToast } = useToastHook();
   const { setModalState } = useModalHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();

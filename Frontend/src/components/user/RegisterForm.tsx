@@ -6,6 +6,8 @@ import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import Divider from 'components/common/Divider';
 import ValidationMessage from 'components/common/Message/ValidationMessage';
+import RadioGroup from 'components/common/Radio';
+
 import {
   IconFemale,
   IconMail,
@@ -15,9 +17,8 @@ import {
 } from '@style/icons';
 import useToastHook from '@hooks/useToastHook';
 import useValidateHook from '@hooks/useValidateHook';
-import useLocalSignUpMutation from '@queries/local/useLocalSignUpMutation';
-import RadioGroup from 'components/common/Radio';
 import { customize } from '@style/colors';
+import useLocalRegisterMutation from '@queries/local/useLocalRegisterMutation';
 import { RadioGroupOptionType } from 'types/style';
 
 const Container = styled.form`
@@ -135,7 +136,7 @@ export default function RegisterForm() {
   );
 
   const navigate = useNavigate();
-  const { mutate, isLoading } = useLocalSignUpMutation();
+  const { mutate, isLoading } = useLocalRegisterMutation();
   const { addToast } = useToastHook();
 
   const {

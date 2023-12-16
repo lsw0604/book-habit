@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 
 import { myBookListAPI } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_LIST_INFINITY_QUERY';
+const { useMyBookListInfinityQueryKey } = queriesKey.myBook;
 
 export default function useMyBookListInfinityQuery(status: SelectorBookType) {
   const { addToast } = useToastHook();
@@ -23,7 +24,7 @@ export default function useMyBookListInfinityQuery(status: SelectorBookType) {
     MyBookListInfinityQueryResponseType,
     AxiosError<{ message: string; status: StatusType }>
   >(
-    [REACT_QUERY_KEY, status],
+    [useMyBookListInfinityQueryKey, status],
     ({ pageParam = 1 }) => myBookListAPI(pageParam, status),
     {
       getNextPageParam: (response) => response.nextPage,

@@ -3,7 +3,7 @@ type MutationResponse = {
   status: 'error' | 'info' | 'success' | 'warning' | '';
 };
 
-// useMyBookCommentQuery의 타입들
+// useMyBookCommentListQuery의 타입들
 
 type MyBookCommentQueryResponseType = {
   comments: MyBookCommentQueryListType;
@@ -22,7 +22,7 @@ type MyBookCommentQueryRequestType = number;
 
 // useMyBookCommentDeleteMutation의 타입들
 type MyBookCommentDeleteMutationResponseType = MutationResponse;
-type MyBOokCommentDeleteMutationRequestType = number;
+type MyBookCommentDeleteMutationRequestType = number;
 
 // useMyBookHistoryDeleteMutation의 타입들
 type MyBookHistoryDeleteMutationResponseType = MutationResponse;
@@ -55,7 +55,7 @@ type MyBookCommentUpdateMutationBodyType = {
   comment: string;
 };
 
-// useMyBookHistoryMutation의 타입들
+// useMyBookHistoryRegisterMutation의 타입들
 type MyBookHistoryMutationResponseType = MutationResponse;
 type MyBookHistoryMutationRequestType = {
   status: '다읽음' | '읽는중' | '읽기시작함';

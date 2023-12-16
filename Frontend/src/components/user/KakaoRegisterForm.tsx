@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Button from 'components/common/Button';
 import Input from 'components/common/Input';
 import RadioGroup from 'components/common/Radio';
-import useKakaoSignUpMutation from '@queries/kakao/useKakaoSignUpMutation';
+import useKakaoRegisterMutation from '@queries/kakao/useKakaoRegisterMutation';
 import { IconFemale, IconMale, IconNumber, IconPerson } from '@style/icons';
 
 const Container = styled.form`
@@ -43,7 +43,8 @@ export default function KakaoRegisterForm() {
   const [gender, setGender] = useState<'female' | 'male' | ''>('');
   const [age, setAge] = useState<number | ''>('');
   const [useValidation, setUseValidation] = useState(false);
-  const { mutate, isLoading } = useKakaoSignUpMutation();
+
+  const { mutate, isLoading } = useKakaoRegisterMutation();
 
   const onChangeName = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);

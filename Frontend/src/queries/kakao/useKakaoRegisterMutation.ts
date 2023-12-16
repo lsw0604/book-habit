@@ -5,10 +5,11 @@ import { useEffect } from 'react';
 import { kakaoSignupAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
 import useUserStateHook from '@hooks/useUserStateHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_KAKAO_SIGNUP_MUTATION';
+const { useKakaoRegisterMutationKey } = queriesKey.kakao;
 
-export default function useKakaoSignUpMutation() {
+export default function useKakaoRegisterMutation() {
   const { addToast } = useToastHook();
   const { setUserState } = useUserStateHook();
 
@@ -16,7 +17,7 @@ export default function useKakaoSignUpMutation() {
     KakaoSignUpMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     KakaoSignUpMutationRequestType
-  >([REACT_QUERY_KEY], kakaoSignupAPI);
+  >([useKakaoRegisterMutationKey], kakaoSignupAPI);
 
   useEffect(() => {
     if (isError && error && error.response?.data) {

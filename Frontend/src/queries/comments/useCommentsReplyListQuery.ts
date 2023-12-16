@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
+
 import { commentsReplyListAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_LIST_QUERY';
+const { useCommentsReplyListQueryKey } = queriesKey.comments;
 
 export default function useCommentsReplyListQuery(
   comment_id: CommentsReplyListQueryRequestType
@@ -14,7 +16,9 @@ export default function useCommentsReplyListQuery(
   const { data, isError, isLoading, error, refetch, isFetching } = useQuery<
     CommentsReplyListQueryResponseType,
     AxiosError<{ message: string; status: StatusType }>
-  >([REACT_QUERY_KEY, comment_id], () => commentsReplyListAPI(comment_id));
+  >([useCommentsReplyListQueryKey, comment_id], () =>
+    commentsReplyListAPI(comment_id)
+  );
 
   useEffect(() => {
     if (isError && error && error.response && error.response.data) {

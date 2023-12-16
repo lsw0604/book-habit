@@ -5,10 +5,11 @@ import { AxiosError } from 'axios';
 
 import { signUpAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_LOCAL_SIGNUP_MUTATION';
+const { useLocalRegisterMutationKey } = queriesKey.local;
 
-export default function useLocalSignUpMutation() {
+export default function useLocalRegisterMutation() {
   const { addToast } = useToastHook();
   const navigate = useNavigate();
 
@@ -16,7 +17,7 @@ export default function useLocalSignUpMutation() {
     LocalSignUpMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     LocalSignUpMutationRequestType
-  >([REACT_QUERY_KEY], signUpAPI);
+  >([useLocalRegisterMutationKey], signUpAPI);
 
   useEffect(() => {
     if (isSuccess && data) {

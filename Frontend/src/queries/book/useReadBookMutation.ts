@@ -9,8 +9,9 @@ import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
 import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 import { readBookRegisterAPI } from 'lib/api/book';
 import { userAtom } from 'recoil/user';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_READ_BOOK_MUTATION';
+const { book, myBook } = queriesKey;
 
 export default function useReadBookMutation() {
   const setModalState = useSetRecoilState(modalAtom);
@@ -26,12 +27,12 @@ export default function useReadBookMutation() {
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     ReadBookMutationResponseType,
-    AxiosError<{ message: string; status: string }>,
+    AxiosError<{ message: string; status: StatusType }>,
     ReadBookMutationRequestType
-  >([REACT_QUERY_KEY], readBookRegisterAPI, {
+  >([book.useReadBookMutationKey], readBookRegisterAPI, {
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['USE_MY_BOOK_LIST_INFINITY_QUERY'],
+        queryKey: [myBook.useMyBookListInfinityQueryKey],
       });
       refetch();
     },
@@ -51,11 +52,10 @@ export default function useReadBookMutation() {
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error) {
-      addToast({
-        message: '읽은책 등록에 실패했습니다.',
-        status: 'error',
-      });
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
+
+      addToast({ message, status });
     }
   }, [isError, error]);
 

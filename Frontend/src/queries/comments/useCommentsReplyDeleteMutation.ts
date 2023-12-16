@@ -6,8 +6,9 @@ import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQue
 import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';
 import { commentsReplyDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_COMMENTS_REPLY_DELETE_MUTATION';
+const { comments, profile } = queriesKey;
 
 export default function useCommentsReplyDeleteMutation(
   reply_id: CommentsReplyDeleteMutationRequestType,
@@ -25,20 +26,24 @@ export default function useCommentsReplyDeleteMutation(
     CommentsReplyDeleteMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     CommentsReplyDeleteMutationRequestType
-  >([REACT_QUERY_KEY, comment_id, reply_id], commentsReplyDeleteAPI, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_REPLY_LIST_QUERY', comment_id],
-      });
-      commentReplyListRefetch();
-    },
-  });
+  >(
+    [comments.useCommentsReplyDeleteMutationKey, comment_id, reply_id],
+    commentsReplyDeleteAPI,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [comments.useCommentsReplyListQueryKey, comment_id],
+        });
+        commentReplyListRefetch();
+      },
+    }
+  );
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
       queryClient.invalidateQueries({
-        queryKey: ['USE_PROFILE_REPLY_QUERY'],
+        queryKey: [profile.useProfileReplyQueryKey],
       });
       profileReplyQueryRefetch();
       addToast({ message, status });

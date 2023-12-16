@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
-import useMyBookCommentQuery from '@queries/myBook/useMyBookCommentQuery';
+import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
 import { IconPlus } from '@style/icons';
 import CommentItemPrivate from 'components/Comments/CommentItemPrivate';
 import Icon from 'components/common/Button/Icon';
@@ -77,7 +77,8 @@ export default function CommentListPrivate({ users_books_id }: IProps) {
     onChangeModal('registerComment');
   };
 
-  const { data, isLoading, isFetching } = useMyBookCommentQuery(users_books_id);
+  const { data, isLoading, isFetching } =
+    useMyBookCommentListQuery(users_books_id);
 
   if (!data || isLoading || isFetching) {
     return (

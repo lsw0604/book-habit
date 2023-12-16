@@ -1,13 +1,15 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { myBookListDeleteAPI } from 'lib/api/myBook';
-import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
-import { useEffect } from 'react';
-import useToastHook from '@hooks/useToastHook';
 import { useNavigate } from 'react-router-dom';
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
+import { AxiosError } from 'axios';
+import { useEffect } from 'react';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_DELETE_MUTATION';
+import useToastHook from '@hooks/useToastHook';
+import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
+import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
+import { myBookListDeleteAPI } from 'lib/api/myBook';
+import { queriesKey } from 'queries';
+
+const { myBook, comments } = queriesKey;
 
 export default function useMyBookListDeleteMutation(
   users_books_id: MyBookListDeleteMutationRequestType
@@ -19,18 +21,18 @@ export default function useMyBookListDeleteMutation(
   const { refetch: commentsListRefetch } = useCommentsListQuery([]);
   const { mutate, isLoading, isSuccess, isError, error, data } = useMutation<
     MyBookListDeleteMutationResponseType,
-    AxiosError,
+    AxiosError<{ message: string; status: StatusType }>,
     MyBookListDeleteMutationRequestType
   >(
-    [REACT_QUERY_KEY, users_books_id],
+    [myBook.useMyBookListDeleteMutationKey, users_books_id],
     () => myBookListDeleteAPI(users_books_id),
     {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ['USE_MY_BOOK_LIST_INFINITY_QUERY'],
+          queryKey: [myBook.useMyBookListInfinityQueryKey],
         });
         queryClient.invalidateQueries({
-          queryKey: ['USE_COMMENTS_LIST_QUERY'],
+          queryKey: [comments.useCommentsListQueryKey],
         });
         myBookListRefetch();
         commentsListRefetch();
@@ -47,8 +49,9 @@ export default function useMyBookListDeleteMutation(
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error) {
-      addToast({ message: '삭제에 실패 했습니다.', status: 'error' });
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
+      addToast({ message, status });
     }
   }, [isError, error]);
 

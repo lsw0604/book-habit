@@ -1,12 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { profileUpdateAPI } from 'lib/api/auth';
 import { useSetRecoilState } from 'recoil';
+import { AxiosError } from 'axios';
+import { useEffect } from 'react';
+
 import { userAtom } from 'recoil/user';
 import useToastHook from '@hooks/useToastHook';
-import { AxiosError } from 'axios';
+import { profileUpdateAPI } from 'lib/api/auth';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_PROFILE_EDIT_MUTATION';
+const { useProfileEditMutationKey } = queriesKey.profile;
 
 export default function useProfileEditMutation() {
   const { addToast } = useToastHook();
@@ -16,7 +18,7 @@ export default function useProfileEditMutation() {
     ProfileEditMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     ProfileEditMutationRequestType
-  >([REACT_QUERY_KEY], profileUpdateAPI);
+  >([useProfileEditMutationKey], profileUpdateAPI);
 
   useEffect(() => {
     if (isSuccess && data) {

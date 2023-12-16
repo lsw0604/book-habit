@@ -1,11 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { loginAPI } from 'lib/api/auth';
 import { useEffect } from 'react';
+
+import { loginAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
 import useUserStateHook from '@hooks/useUserStateHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_LOCAL_LOGIN_MUTATION';
+const { useLocalLoginMutationKey } = queriesKey.local;
 
 export default function useLocalLoginMutation() {
   const { addToast } = useToastHook();
@@ -14,7 +16,7 @@ export default function useLocalLoginMutation() {
     LocalLoginMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     LocalLoginMutationRequestType
-  >([REACT_QUERY_KEY], loginAPI);
+  >([useLocalLoginMutationKey], loginAPI);
 
   useEffect(() => {
     if (isSuccess && data) {

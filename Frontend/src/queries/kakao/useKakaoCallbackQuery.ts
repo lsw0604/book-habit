@@ -1,12 +1,13 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { AxiosError } from 'axios';
 
 import { kakaoCallbackAPI } from 'lib/api/auth';
 import useToastHook from '@hooks/useToastHook';
-import { AxiosError } from 'axios';
 import useUserStateHook from '@hooks/useUserStateHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_KAKAO_CALLBACK_QUERY';
+const { useKakaoCallbackQueryKey } = queriesKey.kakao;
 
 export default function useKakaoCallbackQuery(code: string) {
   const queryClient = useQueryClient();
@@ -17,9 +18,9 @@ export default function useKakaoCallbackQuery(code: string) {
   const { isLoading, data, isSuccess, isError, error, refetch } = useQuery<
     KakaoCallbackQueryResponseType,
     AxiosError<{ status: StatusType; message: string }>
-  >([REACT_QUERY_KEY], () => kakaoCallbackAPI(code), {
+  >([useKakaoCallbackQueryKey], () => kakaoCallbackAPI(code), {
     onError: () => {
-      queryClient.refetchQueries([REACT_QUERY_KEY]);
+      queryClient.refetchQueries([useKakaoCallbackQueryKey]);
     },
     retry: 0,
     enabled: false,
@@ -37,10 +38,7 @@ export default function useKakaoCallbackQuery(code: string) {
   useEffect(() => {
     if (isError && error && error.response && error.response.data) {
       const { message, status } = error.response.data;
-      addToast({
-        message,
-        status,
-      });
+      addToast({ message, status });
     }
   }, [isError, error]);
 

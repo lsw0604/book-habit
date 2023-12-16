@@ -6,14 +6,16 @@ import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery
 import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import { commentsLikeRegisterAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
 const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
+const { comments, profile } = queriesKey;
 
-const queryClient = new QueryClient();
-
-export default function useCommentsLikeMutation(
+export default function useCommentsLikeRegisterMutation(
   comment_id: CommentsLikeMutationRequestType
 ) {
+  const queryClient = new QueryClient();
+
   const { refetch: profileLikeQueryRefetch } = useProfileLikeQuery(1);
   const { refetch: commentsLikeListRefetch } =
     useCommentsLikeListQuery(comment_id);
@@ -25,10 +27,12 @@ export default function useCommentsLikeMutation(
     AxiosError<{ message: string; status: StatusType }>,
     CommentsLikeMutationRequestType
   >([REACT_QUERY_KEY, comment_id], commentsLikeRegisterAPI, {
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({
-        queryKey: ['USE_COMMENTS_LIKE_LIST_QUERY', comment_id],
+        queryKey: [comments.useCommentsLikeRegisterMutationKey, comment_id],
       });
+      const data = await queryClient.getQueryData(['USE_COMMENTS_LIST_QUERY']);
+      console.log(data);
       commentsLikeListRefetch();
     },
   });
@@ -37,7 +41,7 @@ export default function useCommentsLikeMutation(
     if (isSuccess && data) {
       const { message, status } = data;
       queryClient.invalidateQueries({
-        queryKey: ['USE_PROFILE_LIKE_QUERY'],
+        queryKey: [profile.useProfileLikeQueryKey],
       });
       profileLikeQueryRefetch();
       addToast({ message, status });
@@ -47,6 +51,7 @@ export default function useCommentsLikeMutation(
   useEffect(() => {
     if (isError && error && error.response && error.response.data) {
       const { message, status } = error.response.data;
+
       addToast({ message, status });
     }
   }, [isError, error]);

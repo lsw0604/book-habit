@@ -1,33 +1,39 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
+
 import useToastHook from '@hooks/useToastHook';
 import useMyBookHook from '@hooks/useMyBookHook';
-import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import useModalHook from '@hooks/useModalHook';
-import useMyBookListInfinityQuery from './useMyBookListInfinityQuery';
+import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
+import { myBookHistoryRegisterAPI } from 'lib/api/myBook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_MUTATION';
+const { useMyBookHistoryRegisterMutationKey, useMyBookPageQueriesKey } =
+  queriesKey.myBook;
 
-export default function useMyBookHistoryMutation(users_books_id: number) {
+export default function useMyBookHistoryRegisterMutation(
+  users_books_id: number
+) {
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();
   const { setModalState } = useModalHook();
+
   const { myBookHistoryRefetch, myBookTimeRefetch } =
     useMyBookPageQueries(users_books_id);
   const { refetch } = useMyBookListInfinityQuery('전체보기');
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     MyBookHistoryMutationResponseType,
-    AxiosError,
+    AxiosError<{ status: StatusType; message: string }>,
     MyBookHistoryMutationRequestType
-  >([REACT_QUERY_KEY], myBookHistoryRegisterAPI, {
+  >([useMyBookHistoryRegisterMutationKey], myBookHistoryRegisterAPI, {
     onSuccess: (data) => {
       if (data.status === 'success') {
-        queryClient.invalidateQueries(['MY_BOOK_HISTORY']);
+        queryClient.invalidateQueries([useMyBookPageQueriesKey.history]);
         myBookHistoryRefetch();
         myBookTimeRefetch();
         refetch();
@@ -45,11 +51,9 @@ export default function useMyBookHistoryMutation(users_books_id: number) {
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error) {
-      addToast({
-        message: '내 서재에 있는 책에 기록 등록에 실패했습니다.',
-        status: 'error',
-      });
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
+      addToast({ message, status });
     }
   }, [isError, error]);
 

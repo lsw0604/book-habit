@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
+import { AxiosError } from 'axios';
 import { QueryClient, useMutation } from '@tanstack/react-query';
+
 import { myBookCommentDeleteAPI } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
-import { AxiosError } from 'axios';
-import useMyBookCommentQuery from './useMyBookCommentQuery';
+import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_DELETE_MUTATION';
+const { useMyBookCommentDeleteMutationKey, useMyBookCommentListQueryKey } =
+  queriesKey.myBook;
 
 export default function useMyBookCommentDeleteMutation(
   users_books_id: number,
@@ -14,18 +17,21 @@ export default function useMyBookCommentDeleteMutation(
   const queryClient = new QueryClient();
 
   const { addToast } = useToastHook();
-  const { refetch } = useMyBookCommentQuery(users_books_id);
+  const { refetch } = useMyBookCommentListQuery(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     MyBookCommentDeleteMutationResponseType,
-    AxiosError,
-    MyBOokCommentDeleteMutationRequestType
-  >([REACT_QUERY_KEY, users_books_id, comment_id], myBookCommentDeleteAPI);
+    AxiosError<{ message: string; status: StatusType }>,
+    MyBookCommentDeleteMutationRequestType
+  >(
+    [useMyBookCommentDeleteMutationKey, users_books_id, comment_id],
+    myBookCommentDeleteAPI
+  );
 
   useEffect(() => {
     if (isSuccess && data) {
       queryClient.invalidateQueries({
-        queryKey: ['USE_MY_BOOK_COMMENTS_QUERY'],
+        queryKey: [useMyBookCommentListQueryKey],
         exact: true,
       });
       refetch();
@@ -35,11 +41,9 @@ export default function useMyBookCommentDeleteMutation(
   }, [isSuccess, data]);
 
   useEffect(() => {
-    if (isError && error) {
-      addToast({
-        message: '내 서재에 있는 책에 기록 등록에 실패했습니다.',
-        status: 'error',
-      });
+    if (isError && error && error.response && error.response.data) {
+      const { message, status } = error.response.data;
+      addToast({ message, status });
     }
   }, [isError, error]);
 

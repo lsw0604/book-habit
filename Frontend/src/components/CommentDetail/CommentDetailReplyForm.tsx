@@ -10,7 +10,7 @@ import {
 import TextArea from 'components/common/Textarea';
 import Button from 'components/common/Button';
 
-import useCommentsReplyMutation from '@queries/comments/useCommentsReplyMutation';
+import useCommentsReplyRegisterMutation from '@queries/comments/useCommentsReplyRegisterMutation';
 
 interface IProps {
   comment_id: string;
@@ -30,7 +30,7 @@ export default function CommentDetailReplyForm({ comment_id }: IProps) {
 
   const COMMENT_ID = parseInt(comment_id);
 
-  const { mutate } = useCommentsReplyMutation(COMMENT_ID);
+  const { mutate } = useCommentsReplyRegisterMutation(COMMENT_ID);
 
   const replyHandler = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {

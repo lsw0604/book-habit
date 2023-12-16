@@ -7,7 +7,7 @@ import HistoryAddForm from 'components/Modals/History/HistoryAddForm';
 
 import { IconCalendar } from '@style/icons';
 import useMyBookHook from '@hooks/useMyBookHook';
-import useMyBookHistoryMutation from '@queries/myBook/useMyBookHistoryMutation';
+import useMyBookHistoryRegisterMutation from '@queries/myBook/useMyBookHistoryRegisterMutation';
 
 const Container = styled.form`
   width: 100%;
@@ -41,7 +41,7 @@ export default function HistoryRegister() {
     myBookStatus,
   } = useMyBookHook();
 
-  const { mutate, isLoading } = useMyBookHistoryMutation(
+  const { mutate, isLoading } = useMyBookHistoryRegisterMutation(
     myBookUsersBooksId as number
   );
 

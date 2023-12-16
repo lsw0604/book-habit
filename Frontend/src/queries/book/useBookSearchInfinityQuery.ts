@@ -1,13 +1,14 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { booksSearchAPI } from 'lib/api/book';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_BOOK_SEARCH_INFINITY_QUERY';
+const { useBookSearchInfinityQueryKey } = queriesKey.book;
 
 export default function useBookSearchInfinityQuery(keyword: string) {
   const { data, fetchNextPage, isLoading, isFetching, hasNextPage, refetch } =
     useInfiniteQuery<BookSearchInfinityQueryResponseType>(
-      [REACT_QUERY_KEY, keyword],
+      [useBookSearchInfinityQueryKey, keyword],
       ({ pageParam = 1 }) => {
         return keyword.trim() === ''
           ? Promise.resolve({ meta: { is_end: true }, documents: [] })
@@ -21,7 +22,6 @@ export default function useBookSearchInfinityQuery(keyword: string) {
             return undefined;
           }
         },
-        // enabled: false,
         staleTime: Infinity,
         cacheTime: 5 * 60 * 1000,
       }

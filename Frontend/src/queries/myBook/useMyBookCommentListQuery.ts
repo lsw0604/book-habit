@@ -1,18 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-import { myBookCommentsAPI } from 'lib/api/myBook';
 import { AxiosError } from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_QUERY';
+import { myBookCommentsAPI } from 'lib/api/myBook';
+import { queriesKey } from 'queries';
 
-export default function useMyBookCommentQuery(users_books_id: number) {
+const { useMyBookCommentListQueryKey } = queriesKey.myBook;
+
+export default function useMyBookCommentListQuery(users_books_id: number) {
   const { data, isSuccess, error, isError, refetch, isFetching, isLoading } =
     useQuery<
       MyBookCommentQueryResponseType,
       AxiosError,
       MyBookCommentQueryListType
     >(
-      [REACT_QUERY_KEY, users_books_id],
+      [useMyBookCommentListQueryKey, users_books_id],
       () => myBookCommentsAPI(users_books_id),
       {
         select: ({ comments }) => {

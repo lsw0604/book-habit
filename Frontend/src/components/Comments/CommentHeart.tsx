@@ -7,7 +7,7 @@ import { customize } from '@style/colors';
 import { IconHeart, IconHeartFill } from '@style/icons';
 
 import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
-import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
+import useCommentsLikeRegisterMutation from '@queries/comments/useCommentsLikeRegisterMutation';
 import useToastHook from '@hooks/useToastHook';
 
 interface IProps {
@@ -49,7 +49,7 @@ export default function CommentHeart({ comment_id, like_user_id }: IProps) {
   const {
     mutate: commentLikeRegisterMutation,
     isLoading: commentLikeMutationIsLoading,
-  } = useCommentsLikeMutation(comment_id);
+  } = useCommentsLikeRegisterMutation(comment_id);
 
   const {
     mutate: commentLikeDeleteMutation,

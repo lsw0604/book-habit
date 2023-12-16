@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import useToastHook from '@hooks/useToastHook';
 import useCommentsLikeDeleteMutation from '@queries/comments/useCommentsLikeDeleteMutation';
 import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
-import useCommentsLikeMutation from '@queries/comments/useCommentsLikeMutation';
+import useCommentsLikeRegisterMutation from '@queries/comments/useCommentsLikeRegisterMutation';
 import { customize } from '@style/colors';
 import { IconHeart, IconHeartFill } from '@style/icons';
 import { userAtom } from 'recoil/user';
@@ -46,7 +46,7 @@ export default function CommentDetailHeart({ comment_id }: IProps) {
   const {
     mutate: commentLikeRegisterMutation,
     isLoading: commentLikeMutationIsLoading,
-  } = useCommentsLikeMutation(comment_id);
+  } = useCommentsLikeRegisterMutation(comment_id);
 
   const {
     mutate: commentLikeDeleteMutation,

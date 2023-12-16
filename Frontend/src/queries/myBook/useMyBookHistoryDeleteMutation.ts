@@ -3,11 +3,16 @@ import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
+import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 import { myBookHistoryDeleteAPI } from 'lib/api/myBook';
-import useMyBookListInfinityQuery from './useMyBookListInfinityQuery';
 import useToastHook from '@hooks/useToastHook';
+import { queriesKey } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_HISTORY_DELETE_MUTATION';
+const {
+  useMyBookHistoryDeleteMutationKey,
+  useMyBookPageQueriesKey,
+  useMyBookListInfinityQueryKey,
+} = queriesKey.myBook;
 
 export default function useMyBookHistoryDeleteMutation(
   users_books_history_id: number,
@@ -25,7 +30,7 @@ export default function useMyBookHistoryDeleteMutation(
     AxiosError<{ message: string; status: StatusType }>,
     MyBookHistoryDeleteMutationRequestType
   >(
-    [REACT_QUERY_KEY, users_books_id, users_books_history_id],
+    [useMyBookHistoryDeleteMutationKey, users_books_id, users_books_history_id],
     myBookHistoryDeleteAPI
   );
 
@@ -33,12 +38,14 @@ export default function useMyBookHistoryDeleteMutation(
     if (isSuccess && data) {
       const { message, status } = data;
       queryClient.invalidateQueries({
-        queryKey: ['MY_BOOK_HISTORY'],
+        queryKey: [useMyBookPageQueriesKey.history],
       });
       queryClient.invalidateQueries({
-        queryKey: ['MY_BOOK_TIME'],
+        queryKey: [useMyBookPageQueriesKey.time],
       });
-      queryClient.invalidateQueries(['USE_MY_BOOK_LIST_INFINITY_QUERY']);
+      queryClient.invalidateQueries({
+        queryKey: [useMyBookListInfinityQueryKey],
+      });
       myBookHistoryRefetch();
       myBookTimeRefetch();
       refetch();
