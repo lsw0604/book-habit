@@ -73,7 +73,7 @@ export default function Header() {
   };
 
   return (
-    <>
+    <header>
       {pathname !== '/' && (
         <Container isUriProfile={pathname === '/profile'}>
           {logoHandler(pathname)}
@@ -88,6 +88,6 @@ export default function Header() {
           </Wrapper>
         </Container>
       )}
-    </>
+    </header>
   );
 }

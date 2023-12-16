@@ -34,7 +34,9 @@ export default async function commentLikeDelete(req: Request, res: Response, _: 
       await connection.commit();
       connection.release();
 
-      res.status(200).json({ status: 'success', message: `좋아요 취소에 성공하셨습니다.` });
+      res
+        .status(200)
+        .json({ status: 'success', message: `좋아요 취소에 성공하셨습니다.`, user_id: id });
     } catch (error: any) {
       await connection.rollback();
       connection.release();

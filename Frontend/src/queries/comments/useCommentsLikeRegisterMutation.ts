@@ -1,49 +1,55 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
-import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
-import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import { commentsLikeRegisterAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 import { queriesKey } from 'queries';
+import { queryClient } from 'main';
 
-const REACT_QUERY_KEY = 'USE_COMMENTS_LIKE_MUTATION';
-const { comments, profile } = queriesKey;
+const { useCommentsLikeRegisterMutationKey, useCommentsListQueryKey } =
+  queriesKey.comments;
 
 export default function useCommentsLikeRegisterMutation(
   comment_id: CommentsLikeMutationRequestType
 ) {
-  const queryClient = new QueryClient();
-
-  const { refetch: profileLikeQueryRefetch } = useProfileLikeQuery(1);
-  const { refetch: commentsLikeListRefetch } =
-    useCommentsLikeListQuery(comment_id);
-
   const { addToast } = useToastHook();
 
   const { data, mutate, isSuccess, isError, error, isLoading } = useMutation<
     CommentsLikeMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     CommentsLikeMutationRequestType
-  >([REACT_QUERY_KEY, comment_id], commentsLikeRegisterAPI, {
-    onSuccess: async () => {
-      queryClient.invalidateQueries({
-        queryKey: [comments.useCommentsLikeRegisterMutationKey, comment_id],
+  >([useCommentsLikeRegisterMutationKey, comment_id], commentsLikeRegisterAPI, {
+    onSuccess: (response) => {
+      const data = queryClient.getQueryData<CommentsListQueryResponseType>([
+        useCommentsListQueryKey,
+      ]);
+
+      const mappedData = data?.comments.map((comment) => {
+        if (comment.comment_id === comment_id) {
+          const newComment = {
+            ...comment,
+            like_user_id: [
+              ...comment.like_user_id,
+              { user_id: response.user_id },
+            ],
+          };
+
+          return newComment;
+        }
+        return comment;
       });
-      const data = await queryClient.getQueryData(['USE_COMMENTS_LIST_QUERY']);
-      console.log(data);
-      commentsLikeListRefetch();
+
+      queryClient.setQueryData([useCommentsListQueryKey], {
+        comments: mappedData,
+      });
     },
   });
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
-      queryClient.invalidateQueries({
-        queryKey: [profile.useProfileLikeQueryKey],
-      });
-      profileLikeQueryRefetch();
+
       addToast({ message, status });
     }
   }, [isSuccess, data]);
@@ -59,5 +65,7 @@ export default function useCommentsLikeRegisterMutation(
   return {
     mutate,
     isLoading,
+    isSuccess,
+    data,
   };
 }

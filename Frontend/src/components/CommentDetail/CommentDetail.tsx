@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import CommentHeaderPublic from 'components/Comments/CommentHeaderPublic';
-import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
 
+import CommentsHeader from 'components/Comments/CommentsHeader';
 import CommentDetailHeart from 'components/CommentDetail/CommentDetailHeart';
 import CommentDetailReply from 'components/CommentDetail/CommentDetailReply';
 import CommentDetailSkeleton from 'components/CommentDetail/CommentDetailSkeleton';
+import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
 
 interface IProps {
-  comment_id: string;
+  comment_id: number;
 }
 
 const Container = styled.div`
@@ -22,14 +22,6 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
   box-shadow: ${({ theme }) => theme.shadow.lg};
   margin-bottom: 1rem;
-`;
-
-const Header = styled.div`
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 `;
 
 const Comment = styled.div`
@@ -52,9 +44,7 @@ const Footer = styled.div`
 `;
 
 export default function CommentDetail({ comment_id }: IProps) {
-  const COMMENT_ID = parseInt(comment_id);
-
-  const { data, isLoading } = useCommentsDetailQuery(COMMENT_ID);
+  const { data, isLoading } = useCommentsDetailQuery(comment_id);
 
   if (!data || isLoading)
     return (
@@ -65,13 +55,11 @@ export default function CommentDetail({ comment_id }: IProps) {
 
   return (
     <Container>
-      <Header>
-        <CommentHeaderPublic item={data} />
-      </Header>
+      <CommentsHeader item={data} />
       <Comment>{data.comment}</Comment>
       <Footer>
-        <CommentDetailHeart comment_id={COMMENT_ID} />
-        <CommentDetailReply comment_id={COMMENT_ID} />
+        <CommentDetailHeart comment_id={comment_id} />
+        <CommentDetailReply comment_id={comment_id} />
       </Footer>
     </Container>
   );

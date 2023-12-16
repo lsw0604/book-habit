@@ -13,7 +13,7 @@ import Button from 'components/common/Button';
 import useCommentsReplyRegisterMutation from '@queries/comments/useCommentsReplyRegisterMutation';
 
 interface IProps {
-  comment_id: string;
+  comment_id: number;
 }
 
 const Container = styled.form`
@@ -28,9 +28,7 @@ export default function CommentDetailReplyForm({ comment_id }: IProps) {
   const [reply, setReply] = useState<string>('');
   const [useValidation, setUseValidation] = useState<boolean>(false);
 
-  const COMMENT_ID = parseInt(comment_id);
-
-  const { mutate } = useCommentsReplyRegisterMutation(COMMENT_ID);
+  const { mutate } = useCommentsReplyRegisterMutation(comment_id);
 
   const replyHandler = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,7 +43,7 @@ export default function CommentDetailReplyForm({ comment_id }: IProps) {
     if (reply === '') return null;
 
     mutate({
-      comment_id: COMMENT_ID,
+      comment_id,
       body: {
         reply,
       },

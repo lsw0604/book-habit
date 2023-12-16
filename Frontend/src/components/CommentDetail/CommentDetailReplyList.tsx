@@ -1,9 +1,12 @@
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
 
-import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 import Loader from 'components/common/Loader';
 import CommentDetailReplyItem from 'components/CommentDetail/CommentDetailReplyItem';
+import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
+
+interface IProps {
+  comment_id: number;
+}
 
 const Container = styled.ul`
   width: 100%;
@@ -28,31 +31,33 @@ const EmptyWrapper = styled.div`
   border-radius: 1rem;
 `;
 
-export default function CommentDetailReplyList() {
-  const { comment_id } = useParams();
-  if (!comment_id) return <Container>잘못된 접근입니다.</Container>;
+export default function CommentDetailReplyList({ comment_id }: IProps) {
+  const { data, isLoading, isFetching } = useCommentsReplyListQuery(comment_id);
 
-  const { data, isLoading, isFetching } = useCommentsReplyListQuery(
-    parseInt(comment_id)
-  );
-
-  if (data === undefined) {
-    <Container>
-      <Loader />
-    </Container>;
+  if (!data || isLoading) {
+    return (
+      <Container>
+        <LoaderWrapper>
+          <EmptyWrapper>
+            <Loader />
+          </EmptyWrapper>
+        </LoaderWrapper>
+      </Container>
+    );
   }
+
+  if (data.reply.length === 0)
+    return (
+      <Container>
+        <EmptyWrapper>아직 등록된 댓글이 없습니다.</EmptyWrapper>
+      </Container>
+    );
 
   return (
     <Container>
-      {isLoading ? (
-        <Loader />
-      ) : data && data.reply.length > 0 ? (
-        data.reply.map((reply) => (
-          <CommentDetailReplyItem key={reply.reply_id} {...reply} />
-        ))
-      ) : (
-        <EmptyWrapper>아직 등록된 댓글이 없습니다.</EmptyWrapper>
-      )}
+      {data.reply.map((reply) => (
+        <CommentDetailReplyItem key={reply.reply_id} {...reply} />
+      ))}
       {isFetching ? (
         <LoaderWrapper>
           <Loader />

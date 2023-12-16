@@ -32,7 +32,7 @@ const Message = styled.p`
 
 const MONTH = parseInt(dayjs().format('MM'));
 
-export default function CommentEmpty() {
+export default function CommentsEmpty() {
   return (
     <Container>
       <Page>

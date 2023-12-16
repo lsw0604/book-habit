@@ -2,9 +2,9 @@ import styled, { css } from 'styled-components';
 import { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 
-import InfoBox from 'components/MyBookInfo/InfoBox';
 import Calendar from 'components/calendar';
-import CommentListPrivate from 'components/Comments/CommentListPrivate';
+import MyBookDetailInfoBox from 'components/MyBookDetail/MyBookDetailInfoBox';
+import MyBookDetailCommentList from 'components/MyBookDetail/MyBookDetailCommentList';
 
 const WRAPPER_MEDIA_CSS_OBJ = {
   info: css`
@@ -81,7 +81,7 @@ export default function MyBookDetailPage() {
     <Container>
       <Wrapper mode="info">
         <Box mode="info">
-          <InfoBox users_books_id={USERS_BOOKS_ID} />
+          <MyBookDetailInfoBox users_books_id={USERS_BOOKS_ID} />
         </Box>
       </Wrapper>
       <Wrapper mode="calendar">
@@ -91,7 +91,7 @@ export default function MyBookDetailPage() {
       </Wrapper>
       <Wrapper mode="comment">
         <Box mode="comment">
-          <CommentListPrivate users_books_id={USERS_BOOKS_ID} />
+          <MyBookDetailCommentList users_books_id={USERS_BOOKS_ID} />
         </Box>
       </Wrapper>
     </Container>

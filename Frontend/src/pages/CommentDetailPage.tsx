@@ -40,18 +40,20 @@ export default function CommentDetailPage() {
 
   if (!comment_id) return <Navigate to="/404" />;
 
+  const COMMENT_ID = parseInt(comment_id);
+
   return (
     <HelmetProvider
       title="댓글"
       description="한줄평에 달린 댓글을 보는 페이지입니다."
     >
       <Container>
-        <CommentDetail comment_id={comment_id} />
+        <CommentDetail comment_id={COMMENT_ID} />
         <ReplyContainer>
           <Wrapper>
-            <CommentDetailReplyList />
+            <CommentDetailReplyList comment_id={COMMENT_ID} />
           </Wrapper>
-          <CommentDetailReplyForm comment_id={comment_id} />
+          <CommentDetailReplyForm comment_id={COMMENT_ID} />
         </ReplyContainer>
       </Container>
     </HelmetProvider>

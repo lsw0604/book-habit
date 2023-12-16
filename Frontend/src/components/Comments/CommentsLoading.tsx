@@ -13,7 +13,7 @@ const Container = styled.div<{ height?: string }>`
   height: ${({ height }) => (height ? height : null)};
 `;
 
-export default function CommentLoading({ height }: IProps) {
+export default function CommentsLoading({ height }: IProps) {
   return (
     <Container height={height}>
       <Loader size={2} />

@@ -15,7 +15,7 @@ const Stack = styled.div`
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
-export default function Skeleton() {
+export default function MyBookDetailSkeleton() {
   return (
     <Container>
       <Stack>등록할 유형을 골라주세요.</Stack>

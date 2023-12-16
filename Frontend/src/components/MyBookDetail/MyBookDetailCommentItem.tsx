@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Divider from 'components/common/Divider';
-import CommentHeaderPrivate from 'components/Comments/CommentHeaderPrivate';
+import MyBookDetailCommentHeader from 'components/MyBookDetail/MyBookDetailCommentHeader';
 
 interface IProps {
   item: MyBookCommentQueryItemType;
@@ -44,12 +44,15 @@ const Comment = styled.span`
   white-space: pre-line;
 `;
 
-export default function CommentItemPrivate({ item, users_books_id }: IProps) {
+export default function MyBookDetailCommentItem({
+  item,
+  users_books_id,
+}: IProps) {
   const { comment } = item;
 
   return (
     <Container>
-      <CommentHeaderPrivate item={item} users_books_id={users_books_id} />
+      <MyBookDetailCommentHeader item={item} users_books_id={users_books_id} />
       <Divider divider={2} />
       <Content>
         <Comment>{comment}</Comment>

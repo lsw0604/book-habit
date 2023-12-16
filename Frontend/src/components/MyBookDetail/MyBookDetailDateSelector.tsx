@@ -41,7 +41,7 @@ const Heading = styled.span`
   line-height: 18px;
 `;
 
-export default function DateSelector({
+export default function MyBookDetailDateSelector({
   endDate,
   startDate,
   onChange,

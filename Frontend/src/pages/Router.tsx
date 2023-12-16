@@ -38,9 +38,7 @@ const LoadingWrapper = styled.div`
 export default function Router() {
   return (
     <BrowserRouter>
-      <header>
-        <Header />
-      </header>
+      <Header />
       <main>
         <section>
           <DefaultLayout>

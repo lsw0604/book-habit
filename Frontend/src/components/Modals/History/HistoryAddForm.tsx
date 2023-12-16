@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import RadioButton from 'components/common/Radio/RadioButton';
+import MyBookDetailDateSelector from 'components/MyBookDetail/MyBookDetailDateSelector';
 import { RadioGroupOptionType } from 'types/style';
-import DateSelector from 'components/MyBookInfo/DateSelector';
 import useMyBookHook from '@hooks/useMyBookHook';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 
@@ -90,7 +90,7 @@ export default function HistoryAddForm() {
       </Stack>
       <Content>
         <Stack>
-          <DateSelector
+          <MyBookDetailDateSelector
             startDate={startDate}
             onChange={(e) => onChangeMyBookDate(e)}
             date={myBookDate}

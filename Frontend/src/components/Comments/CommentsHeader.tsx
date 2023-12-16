@@ -61,7 +61,7 @@ const HeaderIconContainerRating = styled.div`
   }
 `;
 
-export default function CommentHeaderPublic({ item }: IProps) {
+export default function CommentsHeader({ item }: IProps) {
   const { created_at, title, status, name, rating, profile } = item;
 
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');

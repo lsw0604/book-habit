@@ -31,7 +31,7 @@ const ReplyIconWrapper = styled.div`
   }
 `;
 
-export default function CommentReply({ reply_user_id, comment_id }: IProps) {
+export default function CommentsReply({ reply_user_id, comment_id }: IProps) {
   const navigate = useNavigate();
   const navigateCommentDetail = () => navigate(`/comments/${comment_id}`);
 

@@ -8,7 +8,7 @@ import { IconPencil } from '@style/icons';
 
 import useMyBookHook from '@hooks/useMyBookHook';
 import useModalHook from '@hooks/useModalHook';
-import useMyBookCommentMutation from '@queries/myBook/useMyBookCommentMutation';
+import useMyBookCommentRegisterMutation from '@queries/myBook/useMyBookCommentRegisterMutation';
 
 const Container = styled.form`
   width: 100%;
@@ -53,7 +53,7 @@ export default function CommentRegister() {
     rating: myBookRating,
   };
 
-  const { mutate, isLoading, isSuccess } = useMyBookCommentMutation(
+  const { mutate, isLoading, isSuccess } = useMyBookCommentRegisterMutation(
     myBookUsersBooksId as number
   );
 

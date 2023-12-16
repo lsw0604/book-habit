@@ -18,22 +18,27 @@ export const queriesKey = {
       'USE_COMMENTS_REPLY_REGISTER_MUTATION_KEY',
   },
   kakao: {
-    useKakaoCallbackQueryKey: '',
-    useKakaoRegisterMutationKey: '',
+    useKakaoCallbackQueryKey: 'USE_KAKAO_CALLBACK_QUERY_KEY',
+    useKakaoRegisterMutationKey: 'USE_KAKAO_REGISTER_MUTATION_KEY',
   },
   local: {
-    useLocalLoginMutationKey: '',
-    useLocalRegisterMutationKey: '',
+    useLocalLoginMutationKey: 'USE_LOCAL_LOGIN_MUTATION_KEY',
+    useLocalRegisterMutationKey: 'USE_LOCAL_REGISTER_MUTATION_KEY',
   },
   myBook: {
-    useMyBookCommentDeleteMutationKey: '',
-    useMyBookCommentRegisterMutationKey: '',
-    useMyBookCommentUpdateMutationKey: '',
-    useMyBookCommentListQueryKey: '',
-    useMyBookHistoryDeleteMutationKey: '',
-    useMyBookHistoryRegisterMutationKey: '',
-    useMyBookListDeleteMutationKey: '',
-    useMyBookListInfinityQueryKey: '',
+    useMyBookCommentDeleteMutationKey:
+      'USE_MY_BOOK_COMMENT_DELETE_MUTATION_KEY',
+    useMyBookCommentRegisterMutationKey:
+      'USE_MY_BOOK_COMMENT_REGISTER_MUTATION_KEY',
+    useMyBookCommentUpdateMutationKey:
+      'USE_MY_BOOK_COMMENT_UPDATE_MUTATION_KEY',
+    useMyBookCommentListQueryKey: 'USE_MY_BOOK_COMMENT_LIST_QUERY_KEY',
+    useMyBookHistoryDeleteMutationKey:
+      'USE_MY_BOOK_HISTORY_DELETE_MUTATION_KEY',
+    useMyBookHistoryRegisterMutationKey:
+      'USE_MY_BOOK_HISTORY_REGISTER_MUTATION_KEY',
+    useMyBookListDeleteMutationKey: 'USE_MY_BOOK_LIST_DELETE_MUTATION_KEY',
+    useMyBookListInfinityQueryKey: 'USE_MY_BOOK_LIST_INFINITY_QUERY_KEY',
     useMyBookPageQueriesKey: {
       info: 'USE_MY_BOOK_PAGE_INFO_QUERIES_KEY',
       history: 'USE_MY_BOOK_PAGE_HISTORY_QUERIES_KEY',
@@ -41,9 +46,9 @@ export const queriesKey = {
     },
   },
   profile: {
-    useProfileEditMutationKey: '',
-    useProfileInfoEditMutationKey: '',
-    useProfileLikeQueryKey: '',
-    useProfileReplyQueryKey: '',
+    useProfileEditMutationKey: 'USE_PROFILE_EDIT_MUTATION_KEY',
+    useProfileInfoEditMutationKey: 'USE_PROFILE_INFO_EDIT_MUTATION_KEY',
+    useProfileLikeQueryKey: 'USE_PROFILE_LIKE_QUERY_KEY',
+    useProfileReplyQueryKey: 'USE_PROFILE_REPLY_QUERY_KEY',
   },
 };

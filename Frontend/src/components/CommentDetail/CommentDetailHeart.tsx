@@ -9,6 +9,7 @@ import { customize } from '@style/colors';
 import { IconHeart, IconHeartFill } from '@style/icons';
 import { userAtom } from 'recoil/user';
 import Loader from 'components/common/Loader';
+import { useEffect } from 'react';
 
 interface IProps {
   comment_id: number;
@@ -44,32 +45,53 @@ export default function CommentDetailHeart({ comment_id }: IProps) {
   const { addToast } = useToastHook();
 
   const {
-    mutate: commentLikeRegisterMutation,
-    isLoading: commentLikeMutationIsLoading,
+    mutate: commentsLikeRegisterMutation,
+    isLoading: commentsLikeRegisterMutationIsLoading,
+    isSuccess: commentsLikeRegisterMutationIsSuccess,
+    data: commentsLikeRegisterMutationData,
   } = useCommentsLikeRegisterMutation(comment_id);
 
   const {
-    mutate: commentLikeDeleteMutation,
-    isLoading: commentLikeDeleteMutationIsLoading,
+    mutate: commentsLikeDeleteMutation,
+    isLoading: commentsLikeDeleteMutationIsLoading,
+    isSuccess: commentsLikeDeleteMutationIsSuccess,
+    data: commentsLikeDeleteMutationData,
   } = useCommentsLikeDeleteMutation(comment_id);
 
   const commentLikeHandler = (isLike: boolean) => {
     if (!isLogged) {
       return addToast({ message: '로그인이 필요합니다.', status: 'error' });
     }
+
     if (isLike) {
-      commentLikeRegisterMutation(comment_id);
+      commentsLikeRegisterMutation(comment_id);
     } else {
-      commentLikeDeleteMutation(comment_id);
+      commentsLikeDeleteMutation(comment_id);
     }
   };
   const {
     data: commentsLikeArray,
     isLoading: commentsLikeLoading,
     isFetching: commentsLikeFetching,
+    refetch: commentsLikeRefetch,
   } = useCommentsLikeListQuery(comment_id);
 
   const isLiked = commentsLikeArray?.some((like) => like.users_id === id);
+
+  useEffect(() => {
+    if (
+      commentsLikeRegisterMutationIsSuccess &&
+      commentsLikeRegisterMutationData
+    ) {
+      commentsLikeRefetch();
+    }
+  }, [commentsLikeRegisterMutationIsSuccess, commentsLikeRegisterMutationData]);
+
+  useEffect(() => {
+    if (commentsLikeDeleteMutationIsSuccess && commentsLikeDeleteMutationData) {
+      commentsLikeRefetch();
+    }
+  }, [commentsLikeDeleteMutationIsSuccess, commentsLikeDeleteMutationData]);
 
   return (
     <Container>
@@ -78,8 +100,8 @@ export default function CommentDetailHeart({ comment_id }: IProps) {
       ) : (
         <>
           <HeartIconWrapper isLiked={isLiked}>
-            {commentLikeMutationIsLoading ||
-            commentLikeDeleteMutationIsLoading ? (
+            {commentsLikeRegisterMutationIsLoading ||
+            commentsLikeDeleteMutationIsLoading ? (
               <Loader />
             ) : isLiked ? (
               <IconHeartFill onClick={() => commentLikeHandler(false)} />

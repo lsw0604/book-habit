@@ -3,7 +3,7 @@ import { useSetRecoilState } from 'recoil';
 
 import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
 import { IconPlus } from '@style/icons';
-import CommentItemPrivate from 'components/Comments/CommentItemPrivate';
+import MyBookDetailCommentItem from 'components/MyBookDetail/MyBookDetailCommentItem';
 import Icon from 'components/common/Button/Icon';
 import Loader from 'components/common/Loader';
 import { myBookAtom } from 'recoil/myBook';
@@ -61,7 +61,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export default function CommentListPrivate({ users_books_id }: IProps) {
+export default function MyBookDetailCommentList({ users_books_id }: IProps) {
   const setMyBookState = useSetRecoilState(myBookAtom);
   const setModalState = useSetRecoilState(modalAtom);
 
@@ -107,7 +107,7 @@ export default function CommentListPrivate({ users_books_id }: IProps) {
     <Container>
       <ListContainer>
         {data.map((item) => (
-          <CommentItemPrivate
+          <MyBookDetailCommentItem
             item={item}
             key={item.comment_id}
             users_books_id={users_books_id}

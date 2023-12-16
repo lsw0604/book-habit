@@ -40,12 +40,14 @@ type CommentsLikeListRequestType = number;
 
 // useCommentsLikeMutation의 타입들
 
-type CommentsLikeMutationResponseType = MutationResponse;
+type CommentsLikeMutationResponseType = MutationResponse & { user_id: number };
 type CommentsLikeMutationRequestType = number;
 
 // useCommentsLikeDeleteMutation의 타입들
 
-type CommentsLikeDeleteMutationResponseType = MutationResponse;
+type CommentsLikeDeleteMutationResponseType = MutationResponse & {
+  user_id: number;
+};
 type CommentsLikeDeleteMutationRequestType = number;
 
 // useCommentsDetailQuery의 타입들

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import CommentListPublic from 'components/Comments/CommentListPublic';
-import CommentEmpty from 'components/Comments/CommentEmpty';
-import CommentHashTag from 'components/Comments/CommentHashTag';
+import CommentsList from 'components/Comments/CommentsList';
+import CommentsEmpty from 'components/Comments/CommentsEmpty';
+import CommentsHashTag from 'components/Comments/CommentsHashTag';
 
 import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import useCommentsPageHook from '@hooks/useCommentsPageHook';
@@ -32,24 +32,24 @@ const Header = styled.div`
   margin-bottom: 1rem;
 `;
 
-export default function CommentFilterProvider({ children }: IProps) {
+export default function CommentsFilterProvider({ children }: IProps) {
   const { filter, addFilter, removeFilter } = useCommentsPageHook();
   const { data, isFetching, isLoading } = useCommentsListQuery(filter);
 
-  if (data === undefined) return null;
-  if (data.comments.length === 0) return <CommentEmpty />;
+  if (!data) return null;
+  if (data?.comments.length === 0) return <CommentsEmpty />;
 
   return (
     <Container>
       <Header>
         {children}
-        <CommentHashTag
+        <CommentsHashTag
           addFilter={addFilter}
           removeFilter={removeFilter}
           filter={filter}
         />
       </Header>
-      <CommentListPublic
+      <CommentsList
         isFetching={isFetching}
         isLoading={isLoading}
         comments={data.comments}

@@ -1,4 +1,7 @@
-import { customize } from '@style/colors';
+import { useSetRecoilState } from 'recoil';
+import styled from 'styled-components';
+
+import Icon from 'components/common/Button/Icon';
 import {
   IconCalendar,
   IconLock,
@@ -7,11 +10,9 @@ import {
   IconStar,
   IconTrashCan,
 } from '@style/icons';
-import Icon from 'components/common/Button/Icon';
-import { useSetRecoilState } from 'recoil';
+import { customize } from '@style/colors';
 import { modalAtom } from 'recoil/modal';
 import { myBookAtom } from 'recoil/myBook';
-import styled from 'styled-components';
 
 interface IProps {
   item: MyBookCommentQueryItemType;
@@ -79,7 +80,10 @@ const IconRating = styled.div`
   align-items: center;
 `;
 
-export default function CommentHeaderPrivate({ item, users_books_id }: IProps) {
+export default function MyBookDetailCommentHeader({
+  item,
+  users_books_id,
+}: IProps) {
   const {
     status,
     comment,

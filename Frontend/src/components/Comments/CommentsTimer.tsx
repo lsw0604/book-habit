@@ -1,9 +1,11 @@
+import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+
+import Icon from 'components/common/Button/Icon';
 import { customize } from '@style/colors';
 import { IconRefresh } from '@style/icons';
-import { QueryClient } from '@tanstack/react-query';
-import Icon from 'components/common/Button/Icon';
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { queriesKey } from 'queries';
+import { queryClient } from 'main';
 
 interface IProps {
   refetch: () => void;
@@ -25,9 +27,9 @@ const Time = styled.p`
   color: ${customize.gray['400']};
 `;
 
-const queryClient = new QueryClient();
+const { useCommentsListQueryKey } = queriesKey.comments;
 
-export default function CommentTimer({ refetch }: IProps) {
+export default function CommentsTimer({ refetch }: IProps) {
   const [second, setSecond] = useState<number>(59);
   const [minute, setMinute] = useState<number>(2);
 
@@ -35,7 +37,7 @@ export default function CommentTimer({ refetch }: IProps) {
     setMinute(2);
     setSecond(59);
     queryClient.invalidateQueries({
-      queryKey: ['USE_COMMENTS_LIST_QUERY'],
+      queryKey: [useCommentsListQueryKey],
     });
     refetch();
   };

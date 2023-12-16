@@ -5,12 +5,13 @@ import Loader from 'components/common/Loader';
 import ImageWrapper from 'components/common/ImageWrapper';
 import Divider from 'components/common/Divider';
 import Icon from 'components/common/Button/Icon';
+import HelmetProvider from 'components/common/HelmetProvider';
+
 import { IconBookMark, IconTrashCan } from '@style/icons';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { customize } from '@style/colors';
 import { modalAtom } from 'recoil/modal';
 import { myBookAtom } from 'recoil/myBook';
-import HelmetProvider from 'components/common/HelmetProvider';
 
 interface IProps {
   users_books_id: number;
@@ -118,7 +119,7 @@ const BookMarkWrapper = styled.div`
   }
 `;
 
-export default function InfoBox({ users_books_id }: IProps) {
+export default function MyBookDetailInfoBox({ users_books_id }: IProps) {
   const { myBookInfoData, myBookInfoIsLoading } =
     useMyBookPageQueries(users_books_id);
   const setModalState = useSetRecoilState(modalAtom);

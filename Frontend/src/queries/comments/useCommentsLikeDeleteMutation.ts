@@ -1,50 +1,53 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
-import useCommentsLikeListQuery from '@queries/comments/useCommentsLikeListQuery';
-import useProfileLikeQuery from '@queries/profile/useProfileLikeQuery';
 import { commentsLikeDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 import { queriesKey } from 'queries';
+import { queryClient } from 'main';
 
-const { profile, comments } = queriesKey;
+const { useCommentsLikeDeleteMutationKey, useCommentsListQueryKey } =
+  queriesKey.comments;
 
 export default function useCommentsLikeDeleteMutation(
   comment_id: CommentsLikeDeleteMutationRequestType
 ) {
-  const queryClient = new QueryClient();
-
-  const { refetch: profileLikeQueryRefetch } = useProfileLikeQuery(1);
-  const { refetch: commentsLikeListRefetch } =
-    useCommentsLikeListQuery(comment_id);
-
   const { addToast } = useToastHook();
 
   const { data, isLoading, isError, error, isSuccess, mutate } = useMutation<
     CommentsLikeDeleteMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     CommentsLikeDeleteMutationRequestType
-  >(
-    [comments.useCommentsLikeDeleteMutationKey, comment_id],
-    commentsLikeDeleteAPI,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: [comments.useCommentsLikeListQueryKey, comment_id],
-        });
-        commentsLikeListRefetch();
-      },
-    }
-  );
+  >([useCommentsLikeDeleteMutationKey, comment_id], commentsLikeDeleteAPI, {
+    onSuccess: (response) => {
+      const data = queryClient.getQueryData<CommentsListQueryResponseType>([
+        useCommentsListQueryKey,
+      ]);
+
+      const mappedData = data?.comments.map((comment) => {
+        if (comment.comment_id === comment_id) {
+          const newComment = {
+            ...comment,
+            like_user_id: comment.like_user_id.filter(
+              (like_id) => like_id.user_id !== response.user_id
+            ),
+          };
+
+          return newComment;
+        }
+        return comment;
+      });
+      queryClient.setQueryData([useCommentsListQueryKey], {
+        comments: mappedData,
+      });
+    },
+  });
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
-      queryClient.invalidateQueries({
-        queryKey: [profile.useProfileLikeQueryKey],
-      });
-      profileLikeQueryRefetch();
+
       addToast({ message, status });
     }
   }, [isSuccess, data]);
@@ -59,5 +62,7 @@ export default function useCommentsLikeDeleteMutation(
   return {
     mutate,
     isLoading,
+    isSuccess,
+    data,
   };
 }

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import PublicCommentsItem from 'components/Comments/CommentItemPublic';
-import CommentLoading from 'components/Comments/CommentLoading';
+import CommentsItem from 'components/Comments/CommentsItem';
+import CommentLoading from 'components/Comments/CommentsLoading';
 
 interface IProps {
   comments: CommentsListType;
@@ -20,7 +20,7 @@ const Container = styled.ul`
   scroll-snap-type: y mandatory;
 `;
 
-export default function CommentListPublic({
+export default function CommentsList({
   comments,
   isLoading,
   isFetching,
@@ -30,7 +30,7 @@ export default function CommentListPublic({
   return (
     <Container>
       {comments.map((comment) => (
-        <PublicCommentsItem item={comment} key={comment.comment_id} />
+        <CommentsItem item={comment} key={comment.comment_id} />
       ))}
     </Container>
   );

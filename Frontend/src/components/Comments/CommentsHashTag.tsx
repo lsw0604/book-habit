@@ -45,7 +45,7 @@ const Tag = styled.li<{ isOn: boolean }>`
 
 const hashTag: string[] = [];
 
-export default function CommentHashTag({
+export default function CommentsHashTag({
   filter = [],
   addFilter,
   removeFilter,
