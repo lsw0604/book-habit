@@ -12,7 +12,7 @@ import useToastHook from '@hooks/useToastHook';
 
 interface IProps {
   comment_id: number;
-  like_user_id: { user_id: number }[];
+  like_user_ids: { user_id: number }[];
 }
 
 const Container = styled.div`
@@ -40,11 +40,11 @@ const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
   }
 `;
 
-export default function CommentsHeart({ comment_id, like_user_id }: IProps) {
+export default function CommentsHeart({ comment_id, like_user_ids }: IProps) {
   const { isLogged, id } = useRecoilValue(userAtom);
   const { addToast } = useToastHook();
 
-  const isLiked = like_user_id?.some((like) => like.user_id === id);
+  const isLiked = like_user_ids?.some((like) => like.user_id === id);
 
   const {
     mutate: commentLikeRegisterMutation,
@@ -78,7 +78,7 @@ export default function CommentsHeart({ comment_id, like_user_id }: IProps) {
           <IconHeart onClick={() => commentLikeHandler(true)} />
         )}
       </HeartIconWrapper>
-      <HeartNumber>{like_user_id.length}</HeartNumber>
+      <HeartNumber>{like_user_ids.length}</HeartNumber>
     </Container>
   );
 }

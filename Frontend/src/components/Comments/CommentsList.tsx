@@ -30,7 +30,7 @@ export default function CommentsList({
   return (
     <Container>
       {comments.map((comment) => (
-        <CommentsItem item={comment} key={comment.comment_id} />
+        <CommentsItem comment={comment} key={comment.comment_id} />
       ))}
     </Container>
   );

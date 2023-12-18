@@ -2,24 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { RecoilRoot } from 'recoil';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 600000,
-      cacheTime: 900000,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      retry: 0,
-    },
-    mutations: {
-      retry: 0,
-    },
-  },
-});
+import { queryClient } from 'queries';
 
 const domNode: HTMLElement = document.getElementById('root') as HTMLElement;
 

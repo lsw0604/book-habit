@@ -5,9 +5,14 @@ import dayjs from 'dayjs';
 import styled from 'styled-components';
 
 interface IProps {
-  item: Omit<
+  comment: Omit<
     CommentsItemType,
-    'comment' | 'comment_id' | 'age_category' | 'gender'
+    | 'comment'
+    | 'comment_id'
+    | 'age_category'
+    | 'gender'
+    | 'reply_ids'
+    | 'like_user_ids'
   >;
 }
 
@@ -61,8 +66,8 @@ const HeaderIconContainerRating = styled.div`
   }
 `;
 
-export default function CommentsHeader({ item }: IProps) {
-  const { created_at, title, status, name, rating, profile } = item;
+export default function CommentsHeader({ comment }: IProps) {
+  const { created_at, title, status, name, rating, profile } = comment;
 
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');
 

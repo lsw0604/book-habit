@@ -25,22 +25,20 @@ const Container = styled.ul`
 const Tag = styled.li<{ isOn: boolean }>`
   scroll-snap-align: start;
   margin-left: 8px;
+  line-height: 12px;
   font-size: 10px;
   border-radius: 1rem;
   padding: 5px 1rem;
-  max-width: 100%;
-  min-width: 50px;
-  box-shadow: ${({ theme }) => theme.shadow.md};
-  background-color: ${({ theme }) => theme.mode.sub};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 25px;
-  max-height: auto;
-  line-height: 12px;
+  max-width: 10rem;
+  min-width: 4rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   cursor: pointer;
   color: ${({ isOn }) =>
     isOn ? ({ theme }) => theme.colors.spinner : customize.gray['400']};
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  background-color: ${({ theme }) => theme.mode.sub};
 `;
 
 const hashTag: string[] = [];

@@ -41,7 +41,12 @@ export default async function commentsReplyRegister(
 
       await connection.commit();
       connection.release();
-      res.status(200).json({ status: 'success', message: '댓글 등록에 성공하셨습니다.' });
+
+      res.status(200).json({
+        status: 'success',
+        message: '댓글 등록에 성공하셨습니다.',
+        reply_id: COMMENT_REPLY_REGISTER_RESULT.insertId,
+      });
     } catch (error: any) {
       await connection.rollback();
       connection.release();

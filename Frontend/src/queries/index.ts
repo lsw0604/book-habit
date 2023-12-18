@@ -1,3 +1,5 @@
+import { QueryClient } from '@tanstack/react-query';
+
 export const queriesKey = {
   book: {
     useBookSearchInfinityQueryKey: 'USE_BOOK_SEARCH_INFINITY_QUERY_KEY',
@@ -52,3 +54,19 @@ export const queriesKey = {
     useProfileReplyQueryKey: 'USE_PROFILE_REPLY_QUERY_KEY',
   },
 };
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 600000,
+      cacheTime: 900000,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});

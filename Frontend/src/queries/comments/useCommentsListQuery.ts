@@ -18,9 +18,7 @@ export default function useCommentsListQuery(filter: string[]) {
     staleTime: 3 * 60 * 1000,
     cacheTime: 3 * 60 * 1000,
     select: ({ comments }) => {
-      if (filter.length === 0) {
-        return { comments };
-      }
+      if (filter.length === 0) return { comments };
 
       return {
         comments: comments.filter(

@@ -4,7 +4,8 @@ import { IconCommentDots } from '@style/icons';
 
 interface IProps {
   comment_id: number;
-  reply_user_id: { user_id: number }[];
+  reply_ids: { reply_id: number }[];
+  btn?: boolean;
 }
 
 const Container = styled.div`
@@ -31,16 +32,18 @@ const ReplyIconWrapper = styled.div`
   }
 `;
 
-export default function CommentsReply({ reply_user_id, comment_id }: IProps) {
+export default function CommentsReply({ reply_ids, comment_id, btn }: IProps) {
   const navigate = useNavigate();
-  const navigateCommentDetail = () => navigate(`/comments/${comment_id}`);
+  const navigateCommentDetail = btn
+    ? () => navigate(`/comments/${comment_id}`)
+    : () => null;
 
   return (
     <Container onClick={navigateCommentDetail}>
       <ReplyIconWrapper>
         <IconCommentDots />
       </ReplyIconWrapper>
-      <ReplyNumber>{reply_user_id.length}</ReplyNumber>
+      <ReplyNumber>{reply_ids.length}</ReplyNumber>
     </Container>
   );
 }

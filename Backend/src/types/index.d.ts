@@ -150,7 +150,22 @@ export type CommentDetailType = {
   name: string;
   profile: string;
   status: CommentStatusType;
+  reply_id: number;
+  like_user_id: number;
 } & RowDataPacket;
+
+export type GroupedCommentDetailType = {
+  comment_id: number;
+  comment: string;
+  created_at: Date;
+  rating: number;
+  title: string;
+  name: string;
+  profile: string;
+  status: CommentStatusType;
+  reply_ids: { reply_id: number }[];
+  like_user_ids: { user_id: number }[];
+};
 
 // comments.like.list
 
@@ -170,7 +185,7 @@ export type CommentListType = {
   profile: string;
   status: CommentStatusType;
   age_category: string;
-  reply_user_id: number;
+  reply_id: number;
   like_user_id: number;
 } & RowDataPacket;
 
@@ -184,8 +199,8 @@ export type GroupedCommentType = {
   profile: string;
   status: CommentStatusType;
   age_category: string;
-  reply_user_id: { user_id: number }[];
-  like_user_id: { user_id: number }[];
+  reply_ids: { reply_id: number }[];
+  like_user_ids: { user_id: number }[];
 };
 
 // comments.reply.list

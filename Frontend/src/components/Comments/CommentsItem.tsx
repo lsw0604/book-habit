@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import CommentsHeader from 'components/Comments/CommentsHeader';
 import CommentsReply from 'components/Comments/CommentsReply';
 import CommentsHeart from 'components/Comments/CommentsHeart';
+import CommentsBody from 'components/Comments/CommentsBody';
 
 interface IProps {
-  item: Omit<CommentsItemType, 'age_category' | 'gender'>;
+  comment: Omit<CommentsItemType, 'age_category' | 'gender'>;
 }
 
 const Container = styled.li`
@@ -24,23 +25,6 @@ const Container = styled.li`
   scroll-snap-align: start;
 `;
 
-const Header = styled.div`
-  width: 100%;
-`;
-
-const Content = styled.div`
-  width: 100%;
-  font-size: 18px;
-  color: ${({ theme }) => theme.mode.typo_main};
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  line-height: 25px;
-  overflow: hidden;
-  -webkit-line-clamp: 4;
-  height: 100px;
-  white-space: pre-line;
-`;
-
 const Bottom = styled.div`
   width: 100%;
   display: inline-flex;
@@ -51,22 +35,24 @@ const Bottom = styled.div`
   }
 `;
 
-export default function CommentsItem({ item }: IProps) {
+export default function CommentsItem({ comment }: IProps) {
   const navigate = useNavigate();
 
-  const { comment_id, comment, reply_user_id, like_user_id } = item;
+  const { comment_id, comment: content, reply_ids, like_user_ids } = comment;
 
   const navigateCommentDetailPage = () => navigate(`/comments/${comment_id}`);
 
   return (
     <Container>
-      <Header>
-        <CommentsHeader item={item} />
-      </Header>
-      <Content onClick={navigateCommentDetailPage}>{comment}</Content>
+      <CommentsHeader comment={comment} />
+      <CommentsBody
+        onClick={navigateCommentDetailPage}
+        mode="item"
+        content={content}
+      />
       <Bottom>
-        <CommentsHeart comment_id={comment_id} like_user_id={like_user_id} />
-        <CommentsReply comment_id={comment_id} reply_user_id={reply_user_id} />
+        <CommentsHeart comment_id={comment_id} like_user_ids={like_user_ids} />
+        <CommentsReply comment_id={comment_id} reply_ids={reply_ids} btn />
       </Bottom>
     </Container>
   );

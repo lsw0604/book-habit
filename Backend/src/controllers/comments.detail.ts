@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { CommentDetailType } from '../types';
+import { CommentDetailType, GroupedCommentDetailType } from '../types';
 
 const NAMESPACE = 'COMMENT_DETAIL';
 
@@ -14,11 +14,13 @@ export default async function commentsDetail(req: Request, res: Response, _: Nex
     const connection = await connectionPool.getConnection();
     try {
       const COMMENT_DETAIL_SQL =
-        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status ' +
+        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status, pcr.id AS reply_id, cl.users_id AS like_user_id ' +
         'FROM users_books_comments AS ubc ' +
         'LEFT JOIN books AS bs ON bs.id = ubc.books_id ' +
         'LEFT JOIN users_books AS ub ON ub.id = ubc.users_books_id ' +
         'LEFT JOIN users AS us ON us.id = ub.users_id ' +
+        'LEFT JOIN public_comments_reply AS pcr ON pcr.users_books_comments_id = ubc.id ' +
+        'LEFT JOIN comments_likes AS cl ON cl.users_books_comments_id = ubc.id ' +
         'WHERE ubc.id = ?';
       const COMMENT_DETAIL_VALUE = [comment_id];
       const [COMMENT_DETAIL_RESULT] = await connection.query<CommentDetailType[]>(
@@ -26,9 +28,46 @@ export default async function commentsDetail(req: Request, res: Response, _: Nex
         COMMENT_DETAIL_VALUE
       );
       logging.debug(NAMESPACE, '[COMMENT_DETAIL_RESULT]', COMMENT_DETAIL_RESULT);
+
+      const GroupedCommentDetail = COMMENT_DETAIL_RESULT.reduce(
+        (grouped: GroupedCommentDetailType[], comment: CommentDetailType) => {
+          const { comment_id, reply_id, like_user_id, ...rest } = comment;
+          const existingComment = grouped.find((comment) => comment.comment_id === comment_id);
+
+          if (existingComment) {
+            if (
+              reply_id !== null &&
+              !existingComment.reply_ids.some((user) => user.reply_id === reply_id)
+            ) {
+              existingComment.reply_ids.push({ reply_id });
+            }
+
+            if (
+              like_user_id !== null &&
+              !existingComment.like_user_ids.some((user) => user.user_id === like_user_id)
+            ) {
+              existingComment.like_user_ids.push({ user_id: like_user_id });
+            }
+          } else {
+            const newComment = {
+              comment_id,
+              reply_ids: reply_id !== null ? [{ reply_id }] : [],
+              like_user_ids: like_user_id !== null ? [{ user_id: like_user_id }] : [],
+              ...rest,
+            };
+            grouped.push(newComment);
+          }
+
+          return grouped;
+        },
+        []
+      );
+
+      logging.debug(NAMESPACE, '[GROUPED_COMMENT_DETAIL]', GroupedCommentDetail);
+
       connection.release();
       res.status(200).json({
-        ...COMMENT_DETAIL_RESULT[0],
+        ...GroupedCommentDetail[0],
       });
     } catch (error: any) {
       connection.release();

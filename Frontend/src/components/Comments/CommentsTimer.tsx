@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import Icon from 'components/common/Button/Icon';
 import { customize } from '@style/colors';
 import { IconRefresh } from '@style/icons';
-import { queriesKey } from 'queries';
-import { queryClient } from 'main';
+import { queriesKey, queryClient } from 'queries';
 
 interface IProps {
   refetch: () => void;

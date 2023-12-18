@@ -4,11 +4,13 @@ import { useEffect } from 'react';
 
 import { commentsLikeDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
-import { queriesKey } from 'queries';
-import { queryClient } from 'main';
+import { queriesKey, queryClient } from 'queries';
 
-const { useCommentsLikeDeleteMutationKey, useCommentsListQueryKey } =
-  queriesKey.comments;
+const {
+  useCommentsLikeDeleteMutationKey,
+  useCommentsListQueryKey,
+  useCommentsDetailQueryKey,
+} = queriesKey.comments;
 
 export default function useCommentsLikeDeleteMutation(
   comment_id: CommentsLikeDeleteMutationRequestType
@@ -21,26 +23,51 @@ export default function useCommentsLikeDeleteMutation(
     CommentsLikeDeleteMutationRequestType
   >([useCommentsLikeDeleteMutationKey, comment_id], commentsLikeDeleteAPI, {
     onSuccess: (response) => {
-      const data = queryClient.getQueryData<CommentsListQueryResponseType>([
-        useCommentsListQueryKey,
-      ]);
+      const commentsListData =
+        queryClient.getQueryData<CommentsListQueryResponseType>([
+          useCommentsListQueryKey,
+        ]);
 
-      const mappedData = data?.comments.map((comment) => {
-        if (comment.comment_id === comment_id) {
-          const newComment = {
-            ...comment,
-            like_user_id: comment.like_user_id.filter(
-              (like_id) => like_id.user_id !== response.user_id
-            ),
-          };
+      const commentDetailData =
+        queryClient.getQueryData<CommentsDetailQueryResponseType>([
+          useCommentsDetailQueryKey,
+          comment_id,
+        ]);
 
-          return newComment;
-        }
-        return comment;
-      });
-      queryClient.setQueryData([useCommentsListQueryKey], {
-        comments: mappedData,
-      });
+      if (commentsListData) {
+        const synthesizedCommentsListData = commentsListData?.comments.map(
+          (comment) => {
+            if (comment.comment_id === comment_id) {
+              const newComment = {
+                ...comment,
+                like_user_id: comment.like_user_id.filter(
+                  (like_id) => like_id.user_id !== response.user_id
+                ),
+              };
+
+              return newComment;
+            }
+            return comment;
+          }
+        );
+
+        queryClient.setQueryData([useCommentsListQueryKey], {
+          comments: synthesizedCommentsListData,
+        });
+      }
+
+      if (commentDetailData) {
+        const synthesizedCommentDetailData = {
+          ...commentDetailData,
+          like_user_id: commentDetailData.like_user_id.filter(
+            (like) => like.user_id !== response.user_id
+          ),
+        };
+
+        queryClient.setQueryData([useCommentsDetailQueryKey, comment_id], {
+          ...synthesizedCommentDetailData,
+        });
+      }
     },
   });
 

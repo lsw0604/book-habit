@@ -16,7 +16,7 @@ export default async function commentList(_: Request, res: Response, __: NextFun
     const connection = await connectionPool.getConnection();
     try {
       const COMMENT_LIST_SQL =
-        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status, us.gender, cl.users_id AS like_user_id, pcr.id AS reply_user_id, ' +
+        'SELECT ubc.id AS comment_id, ubc.comment, ubc.created_at, ubc.rating, bs.title, us.name, us.profile, ubc.status, us.gender, cl.users_id AS like_user_id, pcr.id AS reply_id, ' +
         'CASE ' +
         "WHEN us.age BETWEEN 0 AND 9 THEN '어린이' " +
         "WHEN us.age BETWEEN 10 AND 19 THEN '10대' " +
@@ -45,28 +45,28 @@ export default async function commentList(_: Request, res: Response, __: NextFun
 
       const GroupedComments = COMMENT_LIST_RESULT.reduce(
         (grouped: GroupedCommentType[], comment: CommentListType) => {
-          const { comment_id, like_user_id, reply_user_id, ...rest } = comment;
+          const { comment_id, like_user_id, reply_id, ...rest } = comment;
           const existingComment = grouped.find((comment) => comment.comment_id === comment_id);
 
           if (existingComment) {
             if (
               like_user_id !== null &&
-              !existingComment.like_user_id.some((user) => user.user_id === like_user_id)
+              !existingComment.like_user_ids.some((user) => user.user_id === like_user_id)
             ) {
-              existingComment.like_user_id.push({ user_id: like_user_id });
+              existingComment.like_user_ids.push({ user_id: like_user_id });
             }
 
             if (
-              reply_user_id !== null &&
-              !existingComment.reply_user_id.some((user) => user.user_id === reply_user_id)
+              reply_id !== null &&
+              !existingComment.reply_ids.some((reply) => reply.reply_id === reply_id)
             ) {
-              existingComment.reply_user_id.push({ user_id: reply_user_id });
+              existingComment.reply_ids.push({ reply_id });
             }
           } else {
             const newComment = {
               comment_id,
-              like_user_id: like_user_id !== null ? [{ user_id: like_user_id }] : [],
-              reply_user_id: reply_user_id !== null ? [{ user_id: reply_user_id }] : [],
+              like_user_ids: like_user_id !== null ? [{ user_id: like_user_id }] : [],
+              reply_ids: reply_id !== null ? [{ reply_id }] : [],
               ...rest,
             };
             grouped.push(newComment);
