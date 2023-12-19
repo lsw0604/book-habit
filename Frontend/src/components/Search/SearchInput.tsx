@@ -1,16 +1,10 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import Input from 'components/common/Input';
 import Icon from 'components/common/Button/Icon';
 import { IconSearch } from '@style/icons';
-import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
-
-interface IProps {
-  search: string;
-  onChange: (query: ChangeEvent<HTMLInputElement>) => void;
-  setQuery: Dispatch<SetStateAction<string>>;
-}
 
 const Container = styled.form`
   width: 100%;
@@ -37,13 +31,18 @@ const IconWrapper = styled.div`
   right: 55px;
 `;
 
-export default function SearchInput({ search, onChange, setQuery }: IProps) {
-  const { fetchNextPage } = useBookSearchInfinityQuery(search);
+export default function SearchInput() {
+  const [keyword, setKeyword] = useState<string>('');
+
+  const navigate = useNavigate();
+
+  const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setKeyword(event.target.value);
+  }, []);
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    setQuery(search);
-    await fetchNextPage();
+    navigate(`?keyword=${encodeURIComponent(keyword)}`);
   };
 
   return (
@@ -51,7 +50,7 @@ export default function SearchInput({ search, onChange, setQuery }: IProps) {
       <Input
         className="circle_btn"
         style={{ borderRadius: '2rem', padding: '0 1rem' }}
-        value={search}
+        value={keyword}
         onChange={onChange}
         placeholder="찾고자하는 책 제목을 입력해주세요."
       />

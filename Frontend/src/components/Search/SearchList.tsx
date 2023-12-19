@@ -1,15 +1,13 @@
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { v4 } from 'uuid';
 
 import SearchItem from 'components/Search/SearchItem';
 import SearchSkeleton from 'components/Search/SearchSkeleton';
 import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
 import SearchLoader from './SearchLoader';
-
-interface IProps {
-  search: string;
-}
+import { useLocation } from 'react-router-dom';
+import useInfinityObserverHook from '@hooks/useInfinityObserverHook';
 
 const Container = styled.div`
   width: 100%;
@@ -48,61 +46,43 @@ const Observer = styled.div`
   margin-bottom: 20px;
 `;
 
-const OBSERVER_OPTION = {
-  root: null,
-  rootMargin: '20px',
-  threshold: 1.0,
-};
+export default function SearchList() {
+  const { search } = useLocation();
+  const decodedURI = decodeURI(search);
 
-export default function SearchList({ search }: IProps) {
+  const keyword = decodedURI !== undefined ? decodedURI.split('=')[1] : '';
+
   const lastSearchRef = useRef<HTMLDivElement>(null);
 
-  const [initialLoadComplete, setInitialLoadComplete] =
-    useState<boolean>(false);
-
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useBookSearchInfinityQuery(search);
+    useBookSearchInfinityQuery(keyword);
 
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && hasNextPage && !isFetching) {
-      fetchNextPage();
-      observer.disconnect();
-    }
-  }, OBSERVER_OPTION);
+  useInfinityObserverHook({
+    fetchNextPage,
+    hasNextPage,
+    observerRef: lastSearchRef,
+    isFetching,
+  });
 
-  useEffect(() => {
-    if (lastSearchRef.current) {
-      observer.observe(lastSearchRef.current);
-      setInitialLoadComplete(false);
-    }
-    setInitialLoadComplete(true);
-
-    return () => {
-      if (lastSearchRef.current) {
-        observer.unobserve(lastSearchRef.current);
-      }
-    };
-  }, [fetchNextPage, hasNextPage, isFetching, initialLoadComplete]);
-
-  if (search === '' && !data) return <SearchSkeleton search={search} />;
+  if (keyword === '' && !data) return <SearchSkeleton search={keyword} />;
 
   if (!data || isLoading) return <SearchLoader />;
 
   if (data?.pages[0].documents.length === 0)
-    return <SearchSkeleton search={search} />;
+    return <SearchSkeleton search={keyword} />;
 
   return (
     <Container>
       {data?.pages.map((page) => (
         <Page key={v4()}>
           {page.documents.map((document) => (
-            <SearchItem key={document.isbn} search={search} item={document} />
+            <SearchItem key={document.isbn} search={keyword} item={document} />
           ))}
         </Page>
       ))}
       {isFetching ? (
         <SearchLoader />
-      ) : hasNextPage && initialLoadComplete ? (
+      ) : hasNextPage ? (
         <Observer ref={lastSearchRef} />
       ) : null}
     </Container>
