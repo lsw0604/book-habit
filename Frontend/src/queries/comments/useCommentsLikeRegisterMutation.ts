@@ -38,9 +38,9 @@ export default function useCommentsLikeRegisterMutation(
         const synthesizedCommentsListData = commentsListData?.comments.map(
           (comment) => {
             if (comment.comment_id === comment_id) {
-              const newComment = {
+              const newComment: CommentsItemType = {
                 ...comment,
-                like_user_id: [
+                like_user_ids: [
                   ...comment.like_user_ids,
                   { user_id: response.user_id },
                 ],
@@ -54,12 +54,16 @@ export default function useCommentsLikeRegisterMutation(
         queryClient.setQueryData([useCommentsListQueryKey], {
           comments: synthesizedCommentsListData,
         });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: [useCommentsListQueryKey],
+        });
       }
 
       if (commentDetailData) {
-        const synthesizedCommentDetailData = {
+        const synthesizedCommentDetailData: CommentsItemType = {
           ...commentDetailData,
-          like_user_id:
+          like_user_ids:
             commentDetailData.like_user_ids.length !== 0
               ? [
                   ...commentDetailData.like_user_ids,
@@ -70,6 +74,10 @@ export default function useCommentsLikeRegisterMutation(
 
         queryClient.setQueryData([useCommentsDetailQueryKey, comment_id], {
           ...synthesizedCommentDetailData,
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: [useCommentsDetailQueryKey, comment_id],
         });
       }
     },

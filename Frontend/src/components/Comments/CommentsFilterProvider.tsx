@@ -18,8 +18,8 @@ const Container = styled.div`
   padding-top: 1rem;
   display: flex;
   flex-direction: column;
-  @media screen and (min-width: 1280px) {
-    padding: 1rem 30%;
+  @media screen and (min-width: 768px) {
+    padding: 1rem 15%;
   }
 `;
 
@@ -37,7 +37,10 @@ export default function CommentsFilterProvider({ children }: IProps) {
   const { data, isFetching, isLoading } = useCommentsListQuery(filter);
 
   if (!data) return null;
-  if (data?.comments.length === 0) return <CommentsEmpty />;
+
+  const { comments } = data;
+
+  if (comments.length === 0) return <CommentsEmpty />;
 
   return (
     <Container>
@@ -52,7 +55,7 @@ export default function CommentsFilterProvider({ children }: IProps) {
       <CommentsList
         isFetching={isFetching}
         isLoading={isLoading}
-        comments={data.comments}
+        comments={comments}
       />
     </Container>
   );

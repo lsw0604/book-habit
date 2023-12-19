@@ -1,4 +1,4 @@
-import { IconTrashCan } from '@style/icons';
+import { IconCalendar, IconTrashCan } from '@style/icons';
 import Avatar from 'components/common/Avatar';
 import Icon from 'components/common/Button/Icon';
 import dayjs from 'dayjs';
@@ -74,10 +74,13 @@ export default function CommentDetailReplyItem({
   users_id,
 }: CommentsReplyListQueryItemType) {
   const { pathname } = useLocation();
+
   const commentId = pathname.split('/')[2];
   const comment_id = parseInt(commentId);
+
   const setReplyState = useSetRecoilState(replyAtom);
   const setModalState = useSetRecoilState(modalAtom);
+  const { id } = useRecoilValue(userAtom);
 
   const modalHandler = useCallback((type: ModalAtomType['type']) => {
     setModalState({ isOpen: true, type });
@@ -87,8 +90,7 @@ export default function CommentDetailReplyItem({
     setReplyState({ comment_id, reply_id });
   }, []);
 
-  const createdTime = dayjs(created_at).format('YYYY/MM/DD');
-  const { id } = useRecoilValue(userAtom);
+  const createdTime = dayjs(created_at).format('YYYY/MM/DD HH:mm:ss');
   const isAuth = users_id === id ? true : false;
 
   const replyDeleteHandler = () => {
@@ -103,7 +105,11 @@ export default function CommentDetailReplyItem({
           <Avatar size="40px" src={profile} key={reply_id} />
           <ReplyHeaderInfoContainer>
             <ReplyHeaderNameWrapper>{name}</ReplyHeaderNameWrapper>
-            <ReplyHeaderDateWrapper>{createdTime}</ReplyHeaderDateWrapper>
+            <ReplyHeaderDateWrapper>
+              <IconCalendar />
+              &nbsp;
+              {createdTime}
+            </ReplyHeaderDateWrapper>
           </ReplyHeaderInfoContainer>
         </ReplyIconContainer>
         {isAuth ? (

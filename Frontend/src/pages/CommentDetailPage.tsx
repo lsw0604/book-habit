@@ -11,8 +11,8 @@ const Container = styled.div`
   height: 100%;
   overflow: scroll;
   padding: 1rem;
-  @media screen and (min-width: 1280px) {
-    padding: 1rem 30%;
+  @media screen and (min-width: 768px) {
+    padding: 1rem 15%;
   }
 `;
 

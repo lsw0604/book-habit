@@ -64,7 +64,7 @@ type CommentsReplyMutationRequestType = {
 
 // useCommentsReplyListQuery의 타입들
 type CommentsReplyListQueryResponseType = {
-  reply: CommentsReplyListQueryListType;
+  reply_list: CommentsReplyListQueryListType;
 };
 type CommentsReplyListQueryListType = CommentsReplyListQueryItemType[];
 type CommentsReplyListQueryItemType = {

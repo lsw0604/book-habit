@@ -1,21 +1,14 @@
-import { InfiniteData } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 
-import Loader from 'components/common/Loader';
 import SearchItem from 'components/Search/SearchItem';
-import SearchSkeleton from './SearchSkeleton';
+import SearchSkeleton from 'components/Search/SearchSkeleton';
+import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
+import SearchLoader from './SearchLoader';
 
 interface IProps {
-  data: InfiniteData<KakaoSearchResponseType> | undefined;
-  fetchNextPage: () => void;
-  hasNextPage: boolean | undefined;
-  isFetching: boolean;
   search: string;
-  isLoading: boolean;
-  initialLoadComplete: boolean;
-  setInitialLoadComplete: (ctx: boolean) => void;
 }
 
 const Container = styled.div`
@@ -51,45 +44,36 @@ const Page = styled.div`
   }
 `;
 
-const FetchLoader = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 10%;
-`;
-
 const Observer = styled.div`
   margin-bottom: 20px;
 `;
 
-export default function SearchList({
-  data,
-  fetchNextPage,
-  hasNextPage,
-  isFetching,
-  search,
-  isLoading,
-  initialLoadComplete,
-  setInitialLoadComplete,
-}: IProps) {
+const OBSERVER_OPTION = {
+  root: null,
+  rootMargin: '20px',
+  threshold: 1.0,
+};
+
+export default function SearchList({ search }: IProps) {
   const lastSearchRef = useRef<HTMLDivElement>(null);
 
+  const [initialLoadComplete, setInitialLoadComplete] =
+    useState<boolean>(false);
+
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
+    useBookSearchInfinityQuery(search);
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+      fetchNextPage();
+      observer.disconnect();
+    }
+  }, OBSERVER_OPTION);
+
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '20px',
-      threshold: 1.0,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasNextPage && !isFetching) {
-        fetchNextPage();
-        observer.disconnect();
-      }
-    }, observerOptions);
-
     if (lastSearchRef.current) {
       observer.observe(lastSearchRef.current);
+      setInitialLoadComplete(false);
     }
     setInitialLoadComplete(true);
 
@@ -100,9 +84,11 @@ export default function SearchList({
     };
   }, [fetchNextPage, hasNextPage, isFetching, initialLoadComplete]);
 
-  if (search === '' || !data) return <SearchSkeleton search={search} />;
+  if (search === '' && !data) return <SearchSkeleton search={search} />;
 
-  if (data.pages[0].documents.length === 0)
+  if (!data || isLoading) return <SearchLoader />;
+
+  if (data?.pages[0].documents.length === 0)
     return <SearchSkeleton search={search} />;
 
   return (
@@ -110,14 +96,12 @@ export default function SearchList({
       {data?.pages.map((page) => (
         <Page key={v4()}>
           {page.documents.map((document) => (
-            <SearchItem key={document.isbn} search={search} {...document} />
+            <SearchItem key={document.isbn} search={search} item={document} />
           ))}
         </Page>
       ))}
-      {isFetching || isLoading ? (
-        <FetchLoader>
-          <Loader />
-        </FetchLoader>
+      {isFetching ? (
+        <SearchLoader />
       ) : hasNextPage && initialLoadComplete ? (
         <Observer ref={lastSearchRef} />
       ) : null}

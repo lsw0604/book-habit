@@ -38,9 +38,9 @@ export default function useCommentsLikeDeleteMutation(
         const synthesizedCommentsListData = commentsListData?.comments.map(
           (comment) => {
             if (comment.comment_id === comment_id) {
-              const newComment = {
+              const newComment: CommentsItemType = {
                 ...comment,
-                like_user_id: comment.like_user_id.filter(
+                like_user_ids: comment.like_user_ids.filter(
                   (like_id) => like_id.user_id !== response.user_id
                 ),
               };
@@ -54,18 +54,26 @@ export default function useCommentsLikeDeleteMutation(
         queryClient.setQueryData([useCommentsListQueryKey], {
           comments: synthesizedCommentsListData,
         });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: [useCommentsListQueryKey],
+        });
       }
 
       if (commentDetailData) {
-        const synthesizedCommentDetailData = {
+        const synthesizedCommentDetailData: CommentsItemType = {
           ...commentDetailData,
-          like_user_id: commentDetailData.like_user_id.filter(
+          like_user_ids: commentDetailData.like_user_ids.filter(
             (like) => like.user_id !== response.user_id
           ),
         };
 
         queryClient.setQueryData([useCommentsDetailQueryKey, comment_id], {
           ...synthesizedCommentDetailData,
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: [useCommentsDetailQueryKey, comment_id],
         });
       }
     },

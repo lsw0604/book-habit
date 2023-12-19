@@ -1,12 +1,18 @@
+import { useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import { useRef, useEffect, useCallback } from 'react';
+import { v4 } from 'uuid';
 
-import SearchItemHeader from 'components/Search/SearchItemHeader';
+import { modalAtom } from 'recoil/modal';
 import { searchBookAtom } from 'recoil/searchBook';
 import ImageWrapper from 'components/common/ImageWrapper';
+import SearchItemBody from 'components/Search/SearchItemBody';
 import useObserverHook from '@hooks/useObserverHook';
-import { modalAtom } from 'recoil/modal';
+
+interface IProps {
+  item: KakaoSearchResponseDocumentType;
+  search: string;
+}
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.mode.sub};
@@ -27,49 +33,12 @@ const Header = styled.div`
   justify-content: center;
 `;
 
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
-`;
+export default function SearchItem({ item, search }: IProps) {
+  const { isbn, thumbnail, ...rest } = item;
 
-const Stack = styled.div`
-  font-size: 10px;
-  line-height: 12px;
-  width: 100%;
-  display: inline-flex;
-  gap: 8px;
-  font-weight: 700;
-  overflow: hidden;
-  color: ${({ theme }) => theme.mode.typo_sub};
-`;
-
-const P = styled.p`
-  font-size: 10px;
-  line-height: 12px;
-  font-weight: 700;
-  overflow: hidden;
-`;
-
-export default function SearchItem({
-  authors,
-  datetime,
-  isbn,
-  price,
-  publisher,
-  sale_price,
-  status,
-  thumbnail,
-  title,
-  translators,
-  search,
-  contents,
-  url,
-}: KakaoSearchResponseDocumentType & {
-  search: string;
-}) {
-  const date = datetime.toString().split('-');
-  const ISBN = isbn.split(' ');
   const itemRef = useRef<HTMLDivElement>(null);
+
+  const ISBN = isbn.split(' ');
 
   const setModalState = useSetRecoilState(modalAtom);
   const setSearchBookState = useSetRecoilState(searchBookAtom);
@@ -80,21 +49,12 @@ export default function SearchItem({
     setModalState({ isOpen: true, type });
   }, []);
 
+  const onClick = () => {
+    modalHandler('registerSearchBook');
+    setSearchBookState({ ...item, isbn: ISBN[1] });
+  };
+
   useEffect(() => {
-    const onClick = () => {
-      modalHandler('registerSearchBook');
-      setSearchBookState({
-        thumbnail,
-        authors,
-        publisher,
-        contents,
-        isbn: ISBN[1],
-        price,
-        url,
-        title,
-        status,
-      });
-    };
     if (isVisible) {
       itemRef.current?.addEventListener('click', onClick);
     }
@@ -109,42 +69,9 @@ export default function SearchItem({
       {isVisible ? (
         <>
           <Header>
-            <ImageWrapper
-              src={thumbnail}
-              alt={title}
-              width={120}
-              height={174}
-            />
+            <ImageWrapper src={thumbnail} alt={v4()} width={120} height={174} />
           </Header>
-          <Content>
-            <SearchItemHeader title={title} query={search} />
-            <Stack>
-              출판사 <P>{publisher}</P>
-            </Stack>
-            <Stack>
-              작가
-              {authors && authors.map((author) => <P key={author}>{author}</P>)}
-            </Stack>
-            <Stack>
-              번역
-              {translators.length !== 0 ? (
-                translators.map((v) => <P key={v}>{v}</P>)
-              ) : (
-                <P>미상</P>
-              )}
-            </Stack>
-            <Stack>
-              판매가{' '}
-              <P style={{ textDecorationLine: 'line-through' }}>{price}</P>/
-              <P>{sale_price}</P>
-            </Stack>
-            <Stack>
-              판매상태 <P>{status}</P>
-            </Stack>
-            <Stack>
-              출판<P>{`${date[0]}년 ${date[1]}월`}</P>
-            </Stack>
-          </Content>
+          <SearchItemBody content={rest} search={search} />
         </>
       ) : null}
     </Container>

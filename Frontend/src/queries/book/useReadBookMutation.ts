@@ -1,14 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
-import useToastHook from '@hooks/useToastHook';
 import { modalAtom } from 'recoil/modal';
+import useToastHook from '@hooks/useToastHook';
 import useBookRegisterModalHook from '@hooks/useBookRegisterModalHook';
-import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
 import { readBookRegisterAPI } from 'lib/api/book';
-import { userAtom } from 'recoil/user';
 import { queriesKey, queryClient } from 'queries';
 
 const { book, myBook } = queriesKey;
@@ -16,12 +14,7 @@ const { book, myBook } = queriesKey;
 export default function useReadBookMutation() {
   const setModalState = useSetRecoilState(modalAtom);
   const { addToast } = useToastHook();
-  const { isLogged } = useRecoilValue(userAtom);
   const { setBookRegisterModalState } = useBookRegisterModalHook();
-
-  const { refetch } = isLogged
-    ? useMyBookListInfinityQuery('전체보기')
-    : { refetch: () => undefined };
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     ReadBookMutationResponseType,
@@ -30,9 +23,11 @@ export default function useReadBookMutation() {
   >([book.useReadBookMutationKey], readBookRegisterAPI, {
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [myBook.useMyBookListInfinityQueryKey],
+        queryKey: [myBook.useMyBookListInfinityQueryKey, '전체보기'],
       });
-      refetch();
+      queryClient.invalidateQueries({
+        queryKey: [myBook.useMyBookListInfinityQueryKey, '다읽음'],
+      });
     },
   });
 

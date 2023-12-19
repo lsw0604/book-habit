@@ -28,7 +28,7 @@ export default async function commentsReplyList(req: Request, res: Response, _: 
 
       connection.release();
       res.status(200).json({
-        reply: COMMENTS_REPLY_LIST_RESULT,
+        reply_list: COMMENTS_REPLY_LIST_RESULT,
       });
     } catch (error: any) {
       connection.release();

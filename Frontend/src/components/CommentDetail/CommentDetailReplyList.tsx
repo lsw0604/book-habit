@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import Loader from 'components/common/Loader';
 import CommentDetailReplyItem from 'components/CommentDetail/CommentDetailReplyItem';
+import CommentDetailSkeleton from 'components/CommentDetail/CommentDetailSkeleton';
+
 import useCommentsReplyListQuery from '@queries/comments/useCommentsReplyListQuery';
 
 interface IProps {
@@ -21,41 +23,34 @@ const LoaderWrapper = styled.div`
   align-items: center;
 `;
 
-const EmptyWrapper = styled.div`
-  width: 100%;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 1rem;
-`;
+const EMPTY_MESSAGE = '아직 등록된 댓글이 없습니다.';
+const LOADING_MESSAGE = '댓글을 불러오는 중입니다.';
+const SKELETON_HEIGHT = '13rem';
 
 export default function CommentDetailReplyList({ comment_id }: IProps) {
   const { data, isLoading, isFetching } = useCommentsReplyListQuery(comment_id);
 
-  if (!data || isLoading) {
-    return (
-      <Container>
-        <LoaderWrapper>
-          <EmptyWrapper>
-            <Loader />
-          </EmptyWrapper>
-        </LoaderWrapper>
-      </Container>
-    );
-  }
+  if (!data) return null;
 
-  if (data.reply.length === 0)
+  const { reply_list } = data;
+
+  if (isLoading)
     return (
-      <Container>
-        <EmptyWrapper>아직 등록된 댓글이 없습니다.</EmptyWrapper>
-      </Container>
+      <CommentDetailSkeleton
+        isLoading
+        height={SKELETON_HEIGHT}
+        message={LOADING_MESSAGE}
+      />
+    );
+
+  if (reply_list.length === 0)
+    return (
+      <CommentDetailSkeleton height={SKELETON_HEIGHT} message={EMPTY_MESSAGE} />
     );
 
   return (
     <Container>
-      {data.reply.map((reply) => (
+      {reply_list.map((reply) => (
         <CommentDetailReplyItem key={reply.reply_id} {...reply} />
       ))}
       {isFetching ? (

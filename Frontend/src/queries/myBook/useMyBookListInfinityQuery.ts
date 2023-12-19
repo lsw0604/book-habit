@@ -28,8 +28,8 @@ export default function useMyBookListInfinityQuery(status: SelectorBookType) {
     ({ pageParam = 1 }) => myBookListAPI(pageParam, status),
     {
       getNextPageParam: (response) => response.nextPage,
-      staleTime: 1 * 60 * 1000,
-      cacheTime: 2 * 60 * 1000,
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 5 * 60 * 1000,
     }
   );
 

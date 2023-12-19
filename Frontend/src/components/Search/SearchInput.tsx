@@ -1,14 +1,15 @@
-import { ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from 'react';
 import styled from 'styled-components';
 
 import Input from 'components/common/Input';
 import Icon from 'components/common/Button/Icon';
 import { IconSearch } from '@style/icons';
+import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
 
 interface IProps {
   search: string;
   onChange: (query: ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  setQuery: Dispatch<SetStateAction<string>>;
 }
 
 const Container = styled.form`
@@ -36,7 +37,15 @@ const IconWrapper = styled.div`
   right: 55px;
 `;
 
-export default function SearchInput({ search, onChange, onSubmit }: IProps) {
+export default function SearchInput({ search, onChange, setQuery }: IProps) {
+  const { fetchNextPage } = useBookSearchInfinityQuery(search);
+
+  const onSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setQuery(search);
+    await fetchNextPage();
+  };
+
   return (
     <Container onSubmit={onSubmit}>
       <Input
