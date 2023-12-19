@@ -14,11 +14,8 @@ export default async function commentsReplyRegister(
 ) {
   logging.debug(NAMESPACE, '[START]');
 
-  if (req.user === undefined) {
-    logging.error(NAMESPACE, '[로그인이 필요합니다.]');
-
+  if (req.user === undefined)
     return res.status(403).json({ status: 'error', message: '로그인이 필요합니다.' });
-  }
 
   const { comment_id } = req.params;
   const { reply } = req.body;

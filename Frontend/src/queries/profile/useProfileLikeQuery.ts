@@ -15,7 +15,7 @@ export default function useProfileLikeQuery(page: ProfileLikeQueryRequestType) {
     ProfileLikeQueryResponseType,
     AxiosError<{ message: string; status: StatusType }>
   >([useProfileLikeQueryKey, page], () => profileLikeListAPI(page), {
-    staleTime: 1 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
     cacheTime: 2 * 60 * 1000,
     enabled: false,
   });

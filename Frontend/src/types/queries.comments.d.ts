@@ -56,7 +56,9 @@ type CommentsDetailQueryResponseType = CommentsItemType;
 type CommentsDetailQueryRequestType = number;
 
 // useCommentsReplyMutation의 타입들
-type CommentsReplyMutationResponseType = MutationResponse;
+type CommentsReplyMutationResponseType = MutationResponse & {
+  reply_id: number;
+};
 type CommentsReplyMutationRequestType = {
   body: { reply: string };
   comment_id: number;
@@ -78,5 +80,7 @@ type CommentsReplyListQueryItemType = {
 type CommentsReplyListQueryRequestType = number;
 
 // useCommentsReplyDeleteMutation의 타입들
-type CommentsReplyDeleteMutationResponseType = MutationResponse;
+type CommentsReplyDeleteMutationResponseType = MutationResponse & {
+  reply_id: number;
+};
 type CommentsReplyDeleteMutationRequestType = number;

@@ -6,7 +6,12 @@ import { commentsReplyDeleteAPI } from 'lib/api/comments';
 import useToastHook from '@hooks/useToastHook';
 import { queriesKey, queryClient } from 'queries';
 
-const { comments, profile } = queriesKey;
+const {
+  useCommentsReplyDeleteMutationKey,
+  useCommentsReplyListQueryKey,
+  useCommentsListQueryKey,
+  useCommentsDetailQueryKey,
+} = queriesKey.comments;
 
 export default function useCommentsReplyDeleteMutation(
   reply_id: CommentsReplyDeleteMutationRequestType,
@@ -19,15 +24,67 @@ export default function useCommentsReplyDeleteMutation(
     AxiosError<{ message: string; status: StatusType }>,
     CommentsReplyDeleteMutationRequestType
   >(
-    [comments.useCommentsReplyDeleteMutationKey, comment_id, reply_id],
+    [useCommentsReplyDeleteMutationKey, comment_id, reply_id],
     commentsReplyDeleteAPI,
     {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        const commentsListData =
+          queryClient.getQueryData<CommentsListQueryResponseType>([
+            useCommentsListQueryKey,
+          ]);
+        const commentDetailData =
+          queryClient.getQueryData<CommentsDetailQueryResponseType>([
+            useCommentsDetailQueryKey,
+            comment_id,
+          ]);
+
+        if (commentsListData) {
+          const synthesizedCommentsListData = commentsListData?.comments.map(
+            (comment) => {
+              if (comment.comment_id === comment_id) {
+                const newComment: CommentsItemType = {
+                  ...comment,
+                  reply_ids: comment.reply_ids.filter(
+                    (reply) => reply.reply_id !== response.reply_id
+                  ),
+                };
+
+                return newComment;
+              }
+              return comment;
+            }
+          );
+
+          queryClient.setQueryData([useCommentsListQueryKey], {
+            comments: synthesizedCommentsListData,
+          });
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: [useCommentsListQueryKey],
+          });
+        }
+
+        if (commentDetailData) {
+          const synthesizedCommentDetailData: CommentsItemType = {
+            ...commentDetailData,
+            reply_ids: commentDetailData.reply_ids.filter(
+              (reply) => reply.reply_id !== response.reply_id
+            ),
+          };
+
+          console.log(synthesizedCommentDetailData);
+
+          queryClient.setQueryData([useCommentsDetailQueryKey, comment_id], {
+            ...synthesizedCommentDetailData,
+          });
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: [useCommentsDetailQueryKey, comment_id],
+          });
+        }
+
         queryClient.invalidateQueries({
-          queryKey: [comments.useCommentsReplyListQueryKey, comment_id],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [profile.useProfileReplyQueryKey],
+          queryKey: [useCommentsReplyListQueryKey, comment_id],
         });
       },
     }

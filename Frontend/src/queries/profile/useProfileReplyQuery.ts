@@ -17,7 +17,7 @@ export default function useProfileReplyQuery(
     ProfileReplyQueryResponseType,
     AxiosError<{ message: string; status: StatusType }>
   >([useProfileReplyQueryKey, page], () => profileReplyListAPI(page), {
-    staleTime: 1 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
     cacheTime: 2 * 60 * 1000,
     enabled: false,
   });

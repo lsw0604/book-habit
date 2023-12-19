@@ -17,6 +17,8 @@ export default async function commentsReplyDelete(req: Request, res: Response, _
   const { reply_id } = req.params;
   const { id } = req.user;
 
+  const parseIntReplyId = parseInt(reply_id);
+
   try {
     const connection = await connectionPool.getConnection();
     try {
@@ -24,7 +26,7 @@ export default async function commentsReplyDelete(req: Request, res: Response, _
 
       const COMMENTS_REPLY_DELETE_SQL =
         'DELETE FROM public_comments_reply WHERE users_id = ? AND id = ?';
-      const COMMENTS_REPLY_DELETE_VALUE = [id, reply_id];
+      const COMMENTS_REPLY_DELETE_VALUE = [id, parseIntReplyId];
       const COMMENTS_REPLY_DELETE_RESULT = await connection.query<ResultSetHeader>(
         COMMENTS_REPLY_DELETE_SQL,
         COMMENTS_REPLY_DELETE_VALUE
@@ -33,7 +35,13 @@ export default async function commentsReplyDelete(req: Request, res: Response, _
 
       await connection.commit();
       connection.release();
-      res.status(200).json({ status: 'success', message: '댓글 삭제에 성공하셨습니다.' });
+      res
+        .status(200)
+        .json({
+          status: 'success',
+          message: '댓글 삭제에 성공하셨습니다.',
+          reply_id: parseIntReplyId,
+        });
     } catch (error: any) {
       await connection.rollback();
       connection.release();
