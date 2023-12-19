@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { ReactNode, lazy, Suspense } from 'react';
 
+import Loader from 'components/common/Loader';
+import LoginMessage from 'components/Modals/Login/LoginMessage';
 import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
 import useModalHook from '@hooks/useModalHook';
-import Loader from './Loader';
-import LoginMessage from 'components/Modals/Login/LoginMessage';
 
-interface IBottomSheetObj {
+interface IModalComponent {
   [key: string]: ReactNode;
 }
 
@@ -22,13 +22,14 @@ const Container = styled(motion.div)`
   padding: 1rem;
   display: grid;
   background-color: ${({ theme }) => theme.mode.sub};
-  @media screen and (min-width: 1280px) {
+
+  @media screen and (min-width: 768px) {
     position: static;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
     border-radius: 1rem;
+    width: 40%;
   }
 `;
 
@@ -40,48 +41,50 @@ const LoadingWrapper = styled.div`
   justify-content: center;
 `;
 
-const CommentModify = lazy(
+const CommentModifyModal = lazy(
   () => import('components/Modals/Comment/CommentModify')
 );
-const CommentRegister = lazy(
+const CommentRegisterModal = lazy(
   () => import('components/Modals/Comment/CommentRegister')
 );
-const CommentDelete = lazy(
+const CommentDeleteModal = lazy(
   () => import('components/Modals/Comment/CommentDelete')
 );
-const HistoryRegister = lazy(
+const HistoryRegisterModal = lazy(
   () => import('components/Modals/History/HistoryRegister')
 );
-const HistoryDelete = lazy(
+const HistoryDeleteModal = lazy(
   () => import('components/Modals/History/HistoryDelete')
 );
-const ReplyDelete = lazy(() => import('components/Modals/Reply/ReplyDelete'));
-const MyBookDelete = lazy(
+const ReplyDeleteModal = lazy(
+  () => import('components/Modals/Reply/ReplyDelete')
+);
+const MyBookDeleteModal = lazy(
   () => import('components/Modals/MyBook/MyBookDelete')
 );
-const ProfileModify = lazy(
+const ProfileModifyModal = lazy(
   () => import('components/Modals/Profile/ProfileModify')
 );
 
-const bottomSheetComponent: IBottomSheetObj = {
+const modalComponent: IModalComponent = {
   isLogin: <LoginMessage />,
   registerSearchBook: <SearchBookRegister />,
-  modifyComment: <CommentModify />,
-  registerComment: <CommentRegister />,
-  deleteComment: <CommentDelete />,
-  registerHistory: <HistoryRegister />,
-  deleteHistory: <HistoryDelete />,
-  deleteReply: <ReplyDelete />,
-  deleteMyBook: <MyBookDelete />,
-  modifyProfile: <ProfileModify />,
+  modifyComment: <CommentModifyModal />,
+  registerComment: <CommentRegisterModal />,
+  deleteComment: <CommentDeleteModal />,
+  registerHistory: <HistoryRegisterModal />,
+  deleteHistory: <HistoryDeleteModal />,
+  deleteReply: <ReplyDeleteModal />,
+  deleteMyBook: <MyBookDeleteModal />,
+  modifyProfile: <ProfileModifyModal />,
 };
 
-const onChangeBottomSheetComponent = (ctx?: ModalBottomSheetType) => {
-  if (ctx === undefined || !bottomSheetComponent[ctx]) return null;
-  return bottomSheetComponent[ctx];
+const onChangeModalComponent = (ctx?: ModalComponentType) => {
+  if (ctx === undefined || !modalComponent[ctx]) return null;
+  return modalComponent[ctx];
 };
 
-export default function BottomSheet() {
+export default function Modal() {
   const { modalStateType } = useModalHook();
 
   return (
@@ -103,7 +106,7 @@ export default function BottomSheet() {
           </LoadingWrapper>
         }
       >
-        {onChangeBottomSheetComponent(modalStateType)}
+        {onChangeModalComponent(modalStateType)}
       </Suspense>
     </Container>
   );

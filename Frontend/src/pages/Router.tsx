@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import Header from 'components/header/Header';
 import Loader from 'components/common/Loader';
 
+import ModalPortal from 'components/Modals/ModalPortal';
 import BottomNavigationBar from 'components/bottom/BottomNavigationBar';
-import ModalPortal from 'components/common/ModalPortal';
 
 import DefaultLayout from '@pages/layout/DefaultLayout';
 import IsAuthLayout from '@pages/layout/IsAuthLayout';
@@ -25,7 +25,8 @@ const CommentsPage = lazy(() => import('@pages/CommentsPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
 const CommentDetailPage = lazy(() => import('@pages/CommentDetailPage'));
 const NotFound = lazy(() => import('@pages/404'));
-const BottomSheet = lazy(() => import('components/common/BottomSheet'));
+
+const Modal = lazy(() => import('components/Modals'));
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -94,7 +95,7 @@ export default function Router() {
             </LoadingWrapper>
           }
         >
-          <BottomSheet />
+          <Modal />
         </Suspense>
       </ModalPortal>
     </BrowserRouter>

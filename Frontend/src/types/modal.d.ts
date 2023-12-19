@@ -1,9 +1,9 @@
 type ModalAtomType = {
   isOpen: boolean;
-  type?: ModalBottomSheetType;
+  type?: ModalComponentType;
 };
 
-type ModalBottomSheetType =
+type ModalComponentType =
   | 'isLogin'
   | 'registerSearchBook'
   | 'modifyComment'

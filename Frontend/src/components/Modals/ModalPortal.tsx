@@ -28,7 +28,7 @@ const Background = styled.div`
   background-color: rgba(0, 0, 0, 0.7);
 `;
 
-const ModalPortal = ({ children }: IProps) => {
+export default function ModalPortal({ children }: IProps) {
   const [mounted, setMounted] = useState<boolean>(false);
   const ref = useRef<Element | null>();
   const { isOpen } = useRecoilValue(modalAtom);
@@ -54,6 +54,4 @@ const ModalPortal = ({ children }: IProps) => {
     );
   }
   return null;
-};
-
-export default ModalPortal;
+}
