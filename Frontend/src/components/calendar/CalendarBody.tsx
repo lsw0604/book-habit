@@ -11,23 +11,24 @@ interface IProps {
 
 const Container = styled.div`
   width: 100%;
-  height: 80%;
-  display: flex;
-  justify-content: center;
-  margin: 8px 0;
+  height: calc(100% - 126px);
+
+  @media screen and (min-width: 1280px) {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const Box = styled.div<{ numRows: number }>`
-  width: 100%;
   height: 100%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: ${({ numRows }) => `repeat(${numRows}, 1fr)`};
-  justify-content: center;
-  align-items: center;
+
   @media screen and (min-width: 1280px) {
-    width: 85%;
-    height: 85%;
+    width: 70%;
+    height: 70%;
   }
 `;
 

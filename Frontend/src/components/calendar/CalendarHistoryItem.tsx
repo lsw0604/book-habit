@@ -4,25 +4,41 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import Icon from 'components/common/Button/Icon';
-import { IconTrashCan } from '@style/icons';
+import { IconPencil, IconTrashCan } from '@style/icons';
 import { STATUS_WORD_OBJECT, STATUS_COLOR_OBJECT } from 'lib/staticData';
 import { getCalendarDetail } from 'lib/utils/calendar';
 import { calendarAtom } from 'recoil/calendar';
 import { myBookAtom } from 'recoil/myBook';
 import { modalAtom } from 'recoil/modal';
 
-const Container = styled.div`
-  display: inline-flex;
-  padding: 0;
-  margin: 0;
+const Container = styled.li`
   width: 100%;
+  height: 100%;
+  display: inline-flex;
   cursor: pointer;
-  min-height: 100%;
   scroll-snap-align: start;
 `;
 
-const DateContainer = styled.div`
-  width: 12%;
+const Content = styled.div`
+  color: ${({ theme }) => theme.mode.typo_main};
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 10px;
+`;
+
+const HistoryStatusMessage = styled.span<{ status: HistoryStatusType }>`
+  color: ${({ status }) => STATUS_COLOR_OBJECT[status]};
+`;
+
+const HistoryMessage = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.mode.typo_sub};
+`;
+
+const HistoryCreatedAt = styled.div`
   color: ${({ theme }) => theme.mode.typo_sub};
   font-size: 8px;
   display: flex;
@@ -30,27 +46,9 @@ const DateContainer = styled.div`
   justify-content: center;
 `;
 
-const Content = styled.div`
-  color: ${({ theme }) => theme.mode.typo_main};
-  width: 100%;
-  padding: 0 10px;
-  display: inline-flex;
-  flex-direction: row;
-  gap: 0;
-  align-items: center;
-`;
-
-const ContentMessage = styled.p`
-  font-size: 12px;
-`;
-
-const ContentDate = styled.p`
-  font-size: 12px;
-  color: ${({ theme }) => theme.mode.typo_sub};
-`;
-
-const Line = styled.div<{ status: HistoryStatusType }>`
-  width: 0.3rem;
+const ColorBadge = styled.div<{ status: HistoryStatusType }>`
+  width: 1rem;
+  border-radius: 8px 0 0 8px;
   height: auto;
   background-color: ${({ status }) => STATUS_COLOR_OBJECT[status]};
 `;
@@ -86,16 +84,12 @@ export default function CalendarHistoryItem({
     setModalState({ isOpen: true, type });
   }, []);
 
-  const [year, month, day] = dayjs(date).format('YYYY-MM-DD').split('-');
-
   const setCalendarState = useSetRecoilState(calendarAtom);
 
-  const [createdYear, createdMonth, createdDay] = dayjs(created_at)
-    .format('YYYY-MM-DD')
-    .split('-');
-
-  const updatedAt = updated_at
-    ? dayjs(updated_at).format('YYYY-MM-DD').split('-')
+  const [year, month, day] = dayjs(date).format('YYYY-MM-DD').split('-');
+  const createdAtDate = dayjs(created_at).format('YYYY-MM-DD');
+  const updatedAtDate = updated_at
+    ? dayjs(updated_at).format('YYYY-MM-DD')
     : undefined;
 
   const deleteHandler = () => {
@@ -106,38 +100,27 @@ export default function CalendarHistoryItem({
 
   return (
     <Container>
-      <DateContainer>
-        {updatedAt ? (
-          <>
-            <p>{updatedAt[0]}</p>
-            <p>
-              {updatedAt[1]}/{updatedAt[2]}
-            </p>
-          </>
-        ) : (
-          <>
-            <p>{createdYear}</p>
-            <p>
-              {createdMonth}/{createdDay}
-            </p>
-          </>
-        )}
-      </DateContainer>
-      <Line status={status} />
+      <ColorBadge status={status} />
       <Content
         onClick={() =>
           setCalendarState(getCalendarDetail(dayjs(`${year}-${month}`)))
         }
       >
-        <ContentDate>
-          {year}년 {month}월 {day}일&nbsp;
-        </ContentDate>
-        <ContentMessage>{STATUS_WORD_OBJECT[status]}</ContentMessage>
+        <HistoryMessage>
+          {`${year}년 ${month}월 ${day}일`}&nbsp;
+          <HistoryStatusMessage status={status}>
+            {STATUS_WORD_OBJECT[status]}
+          </HistoryStatusMessage>
+        </HistoryMessage>
+        <HistoryCreatedAt>
+          {updatedAtDate ? <p>📅{updatedAtDate}</p> : <p>📅{createdAtDate}</p>}
+        </HistoryCreatedAt>
       </Content>
       <IconWrapper>
         <Icon icon={<IconTrashCan />} onClick={deleteHandler}>
           Delete
         </Icon>
+        <Icon icon={<IconPencil />}>Modify</Icon>
       </IconWrapper>
     </Container>
   );

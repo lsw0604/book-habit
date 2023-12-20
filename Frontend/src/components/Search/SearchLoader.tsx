@@ -17,7 +17,7 @@ const Container = styled.div<{ height?: string }>`
 export default function SearchLoader({ height }: IProps) {
   return (
     <Container height={height}>
-      <Loader />
+      <Loader size={3} />
     </Container>
   );
 }

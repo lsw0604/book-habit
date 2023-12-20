@@ -1,13 +1,13 @@
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { useRef } from 'react';
 import { v4 } from 'uuid';
 
+import Observer from 'components/common/Observer';
 import SearchItem from 'components/Search/SearchItem';
+import SearchLoader from 'components/Search/SearchLoader';
 import SearchSkeleton from 'components/Search/SearchSkeleton';
 import useBookSearchInfinityQuery from '@queries/book/useBookSearchInfinityQuery';
-import SearchLoader from './SearchLoader';
-import { useLocation } from 'react-router-dom';
-import useInfinityObserverHook from '@hooks/useInfinityObserverHook';
 
 const Container = styled.div`
   width: 100%;
@@ -42,27 +42,15 @@ const Page = styled.div`
   }
 `;
 
-const Observer = styled.div`
-  margin-bottom: 20px;
-`;
-
 export default function SearchList() {
   const { search } = useLocation();
   const decodedURI = decodeURI(search);
 
-  const keyword = decodedURI !== undefined ? decodedURI.split('=')[1] : '';
-
+  const keyword = decodedURI !== '' ? decodedURI.split('=')[1] : '';
   const lastSearchRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useBookSearchInfinityQuery(keyword);
-
-  useInfinityObserverHook({
-    fetchNextPage,
-    hasNextPage,
-    observerRef: lastSearchRef,
-    isFetching,
-  });
 
   if (keyword === '' && !data) return <SearchSkeleton search={keyword} />;
 
@@ -80,10 +68,14 @@ export default function SearchList() {
           ))}
         </Page>
       ))}
-      {isFetching ? (
-        <SearchLoader />
-      ) : hasNextPage ? (
-        <Observer ref={lastSearchRef} />
+      {isFetching && <SearchLoader />}
+      {hasNextPage ? (
+        <Observer
+          fetchNextPage={fetchNextPage}
+          isFetching={isFetching}
+          observerRef={lastSearchRef}
+          hasNextPage={hasNextPage}
+        />
       ) : null}
     </Container>
   );

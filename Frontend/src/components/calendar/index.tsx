@@ -13,10 +13,10 @@ interface IProps {
 
 const Container = styled.div`
   width: 100%;
-  height: auto;
-  position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 `;
 
 const options = ['읽는중', '읽기시작함', '읽고싶음', '다읽음'];

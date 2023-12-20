@@ -7,9 +7,6 @@ const media = css`
   @media screen and (min-width: 768px) {
     padding: 4rem 10%;
   }
-  /* @media screen and (min-width: 1280px) {
-    padding: 4rem 15%;
-  } */
 `;
 
 const Layout = styled.div<{ pathname: string }>`

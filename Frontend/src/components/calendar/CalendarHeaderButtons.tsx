@@ -6,15 +6,11 @@ import { IconLeftArrow, IconRightArrow } from '@style/icons';
 
 const Container = styled.div`
   height: auto;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Header = styled.div`
   font-size: 16px;
   line-height: 20px;
-  width: 100%;
-  text-align: center;
   color: ${({ theme }) => theme.mode.typo_main};
   display: flex;
   align-items: center;

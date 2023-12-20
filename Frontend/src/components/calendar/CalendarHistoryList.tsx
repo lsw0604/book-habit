@@ -2,54 +2,20 @@ import styled from 'styled-components';
 import { v4 } from 'uuid';
 
 import CalendarHistoryItem from 'components/calendar/CalendarHistoryItem';
-import Loader from 'components/common/Loader';
+import CalendarHistorySkeleton from 'components/calendar/CalendarHistorySkeleton';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
-import { IconPlus } from '@style/icons';
-import Icon from 'components/common/Button/Icon';
 
 interface IProps {
   filter: string[];
   users_books_id: number;
 }
 
-const Container = styled.div`
+const Container = styled.ul`
   width: 100%;
-  height: 100%;
-  max-height: 104px;
-  overflow: scroll;
-  position: relative;
-  display: flex;
-  padding: 1rem 0;
-  flex-direction: column;
-`;
-
-const ListContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  height: 52px;
   overflow: scroll;
   position: relative;
   scroll-snap-type: y mandatory;
-`;
-
-const EmptyTag = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  color: ${({ theme }) => theme.mode.typo_main};
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const LoadingContainer = styled.div`
-  width: 100%;
-  height: 5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 export default function CalendarHistoryList({
@@ -61,48 +27,23 @@ export default function CalendarHistoryList({
 
   if (!myBookHistoryData) return null;
 
-  if (myBookHistoryIsLoading || myBookHistoryIsFetching) {
-    return (
-      <Container>
-        <LoadingContainer>
-          <Loader size={2} />
-        </LoadingContainer>
-      </Container>
-    );
-  }
+  if (myBookHistoryIsLoading || myBookHistoryIsFetching)
+    return <CalendarHistorySkeleton mode="isLoading" />;
 
-  if (filter.length === 0) {
-    return (
-      <Container>
-        <LoadingContainer>
-          <EmptyTag>찾고자하는 상태를 선택해주세요.</EmptyTag>
-        </LoadingContainer>
-      </Container>
-    );
-  }
+  if (filter.length === 0) return <CalendarHistorySkeleton mode="isFilter" />;
 
-  if (myBookHistoryData.length === 0) {
-    return (
-      <Container>
-        <EmptyTag>
-          아직 등록된 독서기록이 없습니다.
-          <Icon icon={<IconPlus />}>AddHistory</Icon>
-        </EmptyTag>
-      </Container>
-    );
-  }
+  if (myBookHistoryData.length === 0)
+    return <CalendarHistorySkeleton mode="isEmpty" />;
 
   return (
     <Container>
-      <ListContainer>
-        {myBookHistoryData.map((value) => (
-          <CalendarHistoryItem
-            key={v4()}
-            users_books_id={users_books_id}
-            {...value}
-          />
-        ))}
-      </ListContainer>
+      {myBookHistoryData.map((data) => (
+        <CalendarHistoryItem
+          key={v4()}
+          users_books_id={users_books_id}
+          {...data}
+        />
+      ))}
     </Container>
   );
 }

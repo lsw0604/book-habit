@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 interface IProps {
   isLoading?: boolean;
+  background?: boolean;
 }
 
 const Container = styled.div`
@@ -37,13 +38,17 @@ const Span = styled.span`
   text-align: center;
 `;
 
-export default function MyBooksSkeleton({ isLoading }: IProps) {
+export default function MyBooksSkeleton({ isLoading, background }: IProps) {
   if (isLoading)
     return (
       <Container>
-        <Background>
+        {background ? (
+          <Background>
+            <Loader size={2} />
+          </Background>
+        ) : (
           <Loader size={2} />
-        </Background>
+        )}
       </Container>
     );
 

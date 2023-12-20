@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { MutableRefObject, useEffect } from 'react';
 
 interface IProps {
@@ -7,13 +8,17 @@ interface IProps {
   isFetching: boolean;
 }
 
+const Container = styled.div`
+  margin-top: 20px;
+`;
+
 const OBSERVER_OPTION = {
   root: null,
   rootMargin: '20px',
   threshold: 1.0,
 };
 
-export default function useInfinityObserverHook({
+export default function Observer({
   fetchNextPage,
   hasNextPage,
   isFetching,
@@ -37,4 +42,10 @@ export default function useInfinityObserverHook({
       }
     };
   }, [observerRef, fetchNextPage, hasNextPage, isFetching]);
+
+  return (
+    <>
+      <Container ref={observerRef}></Container>;
+    </>
+  );
 }
