@@ -5,7 +5,7 @@ interface IProps {
   page: MyBookListInfinityQueryResponseType;
 }
 
-const Container = styled.div`
+const Container = styled.li`
   width: 100%;
   display: grid;
   gap: 1rem;
@@ -30,8 +30,8 @@ const Container = styled.div`
 export default function MyBooksPage({ page }: IProps) {
   return (
     <Container>
-      {page.books.map((book) => (
-        <MyBooksItem key={book.id} {...book} />
+      {page.books.map((item) => (
+        <MyBooksItem key={item.id} item={item} />
       ))}
     </Container>
   );

@@ -1,36 +1,31 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+
 import ImageWrapper from 'components/common/ImageWrapper';
 
-const Container = styled.div`
-  background-color: ${({ theme }) => theme.mode.sub};
-  border: none;
+interface IProps {
+  item: MyBookListInfinityQueryItemType;
+}
+
+const Container = styled.li`
   width: 100%;
   height: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  box-shadow: ${({ theme }) => theme.shadow.md};
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: center;
+  margin-bottom: 8px;
 `;
 
 const Contents = styled.div`
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Span = styled.span`
-  width: 100%;
-  display: inline-flex;
+  height: auto;
   color: ${({ theme }) => theme.mode.typo_main};
 `;
 
@@ -52,18 +47,12 @@ const DateTime = styled.p`
   font-size: 12px;
 `;
 
-const formatDateTime = (date: string) =>
-  dayjs(date).add(9, 'hour').format('YYYY  MM DD');
-
-export default function MyBooksItem({
-  isbn,
-  thumbnail,
-  status,
-  title,
-  id,
-  date,
-}: MyBookListInfinityQueryItemType) {
+export default function MyBooksItem({ item }: IProps) {
   const navigate = useNavigate();
+
+  const { date, id, isbn, thumbnail, title } = item;
+
+  const datetime = dayjs(date).add(9, 'hour').format('YYYY MM DD');
 
   const onClick = () => navigate(`/my_books/${id}`);
 
@@ -73,11 +62,9 @@ export default function MyBooksItem({
         <ImageWrapper src={thumbnail} alt={isbn} width={120} height={174} />
       </Header>
       <Contents>
-        <Span>
-          <Title>{title}</Title>
-        </Span>
+        <Title>{title}</Title>
         <Status>{status ? status : '서재에만 담겨있어요'}</Status>
-        <DateTime>📅&nbsp;{date ? formatDateTime(date) : '❌'}</DateTime>
+        <DateTime>📅&nbsp;{date ? datetime : '❌'}</DateTime>
       </Contents>
     </Container>
   );
