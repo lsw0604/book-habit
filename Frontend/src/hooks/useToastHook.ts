@@ -7,9 +7,7 @@ export default function useToastHook() {
   const toastState = useRecoilValue(toastAtom);
 
   const addToast = useRecoilCallback<
-    [
-      { message: string; status: 'error' | 'info' | 'success' | 'warning' | '' }
-    ],
+    [{ message: string; status: StatusType }],
     void
   >(
     ({ set }) =>

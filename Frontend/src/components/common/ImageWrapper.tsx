@@ -3,6 +3,7 @@ import { useRef } from 'react';
 
 import { IconImage } from '@style/icons';
 import useObserverHook from '@hooks/useObserverHook';
+import Loader from './Loader';
 
 interface IProps {
   src?: string;
@@ -46,7 +47,9 @@ export default function ImageWrapper({ src, alt, height, width }: IProps) {
       {src ? (
         isVisible ? (
           <img src={src} alt={alt} height={height} width={width} />
-        ) : null
+        ) : (
+          <Loader />
+        )
       ) : (
         <IconImage />
       )}

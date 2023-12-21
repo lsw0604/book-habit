@@ -43,9 +43,6 @@ export default function MyBookDetailCommentList({ users_books_id }: IProps) {
   const setMyBookState = useSetRecoilState(myBookAtom);
   const setModalState = useSetRecoilState(modalAtom);
 
-  const { data, isLoading, isFetching } =
-    useMyBookCommentListQuery(users_books_id);
-
   const onChangeMyBookUserBooksId = (users_books_id: number) => {
     setMyBookState((prev) => ({ ...prev, users_books_id }));
   };
@@ -57,6 +54,9 @@ export default function MyBookDetailCommentList({ users_books_id }: IProps) {
     onChangeMyBookUserBooksId(users_books_id);
     onChangeModal('registerComment');
   };
+
+  const { data, isLoading, isFetching } =
+    useMyBookCommentListQuery(users_books_id);
 
   if (!data) return null;
   if (isLoading || isFetching) return <MyBookDetailLoader mode="isLoading" />;

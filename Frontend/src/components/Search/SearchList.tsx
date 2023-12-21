@@ -68,7 +68,6 @@ export default function SearchList() {
           ))}
         </Page>
       ))}
-      {isFetching && <SearchLoader />}
       {hasNextPage ? (
         <Observer
           fetchNextPage={fetchNextPage}

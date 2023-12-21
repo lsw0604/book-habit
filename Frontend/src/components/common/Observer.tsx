@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const Container = styled.div`
-  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 const OBSERVER_OPTION = {
@@ -43,9 +43,5 @@ export default function Observer({
     };
   }, [observerRef, fetchNextPage, hasNextPage, isFetching]);
 
-  return (
-    <>
-      <Container ref={observerRef}></Container>;
-    </>
-  );
+  return <Container ref={observerRef} />;
 }

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import Icon from 'components/common/Button/Icon';
-import { IconPencil, IconTrashCan } from '@style/icons';
+import { IconTrashCan } from '@style/icons';
 import { STATUS_WORD_OBJECT, STATUS_COLOR_OBJECT } from 'lib/staticData';
 import { getCalendarDetail } from 'lib/utils/calendar';
 import { calendarAtom } from 'recoil/calendar';
@@ -120,7 +120,6 @@ export default function CalendarHistoryItem({
         <Icon icon={<IconTrashCan />} onClick={deleteHandler}>
           Delete
         </Icon>
-        <Icon icon={<IconPencil />}>Modify</Icon>
       </IconWrapper>
     </Container>
   );
