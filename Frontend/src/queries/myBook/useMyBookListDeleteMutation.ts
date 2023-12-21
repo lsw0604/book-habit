@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import useToastHook from '@hooks/useToastHook';
 import { myBookListDeleteAPI } from 'lib/api/myBook';
 import { queriesKey, queryClient } from 'queries';
+import useMyBookListInfinityQuery from './useMyBookListInfinityQuery';
 
 const { myBook, comments } = queriesKey;
 
@@ -14,6 +15,7 @@ export default function useMyBookListDeleteMutation(
 ) {
   const navigate = useNavigate();
   const { addToast } = useToastHook();
+  const { refetch } = useMyBookListInfinityQuery('전체보기');
 
   const { mutate, isLoading, isSuccess, isError, error, data } = useMutation<
     MyBookListDeleteMutationResponseType,
@@ -30,6 +32,7 @@ export default function useMyBookListDeleteMutation(
         queryClient.invalidateQueries({
           queryKey: [comments.useCommentsListQueryKey],
         });
+        refetch();
       },
     }
   );
