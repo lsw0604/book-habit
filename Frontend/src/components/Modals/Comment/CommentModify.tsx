@@ -1,12 +1,13 @@
-import StarRating from 'components/StarRating/Rating';
+import { ChangeEvent } from 'react';
 import styled from 'styled-components';
+
+import StarRating from 'components/StarRating/Rating';
 import Textarea from 'components/common/Textarea';
+import Button from 'components/common/Button';
+import ModalHeader from 'components/Modals/ModalHeader';
+import useMyBookCommentUpdateMutation from '@queries/myBook/useMyBookCommentUpdateMutation';
 import useMyBookHook from '@hooks/useMyBookHook';
 import { IconPencil } from '@style/icons';
-import { ChangeEvent } from 'react';
-import Button from 'components/common/Button';
-import useMyBookCommentUpdateMutation from '@queries/myBook/useMyBookCommentUpdateMutation';
-import ModalHeader from '../ModalHeader';
 
 const Container = styled.form`
   width: 100%;
@@ -49,8 +50,7 @@ export default function CommentModify() {
     comment: myBookComment,
   };
 
-  const { mutate, isLoading } =
-    useMyBookCommentUpdateMutation(myBookUsersBooksId);
+  const { mutate, isLoading } = useMyBookCommentUpdateMutation();
 
   const onSubmit = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();

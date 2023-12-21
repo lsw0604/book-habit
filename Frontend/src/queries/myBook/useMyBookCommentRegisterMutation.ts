@@ -1,26 +1,19 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
 import useToastHook from '@hooks/useToastHook';
 import useMyBookHook from '@hooks/useMyBookHook';
-import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import { myBookCommentsRegisterAPI } from 'lib/api/myBook';
-import { queriesKey } from 'queries';
+import { queriesKey, queryClient } from 'queries';
 
 const { comments, myBook } = queriesKey;
 
 export default function useMyBookCommentRegisterMutation(
   users_books_id: number
 ) {
-  const queryClient = new QueryClient();
   const { addToast } = useToastHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();
-
-  const { refetch: myBookCommentRefetch } =
-    useMyBookCommentListQuery(users_books_id);
-  const { refetch: commentListRefetch } = useCommentsListQuery([]);
 
   const { isLoading, mutate, isSuccess, data, isError, error } = useMutation<
     MyBookCommentMutationResponseType,
@@ -32,14 +25,11 @@ export default function useMyBookCommentRegisterMutation(
     {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [myBook.useMyBookCommentListQueryKey],
-          exact: true,
+          queryKey: [myBook.useMyBookCommentListQueryKey, users_books_id],
         });
         queryClient.invalidateQueries({
           queryKey: [comments.useCommentsListQueryKey],
         });
-        myBookCommentRefetch();
-        commentListRefetch();
       },
     }
   );

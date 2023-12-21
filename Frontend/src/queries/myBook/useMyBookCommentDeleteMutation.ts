@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { AxiosError } from 'axios';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { myBookCommentDeleteAPI } from 'lib/api/myBook';
 import useToastHook from '@hooks/useToastHook';
-import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
-import { queriesKey } from 'queries';
+import { queriesKey, queryClient } from 'queries';
 
 const { useMyBookCommentDeleteMutationKey, useMyBookCommentListQueryKey } =
   queriesKey.myBook;
@@ -14,10 +13,7 @@ export default function useMyBookCommentDeleteMutation(
   users_books_id: number,
   comment_id: number
 ) {
-  const queryClient = new QueryClient();
-
   const { addToast } = useToastHook();
-  const { refetch } = useMyBookCommentListQuery(users_books_id);
 
   const { mutate, isLoading, isSuccess, data, isError, error } = useMutation<
     MyBookCommentDeleteMutationResponseType,
@@ -25,16 +21,18 @@ export default function useMyBookCommentDeleteMutation(
     MyBookCommentDeleteMutationRequestType
   >(
     [useMyBookCommentDeleteMutationKey, users_books_id, comment_id],
-    myBookCommentDeleteAPI
+    myBookCommentDeleteAPI,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [useMyBookCommentListQueryKey],
+        });
+      },
+    }
   );
 
   useEffect(() => {
     if (isSuccess && data) {
-      queryClient.invalidateQueries({
-        queryKey: [useMyBookCommentListQueryKey],
-        exact: true,
-      });
-      refetch();
       const { message, status } = data;
       addToast({ message, status });
     }

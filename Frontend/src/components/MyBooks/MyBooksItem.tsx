@@ -50,7 +50,7 @@ const DateTime = styled.p`
 export default function MyBooksItem({ item }: IProps) {
   const navigate = useNavigate();
 
-  const { date, id, isbn, thumbnail, title } = item;
+  const { date, id, isbn, thumbnail, title, status } = item;
 
   const datetime = dayjs(date).add(9, 'hour').format('YYYY MM DD');
 

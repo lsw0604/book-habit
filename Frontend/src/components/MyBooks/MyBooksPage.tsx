@@ -5,7 +5,7 @@ interface IProps {
   page: MyBookListInfinityQueryResponseType;
 }
 
-const Container = styled.li`
+const Container = styled.ul`
   width: 100%;
   display: grid;
   gap: 1rem;

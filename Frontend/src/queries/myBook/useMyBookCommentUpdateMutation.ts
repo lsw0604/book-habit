@@ -1,19 +1,17 @@
-import useToastHook from '@hooks/useToastHook';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { myBookCommentUpdateAPI } from 'lib/api/myBook';
 import { useEffect } from 'react';
-import useMyBookCommentListQuery from '@queries/myBook/useMyBookCommentListQuery';
+
+import useToastHook from '@hooks/useToastHook';
 import useModalHook from '@hooks/useModalHook';
 import useMyBookHook from '@hooks/useMyBookHook';
+import { myBookCommentUpdateAPI } from 'lib/api/myBook';
+import { queriesKey, queryClient } from 'queries';
 
-const REACT_QUERY_KEY = 'USE_MY_BOOK_COMMENT_UPDATE_MUTATION';
+const { useMyBookCommentUpdateMutationKey, useMyBookCommentListQueryKey } =
+  queriesKey.myBook;
 
-export default function useMyBookCommentUpdateMutation(users_books_id: number) {
-  const queryClient = new QueryClient();
-
-  const { refetch } = useMyBookCommentListQuery(users_books_id);
-
+export default function useMyBookCommentUpdateMutation() {
   const { addToast } = useToastHook();
   const { setModalState } = useModalHook();
   const { onChangeMyBookStateInitial } = useMyBookHook();
@@ -22,15 +20,17 @@ export default function useMyBookCommentUpdateMutation(users_books_id: number) {
     MyBookCommentUpdateMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
     MyBookCommentUpdateMutationRequestType
-  >([REACT_QUERY_KEY], myBookCommentUpdateAPI);
+  >([useMyBookCommentUpdateMutationKey], myBookCommentUpdateAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([useMyBookCommentListQueryKey]);
+    },
+  });
 
   useEffect(() => {
     if (isSuccess && data) {
       const { message, status } = data;
-      queryClient.invalidateQueries(['USE_MY_BOOK_COMMENT_QUERY']);
       setModalState({ isOpen: false, type: undefined });
       addToast({ message, status });
-      refetch();
       onChangeMyBookStateInitial();
     }
   }, [isSuccess, data]);

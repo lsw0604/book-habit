@@ -1,24 +1,20 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
 import useToastHook from '@hooks/useToastHook';
-import useMyBookListInfinityQuery from '@queries/myBook/useMyBookListInfinityQuery';
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
 import { myBookListDeleteAPI } from 'lib/api/myBook';
-import { queriesKey } from 'queries';
+import { queriesKey, queryClient } from 'queries';
 
 const { myBook, comments } = queriesKey;
 
 export default function useMyBookListDeleteMutation(
   users_books_id: MyBookListDeleteMutationRequestType
 ) {
-  const queryClient = new QueryClient();
   const navigate = useNavigate();
   const { addToast } = useToastHook();
-  const { refetch: myBookListRefetch } = useMyBookListInfinityQuery('전체보기');
-  const { refetch: commentsListRefetch } = useCommentsListQuery([]);
+
   const { mutate, isLoading, isSuccess, isError, error, data } = useMutation<
     MyBookListDeleteMutationResponseType,
     AxiosError<{ message: string; status: StatusType }>,
@@ -34,8 +30,6 @@ export default function useMyBookListDeleteMutation(
         queryClient.invalidateQueries({
           queryKey: [comments.useCommentsListQueryKey],
         });
-        myBookListRefetch();
-        commentsListRefetch();
       },
     }
   );

@@ -11,7 +11,7 @@ interface IProps {
   status?: string;
 }
 
-const Container = styled.ul`
+const Container = styled.div`
   height: 100%;
   overflow: scroll;
   display: flex;

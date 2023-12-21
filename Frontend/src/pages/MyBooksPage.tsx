@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import MyBooks from 'components/MyBooks/MyBooks';
+import MyBooks from 'components/MyBooks';
 import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
