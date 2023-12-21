@@ -13,18 +13,6 @@ export const commentsListAPI = async () => {
 };
 
 /**
- * * 한줄평 좋아요 누른 유저 아이디 불러오는 API
- */
-export const commentsLikeListAPI = async (
-  comment_id: CommentsLikeListRequestType
-) => {
-  const { data } = await axios.get<CommentsLikeListQueryResponseType>(
-    `/api/comments/like/list/${comment_id}`
-  );
-  return data;
-};
-
-/**
  * * 특정 comment_id를 가진 comments를 불러오는 API
  */
 export const commentsDetailAPI = async (

@@ -26,18 +26,6 @@ type CommentsItemType = {
   reply_ids: { reply_id: number }[];
 };
 
-// useCommentsLikeListQuery의 타입들
-
-type CommentsLikeListQueryResponseType = {
-  comment_likes: CommentsLikeListType;
-};
-type CommentsLikeListType = CommentsLikeItemType[];
-type CommentsLikeItemType = {
-  users_id: number;
-};
-
-type CommentsLikeListRequestType = number;
-
 // useCommentsLikeMutation의 타입들
 
 type CommentsLikeMutationResponseType = MutationResponse & { user_id: number };
