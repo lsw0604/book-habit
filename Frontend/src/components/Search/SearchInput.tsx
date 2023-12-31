@@ -42,7 +42,10 @@ export default function SearchInput() {
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    navigate(`?keyword=${encodeURIComponent(keyword)}`);
+
+    const url = `?keyword=${keyword}`;
+
+    if (keyword !== '') return navigate(url);
   };
 
   return (

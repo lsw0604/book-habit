@@ -43,16 +43,16 @@ const Page = styled.div`
 `;
 
 export default function SearchList() {
+  const lastSearchRef = useRef<HTMLDivElement>(null);
   const { search } = useLocation();
   const decodedURI = decodeURI(search);
 
-  const keyword = decodedURI !== '' ? decodedURI.split('=')[1] : '';
-  const lastSearchRef = useRef<HTMLDivElement>(null);
+  const keyword = decodedURI !== '' ? decodedURI.split('=')[1] : undefined;
 
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useBookSearchInfinityQuery(keyword);
 
-  if (keyword === '' && !data) return <SearchSkeleton search={keyword} />;
+  if (keyword === undefined) return <SearchSkeleton search={keyword} />;
 
   if (!data || isLoading) return <SearchLoader />;
 

@@ -5,12 +5,12 @@ import { queriesKey } from 'queries';
 
 const { useBookSearchInfinityQueryKey } = queriesKey.book;
 
-export default function useBookSearchInfinityQuery(keyword: string) {
+export default function useBookSearchInfinityQuery(keyword?: string) {
   const { data, fetchNextPage, isLoading, isFetching, hasNextPage, refetch } =
     useInfiniteQuery<BookSearchInfinityQueryResponseType>(
       [useBookSearchInfinityQueryKey, keyword],
       ({ pageParam = 1 }) => {
-        return keyword.trim() === ''
+        return keyword === undefined || keyword.trim() === ''
           ? Promise.resolve({ meta: { is_end: true }, documents: [] })
           : booksSearchAPI(keyword, pageParam);
       },
@@ -24,7 +24,7 @@ export default function useBookSearchInfinityQuery(keyword: string) {
         },
         staleTime: 5 * 60 * 1000,
         cacheTime: 5 * 60 * 1000,
-        enabled: keyword === '' ? false : true,
+        enabled: keyword ? true : false,
       }
     );
 

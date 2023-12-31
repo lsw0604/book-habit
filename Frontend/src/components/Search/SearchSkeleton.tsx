@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 interface IProps {
-  search: string;
+  search?: string;
 }
 
 const Container = styled.div`
@@ -37,13 +37,12 @@ export default function SearchSkeleton({ search }: IProps) {
   return (
     <Container>
       <BackGround>
-        {search !== '' ? (
+        {search && (
           <Message>
-            <HighLight>{search}</HighLight>에 대한 <br /> 검색 결과가 없습니다.
+            <HighLight>{search}</HighLight>에 대한 검색 결과가 없습니다.
           </Message>
-        ) : (
-          <Message>책 제목을 검색해주세요.</Message>
         )}
+        {!search && <Message>책 제목을 검색해주세요.</Message>}
       </BackGround>
     </Container>
   );
