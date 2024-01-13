@@ -10,17 +10,6 @@ type BookRegisterType = {
   status: string;
 };
 
-type ReadingBookRegisterType = BookRegisterType & {
-  startDate: Date;
-};
-
-type ReadBookRegisterType = BookRegisterType & {
-  startDate: Date;
-  endDate: Date;
-};
-
-type ReadToBookRegisterType = BookRegisterType;
-
 type BookRegisterResponseType = {
   message: string;
   status: StatusType;

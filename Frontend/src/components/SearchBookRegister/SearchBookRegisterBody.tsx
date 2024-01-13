@@ -59,7 +59,7 @@ const HeaderDetailDescription = styled.span`
   white-space: pre-line;
 `;
 
-export default function SearchRegisterHeader() {
+export default function SearchBookRegisterBody() {
   const { url, title, thumbnail, contents } = useRecoilValue(searchBookAtom);
 
   return (

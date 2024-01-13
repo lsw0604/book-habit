@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import SearchRegisterHeader from '../../SearchBookRegister/Header';
-import Form from '../../SearchBookRegister/Form';
+
 import ModalHeader from '../ModalHeader';
 import { IconBook } from '@style/icons';
+import SearchBookRegisterForm from 'components/SearchBookRegister';
+import SearchBookRegisterBody from 'components/SearchBookRegister/SearchBookRegisterBody';
 
 const Container = styled.div`
   width: 100%;
@@ -23,8 +24,9 @@ export default function SearchBookRegister() {
   return (
     <Container>
       <ModalHeader {...HEADER_OPTION} />
-      <SearchRegisterHeader />
-      <Form />
+      <SearchBookRegisterForm>
+        <SearchBookRegisterBody />
+      </SearchBookRegisterForm>
     </Container>
   );
 }

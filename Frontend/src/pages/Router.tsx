@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Header from 'components/header/Header';
 import Loader from 'components/common/Loader';
 
-import ModalPortal from 'components/Modals/ModalPortal';
 import BottomNavigationBar from 'components/bottom/BottomNavigationBar';
 
 import DefaultLayout from '@pages/layout/DefaultLayout';
@@ -25,6 +24,7 @@ const CommentsPage = lazy(() => import('@pages/CommentsPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
 const CommentDetailPage = lazy(() => import('@pages/CommentDetailPage'));
 const NotFound = lazy(() => import('@pages/404'));
+const ModalPortal = lazy(() => import('components/Modals/ModalPortal'));
 
 const Modal = lazy(() => import('components/Modals'));
 
@@ -85,19 +85,21 @@ export default function Router() {
         </section>
       </main>
       <footer>
-        <BottomNavigationBar />
-      </footer>
-      <ModalPortal>
-        <Suspense
-          fallback={
-            <LoadingWrapper>
-              <Loader />
-            </LoadingWrapper>
-          }
-        >
-          <Modal />
+        <Suspense>
+          <BottomNavigationBar />
         </Suspense>
-      </ModalPortal>
+      </footer>
+      <Suspense
+        fallback={
+          <LoadingWrapper>
+            <Loader />
+          </LoadingWrapper>
+        }
+      >
+        <ModalPortal>
+          <Modal />
+        </ModalPortal>
+      </Suspense>
     </BrowserRouter>
   );
 }

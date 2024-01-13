@@ -3,12 +3,12 @@ import { ResultSetHeader } from 'mysql2';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookReadRegisterRequest, IRequest, MyBookExistCountType, BookExistType } from '../types';
+import { SearchBookRegisterRequest, IRequest, MyBookExistCountType, BookExistType } from '../types';
 
-const NAMESPACE = 'BOOK_EXIST';
+const NAMESPACE = 'BOOK_REGISTER';
 
-export default async function bookExist(
-  req: IRequest<MyBookReadRegisterRequest>,
+export default async function bookRegister(
+  req: IRequest<SearchBookRegisterRequest>,
   res: Response,
   next: NextFunction
 ) {
@@ -61,11 +61,7 @@ export default async function bookExist(
 
         await connection.commit();
         connection.release();
-        req.body = {
-          ...req.body,
-          users_books_id: USERS_BOOKS_RESULT.insertId,
-        };
-        next();
+        return res.status(200).json({ status: 'success', message: '책 등록에 성공하셨습니다.' });
       } else {
         const MY_BOOK_EXIST_SQL =
           'SELECT COUNT(*) AS count ' +
@@ -94,11 +90,7 @@ export default async function bookExist(
 
         await connection.commit();
         connection.release();
-        req.body = {
-          ...req.body,
-          users_books_id: USERS_BOOKS_RESULT.insertId,
-        };
-        next();
+        return res.status(200).json({ status: 'success', message: '책 등록에 성공하셨습니다.' });
       }
     } catch (error: any) {
       await connection.rollback();

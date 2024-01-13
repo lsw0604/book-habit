@@ -52,10 +52,8 @@ export default function SearchList() {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
     useBookSearchInfinityQuery(keyword);
 
+  if (isLoading) return <SearchLoader height="100%" />;
   if (keyword === undefined) return <SearchSkeleton search={keyword} />;
-
-  if (!data || isLoading) return <SearchLoader />;
-
   if (data?.pages[0].documents.length === 0)
     return <SearchSkeleton search={keyword} />;
 

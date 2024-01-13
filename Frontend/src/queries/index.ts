@@ -3,9 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 export const queriesKey = {
   book: {
     useBookSearchInfinityQueryKey: 'USE_BOOK_SEARCH_INFINITY_QUERY_KEY',
-    useReadBookMutationKey: 'USE_BOOK_SEARCH_READ_BOOK_MUTATION_KEY',
-    useReadingBookMutationKey: 'USE_BOOK_SEARCH_READING_BOOK_MUTATION_KEY',
-    useReadToBookMutationKey: 'USE_BOOK_SEARCH_READ_TO_BOOK_MUTATION_KEY',
+    useBookRegisterMutationKey: 'USE_BOOK_REGISTER_MUTATION_KEY',
   },
   comments: {
     useCommentsDetailQueryKey: 'USE_COMMENTS_DETAIL_QUERY_KEY',

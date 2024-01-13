@@ -112,7 +112,7 @@ export type BookExistType = {
 
 // book.*
 
-export type MyBookRegisterRequest = {
+export type SearchBookRegisterRequest = {
   authors: string;
   publisher: string;
   thumbnail: string;
@@ -122,21 +122,6 @@ export type MyBookRegisterRequest = {
   title: string;
   url: string;
   contents: string;
-};
-
-export type MyBookReadRegisterRequest = MyBookRegisterRequest & {
-  startDate: string;
-  endDate: string;
-  users_books_id?: number;
-};
-
-export type MyBookReadingRegisterRequest = MyBookRegisterRequest & {
-  startDate: string;
-  users_books_id?: number;
-};
-
-export type MyBOokReadToRegisterRequest = MyBookRegisterRequest & {
-  users_books_id?: number;
 };
 
 // comments.detail

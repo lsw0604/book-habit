@@ -30,6 +30,7 @@ export default function useCommentsListQuery(filter: string[]) {
         ),
       };
     },
+    refetchOnMount: true,
   });
 
   useEffect(() => {
