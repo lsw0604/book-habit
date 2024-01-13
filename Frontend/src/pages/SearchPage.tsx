@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import SearchInput from 'components/Search/SearchInput';
 import SearchList from 'components/Search/SearchList';
 import HelmetProvider from 'components/common/HelmetProvider';
+import { Suspense } from 'react';
+import SearchLoader from 'components/Search/SearchLoader';
 
 const Container = styled.div`
   width: 100%;
@@ -31,7 +33,9 @@ export default function SearchPage() {
           <SearchInput />
         </Wrapper>
         <Contents>
-          <SearchList />
+          <Suspense fallback={<SearchLoader height="100%" />}>
+            <SearchList />
+          </Suspense>
         </Contents>
       </Container>
     </HelmetProvider>
