@@ -40,7 +40,7 @@ const HeartIconWrapper = styled.div<{ isLiked?: boolean }>`
   }
 `;
 
-export default function CommentsHeart({ comment_id, like_user_ids }: IProps) {
+export default function CommentHeart({ comment_id, like_user_ids }: IProps) {
   const { isLogged, id } = useRecoilValue(userAtom);
   const { addToast } = useToastHook();
 

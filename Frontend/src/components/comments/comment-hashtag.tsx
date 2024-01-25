@@ -1,8 +1,11 @@
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
-import { customize } from '@style/colors';
 import styled from 'styled-components';
 
-interface IProps {
+import { customize } from '@style/colors';
+import { COMMENT_HASHTAG_LOADER_SIZES } from 'lib/staticData';
+import Skeleton from 'components/common/skeleton';
+
+interface CommentHashtagProps {
+  data: CommentsListQueryResponseType;
   filter: string[];
   addFilter: (tag: string) => void;
   removeFilter: (tag: string) => void;
@@ -11,26 +14,30 @@ interface IProps {
 const Container = styled.ul`
   width: 100%;
   height: auto;
-  max-height: 95px;
+  max-height: 6rem;
   overflow: scroll;
   display: flex;
+  gap: 0.25;
   flex-direction: row;
-  gap: 5px;
-  padding: 5px 0;
+  padding: 1rem 0;
   flex-wrap: wrap;
   position: relative;
   scroll-snap-type: y mandatory;
+  margin-bottom: 0.5rem;
 `;
 
 const Tag = styled.li<{ isOn: boolean }>`
-  scroll-snap-align: start;
-  margin-left: 8px;
-  line-height: 12px;
-  font-size: 10px;
+  margin-left: 0.5rem;
+  margin-bottom: 0.25rem;
+  height: auto;
+  overflow: auto;
   border-radius: 1rem;
-  padding: 5px 1rem;
   max-width: 10rem;
   min-width: 4rem;
+  scroll-snap-align: start;
+  line-height: 12px;
+  font-size: 10px;
+  padding: 5px 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -43,15 +50,12 @@ const Tag = styled.li<{ isOn: boolean }>`
 
 const hashTag: string[] = [];
 
-export default function CommentsHashTag({
+export default function CommentHashTag({
+  data,
   filter = [],
   addFilter,
   removeFilter,
-}: IProps) {
-  const { data } = useCommentsListQuery(filter);
-
-  if (!data) return null;
-
+}: CommentHashtagProps) {
   const filterHandler = (tag: string) => {
     if (filter.includes(tag)) {
       removeFilter(tag);
@@ -89,3 +93,38 @@ export default function CommentsHashTag({
     </Container>
   );
 }
+
+const CommentHashTagLoaderContainer = styled.ul`
+  width: 100%;
+  height: auto;
+  max-height: 4.5rem;
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: row;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+  margin-bottom: 0.5rem;
+  overflow: auto;
+`;
+
+const CommentHashTagLoaderLi = styled.li`
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  width: auto;
+`;
+
+CommentHashTag.Loader = function CommentLoader() {
+  return (
+    <CommentHashTagLoaderContainer>
+      {COMMENT_HASHTAG_LOADER_SIZES.map((size, index) => (
+        <CommentHashTagLoaderLi key={index}>
+          <Skeleton height="20px" width={size} />
+        </CommentHashTagLoaderLi>
+      ))}
+    </CommentHashTagLoaderContainer>
+  );
+};

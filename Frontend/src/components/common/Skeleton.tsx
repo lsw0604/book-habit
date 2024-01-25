@@ -10,20 +10,25 @@ const Animate = keyframes`
   }
 `;
 
-const Container = styled.div<{ width?: string; height?: string }>`
+const Container = styled.div<{
+  width?: string;
+  height?: string;
+  isCircle?: boolean;
+}>`
   animation: ${Animate} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   width: ${({ width }) => width};
   height: ${({ height }) => height};
   background-color: hsl(210, 40%, 96.1%);
   background-color: ${customize.slate['200']};
-  border-radius: 1rem;
+  border-radius: ${({ isCircle }) => (isCircle ? '50%' : '1rem')};
 `;
 
 interface SkeletonProps {
   width?: string;
   height?: string;
+  isCircle?: boolean;
 }
 
-export default function Skeleton({ width, height }: SkeletonProps) {
-  return <Container width={width} height={height} />;
+export default function Skeleton({ width, height, isCircle }: SkeletonProps) {
+  return <Container width={width} height={height} isCircle={isCircle} />;
 }

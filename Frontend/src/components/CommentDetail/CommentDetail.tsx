@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-import CommentsHeader from 'components/Comments/CommentsHeader';
+import CommentsHeader from 'components/comments/CommentsHeader';
 import CommentDetailSkeleton from 'components/CommentDetail/CommentDetailSkeleton';
 import useCommentsDetailQuery from '@queries/comments/useCommentsDetailQuery';
-import CommentsHeart from 'components/Comments/CommentsHeart';
-import CommentsReply from 'components/Comments/CommentsReply';
-import CommentsBody from 'components/Comments/CommentsBody';
+import CommentsHeart from 'components/comments/CommentsHeart';
+import CommentsReply from 'components/comments/CommentsReply';
+import CommentsBody from 'components/comments/CommentsBody';
 
 interface IProps {
   comment_id: number;

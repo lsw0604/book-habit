@@ -6,10 +6,6 @@ import { customize } from '@style/colors';
 import { IconRefresh } from '@style/icons';
 import { queriesKey, queryClient } from 'queries';
 
-interface IProps {
-  refetch: () => void;
-}
-
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -28,7 +24,7 @@ const Time = styled.p`
 
 const { useCommentsListQueryKey } = queriesKey.comments;
 
-export default function CommentsTimer({ refetch }: IProps) {
+export default function CommentTimer() {
   const [second, setSecond] = useState<number>(59);
   const [minute, setMinute] = useState<number>(2);
 
@@ -38,7 +34,6 @@ export default function CommentsTimer({ refetch }: IProps) {
     queryClient.invalidateQueries({
       queryKey: [useCommentsListQueryKey],
     });
-    refetch();
   };
 
   useEffect(() => {

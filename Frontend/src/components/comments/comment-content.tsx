@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-interface IProps {
+interface CommentContentProps {
   content: string;
   mode: 'detail' | 'item';
   onClick?: () => void;
@@ -30,7 +30,11 @@ const Container = styled.div<{ mode: 'detail' | 'item' }>`
   ${({ mode }) => mode === 'item' && COMMENT_ITEM_CSS}
 `;
 
-export default function CommentsBody({ content, mode, onClick }: IProps) {
+export default function CommentContent({
+  content,
+  mode,
+  onClick,
+}: CommentContentProps) {
   return (
     <Container onClick={onClick} mode={mode}>
       {content}

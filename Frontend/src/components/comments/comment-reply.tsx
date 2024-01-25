@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { IconCommentDots } from '@style/icons';
 
-interface IProps {
+interface CommentReplyProps {
   comment_id: number;
   reply_ids: { reply_id: number }[];
   btn?: boolean;
@@ -32,7 +32,11 @@ const ReplyIconWrapper = styled.div`
   }
 `;
 
-export default function CommentsReply({ reply_ids, comment_id, btn }: IProps) {
+export default function CommentReply({
+  reply_ids,
+  comment_id,
+  btn,
+}: CommentReplyProps) {
   const navigate = useNavigate();
   const navigateCommentDetail = btn
     ? () => navigate(`/comments/${comment_id}`)

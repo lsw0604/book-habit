@@ -4,7 +4,7 @@ import Avatar from 'components/common/Avatar';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 
-interface IProps {
+interface CommentHeaderProps {
   comment: Omit<
     CommentsItemType,
     | 'comment'
@@ -66,7 +66,7 @@ const HeaderIconContainerRating = styled.div`
   }
 `;
 
-export default function CommentsHeader({ comment }: IProps) {
+export default function CommentHeader({ comment }: CommentHeaderProps) {
   const { created_at, title, status, name, rating, profile } = comment;
 
   const createdTime = dayjs(created_at).format('YYYY/MM/DD');

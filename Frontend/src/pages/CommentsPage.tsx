@@ -1,22 +1,41 @@
-import CommentsTimer from 'components/Comments/CommentsTimer';
-import CommentsFilterProvider from 'components/Comments/CommentsFilterProvider';
-import HelmetProvider from 'components/common/HelmetProvider';
+import styled from 'styled-components';
 
-import useCommentsListQuery from '@queries/comments/useCommentsListQuery';
-import useCommentsPageHook from '@hooks/useCommentsPageHook';
+import HelmetProvider from 'components/common/HelmetProvider';
+import CommentList from 'components/comments/comment-list';
+import CommentTimer from 'components/comments/comment-timer';
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+const TimerWrapper = styled.div`
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
 
 export default function CommentsPage() {
-  const { filter } = useCommentsPageHook();
-  const { refetch } = useCommentsListQuery(filter);
-
   return (
     <HelmetProvider
       title="한줄평"
       description="한줄평을 보여주는 페이지입니다."
     >
-      <CommentsFilterProvider>
-        <CommentsTimer refetch={refetch} />
-      </CommentsFilterProvider>
+      <Container>
+        <TimerWrapper>
+          <CommentTimer />
+        </TimerWrapper>
+        <CommentList />
+      </Container>
     </HelmetProvider>
   );
 }

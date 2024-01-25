@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useCommentsPageHook() {
+export default function useCommentFilterHook() {
   const [filter, setFilter] = useState<string[]>([]);
 
   const addFilter = (tag: string) => {
