@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import { v4 } from 'uuid';
 
-interface IProps {
+interface SearchItemHeaderProps {
   title: string;
-  query: string;
+  search: string;
 }
 
 const Container = styled.div`
   width: 100%;
-  font-size: 18px;
-  line-height: 20px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   color: ${({ theme }) => theme.mode.typo_sub};
   margin-bottom: 8px;
   float: left;
@@ -24,10 +24,13 @@ const Highlighted = styled.div`
   display: inline-flex;
 `;
 
-export default function SearchItemHeader({ title, query }: IProps) {
-  const regExp = new RegExp(`(${query})`, 'gi');
+export default function SearchItemHeader({
+  title,
+  search,
+}: SearchItemHeaderProps) {
+  const regExp = new RegExp(`(${search})`, 'gi');
 
-  if (query !== '' && title.includes(query)) {
+  if (search !== '' && title.includes(search)) {
     const splitTitle = title.split(regExp);
 
     return (

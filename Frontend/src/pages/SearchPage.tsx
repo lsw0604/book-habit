@@ -1,17 +1,15 @@
 import styled from 'styled-components';
 
-import SearchInput from 'components/Search/SearchInput';
-import SearchList from 'components/Search/SearchList';
+import SearchInput from 'components/search/search-input';
+import SearchList from 'components/search/search-list';
 import HelmetProvider from 'components/common/HelmetProvider';
-import { Suspense } from 'react';
-import SearchLoader from 'components/Search/SearchLoader';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
 `;
 
-const Wrapper = styled.div`
+const Header = styled.div`
   width: 100%;
   height: 10%;
   display: flex;
@@ -22,20 +20,17 @@ const Wrapper = styled.div`
 const Contents = styled.div`
   width: 100%;
   height: 90%;
-  overflow: scroll;
 `;
 
 export default function SearchPage() {
   return (
     <HelmetProvider title="책 검색" description="책 검색하는 페이지입니다.">
       <Container>
-        <Wrapper>
+        <Header>
           <SearchInput />
-        </Wrapper>
+        </Header>
         <Contents>
-          <Suspense fallback={<SearchLoader height="100%" />}>
-            <SearchList />
-          </Suspense>
+          <SearchList />
         </Contents>
       </Container>
     </HelmetProvider>

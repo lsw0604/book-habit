@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useRef } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
 
+import Skeleton from './skeleton';
 import { IconImage } from '@style/icons';
-import useObserverHook from '@hooks/useObserverHook';
-import Loader from './Loader';
 
 interface IProps {
   src?: string;
@@ -38,9 +38,16 @@ const Container = styled.div<{ width: number; height: number }>`
   }
 `;
 
+const OBSERVER_OPTION = {
+  root: null,
+  rootMargin: '10px',
+  threshold: 0.1,
+};
+
 export default function ImageWrapper({ src, alt, height, width }: IProps) {
   const itemRef = useRef<HTMLDivElement>(null);
-  const { isVisible } = useObserverHook(itemRef);
+  const entry = useIntersectionObserver(itemRef, OBSERVER_OPTION);
+  const isVisible = !!entry?.isIntersecting;
 
   return (
     <Container height={height} width={width} ref={itemRef}>
@@ -48,7 +55,7 @@ export default function ImageWrapper({ src, alt, height, width }: IProps) {
         isVisible ? (
           <img src={src} alt={alt} height={height} width={width} />
         ) : (
-          <Loader />
+          <Skeleton width={`${width}px`} height={`${height}px`} />
         )
       ) : (
         <IconImage />

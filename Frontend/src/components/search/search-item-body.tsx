@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
-import SearchItemHeader from './SearchItemHeader';
+import SearchItemHeader from 'components/search/search-item-header';
 
 interface IProps {
   content: Omit<
@@ -50,7 +50,7 @@ export default function SearchItemBody({ content, search }: IProps) {
 
   return (
     <Container>
-      <SearchItemHeader title={title} query={search} />
+      <SearchItemHeader title={title} search={search} />
       <Stack>
         출판사 <P>{publisher}</P>
       </Stack>

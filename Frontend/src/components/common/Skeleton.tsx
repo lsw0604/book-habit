@@ -15,7 +15,7 @@ const Container = styled.div<{ width?: string; height?: string }>`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
   background-color: hsl(210, 40%, 96.1%);
-  background-color: ${customize.slate['300']};
+  background-color: ${customize.slate['200']};
   border-radius: 1rem;
 `;
 
