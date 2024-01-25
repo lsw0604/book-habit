@@ -1,6 +1,7 @@
 import { TextareaHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import ErrorMessage from 'components/common/Message/ErrorMessage';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 const Container = styled.div<{ conWidth: string; conHeight: string }>`
   width: ${({ conWidth }) => conWidth};
@@ -45,6 +46,7 @@ interface IProps
   label?: string;
   conWidth?: string;
   conHeight?: string;
+  register?: UseFormRegisterReturn;
 }
 
 export default function Index({
@@ -54,13 +56,14 @@ export default function Index({
   label,
   conWidth = '100%',
   conHeight = 'auto',
+  register,
   ...props
 }: IProps): JSX.Element {
   return (
     <>
       {label && <Label>{label}</Label>}
       <Container conWidth={conWidth} conHeight={conHeight}>
-        <Textarea {...props} />
+        <Textarea {...props} {...register} />
       </Container>
       {errorMessage && isValid && useValidation && (
         <ErrorMessage message={errorMessage} />

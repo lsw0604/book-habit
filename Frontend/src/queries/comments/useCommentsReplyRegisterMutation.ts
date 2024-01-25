@@ -109,5 +109,6 @@ export default function useCommentsReplyRegisterMutation(
   return {
     mutate,
     isLoading,
+    isSuccess,
   };
 }

@@ -1,15 +1,11 @@
 import styled from 'styled-components';
-import {
-  useCallback,
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-} from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import TextArea from 'components/common/Textarea';
 import Button from 'components/common/Button';
 
+import { InputType, schema } from './type';
 import useCommentsReplyRegisterMutation from '@queries/comments/useCommentsReplyRegisterMutation';
 
 interface IProps {
@@ -25,48 +21,31 @@ const Container = styled.form`
 `;
 
 export default function CommentDetailReplyForm({ comment_id }: IProps) {
-  const [reply, setReply] = useState<string>('');
-  const [useValidation, setUseValidation] = useState<boolean>(false);
+  const { register, handleSubmit, reset } = useForm<InputType>({
+    resolver: zodResolver(schema),
+  });
 
   const { mutate } = useCommentsReplyRegisterMutation(comment_id);
 
-  const replyHandler = useCallback(
-    (event: ChangeEvent<HTMLTextAreaElement>) => {
-      setReply(event.target.value);
-    },
-    []
-  );
-
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    setUseValidation(true);
-    if (reply === '') return null;
-
-    mutate({
-      comment_id,
-      body: {
-        reply,
+  const onSubmit = (data: InputType) => {
+    mutate(
+      {
+        comment_id,
+        body: {
+          reply: data.reply,
+        },
       },
-    });
-    setUseValidation(false);
-    setReply('');
+      {
+        onSuccess: () => {
+          reset();
+        },
+      }
+    );
   };
 
-  useEffect(() => {
-    if (!reply) setReply('');
-
-    setUseValidation(false);
-  }, [reply]);
-
   return (
-    <Container onSubmit={onSubmit}>
-      <TextArea
-        onChange={(event) => replyHandler(event)}
-        value={reply}
-        isValid={reply === ''}
-        useValidation={useValidation}
-        errorMessage="댓글을 입력해주세요."
-      />
+    <Container onSubmit={handleSubmit(onSubmit)}>
+      <TextArea register={{ ...register('reply') }} />
       <Button>등록하기</Button>
     </Container>
   );

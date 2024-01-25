@@ -1,38 +1,59 @@
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 
-import { IconCalendar, IconTrashCan } from '@style/icons';
+import { IconCalendar } from '@style/icons';
 import Avatar from 'components/common/Avatar';
-import Icon from 'components/common/Button/Icon';
 
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { modalAtom } from 'recoil/modal';
 import { replyAtom } from 'recoil/reply';
 import { userAtom } from 'recoil/user';
 import Skeleton from 'components/common/skeleton';
+import { customize } from '@style/colors';
 
 const Container = styled.li`
-  width: 100%;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.mode.sub};
-  margin-bottom: 1rem;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 1rem;
 `;
 
-const ReplyHeaderContainer = styled.div`
+const HeaderContainer = styled.div`
   display: flex;
-  gap: 8px;
-  width: 100%;
+  gap: 1rem;
+  position: relative;
+`;
+
+const HeaderInfoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+`;
+
+const HeaderInfoNameWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  p {
+    position: relative;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `;
 
-const ReplyHeaderDateWrapper = styled.span`
-  color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 10px;
+const HeaderInfoDatetimeContainer = styled.p`
+  font-size: 0.75rem;
+  line-height: 1rem;
+  display: flex;
+  align-items: center;
+  color: ${customize.slate['400']};
   svg {
-    fill: ${({ theme }) => theme.mode.typo_sub};
+    fill: ${customize.slate['400']};
   }
 `;
 
@@ -42,28 +63,29 @@ const ReplyHeaderInfoContainer = styled.div`
   flex-direction: column;
 `;
 
-const ReplyIconContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-`;
-
-const ReplyHeaderNameWrapper = styled.span`
-  font-size: 18px;
-  line-height: 22px;
-  color: ${({ theme }) => theme.mode.typo_sub};
-`;
-
-const ReplyWrapper = styled.div`
+const ReplyWrapper = styled.p`
   width: 100%;
-  min-height: 55px;
+  min-height: 2.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   height: auto;
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.mode.main};
-  padding: 0 1rem;
-  border-radius: 5px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
   color: ${({ theme }) => theme.mode.typo_sub};
+`;
+
+const ReplyDeleteWrapper = styled.p`
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  gap: 2rem;
 `;
 
 export default function CommentDetailReplyItem({
@@ -89,25 +111,28 @@ export default function CommentDetailReplyItem({
 
   return (
     <Container>
-      <ReplyHeaderContainer>
-        <ReplyIconContainer>
-          <Avatar size="40px" src={profile} key={reply_id} />
+      <HeaderContainer>
+        <Avatar size="40px" src={profile} key={reply_id} />
+        <HeaderInfoContainer>
           <ReplyHeaderInfoContainer>
-            <ReplyHeaderNameWrapper>{name}</ReplyHeaderNameWrapper>
-            <ReplyHeaderDateWrapper>
+            <HeaderInfoNameWrapper>
+              <p>{name}</p>
+            </HeaderInfoNameWrapper>
+            <HeaderInfoDatetimeContainer>
               <IconCalendar />
               &nbsp;
               {createdTime}
-            </ReplyHeaderDateWrapper>
+            </HeaderInfoDatetimeContainer>
           </ReplyHeaderInfoContainer>
-        </ReplyIconContainer>
-        {isAuth ? (
-          <Icon onClick={replyDeleteHandler} icon={<IconTrashCan />}>
-            Delete
-          </Icon>
-        ) : null}
-      </ReplyHeaderContainer>
+        </HeaderInfoContainer>
+      </HeaderContainer>
       <ReplyWrapper>{reply}</ReplyWrapper>
+      {isAuth && (
+        <ReplyDeleteWrapper>
+          <span onClick={replyDeleteHandler}>삭제하기</span>
+          <span>수정하기</span>
+        </ReplyDeleteWrapper>
+      )}
     </Container>
   );
 }
