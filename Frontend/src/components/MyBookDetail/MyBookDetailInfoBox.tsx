@@ -7,11 +7,12 @@ import Divider from 'components/common/Divider';
 import Icon from 'components/common/Button/Icon';
 import HelmetProvider from 'components/common/HelmetProvider';
 
-import { IconBookMark, IconTrashCan } from '@style/icons';
+import { IconBookMark, IconPencil, IconPlus, IconTrashCan } from '@style/icons';
 import useMyBookPageQueries from '@queries/myBook/useMyBookPageQueries';
 import { customize } from '@style/colors';
 import { modalAtom } from 'recoil/modal';
 import { myBookAtom } from 'recoil/myBook';
+import Button from 'components/common/Button';
 
 interface IProps {
   users_books_id: number;
@@ -21,6 +22,12 @@ const Container = styled.div`
   height: auto;
   width: 100%;
   display: flex;
+  flex-direction: column;
+`;
+
+const SubContainer = styled.div`
+  display: flex;
+  width: 100%;
 `;
 
 const DetailContainer = styled.div`
@@ -119,6 +126,12 @@ const BookMarkWrapper = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  padding: 1rem 1rem 0 1rem;
+  display: flex;
+  gap: 1rem;
+`;
+
 export default function MyBookDetailInfoBox({ users_books_id }: IProps) {
   const { myBookInfoData, myBookInfoIsLoading } =
     useMyBookPageQueries(users_books_id);
@@ -150,35 +163,48 @@ export default function MyBookDetailInfoBox({ users_books_id }: IProps) {
       description="해당 책의 정보를 보여주는 페이지입니다."
     >
       <Container>
-        <ImageContainer>
-          <ImageWrapper src={thumbnail} alt={title} height={174} width={120} />
-          <BookMarkWrapper>
-            <IconBookMark />
-          </BookMarkWrapper>
-        </ImageContainer>
-        <DetailContainer>
-          <DetailHeader>
-            <DetailHeaderInfo>
-              <Publisher>{publisher}</Publisher>
-              <Title>{title}</Title>
-              <Authors>{authors}</Authors>
-            </DetailHeaderInfo>
-            <DetailHeaderIconWrapper>
-              <Icon onClick={modalHandler} icon={<IconTrashCan />}>
-                Delete
-              </Icon>
-            </DetailHeaderIconWrapper>
-          </DetailHeader>
-          <Divider divider={2} />
-          {contents == '' ? (
-            <Description>등록된 정보가 없습니다.</Description>
-          ) : (
-            <Description>{contents} ...</Description>
-          )}
-          <A href={url} target="_blank" rel="noreferrer">
-            더보기
-          </A>
-        </DetailContainer>
+        <SubContainer>
+          <ImageContainer>
+            <ImageWrapper
+              src={thumbnail}
+              alt={title}
+              height={174}
+              width={120}
+            />
+            <BookMarkWrapper>
+              <IconBookMark />
+            </BookMarkWrapper>
+          </ImageContainer>
+          <DetailContainer>
+            <DetailHeader>
+              <DetailHeaderInfo>
+                <Publisher>{publisher}</Publisher>
+                <Title>{title}</Title>
+                <Authors>{authors}</Authors>
+              </DetailHeaderInfo>
+            </DetailHeader>
+            <Divider divider={2} />
+            {contents == '' ? (
+              <Description>등록된 정보가 없습니다.</Description>
+            ) : (
+              <Description>{contents} ...</Description>
+            )}
+            <A href={url} target="_blank" rel="noreferrer">
+              더보기
+            </A>
+          </DetailContainer>
+        </SubContainer>
+        <ButtonContainer>
+          <Button icon={<IconPlus />} text>
+            태그
+          </Button>
+          <Button icon={<IconPencil />} text>
+            한줄평
+          </Button>
+          <Icon onClick={modalHandler} icon={<IconTrashCan />}>
+            Delete
+          </Icon>
+        </ButtonContainer>
       </Container>
     </HelmetProvider>
   );

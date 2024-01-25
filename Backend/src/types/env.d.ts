@@ -12,7 +12,7 @@ declare namespace NodeJS {
 
     CLIENT_URL: string;
 
-    SESSION_SECRET: string;
+    SESSION_SECRET_KEY: string;
 
     ACCESS_TOKEN: string;
     REFRESH_TOKEN: string;

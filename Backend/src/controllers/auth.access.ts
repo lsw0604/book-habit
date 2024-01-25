@@ -33,6 +33,8 @@ const access = (req: Request, res: Response, next: NextFunction) => {
         return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
       }
 
+      console.log('auth_access', user);
+
       req.user = user;
       next();
     }

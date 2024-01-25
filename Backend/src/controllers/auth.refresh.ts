@@ -37,8 +37,9 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
 
       const { id, name, email } = user as { id: number; name: string; email: string };
       const { access_jwt } = tokenGenerator({ id, name, email });
+      req.cookies(access_jwt, 'access');
 
-      req.user = { ...user, access_jwt };
+      req.user = { ...user };
       next();
     }
   )(req, res, next);

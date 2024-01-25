@@ -75,6 +75,12 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
           httpOnly: true,
           path: '/',
         });
+
+        res.cookie('access', access_jwt, {
+          maxAge: 1000 * 60 * 60,
+          httpOnly: true,
+          path: '/',
+        });
         return res.status(200).json({
           ...KAKAO_ID_EXIST_RESULT[0],
           access_jwt,

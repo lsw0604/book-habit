@@ -5,11 +5,12 @@ interface IProps {
   divider: number;
 }
 
-const Container = styled.hr<{ divider: number }>`
+const Container = styled.div<{ divider: number }>`
   width: 100%;
+  height: 3px;
   margin-top: ${({ divider }) => `${divider}px`};
   margin-bottom: ${({ divider }) => `${divider}px`};
-  border-color: ${customize.gray['200']};
+  background-color: ${customize.gray['300']};
 `;
 
 export default function Divider({ divider }: IProps) {

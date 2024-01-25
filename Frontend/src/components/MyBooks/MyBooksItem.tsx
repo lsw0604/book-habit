@@ -54,7 +54,7 @@ export default function MyBooksItem({ item }: IProps) {
 
   const datetime = dayjs(date).add(9, 'hour').format('YYYY MM DD');
 
-  const onClick = () => navigate(`/my_books/${id}`);
+  const onClick = () => navigate(`/my_books/detail/${id}`);
 
   return (
     <Container onClick={onClick}>
@@ -63,8 +63,8 @@ export default function MyBooksItem({ item }: IProps) {
       </Header>
       <Contents>
         <Title>{title}</Title>
-        <Status>{status ? status : '서재에만 담겨있어요'}</Status>
         <DateTime>📅&nbsp;{date ? datetime : '❌'}</DateTime>
+        <Status>{status ? status : '서재에만 담겨있어요'}</Status>
       </Contents>
     </Container>
   );

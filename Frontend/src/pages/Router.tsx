@@ -23,6 +23,7 @@ const SearchPage = lazy(() => import('@pages/SearchPage'));
 const CommentsPage = lazy(() => import('@pages/CommentsPage'));
 const ProfilePage = lazy(() => import('@pages/ProfilePage'));
 const CommentDetailPage = lazy(() => import('@pages/CommentDetailPage'));
+const CommentRegisterPage = lazy(() => import('@pages/CommentRegisterPage'));
 const NotFound = lazy(() => import('@pages/404'));
 const ModalPortal = lazy(() => import('components/Modals/ModalPortal'));
 
@@ -68,8 +69,12 @@ export default function Router() {
                     <Route path="/profile" Component={ProfilePage} />
                     <Route path="/my_books" Component={MyBooksPage} />
                     <Route
-                      path="/my_books/:users_books_id"
+                      path="/my_books/detail/:users_books_id"
                       Component={MyBookDetailPage}
+                    />
+                    <Route
+                      path="/my_books/comment/:user_books_id"
+                      Component={CommentRegisterPage}
                     />
                   </Route>
                   <Route element={<IsAuthLayout needLogin={false} />}>

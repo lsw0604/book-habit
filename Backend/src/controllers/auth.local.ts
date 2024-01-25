@@ -12,26 +12,19 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (!user) {
         return res.status(403).json({ message: info.message, status: 'error' });
       }
-      const { id, name, email, age, gender, provider, profile } = user as ResponseLoginType;
+      const { id, name, email } = user as ResponseLoginType;
 
-      const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
+      const { access_jwt } = tokenGenerator({ id, name, email });
 
-      res.cookie('refresh', refresh_jwt, {
+      res.cookie('access', access_jwt, {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
         path: '/',
       });
 
       res.status(200).json({
-        id,
-        name,
-        email,
-        gender,
-        age,
-        provider,
-        access_jwt,
-        profile,
-        message: '로그인에 성공했습니다.',
+        ...user,
+        message: info.message,
         status: 'success',
       });
       next();

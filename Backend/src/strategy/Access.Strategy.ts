@@ -1,11 +1,17 @@
-import { ExtractJwt, StrategyOptions, VerifyCallback } from 'passport-jwt';
+import { StrategyOptions, VerifyCallback } from 'passport-jwt';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
 import { AccessStrategyType } from '../types';
 
 const AccessJWTStrategyOptions: StrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: (req) => {
+    let token;
+    if (req && req.cookies) {
+      token = req.cookies['access'];
+      return token;
+    }
+  },
   secretOrKey: process.env.ACCESS_TOKEN as string,
 };
 
