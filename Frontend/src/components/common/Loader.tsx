@@ -1,5 +1,13 @@
-import { motion } from 'framer-motion';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+
+const Animate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 const SpinnerSize = (ctx?: number) => {
   if (ctx === undefined) {
@@ -23,33 +31,23 @@ const Container = styled.div<{ size?: number }>`
   ${({ size }) => SpinnerSize(size)}
 `;
 
-const Spinner = styled(motion.div)`
+const Spinner = styled.div`
   height: 100%;
   width: 100%;
   border: ${({ theme }) => theme.colors.spinner} solid 2px;
   border-top: transparent solid 2px;
   border-radius: 50%;
+  animation: ${Animate} 1s linear infinite;
 `;
 
-const animationVariants = {
-  animate: {
-    rotate: [0, 180, 360],
-    transition: {
-      repeat: Infinity,
-      duration: 1,
-      ease: 'linear',
-    },
-  },
-};
-
-interface IProps {
+interface LoaderProps {
   size?: number;
 }
 
-export default function Loader({ size }: IProps) {
+export default function Loader({ size }: LoaderProps) {
   return (
     <Container size={size}>
-      <Spinner animate="animate" variants={animationVariants} />
+      <Spinner />
     </Container>
   );
 }
