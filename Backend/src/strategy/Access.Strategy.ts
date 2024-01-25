@@ -28,10 +28,9 @@ const AccessVerify: VerifyCallback = async (payload, done) => {
       const [rows] = await connection.query<AccessStrategyType[]>(SQL, VALUES);
 
       if (rows[0] !== undefined) {
-        const { id, name, email, gender, age, provider, profile } = rows[0];
         connection.release();
         logging.debug(NAMESPACE, '[FINISH]');
-        return done(null, { id, name, email, age, gender, provider, profile });
+        return done(null, { ...rows[0] });
       } else {
         connection.release();
         logging.error(NAMESPACE, 'SQL 문 실행 결과가 존재하지 않습니다.');

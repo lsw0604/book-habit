@@ -7,33 +7,23 @@ const access = (req: Request, res: Response, next: NextFunction) => {
     { session: false },
     (_: any, user: Express.User, info: { name: string; message: string; expiredAt?: Date }) => {
       if (!user && info instanceof Error && info.message === 'No auth token') {
-        return res
-          .status(403)
-          .json({ status: 'error', message: 'No auth token', strategy: 'access' });
+        return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
       }
       if (!user && info instanceof Error && info.message === 'jwt malformed') {
-        return res
-          .status(403)
-          .json({ status: 'error', message: 'jwt malformed', strategy: 'access' });
+        return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
       }
 
       if (!user && info instanceof Error && info.message === 'jwt expired') {
-        return res
-          .status(403)
-          .json({ status: 'error', message: 'jwt expired', strategy: 'access' });
+        return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
       }
 
       if (!user && info instanceof Error && info.message === 'invalid token') {
-        return res
-          .status(403)
-          .json({ status: 'error', message: 'invalid token', strategy: 'access' });
+        return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
       }
 
       if (!user) {
         return res.status(403).json({ status: 'error', message: info.message, strategy: 'access' });
       }
-
-      console.log('auth_access', user);
 
       req.user = user;
       next();

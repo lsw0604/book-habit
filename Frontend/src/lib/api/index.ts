@@ -10,19 +10,6 @@ export const axios = Axios.create({
   withCredentials: true,
 });
 
-axios.interceptors.request.use(
-  async (config) => {
-    config.headers.Authorization = `bearer ${window.localStorage.getItem(
-      'ACCESS'
-    )}`;
-    config.headers.Accept = 'application/json';
-    return config;
-  },
-  (error) => {
-    Promise.reject(error);
-  }
-);
-
 axios.interceptors.response.use(
   (response) => {
     return response;
@@ -33,18 +20,12 @@ axios.interceptors.response.use(
     const { message, strategy } = error.response.data;
 
     if (statusCode === 403 && message && strategy === 'access') {
-      const { access_jwt } = await refreshAPI();
-
-      originalRequest._retry = true;
-      window.localStorage.setItem('ACCESS', access_jwt);
+      await refreshAPI();
       return axios(originalRequest);
     }
 
     if (statusCode === 403 && message && strategy === 'refresh') {
       await logoutAPI();
-
-      originalRequest._retry = true;
-      window.localStorage.removeItem('ACCESS');
       return Promise.reject(error);
     }
 

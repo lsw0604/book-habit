@@ -7,7 +7,6 @@ import morgan from 'morgan';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JWTStrategy } from 'passport-jwt';
-import session from 'express-session';
 
 import logging from './config/logging';
 import config from './config/config';
@@ -35,33 +34,18 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET_KEY as string,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../Frontend/dist')));
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 passport.use('local', new LocalStrategy(localOptions, LocalVerify));
 passport.use('access', new JWTStrategy(AccessJWTStrategyOptions, AccessVerify));
 passport.use('refresh', new JWTStrategy(RefreshJWTStrategyOptions, RefreshVerify));
 
-passport.serializeUser((user, done) => {
-  console.log(user, 'user');
-  done(null, user.refresh_jwt);
-});
-
-passport.deserializeUser(async (id, done) => {
-  console.log(id, 'id');
-});
 app.use('/api/books', bookRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/my_book', myBookRouter);

@@ -14,12 +14,22 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       }
       const { id, name, email } = user as ResponseLoginType;
 
-      const { access_jwt } = tokenGenerator({ id, name, email });
+      const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
       res.cookie('access', access_jwt, {
-        maxAge: 1000 * 60 * 60 * 24,
-        httpOnly: true,
+        maxAge: 1000 * 60 * 60,
         path: '/',
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+      });
+
+      res.cookie('refresh', refresh_jwt, {
+        maxAge: 1000 * 60 * 60 * 24,
+        path: '/',
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
       });
 
       res.status(200).json({

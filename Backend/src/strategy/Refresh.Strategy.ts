@@ -28,10 +28,9 @@ const RefreshVerify: VerifyCallback = async (payload, done) => {
       const [rows] = await connection.query<RefreshStrategyType[]>(SQL, VALUE);
 
       if (rows[0] !== undefined) {
-        const { id, age, gender, name, email, provider } = rows[0];
         connection.release();
         logging.debug(NAMESPACE, '[FINISH]');
-        return done(null, { id, age, name, email, gender, provider });
+        return done(null, { ...rows[0] });
       } else {
         connection.release();
         logging.error(NAMESPACE, 'SQL 문 실행 결과가 존재하지 않습니다.');

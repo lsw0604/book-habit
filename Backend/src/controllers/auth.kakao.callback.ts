@@ -70,20 +70,24 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
         const { id, email, name } = KAKAO_ID_EXIST_RESULT[0];
         const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
-        res.cookie('refresh', refresh_jwt, {
-          maxAge: 1000 * 60 * 60 * 24,
-          httpOnly: true,
-          path: '/',
-        });
-
         res.cookie('access', access_jwt, {
           maxAge: 1000 * 60 * 60,
-          httpOnly: true,
           path: '/',
+          secure: true,
+          httpOnly: true,
+          sameSite: 'lax',
         });
+
+        res.cookie('refresh', refresh_jwt, {
+          maxAge: 1000 * 60 * 60 * 24,
+          path: '/',
+          secure: true,
+          httpOnly: true,
+          sameSite: 'lax',
+        });
+
         return res.status(200).json({
           ...KAKAO_ID_EXIST_RESULT[0],
-          access_jwt,
           message: '로그인에 성공 하셨습니다.',
           status: 'success',
         });
@@ -114,17 +118,26 @@ export default async function KakaoCallback(req: Request, res: Response, _: Next
           email: id,
         });
 
+        res.cookie('access', access_jwt, {
+          maxAge: 1000 * 60 * 60,
+          path: '/',
+          secure: true,
+          httpOnly: true,
+          sameSite: 'lax',
+        });
+
         res.cookie('refresh', refresh_jwt, {
           maxAge: 1000 * 60 * 60 * 24,
-          httpOnly: true,
           path: '/',
+          secure: true,
+          httpOnly: true,
+          sameSite: 'lax',
         });
 
         await connection.commit();
         connection.release();
         res.status(200).json({
           ...EXIST_SUB_RESULT[0],
-          access_jwt,
           message: '카카오 추가정보를 등록해주세요.',
           status: 'info',
         });

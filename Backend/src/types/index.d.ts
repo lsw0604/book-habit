@@ -369,7 +369,6 @@ declare global {
       age?: number;
       gender?: GenderType;
       provider?: ProviderType;
-      refresh_jwt?: string;
       profile?: string;
     }
   }

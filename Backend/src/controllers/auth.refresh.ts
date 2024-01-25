@@ -11,22 +11,22 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
       if (!user && info instanceof Error && info.message === 'No auth token') {
         return res
           .status(403)
-          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
+          .json({ status: 'error', message: info.message, strategy: 'refresh' });
       }
       if (!user && info instanceof Error && info.message === 'jwt malformed') {
         return res
           .status(403)
-          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
+          .json({ status: 'error', message: info.message, strategy: 'refresh' });
       }
       if (!user && info instanceof Error && info.message === 'jwt expired') {
         return res
           .status(403)
-          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
+          .json({ status: 'error', message: info.message, strategy: 'refresh' });
       }
       if (!user && info instanceof Error && info.message === 'invalid token') {
         return res
           .status(403)
-          .json({ status: 'error', message: '로그인이 필요합니다.', strategy: 'refresh' });
+          .json({ status: 'error', message: info.message, strategy: 'refresh' });
       }
 
       if (!user) {
@@ -37,9 +37,14 @@ const refresh = (req: Request, res: Response, next: NextFunction) => {
 
       const { id, name, email } = user as { id: number; name: string; email: string };
       const { access_jwt } = tokenGenerator({ id, name, email });
-      req.cookies(access_jwt, 'access');
 
-      req.user = { ...user };
+      res.cookie('access', access_jwt, {
+        maxAge: 1000 * 60 * 60,
+        path: '/',
+        secure: true,
+        httpOnly: true,
+        sameSite: 'lax',
+      });
       next();
     }
   )(req, res, next);

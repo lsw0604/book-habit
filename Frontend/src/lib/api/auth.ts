@@ -15,7 +15,7 @@ export const accessAPI = async () => {
  * * refresh_token을 verify하는 API
  */
 export const refreshAPI = async () => {
-  const { data } = await axios.get<RefreshResponseType>('/api/auth/refresh');
+  const { data } = await axios.get('/api/auth/refresh');
   return data;
 };
 

@@ -57,10 +57,6 @@ type AccessResponseType = {
   profile: string;
 };
 
-type RefreshResponseType = AccessResponseType & {
-  access_jwt: string;
-};
-
 type LogoutResponseType = {
   message: string;
   status: StatusType;
