@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
-import ImageWrapper from 'components/common/ImageWrapper';
+import ImageWrapper from 'components/common/image-wrapper';
+import Skeleton from 'components/common/skeleton';
 
-interface IProps {
+interface MyBookItemProps {
   item: MyBookListInfinityQueryItemType;
 }
 
@@ -20,18 +21,17 @@ const Container = styled.li`
 const Header = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 `;
 
 const Contents = styled.div`
   width: 100%;
   height: auto;
-  color: ${({ theme }) => theme.mode.typo_main};
 `;
 
 const Title = styled.p`
-  font-size: 20px;
-  line-height: 22px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -39,15 +39,17 @@ const Title = styled.p`
 
 const Status = styled.p`
   color: ${({ theme }) => theme.colors.main};
-  font-size: 12px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 `;
 
 const DateTime = styled.p`
   color: ${({ theme }) => theme.mode.typo_sub};
-  font-size: 12px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 `;
 
-export default function MyBooksItem({ item }: IProps) {
+export default function MyBookItem({ item }: MyBookItemProps) {
   const navigate = useNavigate();
 
   const { date, id, isbn, thumbnail, title, status } = item;
@@ -64,8 +66,35 @@ export default function MyBooksItem({ item }: IProps) {
       <Contents>
         <Title>{title}</Title>
         <DateTime>📅&nbsp;{date ? datetime : '❌'}</DateTime>
-        <Status>{status ? status : '서재에만 담겨있어요'}</Status>
+        <Status>{status ? status : '상태없음'}</Status>
       </Contents>
     </Container>
   );
 }
+
+MyBookItem.Loader = function MyBookItemLoader() {
+  return (
+    <Container>
+      <Header>
+        <Skeleton width="120px" height="174px" />
+      </Header>
+      <Contents>
+        <Skeleton
+          width="100%"
+          height="26px"
+          style={{ marginBottom: '0.25rem' }}
+        />
+        <Skeleton
+          width="50px"
+          height="18px"
+          style={{ marginBottom: '0.25rem' }}
+        />
+        <Skeleton
+          width="100px"
+          height="18px"
+          style={{ marginBottom: '0.25rem' }}
+        />
+      </Contents>
+    </Container>
+  );
+};

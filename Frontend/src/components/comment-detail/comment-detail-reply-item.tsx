@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
 import styled from 'styled-components';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { IconCalendar } from '@style/icons';
 import Avatar from 'components/common/Avatar';
+import Skeleton from 'components/common/skeleton';
 
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { modalAtom } from 'recoil/modal';
 import { replyAtom } from 'recoil/reply';
 import { userAtom } from 'recoil/user';
-import Skeleton from 'components/common/skeleton';
 import { customize } from '@style/colors';
 
 const Container = styled.li`

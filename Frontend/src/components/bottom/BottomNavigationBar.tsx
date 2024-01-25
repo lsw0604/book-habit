@@ -43,7 +43,12 @@ const BOTTOM_BUTTON_OPTIONS = [
   { title: '검색하기', icon: <IconSearch />, url: '/search', isAuth: false },
   { title: '한줄평', icon: <IconComments />, url: '/comments', isAuth: false },
   { component: <BottomNavigationPaletteButton /> },
-  { title: '내 서재', icon: <IconBook />, url: '/my_books', isAuth: true },
+  {
+    title: '내 서재',
+    icon: <IconBook />,
+    url: '/my_books?category=전체보기',
+    isAuth: true,
+  },
   { title: '내 프로필', icon: <IconPerson />, url: '/profile', isAuth: true },
 ];
 

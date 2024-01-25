@@ -1,4 +1,5 @@
 import { customize } from '@style/colors';
+import { HTMLAttributes } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const Animate = keyframes`
@@ -23,12 +24,19 @@ const Container = styled.div<{
   border-radius: ${({ isCircle }) => (isCircle ? '50%' : '1rem')};
 `;
 
-interface SkeletonProps {
+interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   width?: string;
   height?: string;
   isCircle?: boolean;
 }
 
-export default function Skeleton({ width, height, isCircle }: SkeletonProps) {
-  return <Container width={width} height={height} isCircle={isCircle} />;
+export default function Skeleton({
+  width,
+  height,
+  isCircle,
+  ...props
+}: SkeletonProps) {
+  return (
+    <Container width={width} height={height} isCircle={isCircle} {...props} />
+  );
 }

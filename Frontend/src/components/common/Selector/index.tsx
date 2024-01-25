@@ -1,14 +1,10 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  MouseEvent as ReactMouseEvent,
-} from 'react';
+import { useRef, useState, MouseEvent as ReactMouseEvent } from 'react';
 import styled from 'styled-components';
 
 import Divider from 'components/common/Divider';
 import ErrorMessage from 'components/common/Message/ErrorMessage';
 import { IconClose, IconDownArrow } from '@style/icons';
+import { useOnClickOutside } from 'usehooks-ts';
 
 const Container = styled.div`
   display: flex;
@@ -129,7 +125,7 @@ const Empty = styled.div`
  * * Multiple true : const [value, setValue] = useState<SelectorOptionType[]>([]);
  * * Multiple false : const [value, setValue] = useState<SelectorOptionType | undefined>(undefined);
  */
-export default function Index({
+export default function Selector({
   multiple,
   value,
   onChange,
@@ -139,9 +135,10 @@ export default function Index({
   errorMessage,
   useValidation,
 }: SelectorType) {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [selects, setSelects] = useState<string[]>(options);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const selectRef = useRef<HTMLDivElement>(null);
 
   const selectOption = (option: string) => {
     if (multiple) {
@@ -190,25 +187,12 @@ export default function Index({
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  useOnClickOutside(selectRef, () => setIsOpen(false));
 
   return (
     <>
       {label && <Label>{label}</Label>}
-      <Container ref={containerRef} onClick={handleOptions}>
+      <Container ref={selectRef} onClick={handleOptions}>
         <ValueContainer>
           <Value>
             {multiple ? (
