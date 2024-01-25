@@ -1,10 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Input from 'components/common/Input';
-import Icon from 'components/common/Button/Icon';
 import { IconSearch } from '@style/icons';
+
+import { InputType, schema } from './type';
 
 const Container = styled.form`
   width: 100%;
@@ -12,56 +14,29 @@ const Container = styled.form`
   padding: 0 1rem;
   flex-direction: column;
   position: relative;
-
-  .circle_btn {
-    &::placeholder {
-      line-height: 16px;
-      font-size: 14px;
-      font-weight: 700;
-      color: ${({ theme }) => theme.mode.typo_sub};
-    }
-  }
-`;
-
-const IconWrapper = styled.div`
-  width: 0px;
-  height: 0px;
-  position: absolute;
-  top: 5px;
-  right: 55px;
 `;
 
 export default function SearchInput() {
-  const [keyword, setKeyword] = useState<string>('');
-
   const navigate = useNavigate();
 
-  const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(event.target.value);
-  }, []);
+  const { register, handleSubmit } = useForm<InputType>({
+    resolver: zodResolver(schema),
+  });
 
-  const onSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-
-    const url = `?keyword=${keyword}`;
-
-    if (keyword !== '') return navigate(url);
+  const onSubmit = (data: InputType) => {
+    return navigate(`?keyword=${data.search}`);
   };
 
   return (
-    <Container onSubmit={onSubmit}>
+    <Container onSubmit={handleSubmit(onSubmit)}>
       <Input
         className="circle_btn"
         style={{ borderRadius: '2rem', padding: '0 1rem' }}
-        value={keyword}
-        onChange={onChange}
         placeholder="찾고자하는 책 제목을 입력해주세요."
+        icon={<IconSearch />}
+        register={{ ...register('search') }}
       />
-      <IconWrapper>
-        <Icon type="submit" icon={<IconSearch />}>
-          Search
-        </Icon>
-      </IconWrapper>
+      <button type="submit" hidden />
     </Container>
   );
 }

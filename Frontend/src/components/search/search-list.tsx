@@ -129,7 +129,6 @@ const SearchListEmptyBackground = styled.div`
 `;
 
 const SearchListEmptySpan = styled.span`
-  display: flex;
   font-size: 1.125rem;
   line-height: 1.75rem;
 `;
@@ -142,7 +141,7 @@ SearchList.Empty = function SearchListEmpty({ keyword }: SearchListEmptyProps) {
   return (
     <SearchListEmptyContainer>
       <SearchListEmptyBackground>
-        {keyword ? (
+        {!keyword ? (
           <SearchListEmptySpan>책 제목을 검색해주세요.</SearchListEmptySpan>
         ) : (
           <SearchListEmptySpan>

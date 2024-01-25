@@ -1,14 +1,16 @@
 import styled from 'styled-components';
-import { InputHTMLAttributes, memo } from 'react';
+import { InputHTMLAttributes } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 import ErrorMessage from 'components/common/Message/ErrorMessage';
 
-interface IProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: JSX.Element;
   label?: string;
   isValid?: boolean;
   useValidation?: boolean;
   errorMessage?: string;
+  register?: UseFormRegisterReturn;
 }
 
 const Container = styled.div<{ icon: boolean }>`
@@ -61,19 +63,20 @@ const Icon = styled.div`
   }
 `;
 
-const Index = ({
+export default function Input({
   icon,
   label,
   isValid,
   useValidation,
   errorMessage,
+  register,
   ...props
-}: IProps) => {
+}: InputProps) {
   return (
     <>
       {label && <Label>{label}</Label>}
       <Container icon={!!icon}>
-        <input {...props} />
+        <input {...props} {...register} />
         <Icon>{icon}</Icon>
       </Container>
       {errorMessage && isValid && useValidation && (
@@ -81,8 +84,4 @@ const Index = ({
       )}
     </>
   );
-};
-
-const MemorizedInput = memo(Index);
-
-export default MemorizedInput;
+}
