@@ -1,9 +1,11 @@
-import { customize } from '@style/colors';
-import ImageWrapper from 'components/common/ImageWrapper';
-import { useRecoilValue } from 'recoil';
-import { searchBookAtom } from 'recoil/searchBook';
 import styled from 'styled-components';
 import { v4 } from 'uuid';
+import { useRecoilValue } from 'recoil';
+
+import ImageWrapper from 'components/common/image-wrapper';
+
+import { searchBookAtom } from 'recoil/searchBook';
+import { customize } from '@style/colors';
 
 const Container = styled.div`
   height: 190px;

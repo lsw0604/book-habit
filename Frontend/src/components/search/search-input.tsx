@@ -31,7 +31,12 @@ export default function SearchInput() {
     <Container onSubmit={handleSubmit(onSubmit)}>
       <Input
         className="circle_btn"
-        style={{ borderRadius: '2rem', padding: '0 1rem' }}
+        style={{
+          borderRadius: '2rem',
+          padding: '0 1rem',
+          fontSize: '0.75rem',
+          lineHeight: '1rem',
+        }}
         placeholder="찾고자하는 책 제목을 입력해주세요."
         icon={<IconSearch />}
         register={{ ...register('search') }}

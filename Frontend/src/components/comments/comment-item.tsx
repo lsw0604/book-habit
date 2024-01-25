@@ -67,8 +67,9 @@ const CommentItemLoaderContainer = styled.div`
   padding: 1rem;
   width: 100%;
   border-radius: 1rem;
-  box-shadow: ${({ theme }) => theme.shadow.lg};
   box-sizing: border-box;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 const CommentItemLoaderHeader = styled.div`

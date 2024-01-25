@@ -15,9 +15,17 @@ export default function useCommentsReplyListQuery(
 
   const { data, isError, isLoading, error, refetch, isFetching } = useQuery<
     CommentsReplyListQueryResponseType,
-    AxiosError<{ message: string; status: StatusType }>
-  >([useCommentsReplyListQueryKey, comment_id], () =>
-    commentsReplyListAPI(comment_id)
+    AxiosError<{ message: string; status: StatusType }>,
+    CommentsReplyListQueryListType
+  >(
+    [useCommentsReplyListQueryKey, comment_id],
+    () => commentsReplyListAPI(comment_id),
+    {
+      select: (response) => {
+        const { reply_list } = response;
+        return reply_list;
+      },
+    }
   );
 
   useEffect(() => {

@@ -1,38 +1,32 @@
 import styled from 'styled-components';
 import { Navigate, useParams } from 'react-router-dom';
 
-import CommentDetailReplyList from 'components/CommentDetail/CommentDetailReplyList';
-import CommentDetailReplyForm from 'components/CommentDetail/CommentDetailReplyForm';
-import CommentDetail from 'components/CommentDetail/CommentDetail';
+import CommentDetailReplyList from 'components/comment-detail/comment-detail-reply-list';
+import CommentDetailReplyForm from 'components/comment-detail/comment-detail-reply-form';
+import CommentDetail from 'components/comment-detail/comment-detail';
 import HelmetProvider from 'components/common/HelmetProvider';
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
-  @media screen and (min-width: 768px) {
-    padding: 1rem 15%;
-  }
+  overflow: auto;
+  box-sizing: border-box;
 `;
 
 const ReplyContainer = styled.div`
-  height: auto;
   display: flex;
+  height: 100%;
   flex-direction: column;
   justify-content: space-between;
   padding: 1rem;
-  background-color: ${({ theme }) => theme.mode.sub};
-  box-shadow: ${({ theme }) => theme.shadow.md};
   border-radius: 1rem;
-`;
-
-const Wrapper = styled.div`
-  height: 80%;
-  position: relative;
-  width: 100%;
-  overflow: scroll;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  background-color: ${({ theme }) => theme.mode.sub};
+  box-shadow: ${({ theme }) => theme.shadow.lg};
 `;
 
 export default function CommentDetailPage() {
@@ -50,9 +44,7 @@ export default function CommentDetailPage() {
       <Container>
         <CommentDetail comment_id={COMMENT_ID} />
         <ReplyContainer>
-          <Wrapper>
-            <CommentDetailReplyList comment_id={COMMENT_ID} />
-          </Wrapper>
+          <CommentDetailReplyList comment_id={COMMENT_ID} />
           <CommentDetailReplyForm comment_id={COMMENT_ID} />
         </ReplyContainer>
       </Container>
