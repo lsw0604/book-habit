@@ -5,6 +5,7 @@ import myBookList from '../controllers/myBook.list';
 import myBookHistoryList from '../controllers/myBook.history.list';
 import myBookCommentsList from '../controllers/myBook.comments.list';
 import myBookInfo from '../controllers/myBook.info';
+import myBookCalendar from '../controllers/myBook.calendar';
 
 import myBookHistoryRegister from '../controllers/myBook.history.register';
 import myBookCommentRegister from '../controllers/myBook.comments.register';
@@ -15,7 +16,7 @@ import myBookHistoryDelete from '../controllers/myBook.history.delete';
 
 import myBookCommentUpdate from '../controllers/myBook.comments.update';
 
-import access from '../controllers/auth.access';
+import access from '../middleware/auth.access';
 
 /**
  * * 내 서재에 등록된 책 목록을 불러오는 API /api/my_book/list?page=page&status=status
@@ -38,6 +39,7 @@ myBookRouter.get('/history/list/:users_books_id', access, myBookHistoryList);
 myBookRouter.get('/comments/list/:users_books_id', access, myBookCommentsList);
 myBookRouter.get('/info/:users_books_id', access, myBookInfo);
 myBookRouter.get('/time_range/:users_books_id', access, myBookTimeRange);
+myBookRouter.get('/calendar/:users_books_id', access, myBookCalendar);
 // CREATE
 myBookRouter.post('/history/register', access, myBookHistoryRegister);
 myBookRouter.post('/comments/register', access, myBookCommentRegister);

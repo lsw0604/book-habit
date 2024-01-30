@@ -42,15 +42,7 @@ const LocalVerify: LocalVerify = async (email, password, done) => {
 
       logging.info(NAMESPACE, '로그인에 성공했습니다.');
 
-      return done(
-        null,
-        {
-          ...rows[0],
-        },
-        {
-          message: '로그인에 성공했습니다.',
-        }
-      );
+      return done(null, { ...rows[0] }, { message: '로그인에 성공했습니다.' });
     } catch (error: any) {
       connection.release();
       logging.error(NAMESPACE, ' : ', error);

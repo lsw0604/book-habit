@@ -2,8 +2,6 @@ import express from 'express';
 
 import register from '../controllers/auth.register';
 import local from '../controllers/auth.local';
-import access from '../controllers/auth.access';
-import refresh from '../controllers/auth.refresh';
 import logout from '../controllers/auth.logout';
 import kakao from '../controllers/auth.kakao.login';
 import KakaoCallback from '../controllers/auth.kakao.callback';
@@ -14,6 +12,8 @@ import authLikeList from '../controllers/auth.like.list';
 import authReplyList from '../controllers/auth.reply.list';
 
 import upload from '../middleware/multer';
+import access from '../middleware/auth.access';
+import refresh from '../middleware/auth.refresh';
 
 /**
  * * 로그아웃하는 API /api/auth/logout

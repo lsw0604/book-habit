@@ -1,6 +1,7 @@
 import http from 'http';
 import path from 'path';
 import express from 'express';
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
@@ -41,6 +42,13 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../Frontend/dist')));
 
 app.use(passport.initialize());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET_KEY as string,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 passport.use('local', new LocalStrategy(localOptions, LocalVerify));
 passport.use('access', new JWTStrategy(AccessJWTStrategyOptions, AccessVerify));

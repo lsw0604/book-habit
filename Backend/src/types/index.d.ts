@@ -356,7 +356,8 @@ type HistoryType = Omit<StatusType, '읽고싶음'>;
 
 declare module 'express-session' {
   interface SessionData {
-    kakaoAccessToken: string;
+    kakao_access_token: string;
+    access_token: string;
   }
 }
 
@@ -370,6 +371,7 @@ declare global {
       gender?: GenderType;
       provider?: ProviderType;
       profile?: string;
+      access_token?: string;
     }
   }
 }

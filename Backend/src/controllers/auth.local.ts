@@ -12,6 +12,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       if (!user) {
         return res.status(403).json({ message: info.message, status: 'error' });
       }
+
       const { id, name, email } = user as ResponseLoginType;
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });

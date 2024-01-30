@@ -10,7 +10,7 @@ import commentsReplyRegister from '../controllers/comments.reply.register';
 import commentsLikeDelete from '../controllers/comments.like.delete';
 import commentsReplyDelete from '../controllers/comments.reply.delete';
 
-import access from '../controllers/auth.access';
+import access from '../middleware/auth.access';
 
 /**
  * * Comment 리스트를 불러오는 API /api/comments/list
