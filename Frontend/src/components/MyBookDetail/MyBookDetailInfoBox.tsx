@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
-import Loader from 'components/common/Loader';
+import Loader from 'components/common/loader';
 import ImageWrapper from 'components/common/image-wrapper';
 import Divider from 'components/common/Divider';
 import Icon from 'components/common/Button/Icon';
@@ -106,12 +106,6 @@ const DetailHeader = styled.div`
 
 const DetailHeaderInfo = styled.div`
   width: 80%;
-`;
-
-const DetailHeaderIconWrapper = styled.div`
-  width: 20%;
-  display: flex;
-  justify-content: end;
 `;
 
 const BookMarkWrapper = styled.div`

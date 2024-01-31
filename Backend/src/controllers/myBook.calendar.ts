@@ -2,7 +2,8 @@ import { Response, Request, NextFunction } from 'express';
 
 import logging from '../config/logging';
 import { connectionPool } from '../config/database';
-import { MyBookHistoryListType, MyBookTimeRangeType } from '../types';
+import { HistoryType, MyBookHistoryListType, MyBookTimeRangeType, StatusType } from '../types';
+import dayjs from 'dayjs';
 
 const NAMESPACE = 'MY_BOOK_CALENDAR';
 
@@ -44,11 +45,19 @@ export default async function myBookCalendar(req: Request, res: Response, _: Nex
       );
       logging.debug(NAMESPACE, '[HISTORY_RESULT]', HISTORY_RESULT);
 
+      const data: { [date: string]: StatusType[] } = {};
+
+      HISTORY_RESULT.forEach((item) => {
+        const date_string = dayjs(item.date).add(9, 'hour').format('YYYY-MM-DD');
+        data[date_string] = data[date_string] || [];
+        data[date_string].push(item.status);
+      });
+
       connection.release();
       res.status(200).json({
         startDate: TIME_RANGE_RESULT[0].startDate,
         endDate: TIME_RANGE_RESULT[0].endDate,
-        historyList: HISTORY_RESULT,
+        historyList: data,
       });
     } catch (error: any) {
       connection.release();

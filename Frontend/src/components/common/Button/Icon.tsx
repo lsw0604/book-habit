@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import Loader from '../Loader';
+import Loader from '../loader';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: JSX.Element;

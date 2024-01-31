@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { LogoMain } from '@style/icons';
-import Loader from 'components/common/Loader';
+import Loader from 'components/common/loader';
 
 const Container = styled.div`
   width: 100%;

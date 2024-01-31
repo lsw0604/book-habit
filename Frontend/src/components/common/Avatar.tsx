@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { v4 } from 'uuid';
-import Loader from './Loader';
+import Loader from './loader';
 
 interface IProps {
   size: string;

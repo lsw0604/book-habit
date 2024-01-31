@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react';
 import styled from 'styled-components';
 
 import Header from 'components/header/Header';
-import Loader from 'components/common/Loader';
+import Loader from 'components/common/loader';
 
 import BottomNavigationBar from 'components/bottom/BottomNavigationBar';
 

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from 'recoil/user';
 
-import Loader from 'components/common/Loader';
+import Loader from 'components/common/loader';
 import { customize } from '@style/colors';
 import { IconHeart, IconHeartFill } from '@style/icons';
 

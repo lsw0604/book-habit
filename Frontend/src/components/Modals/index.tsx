@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { ReactNode, lazy, Suspense } from 'react';
 
-import Loader from 'components/common/Loader';
+import Loader from 'components/common/loader';
 import LoginMessage from 'components/Modals/Login/LoginMessage';
 import SearchBookRegister from 'components/Modals/SearchBook/SearchBookRegister';
 import useModalHook from '@hooks/useModalHook';

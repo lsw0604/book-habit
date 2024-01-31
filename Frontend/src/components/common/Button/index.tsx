@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, ReactNode, memo } from 'react';
 import styled from 'styled-components';
 
-import Loader from 'components/common/Loader';
+import Loader from 'components/common/loader';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
