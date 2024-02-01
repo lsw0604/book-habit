@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 
-import Loader from 'components/common/loader';
+import Loader from 'components/common/Loader';
 import ProfileReplyItem from './ProfileReplyItem';
 import Pagination from 'components/common/Pagination';
 import useProfileReplyQuery from '@queries/profile/useProfileReplyQuery';

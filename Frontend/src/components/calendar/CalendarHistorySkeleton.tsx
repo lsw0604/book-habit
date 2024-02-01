@@ -1,4 +1,4 @@
-import Loader from 'components/common/loader';
+import Loader from 'components/common/Loader';
 import styled from 'styled-components';
 
 interface IProps {

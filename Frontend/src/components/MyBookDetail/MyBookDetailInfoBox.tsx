@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 
-import Loader from 'components/common/loader';
+import Loader from 'components/common/Loader';
 import ImageWrapper from 'components/common/image-wrapper';
 import Divider from 'components/common/Divider';
 import Icon from 'components/common/Button/Icon';

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import useKakaoCallbackQuery from '@queries/kakao/useKakaoCallbackQuery';
-import Loader from 'components/common/loader';
+import Loader from 'components/common/Loader';
 
 const Container = styled.div`
   width: 100%;

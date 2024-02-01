@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { IconCalendar } from '@style/icons';
 import Avatar from 'components/common/Avatar';
-import Skeleton from 'components/common/skeleton';
+import Skeleton from 'components/common/Skeleton';
 
 import { modalAtom } from 'recoil/modal';
 import { replyAtom } from 'recoil/reply';

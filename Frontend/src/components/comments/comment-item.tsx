@@ -5,7 +5,7 @@ import CommentHeader from 'components/comments/comment-header';
 import CommentReply from 'components/comments/comment-reply';
 import CommentHeart from 'components/comments/comment-heart';
 import CommentContent from 'components/comments/comment-content';
-import Skeleton from 'components/common/skeleton';
+import Skeleton from 'components/common/Skeleton';
 
 interface IProps {
   comment: Omit<CommentsItemType, 'age_category' | 'gender'>;

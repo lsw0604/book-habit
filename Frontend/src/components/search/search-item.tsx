@@ -8,7 +8,7 @@ import {
   useUpdateEffect,
 } from 'usehooks-ts';
 
-import Skeleton from 'components/common/skeleton';
+import Skeleton from 'components/common/Skeleton';
 import ImageWrapper from 'components/common/image-wrapper';
 import SearchItemBody from 'components/search/search-item-body';
 

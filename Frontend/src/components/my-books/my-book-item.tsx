@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import ImageWrapper from 'components/common/image-wrapper';
-import Skeleton from 'components/common/skeleton';
+import Skeleton from 'components/common/Skeleton';
 
 interface MyBookItemProps {
   item: MyBookListInfinityQueryItemType;

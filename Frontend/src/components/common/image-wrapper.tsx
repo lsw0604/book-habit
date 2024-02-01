@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useRef } from 'react';
 import { useIntersectionObserver } from 'usehooks-ts';
 
-import Skeleton from './skeleton';
+import Skeleton from './Skeleton';
 import { IconImage } from '@style/icons';
 
 interface IProps {

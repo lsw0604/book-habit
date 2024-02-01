@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { customize } from '@style/colors';
 import { COMMENT_HASHTAG_LOADER_SIZES } from 'lib/staticData';
-import Skeleton from 'components/common/skeleton';
+import Skeleton from 'components/common/Skeleton';
 
 interface CommentHashtagProps {
   data: CommentsListQueryResponseType;
