@@ -255,10 +255,11 @@ export type MyBookHistoryRegisterRequestType = {
   users_books_id: number;
   status: HistoryType;
   date: Date;
+  page?: number;
 };
 
 export type MyBookHistoryRegisterStatusExistType = {
-  status: HistoryType;
+  count: number;
 } & RowDataPacket;
 
 export type MyBookHistoryRegisterHistoryExistType = {

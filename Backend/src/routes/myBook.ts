@@ -37,7 +37,7 @@ const myBookRouter = express.Router();
 myBookRouter.get('/list', access, myBookList);
 myBookRouter.get('/history/list/:users_books_id', access, myBookHistoryList);
 myBookRouter.get('/comments/list/:users_books_id', access, myBookCommentsList);
-myBookRouter.get('/info/:users_books_id', access, myBookInfo);
+myBookRouter.get('/info/:users_books_id', myBookInfo);
 myBookRouter.get('/time_range/:users_books_id', access, myBookTimeRange);
 myBookRouter.get('/calendar/:users_books_id', access, myBookCalendar);
 // CREATE

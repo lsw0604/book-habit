@@ -17,6 +17,8 @@ const login = (req: Request, res: Response, next: NextFunction) => {
 
       const { access_jwt, refresh_jwt } = tokenGenerator({ id, name, email });
 
+      // req.session.access_token = access_jwt;
+
       res.cookie('access', access_jwt, {
         maxAge: 1000 * 60 * 60,
         path: '/',
