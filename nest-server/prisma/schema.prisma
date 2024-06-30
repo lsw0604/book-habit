@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Provider {
+  LOCAL
+  KAKAO
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum BookStatus {
+  
+}
+
+model Book {
+  id        Int     @id @default(autoincrement())
+  isbn      ISBN[]
+  title     String?
+  author    Author[]
+  publisher String?
+  price     Int?
+  thumbnail String?
+  contents  String?
+  url       String?
+  status    String?
+}
+
+model ISBN {
+  id        Int       @id @default(autoincrement())
+  isbn      String    @unique
+  bookId    Int
+  book      Book      @relation(fields: [bookId], references: [id])
+}
+
+model Author {
+  id        Int       @id @default(autoincrement())
+  name      String
+  bookId    Int
+  book      Book      @relation(fields: [bookId], references: [id])
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String?   @unique
+  password  String?
+  name      String?
+  birthday  DateTime?
+  gender    Gender?
+  provider  Provider?
+  profile   String?   @default("https://pic.lsw0604.store/20231123_1205SS_e16f2d7c-ae50-4558-9b5a-e44f9be0bf2e.jpg")
+}
+
+model MyBook {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  bookId     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  book       Book     @relation(fields: [bookId], references: [id])
+}
+
+model MyBookComment {
+  id                Int      @id @default(autoincrement())
+  bookId            Int
+  myBookId          Int
+  comment           String
+  rating            Int
+  status            String
+  isPublic          Boolean
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  myBook            MyBook     @relation(fields: [myBookId], references: [id])
+  book              Book       @relation(fields: [bookId], references: [id])
+}
+
+model comments_likes {
+  id                    Int      @id @default(autoincrement())
+  users_id              Int
+  users_books_comments_id Int
+  users                 users                 @relation(fields: [users_id], references: [id])
+  users_books_comments  users_books_comments  @relation(fields: [users_books_comments_id], references: [id])
+}
+
+model public_comments_reply {
+  id                    Int      @id @default(autoincrement())
+  reply                 String
+  users_books_comments_id Int
+  users_id              Int
+  created_at            DateTime @default(now())
+  users                 users                 @relation(fields: [users_id], references: [id])
+  users_books_comments  users_books_comments  @relation(fields: [users_books_comments_id], references: [id])
+}
+
+model tags {
+  id   Int    @id @default(autoincrement())
+  tag  String?
+}
+
+model users_books_hashtag {
+  id             Int    @id @default(autoincrement())
+  users_books_id Int
+  tags_id        Int
+  users_books    users_books @relation(fields: [users_books_id], references: [id])
+  tags           tags        @relation(fields: [tags_id], references: [id])
+}
+
+model users_books_history {
+  id              Int           @id @default(autoincrement())
+  status          String
+  page            Int?
+  date            DateTime?
+  usersBooksId    Int
+  usersBooks      users_books   @relation(fields: [users_books_id], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
