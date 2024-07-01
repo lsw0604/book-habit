@@ -15,4 +15,16 @@ describe('PrismaService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should connect on init', async () => {
+    jest.spyOn(service, '$connect');
+    await service.onModuleInit();
+    expect(service.$connect).toHaveBeenCalled();
+  });
+
+  it('should disconnect on destroy', async () => {
+    jest.spyOn(service, '$disconnect');
+    await service.onModuleDestroy();
+    expect(service.$disconnect).toHaveBeenCalled();
+  });
 });
