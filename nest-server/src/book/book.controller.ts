@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 
-@Controller('book')
-export class BookController {}
+@Controller('/api/book')
+export class BookController {
+  @Post()
+  registerBook() {}
+
+  @Get()
+  isExistBook() {}
+}
