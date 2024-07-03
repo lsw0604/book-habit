@@ -13,8 +13,8 @@ export class BookRegisterDto {
   @IsDate()
   datetime: Date;
 
-  @IsString()
-  isbn: string;
+  @IsArray()
+  isbn: string[];
 
   @IsNumber()
   price: number;

@@ -33,6 +33,7 @@ model Book {
   title                 String?
   author                Author[]
   myBook                MyBook[]
+  translator            Translator[]
   publisher             String?
   price                 Int?
   thumbnail             String?
@@ -51,6 +52,13 @@ model ISBN {
 model Author {
   id                    Int            @id @default(autoincrement())
   name                  String
+  bookId                Int
+  book                  Book           @relation(fields: [bookId], references: [id])
+}
+
+model Translator {
+  id                    Int            @id @default(autoincrement())
+  translator            String
   bookId                Int
   book                  Book           @relation(fields: [bookId], references: [id])
 }
