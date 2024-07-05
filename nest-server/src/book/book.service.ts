@@ -1,71 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookRegisterDto } from './dto/book.register.dto';
-import { Book } from '@prisma/client';
+import { Book, Prisma } from '@prisma/client';
 
 @Injectable()
 export class BookService {
   constructor(private prismaService: PrismaService) {}
 
-  async registerBook(
-    dto: Omit<BookRegisterDto, 'isbn' | 'author' | 'translator'>,
-  ): Promise<number> {
-    const { id } = await this.prismaService.book.create({
-      data: {
-        ...dto,
-      },
-    });
+  async registerBook(dto: BookRegisterDto): Promise<Book> {
+    return this.prismaService.$transaction(async (prisma) => {
+      this.validateBookData(dto);
 
-    return id;
-  }
-
-  async existIsbn(isbn: string) {
-    const { book } = this.prismaService.iSBN.findUnique({
-      where: {
-        isbn,
-      },
+      const book = await this.createBook(prisma, dto);
     });
   }
 
-  registerIsbn(dto: Pick<BookRegisterDto, 'isbn'>, bookId: number) {
-    if (dto.isbn.length === 0) return;
-
-    dto.isbn.forEach(async (isbn) => {
-      await this.prismaService.iSBN.create({
-        data: {
-          isbn,
-          bookId,
-        },
-      });
-    });
+  private validateBookData(dto: BookRegisterDto) {
+    if (dto.isbn.length === 0) {
+      throw new BadRequestException('ISBN은 반드시 한개 이상 필요합니다.');
+    }
   }
 
-  registerAuthor(dto: Pick<BookRegisterDto, 'authors'>, bookId: number) {
-    if (dto.authors.length === 0) return;
-
-    dto.authors.forEach(async (name) => {
-      await this.prismaService.author.create({
-        data: {
-          name,
-          bookId,
-        },
-      });
-    });
-  }
-
-  registerTranslator(
-    dto: Pick<BookRegisterDto, 'translators'>,
-    bookId: number,
-  ) {
-    if (dto.translators.length === 0) return;
-
-    dto.translators.forEach(async (translator) => {
-      await this.prismaService.translator.create({
-        data: {
-          translator,
-          bookId,
-        },
-      });
-    });
-  }
+  private async createBook(
+    prisma: Prisma.TransactionClient,
+    dto: BookRegisterDto,
+  ) {}
 }
