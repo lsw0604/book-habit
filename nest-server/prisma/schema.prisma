@@ -29,17 +29,17 @@ enum MyBookStatus {
 
 model Book {
   id                    Int            @id @default(autoincrement())
-  isbn                  ISBN[]
   title                 String?
-  author                Author[]
-  myBook                MyBook[]
-  translator            Translator[]
   publisher             String?
   price                 Int?
   thumbnail             String?
   contents              String?
   url                   String?
   status                String?
+  myBook                MyBook[]
+  isbns                 ISBN[]
+  authors               BookAuthor[]
+  translators           BookTranslator[]
 }
 
 model ISBN {
@@ -52,15 +52,31 @@ model ISBN {
 model Author {
   id                    Int            @id @default(autoincrement())
   name                  String
-  bookId                Int
-  book                  Book           @relation(fields: [bookId], references: [id])
+  books                 BookAuthor[]
 }
 
 model Translator {
   id                    Int            @id @default(autoincrement())
-  translator            String
+  name                  String
+  books                 BookTranslator[]
+}
+
+model BookAuthor {
   bookId                Int
+  authorId              Int
   book                  Book           @relation(fields: [bookId], references: [id])
+  author                Author         @relation(fields: [authorId], references: [id])
+
+  @@id([bookId, authorId])
+}
+
+model BookTranslator {
+  bookId                Int
+  translatorId          Int
+  book                  Book           @relation(fields: [bookId], references: [id])
+  translator            Translator     @relation(fields: [translatorId], references: [id])
+
+  @@id([bookId, translatorId])
 }
 
 model User {
