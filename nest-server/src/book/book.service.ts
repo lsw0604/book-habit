@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookRegisterDto } from './dto/book.register.dto';
 import { Prisma } from '@prisma/client';
@@ -25,21 +29,67 @@ export class BookService {
       this.validateBookData(dto);
 
       for (const isbn of dto.isbn) {
-        if (this.existISBN(prisma, isbn)) {
+        if (await this.existISBN(prisma, isbn)) {
           throw new BadRequestException(`이미 등록된 책입니다. (${isbn})`);
         }
       }
 
       const book = await this.createBook(prisma, dto);
 
-      await Promise.all([
-        this.createISBN(prisma, dto, book.id),
-        this.processAuthor(prisma, dto, book.id),
-        this.processTranslator(prisma, dto, book.id),
-      ]);
+      await this.createISBN(prisma, dto, book.id);
+      await this.processAuthor(prisma, dto, book.id);
+      await this.processTranslator(prisma, dto, book.id);
 
       return this.getBookWithRelations(prisma, book.id);
     });
+  }
+
+  async deleteBook(id: number) {
+    return this.prismaService.$transaction(async (prisma) => {
+      const book = await prisma.book.findUnique({
+        where: { id },
+        include: {
+          isbns: true,
+          translators: true,
+          authors: true,
+        },
+      });
+
+      if (!book) {
+        throw new NotFoundException(
+          `해당 id : ${id} (을)를 가진 책을 찾을 수 없습니다.`,
+        );
+      }
+
+      await this.deleteISBN(prisma, book.id);
+      await this.deleteBookAuthor(prisma, book.id);
+      await this.deleteBookTranslator(prisma, book.id);
+      await prisma.book.delete({ where: { id } });
+
+      return { message: `${book.id}번 책을 성공적으로 삭제했습니다.` };
+    });
+  }
+
+  private async deleteISBN(prisma: Prisma.TransactionClient, bookId: number) {
+    await prisma.iSBN.deleteMany({
+      where: {
+        bookId,
+      },
+    });
+  }
+
+  private async deleteBookAuthor(
+    prisma: Prisma.TransactionClient,
+    bookId: number,
+  ) {
+    await prisma.bookAuthor.deleteMany({ where: { bookId } });
+  }
+
+  private async deleteBookTranslator(
+    prisma: Prisma.TransactionClient,
+    bookId: number,
+  ) {
+    await prisma.bookTranslator.deleteMany({ where: { bookId } });
   }
 
   private async createBook(
