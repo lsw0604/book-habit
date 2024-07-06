@@ -1,25 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { BookRegisterDto } from './dto/book.register.dto';
-import { Book, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BookService {
   constructor(private prismaService: PrismaService) {}
-
-  async registerBook(dto: BookRegisterDto): Promise<Book> {
-    return this.prismaService.$transaction(async (prisma) => {
-      this.validateBookData(dto);
-
-      const book = await this.createBook(prisma, dto);
-
-      await this.createISBN(prisma, dto, book.id);
-      await this.processAuthor(prisma, dto, book.id);
-      await this.processTranslator(prisma, dto, book.id);
-
-      return this.getBookWithRelations(prisma, book.id);
-    });
-  }
 
   private validateBookData(dto: BookRegisterDto) {
     if (dto.isbn.length === 0) {
@@ -27,13 +13,61 @@ export class BookService {
     }
   }
 
-  private createBook(
+  private async existISBN(prisma: Prisma.TransactionClient, isbn: string) {
+    const existISBN = await prisma.iSBN.findFirst({
+      where: { isbn },
+    });
+    return !!existISBN;
+  }
+
+  async registerBook(dto: BookRegisterDto) {
+    return this.prismaService.$transaction(async (prisma) => {
+      this.validateBookData(dto);
+
+      for (const isbn of dto.isbn) {
+        if (this.existISBN(prisma, isbn)) {
+          throw new BadRequestException(`이미 등록된 책입니다. (${isbn})`);
+        }
+      }
+
+      const book = await this.createBook(prisma, dto);
+
+      await Promise.all([
+        this.createISBN(prisma, dto, book.id),
+        this.processAuthor(prisma, dto, book.id),
+        this.processTranslator(prisma, dto, book.id),
+      ]);
+
+      return this.getBookWithRelations(prisma, book.id);
+    });
+  }
+
+  private async createBook(
     prisma: Prisma.TransactionClient,
     dto: Omit<BookRegisterDto, 'isbn' | 'translators' | 'authors'>,
   ) {
+    const {
+      title,
+      url,
+      thumbnail,
+      contents,
+      datetime,
+      price,
+      sale_price,
+      publisher,
+      status,
+    } = dto;
     return prisma.book.create({
       data: {
-        ...dto,
+        title,
+        url,
+        thumbnail,
+        contents,
+        datetime,
+        price,
+        sale_price,
+        publisher,
+        status,
       },
     });
   }

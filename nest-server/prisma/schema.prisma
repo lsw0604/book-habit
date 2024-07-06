@@ -32,9 +32,11 @@ model Book {
   title                 String?
   publisher             String?
   price                 Int?
+  sale_price            Int?
   thumbnail             String?
-  contents              String?
+  contents              String?        @db.Text
   url                   String?
+  datetime              DateTime       @db.DateTime()
   status                String?
   myBook                MyBook[]
   isbns                 ISBN[]
