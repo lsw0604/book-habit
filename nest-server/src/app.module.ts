@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { S3Service } from './s3/s3.service';
 import { ImageService } from './image/image.service';
 import { CloudfrontService } from './cloudfront/cloudfront.service';
+import { MyBookModule } from './my-book/my-book.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CloudfrontService } from './cloudfront/cloudfront.service';
     BookModule,
     UserModule,
     AuthModule,
+    MyBookModule,
   ],
   controllers: [AppController],
   providers: [AppService, S3Service, ImageService, CloudfrontService],
