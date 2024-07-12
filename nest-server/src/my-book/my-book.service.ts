@@ -14,7 +14,7 @@ export class MyBookService {
     /**
      * TODO: decodedStatus 수정하기
      */
-    if (decodedStatus === ) {
+    if (!decodedStatus) {
       const totalBookCount = await this.prismaService.myBook.count({
         where: {
           userId,
