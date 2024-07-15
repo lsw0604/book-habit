@@ -1,67 +1,74 @@
 import { Injectable } from '@nestjs/common';
-import { MyBookStatus } from '@prisma/client';
+import { MyBookStatus, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MyBookService {
   constructor(private prismaService: PrismaService) {}
 
-  async getMyBookList(userId: number, page: string, status: string) {
-    const parsedPage = parseInt(page) || 1;
-    const startPage = (parsedPage - 1) * 10;
-    const decodedStatus = decodeURI(status) as MyBookStatus;
+  async getMyBookList(
+    userId: number,
+    page: number,
+    status?: MyBookStatus | 'ALL',
+  ) {
+    const take = 10;
+    const skip = (page - 1) * take;
 
-    /**
-     * TODO: decodedStatus 수정하기
-     */
-    if (!decodedStatus) {
-      const totalBookCount = await this.prismaService.myBook.count({
-        where: {
-          userId,
-        },
-      });
+    const where: Prisma.MyBookWhereInput = {
+      userId,
+      ...(status && status !== 'ALL' && { myBookStatus: status }),
+    };
 
-      const totalPage = Math.ceil(totalBookCount / 10);
-      const books = await this.prismaService.myBook.findMany({
-        where: {
-          userId,
+    const totalCount = await this.prismaService.myBook.count({ where });
+    const books = await this.prismaService.myBook.findMany({
+      where,
+      select: {
+        id: true,
+        myBookStatus: true,
+        book: {
+          select: {
+            title: true,
+            thumbnail: true,
+            isbns: {
+              select: {
+                isbn: true,
+              },
+              take: 1,
+            },
+          },
         },
-        include: {
-          book: true,
+        history: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+          select: {
+            date: true,
+          },
         },
-        skip: startPage,
-        take: 10,
-      });
+      },
+      skip,
+      take,
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
 
-      return {
-        nextPage: parsedPage >= totalPage ? undefined : parsedPage + 1,
-        books,
-      };
-    } else {
-      const totalBookCount = await this.prismaService.myBook.count({
-        where: {
-          userId,
-          myBookStatus: decodedStatus,
-        },
-      });
+    const totalPages = Math.ceil(totalCount / take);
+    const nextPage = page < totalPages ? page + 1 : undefined;
 
-      const totalPage = Math.ceil(totalBookCount / 10);
-      const books = await this.prismaService.myBook.findMany({
-        where: {
-          userId,
-          myBookStatus: decodedStatus,
-        },
-        include: {
-          book: true,
-        },
-        skip: startPage,
-        take: 10,
-      });
-
-      return {
-        nextPage: parsedPage >= totalPage ? undefined : parsedPage + 1,
-        books,
-      };
-    }
+    return {
+      nextPage,
+      books: books.map((book) => ({
+        id: book.id,
+        title: book.book.title,
+        thumbnail: book.book.thumbnail,
+        isbn: book.book.isbns.map((isbn) => {
+          return isbn;
+        }),
+        date: book.history[0]?.date,
+        status: book.myBookStatus,
+      })),
+    };
   }
 }
