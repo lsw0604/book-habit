@@ -6,6 +6,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class MyBookService {
   constructor(private prismaService: PrismaService) {}
 
+  async deleteMyBook(myBookId: number, userId: number) {
+    await this.prismaService.myBook.delete({
+      where: {
+        id: myBookId,
+      },
+    });
+  }
+
   async getMyBookList(
     userId: number,
     page: number,
