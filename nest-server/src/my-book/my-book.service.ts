@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { MyBookStatus, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -6,11 +6,55 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class MyBookService {
   constructor(private prismaService: PrismaService) {}
 
-  async deleteMyBook(myBookId: number, userId: number) {
-    await this.prismaService.myBook.delete({
+  async deleteMyBook(userId: number, myBookId: number) {
+    const myBook = await this.prismaService.myBook.findFirst({
       where: {
         id: myBookId,
+        userId,
       },
+    });
+
+    if (!myBook) {
+      throw new NotFoundException('해당 myBook을 찾을 수 없습니다.');
+    }
+
+    await this.prismaService.$transaction(async (prisma) => {
+      await prisma.myBookHistory.deleteMany({
+        where: {
+          myBookId,
+        },
+      });
+
+      const comments = await prisma.myBookComment.findMany({
+        where: { myBookId },
+        select: { id: true },
+      });
+
+      const commentIds = comments.map((comment) => comment.id);
+
+      await prisma.commentLike.deleteMany({
+        where: {
+          myBookCommentId: { in: commentIds },
+        },
+      });
+
+      await prisma.commentReply.deleteMany({
+        where: {
+          myBookCommentId: { in: commentIds },
+        },
+      });
+
+      await prisma.myBookComment.deleteMany({
+        where: { myBookId },
+      });
+
+      await prisma.myBookTag.deleteMany({
+        where: { myBookId },
+      });
+
+      await prisma.myBook.delete({
+        where: { id: myBookId },
+      });
     });
   }
 

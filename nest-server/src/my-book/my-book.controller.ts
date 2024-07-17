@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Request } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Query, Req } from '@nestjs/common';
 import { MyBookService } from './my-book.service';
 import { MyBookStatus } from '@prisma/client';
 
@@ -8,7 +8,7 @@ export class MyBookController {
 
   @Get()
   async getMyBookList(
-    @Request() req,
+    @Req() req,
     @Query('page') page: string = '1',
     @Query('status') status?: MyBookStatus | 'ALL',
   ) {
@@ -19,5 +19,13 @@ export class MyBookController {
       pageNumber,
       status as MyBookStatus | 'ALL',
     );
+  }
+
+  @Delete()
+  async deleteMyBook(@Req() req, @Param('id') id: string) {
+    const userId = req.user.id;
+    const myBookId = parseInt(id, 10);
+    await this.myBookService.deleteMyBook(userId, myBookId);
+    return;
   }
 }
