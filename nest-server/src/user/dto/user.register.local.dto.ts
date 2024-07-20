@@ -1,7 +1,7 @@
 import { IsDate, IsEmail, IsEnum, IsString } from 'class-validator';
 import { Gender } from '@prisma/client';
 
-export class UserLocalRegisterDto {
+export class UserRegisterLocalDto {
   @IsString()
   @IsEmail()
   email: string;
