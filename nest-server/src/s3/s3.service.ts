@@ -4,9 +4,10 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class S3Service {
-  private s3: S3;
-
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private s3: S3,
+  ) {
     this.s3 = new S3({
       region: this.configService.get<string>('AWS_REGION'),
     });

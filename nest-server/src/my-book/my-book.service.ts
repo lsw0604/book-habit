@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MyBookService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prismaService: PrismaService) { }
 
   async deleteMyBook(userId: number, myBookId: number) {
     const myBook = await this.prismaService.myBook.findFirst({

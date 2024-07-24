@@ -4,7 +4,7 @@ import { MyBookStatus } from '@prisma/client';
 
 @Controller('/api/my-book')
 export class MyBookController {
-  constructor(private myBookService: MyBookService) {}
+  constructor(private myBookService: MyBookService) { }
 
   @Get()
   async getMyBookList(
