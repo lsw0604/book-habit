@@ -25,9 +25,11 @@ export class UserService {
         ...dto
       }
     })
+
+    return user
   }
 
-  async validateEmail(dto: Pick<UserRegisterLocalDto, 'email'>) {
+  private async validateEmail(dto: Pick<UserRegisterLocalDto, 'email'>) {
     const email = dto.email
     return !!await this.prismaService.user.findUnique({
       where: {

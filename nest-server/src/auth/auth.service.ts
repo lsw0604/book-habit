@@ -10,11 +10,14 @@ export class AuthService {
   constructor(private prismaService: PrismaService, private userService: UserService) { }
 
   async signIn(dto: AuthSignInDto) {
+
+
     return `${dto.email} ${dto.password}`;
   }
 
   async signUp(dto: AuthLocalSignUp) {
+    const auth = this.userService.registerUser(dto);
 
-    return `${dto.email} ${dto.password} ${dto.birthday} ${dto.gender} ${dto.name}`;
+    return auth;
   }
 }
