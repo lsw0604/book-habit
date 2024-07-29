@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MyBookService {
-  constructor(private prismaService: PrismaService) { }
+  constructor(private prismaService: PrismaService) {}
 
   async deleteMyBook(userId: number, myBookId: number) {
     const myBook = await this.prismaService.myBook.findFirst({
@@ -58,11 +58,7 @@ export class MyBookService {
     });
   }
 
-  async getMyBookList(
-    userId: number,
-    page: number,
-    status?: MyBookStatus | 'ALL',
-  ) {
+  async getMyBookList(userId: number, page: number, status?: MyBookStatus | 'ALL') {
     const take = 10;
     const skip = (page - 1) * take;
 

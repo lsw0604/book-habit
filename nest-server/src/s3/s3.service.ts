@@ -13,11 +13,7 @@ export class S3Service {
     });
   }
 
-  async uploadImage(
-    buffer: Buffer,
-    filename: string,
-    contentType: string,
-  ): Promise<string> {
+  async uploadImage(buffer: Buffer, filename: string, contentType: string): Promise<string> {
     const bucketName = this.configService.get<string>('S3_BUCKET_NAME');
     await this.s3.putObject({
       Bucket: bucketName,

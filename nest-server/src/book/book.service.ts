@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookRegisterDto } from './dto/book.register.dto';
 import { Prisma } from '@prisma/client';
@@ -56,9 +52,7 @@ export class BookService {
       });
 
       if (!book) {
-        throw new NotFoundException(
-          `해당 id : ${id} (을)를 가진 책을 찾을 수 없습니다.`,
-        );
+        throw new NotFoundException(`해당 id : ${id} (을)를 가진 책을 찾을 수 없습니다.`);
       }
 
       await this.deleteISBN(prisma, book.id);
@@ -78,17 +72,11 @@ export class BookService {
     });
   }
 
-  private async deleteBookAuthor(
-    prisma: Prisma.TransactionClient,
-    bookId: number,
-  ) {
+  private async deleteBookAuthor(prisma: Prisma.TransactionClient, bookId: number) {
     await prisma.bookAuthor.deleteMany({ where: { bookId } });
   }
 
-  private async deleteBookTranslator(
-    prisma: Prisma.TransactionClient,
-    bookId: number,
-  ) {
+  private async deleteBookTranslator(prisma: Prisma.TransactionClient, bookId: number) {
     await prisma.bookTranslator.deleteMany({ where: { bookId } });
   }
 
@@ -96,17 +84,7 @@ export class BookService {
     prisma: Prisma.TransactionClient,
     dto: Omit<BookRegisterDto, 'isbn' | 'translators' | 'authors'>,
   ) {
-    const {
-      title,
-      url,
-      thumbnail,
-      contents,
-      datetime,
-      price,
-      sale_price,
-      publisher,
-      status,
-    } = dto;
+    const { title, url, thumbnail, contents, datetime, price, sale_price, publisher, status } = dto;
     return prisma.book.create({
       data: {
         title,
@@ -201,10 +179,7 @@ export class BookService {
     }
   }
 
-  private getBookWithRelations(
-    prisma: Prisma.TransactionClient,
-    bookId: number,
-  ) {
+  private getBookWithRelations(prisma: Prisma.TransactionClient, bookId: number) {
     return prisma.book.findUnique({
       where: { id: bookId },
       include: {

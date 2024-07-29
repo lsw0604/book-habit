@@ -1,8 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: './tsconfig.json',
     sourceType: 'module',
+    tsconfigRootDir: __dirname,
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
@@ -17,9 +18,9 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
-    'prettier/prettier': ['error', {}, {usePrettierrc: true}],
-    'max-len': ['error', {code: 100}],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    'max-len': ['error', { code: 100 }],
     'no-console': 'warn',
     'no-unused-expressions': 'error',
     eqeqeq: ['error', 'always'],
@@ -27,6 +28,7 @@ module.exports = {
     'prefer-const': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
-    'linebreak-style': ['error', require('os').EOL === '\r\n' ? 'window' : 'unix'],
+    // 'linebreak-style': ['error', require('os').EOL === '\r\n' ? 'windows' : 'unix'],
+    // 'linebreak-style': ['error', 'windows'],
   },
 };

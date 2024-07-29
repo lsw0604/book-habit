@@ -4,7 +4,7 @@ import { MyBookStatus } from '@prisma/client';
 
 @Controller('/api/my-book')
 export class MyBookController {
-  constructor(private myBookService: MyBookService) { }
+  constructor(private myBookService: MyBookService) {}
 
   @Get()
   async getMyBookList(
@@ -14,11 +14,7 @@ export class MyBookController {
   ) {
     const userId = req.user.id;
     const pageNumber = parseInt(page, 10);
-    return this.myBookService.getMyBookList(
-      userId,
-      pageNumber,
-      status as MyBookStatus | 'ALL',
-    );
+    return this.myBookService.getMyBookList(userId, pageNumber, status as MyBookStatus | 'ALL');
   }
 
   @Delete()

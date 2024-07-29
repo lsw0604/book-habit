@@ -5,6 +5,5 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
-  "bracketSpacing": false,
   "endOfLine": "crlf"
 }
