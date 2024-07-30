@@ -1,6 +1,4 @@
 {
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "cSpell.words": [
     "datasources",
     "datepicker",
@@ -12,5 +10,6 @@
     "svgr",
     "tanstack",
     "ubsp"
-  ]
+  ],
+  "editor.formatOnSave": true
 }

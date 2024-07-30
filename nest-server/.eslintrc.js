@@ -28,7 +28,5 @@ module.exports = {
     'prefer-const': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
-    // 'linebreak-style': ['error', require('os').EOL === '\r\n' ? 'windows' : 'unix'],
-    // 'linebreak-style': ['error', 'windows'],
   },
 };

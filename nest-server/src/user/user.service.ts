@@ -1,18 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ImageService } from '../image/image.service';
-import { CloudFrontService } from '../cloudfront/cloudfront.service';
-import { S3Service } from '../s3/s3.service';
 import { UserRegisterLocalDto } from './dto/user.register.local.dto';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private prismaService: PrismaService,
-    private readonly imageService: ImageService,
-    private readonly s3Service: S3Service,
-    private readonly cloudfrontService: CloudFrontService,
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
   async registerUser(dto: UserRegisterLocalDto) {
     const existEmail = await this.validateEmail(dto);
