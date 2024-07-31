@@ -12,7 +12,7 @@ import { MyBookModule } from './my-book/my-book.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '../.env',
     }),
     PrismaModule,
     BookModule,
