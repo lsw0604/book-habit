@@ -25,7 +25,7 @@ export class UserService {
   }
 
   private async validateEmail(dto: Pick<UserRegisterLocalDto, 'email'>) {
-    const email = dto.email;
+    const { email } = dto;
 
     return !!(await this.prismaService.user.findUnique({
       where: {
@@ -36,6 +36,7 @@ export class UserService {
 
   private async hashPassword(dto: Pick<UserRegisterLocalDto, 'password'>) {
     const BCRYPT_SALT_ROUNDS = 10;
-    return await bcrypt.hash(dto.password, BCRYPT_SALT_ROUNDS);
+    const { password } = dto;
+    return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
   }
 }
