@@ -4,12 +4,14 @@ import { AuthSignInDto } from './dto/auth.signin.dto';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   async signIn(dto: AuthSignInDto) {
@@ -34,10 +36,7 @@ export class AuthService {
 
     if (!comparePassword) throw new UnauthorizedException('올바른 비밀번호를 입력해주세요.');
 
-    return {
-      refreshToken: 'refreshToken',
-      accessToken: 'accessToken',
-    };
+    return this.generateUserTokens(user.id);
   }
 
   async signUp(dto: AuthLocalSignUp) {
@@ -59,5 +58,15 @@ export class AuthService {
 
   async logout() {
     return;
+  }
+
+  async generateUserTokens(userId) {
+    const accessToken = this.jwtService.sign({ userId }, { expiresIn: '15s' });
+    const refreshToken = this.jwtService.sign({ userId }, { expiresIn: '1h' });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }
