@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { AuthSignInDto } from './dto/auth.signin.dto';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
+import { AuthSignInDto } from './dto/auth.signin.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(dto: AuthSignInDto) {
+  async login(dto: AuthSignInDto) {
     const { email, password } = dto;
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -36,19 +36,20 @@ export class AuthService {
 
     if (!comparePassword) throw new UnauthorizedException('올바른 비밀번호를 입력해주세요.');
 
-    return this.generateUserTokens(user.id);
+    const { password: _, ...rest } = user;
+
+    return { ...rest };
   }
 
-  async signUp(dto: AuthLocalSignUp) {
+  async register(dto: AuthLocalSignUp) {
     await this.userService.registerUser(dto);
 
-    const example = await this.signIn(dto);
+    const user = await this.login(dto);
 
-    const { accessToken, refreshToken } = example;
+    // const { accessToken, refreshToken } = example;
 
     return {
-      refreshToken,
-      accessToken,
+      ...user,
     };
   }
 
