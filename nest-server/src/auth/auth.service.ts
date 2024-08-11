@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { AuthGenerateTokenDto } from './dto/auth.generate.token.dto';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
 import { AuthSignInDto } from './dto/auth.signin.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +39,7 @@ export class AuthService {
 
     const { password: _, ...rest } = user;
 
-    return { ...rest };
+    return { rest };
   }
 
   async register(dto: AuthLocalSignUp) {
@@ -61,9 +62,13 @@ export class AuthService {
     return;
   }
 
-  async generateUserTokens(userId) {
-    const accessToken = this.jwtService.sign({ userId }, { expiresIn: '15s' });
-    const refreshToken = this.jwtService.sign({ userId }, { expiresIn: '1h' });
+  async generateUserTokens(dto: AuthGenerateTokenDto) {
+    const { email, birthday, gender, name, id } = dto;
+    const accessToken = this.jwtService.sign(
+      { id, email, birthday, gender, name },
+      { expiresIn: '5m', privateKey: process.env.SECRET_ACCESS_KEY },
+    );
+    const refreshToken = this.jwtService.sign({ id }, { expiresIn: '1h' });
 
     return {
       accessToken,

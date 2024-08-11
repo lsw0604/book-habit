@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Request, Response, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -9,8 +9,15 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('signin')
-  signIn(@Request() req: any) {
-    return req.user;
+  async signIn(@Request() req: any, @Response() res: any) {
+    const { accessToken, refreshToken } = await this.authService.generateUserTokens(req.user);
+
+    res.cookie('token', refreshToken);
+
+    return {
+      accessToken,
+      ...req.user,
+    };
   }
 
   @Post('signup')
