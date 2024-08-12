@@ -43,14 +43,16 @@ export class AuthService {
   }
 
   async register(dto: AuthLocalSignUp) {
-    await this.userService.registerUser(dto);
+    const user = await this.userService.registerUser(dto);
 
-    const user = await this.login(dto);
+    const { password: _, ...rest } = user;
 
-    // const { accessToken, refreshToken } = example;
+    const { accessToken, refreshToken } = await this.generateUserTokens(rest);
 
     return {
-      ...user,
+      ...rest,
+      accessToken,
+      refreshToken,
     };
   }
 
