@@ -1,10 +1,11 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import {
-  ConflictException,
   Injectable,
-  InternalServerErrorException,
   OnModuleDestroy,
   OnModuleInit,
+  InternalServerErrorException,
+  ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 
 @Injectable()
@@ -31,27 +32,39 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   async executeQuery<T>(action: () => Promise<T>): Promise<T> {
     try {
       return await action();
-    } catch (err) {
-      this.handlePrismaError(err);
+    } catch (error) {
+      this.handlePrismaError(error);
     }
   }
 
   // Prisma 에러를 처리하는 메서드
   private handlePrismaError(error: any): never {
-    // Prisma 에러 코드를 확인하고, 적절한 NestJS 예외를 던짐
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      // Prisma 오류 코드에 따른 처리
       switch (error.code) {
-        case 'P2002': // Unique constraint failed
-          throw new ConflictException('고유 제약 조건에 실패했습니다. 중복된 데이터가 존재합니다.');
-        // 다른 Prisma 오류 코드에 대한 처리 추가 가능
+        case 'P2002':
+          throw new ConflictException('고유 제약 조건에 실패했습니다: ' + error.meta?.target);
+        case 'P2003':
+          throw new BadRequestException('외래 키 제약 조건에 실패했습니다.');
+        case 'P2004':
+          throw new BadRequestException('제약 조건에 맞지 않는 쿼리입니다.');
+        case 'P2005':
+          throw new BadRequestException('잘못된 값이 제공되었습니다.');
+        // 추가적인 Prisma 오류 코드 처리 가능
         default:
           throw new InternalServerErrorException('알 수 없는 데이터베이스 오류가 발생했습니다.');
       }
-    }
-
-    // PrismaClientInitializationError 등 다른 Prisma 예외 처리
-    if (error instanceof Prisma.PrismaClientInitializationError) {
+    } else if (error instanceof Prisma.PrismaClientInitializationError) {
+      // 초기화 오류 처리
       throw new InternalServerErrorException('데이터베이스 연결 초기화에 실패했습니다.');
+    } else if (error instanceof Prisma.PrismaClientRustPanicError) {
+      // Rust 패닉 처리
+      throw new InternalServerErrorException(
+        '데이터베이스 클라이언트에서 치명적인 오류가 발생했습니다.',
+      );
+    } else if (error instanceof Prisma.PrismaClientValidationError) {
+      // Validation 오류 처리
+      throw new BadRequestException('잘못된 입력이 제공되었습니다.');
     }
 
     // 그 외의 예외는 일반 InternalServerError로 처리
