@@ -56,7 +56,7 @@ export class AuthService {
     };
   }
 
-  async refreshToken() {
+  async refresh() {
     return;
   }
 
@@ -70,7 +70,10 @@ export class AuthService {
       { id, email, birthday, gender, name },
       { expiresIn: '5m', privateKey: process.env.SECRET_ACCESS_KEY },
     );
-    const refreshToken = this.jwtService.sign({ id }, { expiresIn: '1h' });
+    const refreshToken = this.jwtService.sign(
+      { id },
+      { expiresIn: '1h', privateKey: process.env.SECRET_REFRESH_KEY },
+    );
 
     return {
       accessToken,

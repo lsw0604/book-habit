@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, Response, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, Response, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
@@ -24,4 +24,7 @@ export class AuthController {
   signUp(@Body() dto: AuthLocalSignUp) {
     return this.authService.register(dto);
   }
+
+  @Get('refresh')
+  refresh() {}
 }
