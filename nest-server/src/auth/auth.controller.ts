@@ -27,7 +27,7 @@ export class AuthController {
     return {
       refreshToken,
       accessToken,
-      user: req.user,
+      ...req.user,
     };
   }
 
@@ -36,6 +36,9 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @Get('refresh')
-  refresh() {}
+  @UseGuards(AuthGuard('access'))
+  @Get('me')
+  refresh(@Request() req: any) {
+    return req;
+  }
 }
