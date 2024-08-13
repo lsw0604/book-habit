@@ -1,22 +1,33 @@
-import { Body, Controller, Get, Post, Request, Response, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Request,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
+import { CookieInterceptor } from 'src/interceptors/cookie-interceptor';
 
 @Controller('/api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(AuthGuard('local'))
+  @UseInterceptors(CookieInterceptor)
   @Post('signin')
-  async signIn(@Request() req: any, @Response() res: any) {
+  @HttpCode(200)
+  async signIn(@Request() req: any) {
     const { accessToken, refreshToken } = await this.authService.generateUserTokens(req.user);
 
-    res.cookie('token', refreshToken);
-
     return {
+      refreshToken,
       accessToken,
-      ...req.user,
+      user: req.user,
     };
   }
 
