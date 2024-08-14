@@ -8,7 +8,7 @@ export class CookieInterceptor implements NestInterceptor {
       tap((data) => {
         const response = context.switchToHttp().getResponse();
         if (data && data.refreshToken) {
-          response.cookie('token', data.refreshToken, { httpOnly: true, secure: true });
+          response.cookie('refresh_token', data.refreshToken, { httpOnly: true, secure: true });
           delete data.refreshToken; // 응답에서 refreshToken 제거
         }
       }),

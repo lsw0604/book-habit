@@ -39,15 +39,16 @@ export class AuthService {
 
     const { password: _, ...rest } = user;
 
-    return { rest };
+    return rest;
   }
 
   async register(dto: AuthLocalSignUp) {
     const user = await this.userService.registerUser(dto);
 
-    const { password: _, ...rest } = user;
+    const { password: _, id, ...rest } = user;
 
-    const { accessToken, refreshToken } = await this.generateUserTokens(rest);
+    const { accessToken } = await this.generateAccessToken({ ...rest, id });
+    const { refreshToken } = await this.generateRefreshToken({ id });
 
     return {
       ...rest,
@@ -64,20 +65,25 @@ export class AuthService {
     return;
   }
 
-  async generateUserTokens(dto: AuthGenerateTokenDto) {
-    const { email, birthday, gender, name, id } = dto;
-    const accessToken = this.jwtService.sign(
-      { id, email, birthday, gender, name },
-      { expiresIn: '5m', privateKey: process.env.SECRET_ACCESS_KEY },
-    );
+  async generateRefreshToken(dto: Pick<AuthGenerateTokenDto, 'id'>) {
+    const { id } = dto;
     const refreshToken = this.jwtService.sign(
       { id },
       { expiresIn: '1h', privateKey: process.env.SECRET_REFRESH_KEY },
     );
+    return {
+      refreshToken,
+    };
+  }
 
+  async generateAccessToken(dto: AuthGenerateTokenDto) {
+    const { email, birthday, gender, id, name } = dto;
+    const accessToken = this.jwtService.sign(
+      { id, email, birthday, gender, name },
+      { expiresIn: '5m', privateKey: process.env.SECRET_ACCESS_KEY },
+    );
     return {
       accessToken,
-      refreshToken,
     };
   }
 }

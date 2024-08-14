@@ -12,6 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
 import { CookieInterceptor } from 'src/interceptors/cookie-interceptor';
+import { AccessGuard } from './guard/access.guard';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -22,12 +23,13 @@ export class AuthController {
   @Post('signin')
   @HttpCode(200)
   async signIn(@Request() req: any) {
-    const { accessToken, refreshToken } = await this.authService.generateUserTokens(req.user);
+    const { accessToken } = await this.authService.generateAccessToken(req.user);
+    const { refreshToken } = await this.authService.generateRefreshToken(req.user);
 
     return {
       refreshToken,
       accessToken,
-      ...req.user,
+      user: req.user,
     };
   }
 
@@ -36,9 +38,9 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UseGuards(AuthGuard('access'))
+  @UseGuards(AccessGuard)
   @Get('me')
-  refresh(@Request() req: any) {
+  refresh(@Request() req) {
     return req;
   }
 }

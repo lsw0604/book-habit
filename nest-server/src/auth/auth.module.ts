@@ -7,6 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AccessStrategy } from './strategies/access.strategy';
+import { RefreshStrategy } from './strategies/refresh.strategy';
 
 @Module({
   imports: [
@@ -15,12 +16,19 @@ import { AccessStrategy } from './strategies/access.strategy';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow('SECRET_ACCESS_KEY'),
-        signOptions: { expiresIn: '5m' },
+        signOptions: { expiresIn: '15m' },
+      }),
+    }),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow('SECRET_REFRESH_KEY'),
+        signOptions: { expiresIn: '7d' },
       }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, LocalStrategy, AccessStrategy],
+  providers: [AuthService, UserService, LocalStrategy, AccessStrategy, RefreshStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
