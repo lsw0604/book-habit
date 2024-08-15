@@ -38,9 +38,11 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UseGuards(AccessGuard)
+  @UseGuards(AuthGuard('access'))
+  // @UseGuards(AccessGuard)
   @Get('me')
   refresh(@Request() req) {
-    return req;
+    console.log(req.user);
+    return req.user;
   }
 }
