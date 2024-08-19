@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   Post,
+  Req,
   Request,
   UseGuards,
   UseInterceptors,
@@ -38,10 +39,9 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UseGuards(AuthGuard('access'))
-  // @UseGuards(AccessGuard)
-  @Get('me')
-  refresh(@Request() req) {
+  @UseGuards(AccessGuard)
+  @Get('test')
+  refresh(@Req() req) {
     console.log(req.user);
     return req.user;
   }
