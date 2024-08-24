@@ -69,7 +69,7 @@ export class AuthService {
     const { id } = dto;
     const refreshToken = this.jwtService.sign(
       { id },
-      { expiresIn: '1h', privateKey: process.env.SECRET_REFRESH_KEY },
+      { expiresIn: '1s', privateKey: process.env.SECRET_REFRESH_KEY },
     );
     return {
       refreshToken,
@@ -78,10 +78,7 @@ export class AuthService {
 
   async generateAccessToken(dto: AuthGenerateTokenDto) {
     const { email, birthday, gender, id, name } = dto;
-    const accessToken = this.jwtService.sign(
-      { id, email, birthday, gender, name },
-      { expiresIn: '5m', privateKey: process.env.SECRET_ACCESS_KEY },
-    );
+    const accessToken = this.jwtService.sign({ id, email, birthday, gender, name });
     return {
       accessToken,
     };

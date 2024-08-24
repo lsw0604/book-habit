@@ -8,7 +8,6 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AccessStrategy } from './strategies/access.strategy';
 import { RefreshStrategy } from './strategies/refresh.strategy';
-import { AccessGuard } from './guard/access.guard';
 
 @Module({
   imports: [
@@ -20,24 +19,10 @@ import { AccessGuard } from './guard/access.guard';
         signOptions: { expiresIn: '15m' },
       }),
     }),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.getOrThrow<string>('SECRET_REFRESH_KEY'),
-        signOptions: { expiresIn: '7d' },
-      }),
-    }),
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    UserService,
-    LocalStrategy,
-    AccessStrategy,
-    RefreshStrategy,
-    AccessGuard,
-  ],
-  exports: [AuthService, AccessGuard],
+  providers: [AuthService, UserService, LocalStrategy, AccessStrategy, RefreshStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}
