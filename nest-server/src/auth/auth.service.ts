@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthGenerateTokenDto } from './dto/auth.generate.token.dto';
@@ -10,6 +11,7 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
   constructor(
+    private configService: ConfigService,
     private prismaService: PrismaService,
     private userService: UserService,
     private jwtService: JwtService,
@@ -47,7 +49,7 @@ export class AuthService {
 
     const { password: _, id, ...rest } = user;
 
-    const { accessToken } = await this.generateAccessToken({ ...rest, id });
+    const { accessToken } = await this.generateAccessToken({ id });
     const { refreshToken } = await this.generateRefreshToken({ id });
 
     return {
@@ -65,11 +67,11 @@ export class AuthService {
     return;
   }
 
-  async generateRefreshToken(dto: Pick<AuthGenerateTokenDto, 'id'>) {
+  async generateRefreshToken(dto: AuthGenerateTokenDto) {
     const { id } = dto;
     const refreshToken = this.jwtService.sign(
       { id },
-      { expiresIn: '1s', privateKey: process.env.SECRET_REFRESH_KEY },
+      { expiresIn: '7d', secret: this.configService.getOrThrow<string>('SECRET_REFRESH_KEY') },
     );
     return {
       refreshToken,
@@ -77,8 +79,8 @@ export class AuthService {
   }
 
   async generateAccessToken(dto: AuthGenerateTokenDto) {
-    const { email, birthday, gender, id, name } = dto;
-    const accessToken = this.jwtService.sign({ id, email, birthday, gender, name });
+    const { id } = dto;
+    const accessToken = this.jwtService.sign({ id });
     return {
       accessToken,
     };

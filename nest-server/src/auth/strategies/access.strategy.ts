@@ -1,47 +1,35 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { Gender } from '@prisma/client';
 
-interface TokenPayload {
+export interface TokenPayload {
   id: number;
+  iat: number;
+  exp: number;
+}
+
+interface AccessTokenPayload extends TokenPayload {
+  name: string;
+  email: string;
+  gender: Gender;
+  birthday: string;
 }
 
 @Injectable()
 export class AccessStrategy extends PassportStrategy(Strategy, 'access') {
-  private readonly logger = new Logger(AccessStrategy.name);
-
-  constructor(
-    configService: ConfigService,
-    private jwtService: JwtService,
-  ) {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get('SECRET_ACCESS_KEY'),
-      passReqToCallback: true,
     });
   }
 
-  async validate(req: any, payload: TokenPayload) {
-    try {
-      const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-      console.log(token);
-      const result = await this.jwtService.verifyAsync(token);
-      this.logger.debug(`Result : ${JSON.stringify(result)}`);
-      this.logger.debug(`Validating payload: ${JSON.stringify(payload)}`);
-      return payload;
-    } catch (err) {
-      console.log('ssss');
-      console.log(err);
-      this.logger.error(`Token validation error: ${err.message}`);
-      if (err.message === 'jwt expired') {
-        throw new UnauthorizedException('Token has expired');
-      } else if (err.message === 'jwt malformed') {
-        throw new UnauthorizedException('Token is malformed');
-      } else {
-        throw new UnauthorizedException('Invalid token');
-      }
-    }
+  /**
+   * * validate 메서드는 decoded된 데이터를 받는다.
+   */
+  async validate(payload: AccessTokenPayload) {
+    return payload;
   }
 }

@@ -1,42 +1,44 @@
 import { Request } from 'express';
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
+import { TokenPayload } from './access.strategy';
+import { AuthService } from '../auth.service';
 
-interface TokenPayload {
-  userId: number;
-}
+interface RefreshTokenPayload extends TokenPayload {}
 
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(Strategy) {
+export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(
-    private readonly prismaService: PrismaService,
-    configService: ConfigService,
+    private readonly userService: UserService,
+    private authService: AuthService,
+    readonly configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request.cookies['refresh_token'],
+        (request: Request) => {
+          const token = request?.cookies['refresh_token'];
+
+          return token;
+        },
       ]),
-      secretOrKey: configService.getOrThrow('SECRET_REFRESH_KEY'),
+      secretOrKey: configService.getOrThrow<string>('SECRET_REFRESH_KEY'),
+      ignoreExpiration: false,
     });
   }
 
-  async validate(payload: TokenPayload) {
-    const users = await this.prismaService.user.findUnique({
-      where: {
-        id: payload.userId,
-      },
-      select: {
-        id: true,
-        email: true,
-        birthday: true,
-        name: true,
-        gender: true,
-      },
-    });
+  async validate(payload: RefreshTokenPayload) {
+    const user = await this.userService.getUserById(payload.id);
+    if (!user) throw new ConflictException();
 
-    return users;
+    const { id, ...rest } = user;
+    const { accessToken } = await this.authService.generateAccessToken({ id });
+
+    return {
+      accessToken,
+      user: { ...rest },
+    };
   }
 }

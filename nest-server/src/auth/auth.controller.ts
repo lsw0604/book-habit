@@ -4,7 +4,7 @@ import {
   Get,
   HttpCode,
   Post,
-  Req,
+  Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -12,6 +12,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
 import { CookieInterceptor } from 'src/interceptors/cookie-interceptor';
+import { AccessGuard } from './guard/access.guard';
+import { RefreshGuard } from './guard/refresh.guard';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -21,7 +23,7 @@ export class AuthController {
   @UseInterceptors(CookieInterceptor)
   @Post('signin')
   @HttpCode(200)
-  async signIn(@Req() req: any) {
+  async signIn(@Request() req: any) {
     const { accessToken } = await this.authService.generateAccessToken(req.user);
     const { refreshToken } = await this.authService.generateRefreshToken(req.user);
 
@@ -37,10 +39,15 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UseGuards(AuthGuard('access'))
+  @UseGuards(AccessGuard)
   @Get('test')
-  refresh(@Req() req) {
-    console.log(req.user);
+  refresh(@Request() req) {
+    return req.user;
+  }
+
+  @UseGuards(RefreshGuard)
+  @Get('refresh')
+  refreshToken(@Request() req) {
     return req.user;
   }
 }
