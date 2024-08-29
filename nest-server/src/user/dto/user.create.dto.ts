@@ -1,7 +1,7 @@
-import { Gender } from '@prisma/client';
 import { IsDate, IsEmail, IsEnum, IsString } from 'class-validator';
+import { Gender } from '@prisma/client';
 
-export class AuthLocalSignUp {
+export class UserCreateDto {
   @IsString()
   @IsEmail()
   email: string;
@@ -9,12 +9,12 @@ export class AuthLocalSignUp {
   @IsString()
   password: string;
 
-  @IsEnum(Gender)
-  gender: Gender;
+  @IsString()
+  name: string;
 
   @IsDate()
   birthday: Date;
 
-  @IsString()
-  name: string;
+  @IsEnum(Gender)
+  gender: Gender;
 }

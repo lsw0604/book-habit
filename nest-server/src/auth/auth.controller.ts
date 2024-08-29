@@ -3,51 +3,60 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
+  HttpStatus,
   Post,
-  Request,
+  Req,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
 import { CookieInterceptor } from 'src/interceptors/cookie-interceptor';
 import { AccessGuard } from './guard/access.guard';
 import { RefreshGuard } from './guard/refresh.guard';
+import { LocalGuard } from './guard/local.guard';
+import { Request, Response } from 'express';
 
 @Controller('/api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalGuard)
   @UseInterceptors(CookieInterceptor)
   @Post('signin')
   @HttpCode(200)
-  async signIn(@Request() req: any) {
-    const { accessToken } = await this.authService.generateAccessToken(req.user);
-    const { refreshToken } = await this.authService.generateRefreshToken(req.user);
-
-    return {
-      refreshToken,
-      accessToken,
-      user: req.user,
-    };
+  async signIn(@Req() req: Request) {
+    return req.user;
   }
 
   @Post('signup')
-  signUp(@Body() dto: AuthLocalSignUp) {
-    return this.authService.register(dto);
+  @HttpCode(200)
+  async signUp(@Body() dto: AuthLocalSignUp, @Res() res: Response) {
+    const { accessToken, refreshToken, user } = await this.authService.register(dto);
+
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true });
+    return {
+      accessToken,
+      user,
+    };
   }
 
   @UseGuards(AccessGuard)
   @Get('test')
-  refresh(@Request() req) {
+  refresh(@Req() req: Request) {
     return req.user;
   }
 
   @UseGuards(RefreshGuard)
   @Get('refresh')
-  refreshToken(@Request() req) {
+  refreshToken(@Req() req: Request) {
     return req.user;
+  }
+
+  @Get('filter-test')
+  async throwError() {
+    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   }
 }

@@ -1,13 +1,11 @@
 import { Request } from 'express';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/user/user.service';
-import { TokenPayload } from './access.strategy';
 import { AuthService } from '../auth.service';
-
-interface RefreshTokenPayload extends TokenPayload {}
+import { TokenInterface } from '../interface/token.interface';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
@@ -29,16 +27,15 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     });
   }
 
-  async validate(payload: RefreshTokenPayload) {
+  async validate(payload: TokenInterface) {
     const user = await this.userService.getUserById(payload.id);
-    if (!user) throw new ConflictException();
 
     const { id, ...rest } = user;
     const { accessToken } = await this.authService.generateAccessToken({ id });
 
     return {
       accessToken,
-      user: { ...rest },
+      user: { id, ...rest },
     };
   }
 }

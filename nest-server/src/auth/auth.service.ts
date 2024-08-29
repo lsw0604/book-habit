@@ -2,35 +2,23 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AuthGenerateTokenDto } from './dto/auth.generate.token.dto';
-import { AuthLocalSignUp } from './dto/auth.local.signup.dto';
-import { AuthSignInDto } from './dto/auth.signin.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthLoginDto } from './dto/auth.login.dto';
+import { AuthTokenPayloadDto } from './dto/auth.token.payload.dto';
+import { AuthLocalRegisterDto } from './dto/auth.local.register.dto';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private configService: ConfigService,
-    private prismaService: PrismaService,
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: AuthSignInDto) {
+  async login(dto: AuthLoginDto) {
     const { email, password } = dto;
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        email,
-      },
-      select: {
-        id: true,
-        birthday: true,
-        email: true,
-        gender: true,
-        password: true,
-        name: true,
-      },
+    const user = await this.userService.getUserByEmail({
+      email,
     });
 
     if (!user) throw new UnauthorizedException('해당 이메일을 가진 사용자를 찾을 수 없습니다.');
@@ -44,7 +32,7 @@ export class AuthService {
     return rest;
   }
 
-  async register(dto: AuthLocalSignUp) {
+  async register(dto: AuthLocalRegisterDto) {
     const user = await this.userService.registerUser(dto);
 
     const { password: _, id, ...rest } = user;
@@ -53,7 +41,7 @@ export class AuthService {
     const { refreshToken } = await this.generateRefreshToken({ id });
 
     return {
-      ...rest,
+      user: { ...rest },
       accessToken,
       refreshToken,
     };
@@ -67,7 +55,7 @@ export class AuthService {
     return;
   }
 
-  async generateRefreshToken(dto: AuthGenerateTokenDto) {
+  async generateRefreshToken(dto: AuthTokenPayloadDto) {
     const { id } = dto;
     const refreshToken = this.jwtService.sign(
       { id },
@@ -78,7 +66,7 @@ export class AuthService {
     };
   }
 
-  async generateAccessToken(dto: AuthGenerateTokenDto) {
+  async generateAccessToken(dto: AuthTokenPayloadDto) {
     const { id } = dto;
     const accessToken = this.jwtService.sign({ id });
     return {

@@ -1,6 +1,6 @@
 import { IsPositive, IsInt } from 'class-validator';
 
-export class AuthGenerateTokenDto {
+export class AuthTokenPayloadDto {
   @IsInt()
   @IsPositive()
   id: number;

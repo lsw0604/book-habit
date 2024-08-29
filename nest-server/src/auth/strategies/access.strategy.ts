@@ -2,20 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { Gender } from '@prisma/client';
-
-export interface TokenPayload {
-  id: number;
-  iat: number;
-  exp: number;
-}
-
-interface AccessTokenPayload extends TokenPayload {
-  name: string;
-  email: string;
-  gender: Gender;
-  birthday: string;
-}
+import { TokenInterface } from '../interface/token.interface';
 
 @Injectable()
 export class AccessStrategy extends PassportStrategy(Strategy, 'access') {
@@ -29,7 +16,7 @@ export class AccessStrategy extends PassportStrategy(Strategy, 'access') {
   /**
    * * validate 메서드는 decoded된 데이터를 받는다.
    */
-  async validate(payload: AccessTokenPayload) {
+  async validate(payload: TokenInterface) {
     return payload;
   }
 }
