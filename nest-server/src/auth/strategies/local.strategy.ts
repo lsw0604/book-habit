@@ -17,8 +17,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       password,
     });
 
-    const { accessToken } = await this.authService.generateAccessToken({ id: user.id });
-    const { refreshToken } = await this.authService.generateRefreshToken({ id: user.id });
+    const { accessToken } = this.authService.generateAccessToken(user.id);
+    const { refreshToken } = this.authService.generateRefreshToken(user.id);
 
     return {
       accessToken,

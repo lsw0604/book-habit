@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthLoginDto } from './dto/auth.login.dto';
-import { AuthTokenPayloadDto } from './dto/auth.token.payload.dto';
 import { AuthLocalRegisterDto } from './dto/auth.local.register.dto';
 import { UserService } from 'src/user/user.service';
 
@@ -17,7 +16,7 @@ export class AuthService {
 
   async login(dto: AuthLoginDto) {
     const { email, password } = dto;
-    const user = await this.userService.getUserByEmail({
+    const user = await this.userService.findUser({
       email,
     });
 
@@ -33,12 +32,20 @@ export class AuthService {
   }
 
   async register(dto: AuthLocalRegisterDto) {
-    const user = await this.userService.registerUser(dto);
+    const existEmail = await this.userService.findUser({ email: dto.email });
 
+    if (!!existEmail) throw new UnauthorizedException('해당 이메일이 존재합니다.');
+
+    const hashedPassword = await this.hashPassword(dto.password);
+    const user = await this.userService.createUser({
+      ...dto,
+      password: hashedPassword,
+      provider: 'LOCAL',
+    });
     const { password: _, id, ...rest } = user;
 
-    const { accessToken } = await this.generateAccessToken({ id });
-    const { refreshToken } = await this.generateRefreshToken({ id });
+    const { accessToken } = this.generateAccessToken(id);
+    const { refreshToken } = this.generateRefreshToken(id);
 
     return {
       user: { ...rest },
@@ -55,8 +62,7 @@ export class AuthService {
     return;
   }
 
-  async generateRefreshToken(dto: AuthTokenPayloadDto) {
-    const { id } = dto;
+  generateRefreshToken(id: number) {
     const refreshToken = this.jwtService.sign(
       { id },
       { expiresIn: '7d', secret: this.configService.getOrThrow<string>('SECRET_REFRESH_KEY') },
@@ -66,11 +72,15 @@ export class AuthService {
     };
   }
 
-  async generateAccessToken(dto: AuthTokenPayloadDto) {
-    const { id } = dto;
+  generateAccessToken(id: number) {
     const accessToken = this.jwtService.sign({ id });
     return {
       accessToken,
     };
+  }
+
+  private async hashPassword(password: string) {
+    const BCRYPT_SALT_ROUNDS = 10;
+    return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
   }
 }

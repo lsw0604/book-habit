@@ -1,4 +1,5 @@
-import { IsInt, IsString } from 'class-validator';
+import { Gender, Provider } from '@prisma/client';
+import { IsDate, IsEnum, IsInt, IsString } from 'class-validator';
 
 export class UserDto {
   @IsInt()
@@ -12,4 +13,16 @@ export class UserDto {
 
   @IsString()
   name: string;
+
+  @IsDate()
+  birthday: Date;
+
+  @IsEnum(Gender)
+  gender: Gender;
+
+  @IsEnum(Provider)
+  provider: Provider;
+
+  @IsString()
+  profile: string;
 }

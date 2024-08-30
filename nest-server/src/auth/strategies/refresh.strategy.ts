@@ -28,10 +28,10 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   }
 
   async validate(payload: TokenInterface) {
-    const user = await this.userService.getUserById(payload.id);
+    const user = await this.userService.findUser({ id: payload.id });
 
     const { id, ...rest } = user;
-    const { accessToken } = await this.authService.generateAccessToken({ id });
+    const { accessToken } = this.authService.generateAccessToken(id);
 
     return {
       accessToken,
