@@ -1,22 +1,18 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import { FindUserDto } from './dto/find.user.dto';
 
 @Injectable()
 export class UserService {
-  private logger = new Logger(UserService.name);
-
   constructor(private prismaService: PrismaService) {}
 
   async createUser(dto: CreateUserDto) {
-    this.logger.debug(`createUser DTD : ${JSON.stringify(dto)}`);
     const user = await this.prismaService.user.create({
       data: {
         ...dto,
       },
     });
-    this.logger.debug(`createUser Info : ${user}`);
     return user;
   }
 

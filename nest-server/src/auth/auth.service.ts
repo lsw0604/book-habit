@@ -42,13 +42,13 @@ export class AuthService {
       password: hashedPassword,
       provider: 'LOCAL',
     });
-    const { password: _, id, ...rest } = user;
+    const { password: _, ...rest } = user;
 
-    const { accessToken } = this.generateAccessToken(id);
-    const { refreshToken } = this.generateRefreshToken(id);
+    const { accessToken } = this.generateAccessToken(user.id);
+    const { refreshToken } = this.generateRefreshToken(user.id);
 
     return {
-      user: { ...rest },
+      ...rest,
       accessToken,
       refreshToken,
     };

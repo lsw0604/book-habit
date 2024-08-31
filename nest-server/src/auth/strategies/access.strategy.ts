@@ -21,12 +21,6 @@ export class AccessStrategy extends PassportStrategy(Strategy, 'access') {
    * * validate 메서드는 decoded된 데이터를 받는다.
    */
   async validate(payload: TokenInterface) {
-    const user = await this.userService.findUser({ id: payload.id });
-
-    const { password: _, ...rest } = user;
-
-    return {
-      user: rest,
-    };
+    return await this.userService.findUser({ id: payload.id });
   }
 }
