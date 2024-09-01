@@ -24,4 +24,8 @@ export class CreateUserDto {
 
   @IsEnum(Provider)
   provider: Provider;
+
+  @IsOptional()
+  @IsString()
+  profile?: string;
 }
