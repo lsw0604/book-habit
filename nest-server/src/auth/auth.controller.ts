@@ -1,14 +1,4 @@
-import {
-  Get,
-  Req,
-  Res,
-  Body,
-  Post,
-  UseGuards,
-  Controller,
-  UseInterceptors,
-  Query,
-} from '@nestjs/common';
+import { Get, Req, Res, Body, Post, UseGuards, Controller, UseInterceptors } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { User } from '@prisma/client';
 import { AuthService } from './auth.service';
@@ -20,6 +10,7 @@ import { RefreshGuard } from './guard/refresh.guard';
 import { LocalGuard } from './guard/local.guard';
 import { AuthLocalRegisterDto } from './dto/auth.local.register.dto';
 import { ConfigService } from '@nestjs/config';
+import { KakaoGuard } from './guard/kakao.guard';
 
 interface AccessTokenExtendsUser extends User {
   accessToken: string;
@@ -103,6 +94,14 @@ export class AuthController {
     );
   }
 
+  @UseGuards(KakaoGuard)
+  @UseInterceptors(
+    new CookieInterceptor<RefreshTokenExtendsUer, 'refreshToken'>('refreshToken'),
+    new SetBearerHeaderInterceptor<AccessTokenExtendsUser>('accessToken', 'Authorization'),
+    new OmitPropertyInterceptor<User, 'password'>('password'),
+  )
   @Get('kakao/callback')
-  kakaoCallback(@Query('code') code: string) {}
+  async kakaoCallback(@Req() req: Request) {
+    return req.user;
+  }
 }
