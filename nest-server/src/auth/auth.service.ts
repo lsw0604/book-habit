@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -9,7 +9,6 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-  private logger = new Logger(AuthService.name);
   constructor(
     private configService: ConfigService,
     private userService: UserService,
@@ -89,7 +88,7 @@ export class AuthService {
 
     if (!kakao_email) throw new UnauthorizedException('kakao_id가 존재하지 않습니다.');
 
-    const email = `${kakao_email}@oauth.kakao.com`;
+    const email = await this.kakaoEmailTransfer(kakao_email);
     const profile: string = kakao_account.profile.thumbnail_image_url;
 
     const existKakaoId = await this.userService.findUser({
@@ -178,5 +177,8 @@ export class AuthService {
     return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
   }
 
-  private async kakaoEmailTranslator() {}
+  private async kakaoEmailTransfer(kakao_email: number) {
+    const emailAddress = '@oauth.kakao.com';
+    return `${kakao_email}${emailAddress}`;
+  }
 }
