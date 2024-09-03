@@ -11,6 +11,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     const status = HttpStatus.BAD_REQUEST;
 
     response.status(status).json({
+      statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.path,
       message: `Prisma Error : ${exception.message}`,

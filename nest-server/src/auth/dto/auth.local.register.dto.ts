@@ -15,7 +15,7 @@ export class AuthLocalRegisterDto {
 
   @IsDate()
   @Type(() => Date)
-  birthday?: Date;
+  birthday: Date;
 
   @IsString()
   name: string;
