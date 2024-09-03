@@ -1,14 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import qs from 'qs';
+import * as qs from 'qs';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { AuthLocalRegisterDto } from './dto/auth.local.register.dto';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger(AuthService.name);
   constructor(
     private configService: ConfigService,
     private userService: UserService,
@@ -55,14 +56,6 @@ export class AuthService {
     };
   }
 
-  async refresh() {
-    return;
-  }
-
-  async logout() {
-    return;
-  }
-
   generateRefreshToken(id: number) {
     const refreshToken = this.jwtService.sign(
       { id },
@@ -96,7 +89,12 @@ export class AuthService {
 
     if (!kakao_email) throw new UnauthorizedException('kakao_id가 존재하지 않습니다.');
 
-    const existKakaoId = await this.userService.findUser(kakao_email);
+    const email = `${kakao_email}@oauth.kakao.com`;
+    const profile: string = kakao_account.profile.thumbnail_image_url;
+
+    const existKakaoId = await this.userService.findUser({
+      email,
+    });
 
     if (!!existKakaoId) {
       const { accessToken } = this.generateAccessToken(existKakaoId.id);
@@ -110,9 +108,9 @@ export class AuthService {
     }
 
     const user = await this.userService.createUser({
-      email: kakao_email,
+      email,
       provider: 'KAKAO',
-      profile: kakao_account.profile.thumbnail_image_url,
+      profile,
     });
 
     const { accessToken } = this.generateAccessToken(user.id);
@@ -127,32 +125,58 @@ export class AuthService {
 
   private async getKakaoId(token: string) {
     const K_API_FETCH_ME_URL = 'https://kapi.kakao.com/v2/user/me';
+    try {
+      const response = await fetch(K_API_FETCH_ME_URL, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const { id: kakao_email, kakao_account } = await fetch(K_API_FETCH_ME_URL, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;',
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((response) => response.json());
+      if (!response.ok) {
+        throw new UnauthorizedException('v2/user/me 카카오 API 호룰에 실패했습니다.');
+      }
 
-    return { kakao_email, kakao_account };
+      const { kakao_email, kakao_account } = await response.json();
+
+      return {
+        kakao_email,
+        kakao_account,
+      };
+    } catch (err) {
+      throw new UnauthorizedException('v2/user/me 카카오 API 호출 중에 오류가 발생했습니다.');
+    }
   }
 
   private async getKakaoAccessToken(body: string) {
     const K_AUTH_FETCH_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+    try {
+      const response = await fetch(K_AUTH_FETCH_TOKEN_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body,
+      });
 
-    const { access_token } = await fetch(K_AUTH_FETCH_TOKEN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
-    }).then((response) => response.json());
+      if (!response.ok) {
+        throw new UnauthorizedException('oauth/token 카카오 API 호출에 실패했습니다.');
+      }
 
-    return { access_token };
+      const { access_token } = await response.json();
+      return {
+        access_token,
+      };
+    } catch (err) {
+      throw new UnauthorizedException('oauth/token 카카오 API 호출 중에 오류가 발생했습니다.');
+    }
   }
 
   private async hashPassword(password: string) {
     const BCRYPT_SALT_ROUNDS = 10;
     return await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
   }
+
+  private async kakaoEmailTranslator() {}
 }

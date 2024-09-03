@@ -84,23 +84,13 @@ export class AuthController {
     });
   }
 
-  @Get('kakao')
-  kakao(@Res() res: Response) {
-    const KAKAO_CLIENT_ID = this.configService.getOrThrow<string>('KAKAO_CLIENT_ID');
-    const KAKAO_CALLBACK_URI = this.configService.getOrThrow<string>('KAKAO_CALLBACK_URL');
-    return res.status(302).redirect(
-      // eslint-disable-next-line max-len
-      `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_CALLBACK_URI}&response_type=code`,
-    );
-  }
-
   @UseGuards(KakaoGuard)
   @UseInterceptors(
     new CookieInterceptor<RefreshTokenExtendsUer, 'refreshToken'>('refreshToken'),
     new SetBearerHeaderInterceptor<AccessTokenExtendsUser>('accessToken', 'Authorization'),
     new OmitPropertyInterceptor<User, 'password'>('password'),
   )
-  @Get('kakao/callback')
+  @Get('kakao')
   async kakaoCallback(@Req() req: Request) {
     return req.user;
   }
