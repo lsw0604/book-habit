@@ -12,7 +12,6 @@ declare global {
     }
 
     interface Request {
-      2;
       user?: User;
     }
   }

@@ -10,7 +10,6 @@ import { AllExceptionFilter } from './filters/all-exception.filter';
 import { OmitPropertyInterceptor } from './interceptors/omit-property.interceptor';
 import { CookieInterceptor } from './interceptors/cookie.interceptor';
 import { SetBearerHeaderInterceptor } from './interceptors/set-bearer-header.interceptor';
-
 import { AccessTokenType, RefreshTokenType } from './types/token';
 
 async function bootstrap() {
