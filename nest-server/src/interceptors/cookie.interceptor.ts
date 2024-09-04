@@ -10,10 +10,11 @@ export class CookieInterceptor<T, K extends keyof T> implements NestInterceptor 
     return next.handle().pipe(
       map((data: T) => {
         const response: Response = context.switchToHttp().getResponse();
-        if (data) {
+        if (!response.headersSent && data) {
           response.cookie(this.omitToProperty as string, data[this.omitToProperty], {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           });
           const { [this.omitToProperty]: _, ...rest } = data;
           return rest as Omit<T, K>;

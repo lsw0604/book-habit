@@ -32,7 +32,7 @@ export class UserService {
     return user;
   }
 
-  async updateUser(id: number, dto: UpdateUserDto) {
+  async updateUser({ id, dto }: { id: number; dto: UpdateUserDto }) {
     const { name, gender, birthday, profile } = dto;
 
     if (!name && !gender && !birthday && !profile) {

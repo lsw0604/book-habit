@@ -9,11 +9,13 @@ export class AllExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception instanceof HttpException ? exception.getStatus() : 500;
 
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.path,
-      message: exception instanceof HttpException ? exception.message : 'Internal server error',
-    });
+    if (!response.headersSent) {
+      response.status(status).json({
+        statusCode: status,
+        timestamp: new Date().toISOString(),
+        path: request.path,
+        message: exception instanceof HttpException ? exception.message : 'Internal server error',
+      });
+    }
   }
 }
