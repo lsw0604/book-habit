@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { MyBookModule } from './my-book/my-book.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MyBookCommentModule } from './my-book-comment/my-book-comment.module';
+import { CommentLikeModule } from './comment-like/comment-like.module';
+import { CommentReplyModule } from './comment-reply/comment-reply.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { MyBookCommentModule } from './my-book-comment/my-book-comment.module';
     AuthModule,
     MyBookModule,
     MyBookCommentModule,
+    CommentLikeModule,
+    CommentReplyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

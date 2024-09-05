@@ -14,6 +14,9 @@ type ExistMyBookCommentDTO = Pick<MyBookComment, 'id'>;
 type ValidateMyBookUserDTO = Pick<MyBook, 'userId' | 'id'>;
 type ValidateMyBookCommentUserDTO = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
 
+/**
+ * TODO: 중복되는 메서드 다시 한번보기
+ */
 @Injectable()
 export class MyBookCommentService {
   constructor(
@@ -71,6 +74,9 @@ export class MyBookCommentService {
     return comment;
   }
 
+  /**
+   * TODO: 굳이 select로 내가 원하지 않는 형식으로 받을 이유가 있을까? DI의 장점을 최대한 살려보자
+   */
   async getPublicMyBookCommentDetail({ id }: GetPublicMyBookCommentDetailDTO) {
     await this.existMyBookComment({ id });
     const comment = await this.prismaService.myBookComment.findUnique({
@@ -143,7 +149,6 @@ export class MyBookCommentService {
       });
     });
   }
-
   private async existMyBookComment({ id }: ExistMyBookCommentDTO) {
     const comment = await this.prismaService.myBookComment.findUnique({
       where: {
