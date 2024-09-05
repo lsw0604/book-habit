@@ -220,7 +220,7 @@ export class MyBookService {
     });
   }
 
-  private async findMyBookById({ id }: Pick<MyBook, 'id'>) {
+  async findMyBookById({ id }: Pick<MyBook, 'id'>) {
     return await this.prismaService.myBook.findUnique({
       where: {
         id,

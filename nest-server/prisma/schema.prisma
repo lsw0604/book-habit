@@ -116,7 +116,6 @@ model MyBookComment {
   commentLike           CommentLike[]
   commentReply          CommentReply[]
   comment               String
-  status                String
   isPublic              Boolean
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt

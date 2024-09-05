@@ -8,6 +8,8 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { AccessStrategy } from './strategies/access.strategy';
 import { RefreshStrategy } from './strategies/refresh.strategy';
 import { UserModule } from 'src/user/user.module';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
@@ -25,7 +27,14 @@ import { UserModule } from 'src/user/user.module';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, AccessStrategy, RefreshStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    AccessStrategy,
+    RefreshStrategy,
+    PrismaService,
+    UserService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}
