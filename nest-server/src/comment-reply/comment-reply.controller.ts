@@ -6,7 +6,7 @@ import { CreateCommentReplyDto } from './dto/create.comment.reply.dto';
 import { UpdateCommentReplyDto } from './dto/update.comment.reply.dto';
 
 @UseGuards(AccessGuard)
-@Controller('comment-reply')
+@Controller('/api/comment-reply')
 export class CommentReplyController {
   constructor(private commentReplyService: CommentReplyService) {}
 

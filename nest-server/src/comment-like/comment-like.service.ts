@@ -1,10 +1,16 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CommentLike } from '@prisma/client';
 import { MyBookCommentService } from 'src/my-book-comment/my-book-comment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 type CreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
 type DeleteCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
+type FindCommentLikeDTO = Pick<CommentLike, 'id'>;
 type ValidateCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
 type ValidateCreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
 
@@ -41,6 +47,20 @@ export class CommentLikeService {
     return deletedCommentLike;
   }
 
+  async findCommentLike({ id }: FindCommentLikeDTO) {
+    const commentLike = await this.prismaService.commentLike.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!commentLike) {
+      throw new NotFoundException(`해당 commentId를 찾지 못 했습니다.`);
+    }
+
+    return commentLike;
+  }
+
   private async validateCreateCommentLike({
     myBookCommentId,
     userId,
@@ -62,11 +82,7 @@ export class CommentLikeService {
   }
 
   private async validateCommentLike({ id, userId }: ValidateCommentLikeDTO) {
-    const commentLike = await this.prismaService.commentLike.findUnique({
-      where: {
-        id,
-      },
-    });
+    const commentLike = await this.findCommentLike({ id });
 
     if (commentLike.userId !== userId) {
       throw new UnauthorizedException('해당 comment의 좋아요를 삭제할 권한이 없습니다.');
