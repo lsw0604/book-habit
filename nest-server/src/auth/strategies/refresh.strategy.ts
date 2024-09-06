@@ -5,7 +5,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from '../auth.service';
-import { TokenInterface } from '../interface/token.interface';
+import { TokenType } from 'src/types/token';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
@@ -27,7 +27,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     });
   }
 
-  async validate(payload: TokenInterface) {
+  async validate(payload: TokenType) {
     const user = await this.userService.findUser({ id: payload.id });
 
     const { id } = user;

@@ -64,11 +64,7 @@ export class MyBookController {
     const id = parseInt(myBookId, 10);
     const userId = req.user.id;
 
-    await this.myBookService.deleteMyBook({ id, userId });
-
-    return {
-      message: `myBook/:${id}를 삭제하는데 성공했습니다.`,
-    };
+    return await this.myBookService.deleteMyBook({ id, userId });
   }
 
   @Put('/:myBookId')

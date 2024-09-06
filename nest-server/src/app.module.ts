@@ -11,6 +11,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { MyBookCommentModule } from './my-book-comment/my-book-comment.module';
 import { CommentLikeModule } from './comment-like/comment-like.module';
 import { CommentReplyModule } from './comment-reply/comment-reply.module';
+import { MyBookHistoryModule } from './my-book-history/my-book-history.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CommentReplyModule } from './comment-reply/comment-reply.module';
     MyBookCommentModule,
     CommentLikeModule,
     CommentReplyModule,
+    MyBookHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
