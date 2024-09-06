@@ -1,12 +1,9 @@
-import { Body, Controller, Delete, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { CommentLikeService } from './comment-like.service';
 import { CreateCommentLikeDto } from './dto/create.comment.like.dto';
 
-/**
- * TODO: comment-like service 완성하기
- */
 @UseGuards(AccessGuard)
 @Controller('/api/comment-like')
 export class CommentLikeController {
@@ -22,10 +19,11 @@ export class CommentLikeController {
     });
   }
 
-  @Delete()
-  async deleteCommentLike(@Req() req: Request) {
+  @Delete('/:commentLikeId')
+  async deleteCommentLike(@Param('commentLikeId') commentLikeId: string, @Req() req: Request) {
+    const id = parseInt(commentLikeId, 10);
     const userId = req.user.id;
 
-    return userId;
+    return await this.commentLikeService.deleteCommentLike({ id, userId });
   }
 }
