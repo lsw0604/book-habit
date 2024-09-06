@@ -1,7 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookRegisterDto } from './dto/book.register.dto';
-import { Prisma } from '@prisma/client';
+import { Book, Prisma } from '@prisma/client';
+
+type FindBookDTO = Pick<Book, 'id'>;
 
 @Injectable()
 export class BookService {
@@ -18,6 +20,16 @@ export class BookService {
       where: { isbn },
     });
     return !!existISBN;
+  }
+
+  async findBook({ id }: FindBookDTO) {
+    const book = await this.prismaService.book.findUnique({ where: { id } });
+
+    if (!book) {
+      throw new NotFoundException('해당 book을 찾을 수 없습니다.');
+    }
+
+    return book;
   }
 
   async registerBook(dto: BookRegisterDto) {

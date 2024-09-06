@@ -1,22 +1,37 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { MyBook, MyBookStatus, Prisma } from '@prisma/client';
+import { BookService } from 'src/book/book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+type CreateMyBookDTO = Pick<MyBook, 'bookId' | 'userId'>;
+type GetMyBookListDTO = Pick<MyBook, 'userId'> & { myBookStatus: MyBookStatus | 'ALL' } & {
+  pageNumber: number;
+};
+type UpdateMyBookDTO = Partial<Pick<MyBook, 'rating' | 'myBookStatus' | 'id' | 'userId'>>;
+type DeleteMyBookDTO = Pick<MyBook, 'id' | 'userId'>;
+type FindMyBookDTO = Pick<MyBook, 'id'>;
+type ValidateMyBookDTO = Pick<MyBook, 'id' | 'userId'>;
+type VAlidateCreateMyBookDTO = Pick<MyBook, 'bookId'>;
 
 @Injectable()
 export class MyBookService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly bookService: BookService,
+  ) {}
 
-  async createMyBook({ bookId, userId }: Pick<MyBook, 'bookId' | 'userId'>) {
-    if (!userId || !bookId) {
-      throw new BadRequestException('userId 또는 bookId를 읽을 수 없습니다.');
-    }
+  async createMyBook({ bookId, userId }: CreateMyBookDTO) {
+    await this.validateCreateMyBook({ bookId });
+    const initialData: Pick<MyBook, 'rating' | 'myBookStatus'> = {
+      rating: 0,
+      myBookStatus: 'TO_READ',
+    };
 
     const myBook = await this.prismaService.myBook.create({
       data: {
         userId,
         bookId,
-        rating: 0,
-        myBookStatus: 'TO_READ',
+        ...initialData,
       },
     });
 
@@ -69,11 +84,7 @@ export class MyBookService {
     return myBook;
   }
 
-  async getMyBookList({
-    userId,
-    pageNumber,
-    myBookStatus,
-  }: Pick<MyBook, 'userId'> & { myBookStatus: MyBookStatus | 'ALL' } & { pageNumber: number }) {
+  async getMyBookList({ userId, pageNumber, myBookStatus }: GetMyBookListDTO) {
     const take = 10;
     const skip = (pageNumber - 1) * take;
 
@@ -135,24 +146,8 @@ export class MyBookService {
     };
   }
 
-  async updateMyBook({
-    id,
-    myBookStatus,
-    rating,
-    userId,
-  }: Partial<Pick<MyBook, 'rating' | 'myBookStatus' | 'id' | 'userId'>>) {
-    const existMyBook = await this.findMyBookById({ id });
-
-    if (!existMyBook) {
-      throw new BadRequestException(`해당 ID : ${id}를 가진 myBook을 찾을 수 없습니다.`);
-    }
-
-    if (existMyBook.userId !== userId) {
-      throw new UnauthorizedException(
-        `해당 ${id}를 가진 myBook에 대한 작업을 수행 할 수 없습니다.`,
-      );
-    }
-
+  async updateMyBook({ id, myBookStatus, rating, userId }: UpdateMyBookDTO) {
+    await this.validateMyBook({ id, userId });
     const updatedMyBook = await this.prismaService.myBook.update({
       where: {
         id,
@@ -167,18 +162,8 @@ export class MyBookService {
     return updatedMyBook;
   }
 
-  async deleteMyBook({ id: myBookId, userId }: Pick<MyBook, 'id' | 'userId'>) {
-    const existMyBook = await this.findMyBookById({ id: myBookId });
-
-    if (!existMyBook) {
-      throw new BadRequestException(`해당 ID : ${myBookId}를 가진 myBook을 찾을 수 없습니다.`);
-    }
-
-    if (existMyBook.userId !== userId) {
-      throw new UnauthorizedException(
-        `해당 ${myBookId}를 가진 myBook에 대한 작업을 수행 할 수 없습니다.`,
-      );
-    }
+  async deleteMyBook({ id: myBookId, userId }: DeleteMyBookDTO) {
+    await this.validateMyBook({ id: myBookId, userId });
 
     await this.prismaService.$transaction(async (prisma) => {
       await prisma.myBookHistory.deleteMany({
@@ -218,13 +203,35 @@ export class MyBookService {
         where: { id: myBookId },
       });
     });
+
+    return {
+      message: `해당 ID : ${myBookId}를 가진 MyBook을 삭제하는데 성공했습니다.`,
+    };
   }
 
-  async findMyBookById({ id }: Pick<MyBook, 'id'>) {
-    return await this.prismaService.myBook.findUnique({
+  async findMyBook({ id }: FindMyBookDTO) {
+    const myBook = await this.prismaService.myBook.findUnique({
       where: {
         id,
       },
     });
+
+    if (!myBook) {
+      throw new NotFoundException(`해당 ID : ${id}를 가진 myBook을 찾을 수 없습니다.`);
+    }
+
+    return myBook;
+  }
+
+  private async validateCreateMyBook({ bookId: id }: VAlidateCreateMyBookDTO) {
+    await this.bookService.findBook({ id });
+  }
+
+  private async validateMyBook({ id, userId }: ValidateMyBookDTO) {
+    const myBook = await this.findMyBook({ id });
+
+    if (myBook.userId !== userId) {
+      throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
+    }
   }
 }

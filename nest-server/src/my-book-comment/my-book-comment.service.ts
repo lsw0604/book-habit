@@ -10,13 +10,10 @@ type UpdateMyBookCommentDTO = Partial<Pick<MyBookComment, 'comment' | 'isPublic'
   Pick<MyBookComment, 'id'> &
   Pick<MyBook, 'userId'>;
 type DeleteMyBookCommentDTO = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
-type ExistMyBookCommentDTO = Pick<MyBookComment, 'id'>;
-type ValidateMyBookUserDTO = Pick<MyBook, 'userId' | 'id'>;
-type ValidateMyBookCommentUserDTO = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
+type ValidateCreateMyBookCommentDTO = Pick<MyBookComment, 'myBookId'> & Pick<MyBook, 'userId'>;
+type ValidateMyBookCommentDTO = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
+type FIndMyBookCommentDTO = Pick<MyBookComment, 'id'>;
 
-/**
- * TODO: 중복되는 메서드 다시 한번보기
- */
 @Injectable()
 export class MyBookCommentService {
   constructor(
@@ -25,7 +22,7 @@ export class MyBookCommentService {
   ) {}
 
   async createMyBookComment({ comment, isPublic, myBookId, userId }: CreateMyBookCommentDTO) {
-    await this.validateMyBookUser({ userId, id: myBookId });
+    await this.validateCreateMyBookComment({ userId, myBookId });
 
     const newComment = await this.prismaService.myBookComment.create({
       data: {
@@ -74,14 +71,12 @@ export class MyBookCommentService {
     return comment;
   }
 
-  /**
-   * TODO: 굳이 select로 내가 원하지 않는 형식으로 받을 이유가 있을까? DI의 장점을 최대한 살려보자
-   */
   async getPublicMyBookCommentDetail({ id }: GetPublicMyBookCommentDetailDTO) {
-    await this.existMyBookComment({ id });
-    const comment = await this.prismaService.myBookComment.findUnique({
+    const myBookComment = await this.findMyBookComment({ id });
+
+    return await this.prismaService.myBookComment.findUnique({
       where: {
-        id,
+        id: myBookComment.id,
         isPublic: true,
       },
       select: {
@@ -109,12 +104,10 @@ export class MyBookCommentService {
         commentReply: true,
       },
     });
-
-    return comment;
   }
 
   async updateMyBookComment({ isPublic, userId, comment, id }: UpdateMyBookCommentDTO) {
-    await this.validateUserComment({ userId, id });
+    await this.validateMyBookComment({ userId, id });
 
     return await this.prismaService.myBookComment.update({
       where: {
@@ -128,7 +121,7 @@ export class MyBookCommentService {
   }
 
   async deleteMyBookComment({ id, userId }: DeleteMyBookCommentDTO) {
-    await this.validateUserComment({ id, userId });
+    await this.validateMyBookComment({ id, userId });
     await this.prismaService.$transaction(async (prisma) => {
       await prisma.commentLike.deleteMany({
         where: {
@@ -149,46 +142,36 @@ export class MyBookCommentService {
       });
     });
   }
-  private async existMyBookComment({ id }: ExistMyBookCommentDTO) {
-    const comment = await this.prismaService.myBookComment.findUnique({
+
+  async findMyBookComment({ id }: FIndMyBookCommentDTO) {
+    const myBookComment = await this.prismaService.myBookComment.findUnique({
       where: {
         id,
       },
-      select: {
-        myBook: {
-          select: {
-            userId: true,
-          },
-        },
-      },
     });
 
-    if (!comment) {
-      throw new NotFoundException(`해당 ID : ${id}를 가진 MyBookComment 찾을 수 없습니다.`);
+    if (!myBookComment) {
+      throw new NotFoundException(`해당 ID : ${id}를 가진 MyBookComment를 찾을 수 없습니다.`);
     }
 
-    return comment;
+    return myBookComment;
   }
 
-  private async validateMyBookUser({ id, userId }: ValidateMyBookUserDTO) {
-    const myBook = await this.myBookService.findMyBookById({ id });
-
-    if (!myBook) {
-      throw new NotFoundException(`해당 ${id}를 가진 MyBook을 찾을 수 없습니다.`);
-    }
+  private async validateCreateMyBookComment({ myBookId, userId }: ValidateCreateMyBookCommentDTO) {
+    const myBook = await this.myBookService.findMyBook({ id: myBookId });
 
     if (myBook.userId !== userId) {
-      throw new UnauthorizedException(
-        `해당 MyBook의 소유자가 아니므로 MyBook에 Comment를 작성할 수 없습니다.`,
-      );
+      throw new UnauthorizedException(`해당 myBookComment에 대한 권한이 없습니다.`);
     }
   }
 
-  private async validateUserComment({ id, userId }: ValidateMyBookCommentUserDTO) {
-    const existComment = await this.existMyBookComment({ id });
+  private async validateMyBookComment({ id, userId }: ValidateMyBookCommentDTO) {
+    const myBookComment = await this.findMyBookComment({ id });
 
-    if (userId !== existComment.myBook.userId) {
-      throw new UnauthorizedException(`해당 MyBookComment의 소유자가 아니므로 수정할 수 없습니다.`);
+    const myBook = await this.myBookService.findMyBook({ id: myBookComment.id });
+
+    if (myBook.userId !== userId) {
+      throw new UnauthorizedException(`해당 myBookComment에 대한 권한이 없습니다.`);
     }
   }
 }

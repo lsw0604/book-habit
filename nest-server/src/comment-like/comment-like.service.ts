@@ -1,63 +1,74 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CommentLike } from '@prisma/client';
+import { MyBookCommentService } from 'src/my-book-comment/my-book-comment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-type CreateCommentLikeDTO = Omit<CommentLike, 'id'>;
-type DeleteCommentLikeDTO = Omit<CommentLike, 'myBookCommentId'>;
-type ExistingCommentLikeDTO = Omit<CommentLike, 'id'>;
-type validateCommentLikeDTO = Omit<CommentLike, 'myBookCommentId'>;
+type CreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
+type DeleteCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
+type ValidateCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
+type ValidateCreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
 
 @Injectable()
 export class CommentLikeService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly myBookCommentService: MyBookCommentService,
+  ) {}
 
-  async createCommentLike(dto: CreateCommentLikeDTO) {
-    await this.existingCommentLike({ ...dto });
+  async createCommentLike({ myBookCommentId, userId }: CreateCommentLikeDTO) {
+    await this.validateCreateCommentLike({ myBookCommentId, userId });
+
     const commentLike = await this.prismaService.commentLike.create({
       data: {
-        ...dto,
+        userId,
+        myBookCommentId,
       },
     });
 
     return commentLike;
   }
 
-  async deleteCommentLike(dto: DeleteCommentLikeDTO) {
-    await this.validateCommentLike(dto);
+  async deleteCommentLike({ id, userId }: DeleteCommentLikeDTO) {
+    await this.validateCommentLike({ id, userId });
 
     const deletedCommentLike = await this.prismaService.commentLike.delete({
       where: {
-        ...dto,
+        userId,
+        id,
       },
     });
 
     return deletedCommentLike;
   }
 
-  private async existingCommentLike(dto: ExistingCommentLikeDTO) {
-    const existingCommentLike = await this.prismaService.commentLike.findFirst({
+  private async validateCreateCommentLike({
+    myBookCommentId,
+    userId,
+  }: ValidateCreateCommentLikeDTO) {
+    const myBookComment = await this.myBookCommentService.findMyBookComment({
+      id: myBookCommentId,
+    });
+
+    const commentLike = await this.prismaService.commentLike.findFirst({
       where: {
-        userId: dto.userId,
-        myBookCommentId: dto.myBookCommentId,
+        myBookCommentId: myBookComment.id,
+        userId,
       },
     });
 
-    if (existingCommentLike) {
+    if (commentLike) {
       throw new BadRequestException('이미 해당 comment에 좋아요를 눌렀습니다.');
     }
   }
 
-  private async validateCommentLike(dto: validateCommentLikeDTO) {
-    const { userId } = await this.prismaService.commentLike.findUnique({
+  private async validateCommentLike({ id, userId }: ValidateCommentLikeDTO) {
+    const commentLike = await this.prismaService.commentLike.findUnique({
       where: {
-        id: dto.id,
-      },
-      select: {
-        userId: true,
+        id,
       },
     });
 
-    if (userId !== dto.userId) {
+    if (commentLike.userId !== userId) {
       throw new UnauthorizedException('해당 comment의 좋아요를 삭제할 권한이 없습니다.');
     }
   }
