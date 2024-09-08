@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { MyBookTag, Tag } from '@prisma/client';
+import { MyBook, MyBookTag, Tag } from '@prisma/client';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 type CreateTagDTO = Pick<Tag, 'tag'>;
-type CreateMyBookTagDTO = Pick<MyBookTag, 'tagId' | 'myBookId'>;
-type ValidateCreateTagDTO = Pick<Tag, 'tag'>;
+type CreateMyBookTagDTO = Pick<MyBookTag, 'myBookId'> & Pick<Tag, 'tag'> & Pick<MyBook, 'userId'>;
 
 @Injectable()
 export class MyBookTagService {
@@ -15,12 +14,38 @@ export class MyBookTagService {
   ) {}
 
   async createTag({ tag }: CreateTagDTO) {
-    const existTag = this.prismaService.tag.findFirst({
+    const existTag = await this.prismaService.tag.findFirst({
       where: {
         tag,
       },
     });
+
+    if (!existTag) {
+      const newTag = await this.prismaService.tag.create({
+        data: {
+          tag,
+        },
+      });
+
+      return newTag;
+    }
+
+    return existTag;
   }
 
-  private async createMyBookTag({ tagId, myBookId }: CreateMyBookTagDTO) {}
+  async createMyBookTag({ tag, myBookId, userId }: CreateMyBookTagDTO) {
+    await this.myBookService.validateMyBook({ id: myBookId, userId });
+    const myBook = await this.myBookService.findMyBook({ id: myBookId });
+
+    const newTag = await this.createTag({ tag });
+
+    const myBookTag = await this.prismaService.myBookTag.create({
+      data: {
+        tagId: newTag.id,
+        myBookId: myBook.id,
+      },
+    });
+
+    return myBookTag;
+  }
 }

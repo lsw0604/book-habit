@@ -47,12 +47,21 @@ export class MyBookService {
       select: {
         rating: true,
         myBookStatus: true,
+        tag: {
+          select: {
+            tag: true,
+          },
+        },
         book: {
           select: {
             id: true,
             authors: {
               select: {
-                author: true,
+                author: {
+                  select: {
+                    name: true,
+                  },
+                },
               },
             },
             datetime: true,
@@ -81,7 +90,7 @@ export class MyBookService {
       },
     });
 
-    return myBook;
+    return await this.prismaService.executeQuery(async () => myBook);
   }
 
   async getMyBookList({ userId, pageNumber, myBookStatus }: GetMyBookListDTO) {
@@ -227,7 +236,7 @@ export class MyBookService {
     await this.bookService.findBook({ id });
   }
 
-  private async validateMyBook({ id, userId }: ValidateMyBookDTO) {
+  async validateMyBook({ id, userId }: ValidateMyBookDTO) {
     const myBook = await this.findMyBook({ id });
 
     if (myBook.userId !== userId) {
