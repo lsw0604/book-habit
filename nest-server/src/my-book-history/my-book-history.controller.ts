@@ -1,48 +1,54 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { MyBookHistoryService } from './my-book-history.service';
 import { CreateMyBookHistoryDto } from './dto/create.my.book.history.dto';
 import { UpdateMyBookHistoryDto } from './dto/update.my.book.history.dto';
+import { UserDecorator } from 'src/decorator/user.decorator';
 
 @UseGuards(AccessGuard)
 @Controller('/api/my-book-history')
 export class MyBookHistoryController {
   constructor(private myBookHistoryService: MyBookHistoryService) {}
 
-  @Post()
-  async createMyBookHistory(@Req() req: Request, @Body() dto: CreateMyBookHistoryDto) {
-    const userId = req.user.id;
-
-    return await this.myBookHistoryService.createMyBookHistory({ userId, ...dto });
+  @Post('/:myBookId')
+  async createMyBookHistory(
+    @Param('myBookId', ParseIntPipe) myBookId: number,
+    @UserDecorator('id') userId: number,
+    @Body()
+    dto: CreateMyBookHistoryDto,
+  ) {
+    return this.myBookHistoryService.createMyBookHistory({ userId, myBookId, ...dto });
   }
 
   @Get('/:myBookId')
-  async getMyBookHistory(@Param('myBookId') myBookId: string) {
-    const id = parseInt(myBookId, 10);
-    return await this.myBookHistoryService.getMyBookHistoryList({ myBookId: id });
+  async getMyBookHistoryList(@Param('myBookId', ParseIntPipe) id: number) {
+    return this.myBookHistoryService.getMyBookHistoryList({ id });
   }
 
   @Put('/:myBookHistoryId')
   async updateMyBookHistory(
-    @Req() req: Request,
-    @Param('myBookHistoryId') myBookHistoryId: string,
+    @UserDecorator('id') userId: number,
+    @Param('myBookHistoryId', ParseIntPipe) id: number,
     @Body() dto: UpdateMyBookHistoryDto,
   ) {
-    const userId = req.user.id;
-    const id = parseInt(myBookHistoryId, 10);
-
-    return await this.myBookHistoryService.updateMyBookHistory({ id, userId, ...dto });
+    return this.myBookHistoryService.updateMyBookHistory({ id, userId, ...dto });
   }
 
   @Delete('/:myBookHistoryId')
   async deleteMyBookHistory(
-    @Req() req: Request,
-    @Param('myBookHistoryId') myBookHistoryId: string,
+    @UserDecorator('id') userId: number,
+    @Param('myBookHistoryId') id: number,
   ) {
-    const userId = req.user.id;
-    const id = parseInt(myBookHistoryId, 10);
-
-    return await this.myBookHistoryService.deleteMyBookHistory({ id, userId });
+    return this.myBookHistoryService.deleteMyBookHistory({ id, userId });
   }
 }

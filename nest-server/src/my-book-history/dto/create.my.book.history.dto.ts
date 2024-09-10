@@ -1,14 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsInt } from 'class-validator';
+import { IsDate, IsInt, IsNotEmpty } from 'class-validator';
 
 export class CreateMyBookHistoryDto {
   @IsInt()
-  myBookId: number;
-
-  @IsInt()
+  @IsNotEmpty()
   page: number;
 
   @IsDate()
   @Type(() => Date)
+  @IsNotEmpty()
   date: Date;
 }

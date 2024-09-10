@@ -1,101 +1,86 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { MyBook, MyBookHistory } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-type CreateMyBookHistoryDTO = Pick<MyBookHistory, 'date' | 'page' | 'myBookId'> &
-  Pick<MyBook, 'userId'>;
-type GetMyBookHistoryDTO = Pick<MyBookHistory, 'myBookId'>;
-type UpdateMyBookHistoryDTO = Pick<MyBookHistory, 'id'> &
-  Partial<Pick<MyBookHistory, 'page' | 'date'>> &
-  Pick<MyBook, 'userId'>;
-type deleteMyBookHistoryDTO = Pick<MyBookHistory, 'id'> & Pick<MyBook, 'userId'>;
-type FindMyBookHistoryDTO = Pick<MyBookHistory, 'id'>;
-type ValidateCreateMyBookHistoryDTO = Pick<MyBook, 'userId' | 'id'>;
-type ValidateMyBookHistoryDTO = Pick<MyBookHistory, 'id'> & Pick<MyBook, 'userId'>;
+import {
+  CreateMyBookHistoryPayload,
+  GetMyBookHistoryListPayload,
+  GetMyBookHistoryPayload,
+  UpdateMyBookHistoryPayload,
+  deleteMyBookHistoryPayload,
+} from './interface';
 
 @Injectable()
 export class MyBookHistoryService {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly myBookService: MyBookService,
   ) {}
 
-  async createMyBookHistory({ myBookId, userId, date, page }: CreateMyBookHistoryDTO) {
-    await this.validateCreateMyBookHistory({ id: myBookId, userId });
+  async createMyBookHistory(payload: CreateMyBookHistoryPayload) {
+    const myBook = await this.myBookService.validateMyBook({
+      id: payload.myBookId,
+      userId: payload.userId,
+    });
     const myBookHistory = await this.prismaService.myBookHistory.create({
       data: {
-        date,
-        page,
-        myBookId,
+        date: payload.date,
+        page: payload.page,
+        myBookId: myBook.id,
       },
     });
 
     return myBookHistory;
   }
 
-  async getMyBookHistoryList({ myBookId }: GetMyBookHistoryDTO) {
-    return await this.prismaService.myBookHistory.findMany({
+  async getMyBookHistoryList(payload: GetMyBookHistoryListPayload) {
+    return this.prismaService.myBookHistory.findMany({
       where: {
-        myBookId,
+        myBookId: payload.id,
       },
     });
   }
 
-  async updateMyBookHistory({ id, userId, date, page }: UpdateMyBookHistoryDTO) {
-    await this.validateMyBookHistory({ id, userId });
-    const myBookHistory = await this.prismaService.myBookHistory.update({
-      where: {
-        id,
-      },
-      data: {
-        page,
-        date,
-      },
-    });
-
-    return myBookHistory;
-  }
-
-  async deleteMyBookHistory({ userId, id }: deleteMyBookHistoryDTO) {
-    await this.validateMyBookHistory({ id, userId });
-    const myBookHistory = await this.prismaService.myBookHistory.delete({
-      where: {
-        id,
-      },
-    });
-    return myBookHistory;
-  }
-
-  async findMyBookHistory({ id }: FindMyBookHistoryDTO) {
+  async getMyBookHistory(payload: GetMyBookHistoryPayload) {
     const myBookHistory = await this.prismaService.myBookHistory.findUnique({
       where: {
-        id,
+        id: payload.id,
       },
     });
 
-    if (!myBookHistory) {
-      throw new NotFoundException(`해당 ID : ${id}를 가진 MyBookHistory를 찾을 수 없습니다.`);
-    }
+    if (!myBookHistory) throw new NotFoundException('해당 History를 찾을 수 없습니다.');
 
     return myBookHistory;
   }
 
-  private async validateMyBookHistory({ id, userId }: ValidateMyBookHistoryDTO) {
-    const myBookHistory = await this.findMyBookHistory({ id });
+  async updateMyBookHistory(payload: UpdateMyBookHistoryPayload) {
+    const myBookHistory = await this.getMyBookHistory({ id: payload.id });
+    await this.myBookService.validateMyBook({
+      id: myBookHistory.myBookId,
+      userId: payload.userId,
+    });
 
-    const myBook = await this.myBookService.findMyBook({ id: myBookHistory.myBookId });
-
-    if (myBook.userId !== userId) {
-      throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
-    }
+    return this.prismaService.myBookHistory.update({
+      where: {
+        id: myBookHistory.id,
+      },
+      data: {
+        date: payload.date,
+        page: payload.page,
+      },
+    });
   }
 
-  private async validateCreateMyBookHistory({ id, userId }: ValidateCreateMyBookHistoryDTO) {
-    const myBook = await this.myBookService.findMyBook({ id });
+  async deleteMyBookHistory(payload: deleteMyBookHistoryPayload) {
+    const myBookHistory = await this.getMyBookHistory({ id: payload.id });
+    await this.myBookService.validateMyBook({
+      id: myBookHistory.myBookId,
+      userId: payload.userId,
+    });
 
-    if (myBook.userId !== userId) {
-      throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
-    }
+    return this.prismaService.myBookHistory.delete({
+      where: {
+        id: myBookHistory.id,
+      },
+    });
   }
 }
