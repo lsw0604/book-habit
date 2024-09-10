@@ -1,58 +1,60 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { MyBookCommentService } from './my-book-comment.service';
 import { CreateMyBookCommentDto } from './dto/create.my.book.comment.dto';
 import { UpdateMyBookCommentDto } from './dto/update.my.book.comment.dto';
+import { UserDecorator } from 'src/decorator/user.decorator';
 
 @Controller('/api/my-book-comment')
 export class MyBookCommentController {
   constructor(private myBookCommentService: MyBookCommentService) {}
 
   @UseGuards(AccessGuard)
-  @Post()
-  async createMyBookComment(@Req() req: Request, @Body() dto: CreateMyBookCommentDto) {
-    const userId = req.user.id;
-    return await this.myBookCommentService.createMyBookComment({ userId, ...dto });
+  @Post('/:myBookId')
+  async createMyBookComment(
+    @UserDecorator('id') userId: number,
+    @Body() dto: CreateMyBookCommentDto,
+    @Param('myBookId', ParseIntPipe) myBookId: number,
+  ) {
+    return this.myBookCommentService.createMyBookComment({ userId, myBookId, ...dto });
   }
 
   @Get()
-  async getPublicMyBookComment() {
+  async getPublicMyBookCommentList() {
     return await this.myBookCommentService.getPublicMyBookCommentList();
   }
 
   @Get('/:myBookCommentId')
-  async getPublicMyBookCommentDetail(@Param('myBookCommentId') myBookCommentId: string) {
-    const id = parseInt(myBookCommentId, 10);
-    return await this.myBookCommentService.getPublicMyBookCommentDetail({ id });
+  async getPublicMyBookCommentDetail(@Param('myBookCommentId', ParseIntPipe) id: number) {
+    return this.myBookCommentService.getPublicMyBookCommentDetail({ id });
   }
 
   @UseGuards(AccessGuard)
   @Put('/:myBookCommentId')
   async updateMyBookComment(
-    @Req() req: Request,
-    @Param('myBookCommentId') myBookCommentId: string,
+    @UserDecorator('id') userId: number,
+    @Param('myBookCommentId', ParseIntPipe) id: number,
     @Body() dto: UpdateMyBookCommentDto,
   ) {
-    const id = parseInt(myBookCommentId, 10);
-    const userId = req.user.id;
-
-    return await this.myBookCommentService.updateMyBookComment({ id, userId, ...dto });
+    return this.myBookCommentService.updateMyBookComment({ id, userId, ...dto });
   }
 
   @UseGuards(AccessGuard)
   @Delete('/:myBookCommentId')
   async deleteMyBookComment(
-    @Req() req: Request,
-    @Param('myBookCommentId') myBookCommentId: string,
+    @UserDecorator('id') userId: number,
+    @Param('myBookCommentId', ParseIntPipe) id: number,
   ) {
-    const id = parseInt(myBookCommentId, 10);
-    const userId = req.user.id;
-
-    await this.myBookCommentService.deleteMyBookComment({ id, userId });
-
-    return {
-      message: `myBookComment/:${id}를 삭제하는데 성공했습니다.`,
-    };
+    return this.myBookCommentService.deleteMyBookComment({ id, userId });
   }
 }

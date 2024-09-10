@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateMyBookTagPayload, DeleteMyBookTagPayload, GetMyBookTagPayload } from './interface';
 
 @Injectable()
 export class MyBookTagService {

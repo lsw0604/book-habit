@@ -1,13 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  CreateMyBookHistoryPayload,
-  GetMyBookHistoryListPayload,
-  GetMyBookHistoryPayload,
-  UpdateMyBookHistoryPayload,
-  deleteMyBookHistoryPayload,
-} from './interface';
 
 @Injectable()
 export class MyBookHistoryService {

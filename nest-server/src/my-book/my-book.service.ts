@@ -1,105 +1,60 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { MyBook, MyBookStatus, Prisma } from '@prisma/client';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { BookService } from 'src/book/book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-type CreateMyBookDTO = Pick<MyBook, 'bookId' | 'userId'>;
-type GetMyBookListDTO = Pick<MyBook, 'userId'> & { myBookStatus: MyBookStatus | 'ALL' } & {
-  pageNumber: number;
-};
-type UpdateMyBookDTO = Partial<Pick<MyBook, 'rating' | 'myBookStatus' | 'id' | 'userId'>>;
-type DeleteMyBookDTO = Pick<MyBook, 'id' | 'userId'>;
-type FindMyBookDTO = Pick<MyBook, 'id'>;
-type ValidateMyBookDTO = Pick<MyBook, 'id' | 'userId'>;
-type VAlidateCreateMyBookDTO = Pick<MyBook, 'bookId'>;
 
 @Injectable()
 export class MyBookService {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly bookService: BookService,
   ) {}
 
-  async createMyBook({ bookId, userId }: CreateMyBookDTO) {
-    await this.validateCreateMyBook({ bookId });
-    const initialData: Pick<MyBook, 'rating' | 'myBookStatus'> = {
-      rating: 0,
-      myBookStatus: 'TO_READ',
-    };
+  async createMyBook(payload: CreateMyBookPayload) {
+    const book = await this.duplicateMyBook({ bookId: payload.bookId, userId: payload.userId });
 
-    const myBook = await this.prismaService.myBook.create({
+    return await this.prismaService.myBook.create({
       data: {
-        userId,
-        bookId,
-        ...initialData,
+        userId: payload.userId,
+        bookId: book.id,
+        rating: 0,
+        myBookStatus: 'TO_READ',
       },
     });
-
-    return myBook;
   }
 
-  async getMyBookDetail({ id, userId }: Pick<MyBook, 'id' | 'userId'>) {
-    const myBook = await this.prismaService.myBook.findUnique({
+  async getMyBookDetail(payload: GetMyBookDetailPayload) {
+    const myBook = await this.validateMyBook({ id: payload.id, userId: payload.userId });
+
+    return await this.prismaService.myBook.findUnique({
       where: {
-        id,
-        userId,
+        id: myBook.id,
+        userId: myBook.userId,
       },
       select: {
         rating: true,
         myBookStatus: true,
-        tag: {
-          select: {
-            tag: true,
-          },
-        },
-        book: {
-          select: {
-            id: true,
-            authors: {
-              select: {
-                author: {
-                  select: {
-                    name: true,
-                  },
-                },
-              },
-            },
-            datetime: true,
-            contents: true,
-            isbns: {
-              select: {
-                isbn: true,
-              },
-            },
-            price: true,
-            thumbnail: true,
-            publisher: true,
-            sale_price: true,
-            title: true,
-            url: true,
-            translators: {
-              select: {
-                translator: true,
-              },
-            },
-            status: true,
-          },
-        },
+        book: true,
+        tag: true,
         createdAt: true,
         updatedAt: true,
       },
     });
-
-    return await this.prismaService.executeQuery(async () => myBook);
   }
 
-  async getMyBookList({ userId, pageNumber, myBookStatus }: GetMyBookListDTO) {
+  async getMyBookList(payload: GetMyBookListPayload) {
     const take = 10;
-    const skip = (pageNumber - 1) * take;
+    const skip = (payload.pageNumber - 1) * take;
 
     const where: Prisma.MyBookWhereInput = {
-      userId,
-      ...(myBookStatus && myBookStatus !== 'ALL' && { myBookStatus }),
+      userId: payload.userId,
+      ...(payload.myBookStatus &&
+        payload.myBookStatus !== 'ALL' && { myBookStatus: payload.myBookStatus }),
     };
 
     const totalCount = await this.prismaService.myBook.count({ where });
@@ -138,7 +93,7 @@ export class MyBookService {
     });
 
     const totalPages = Math.ceil(totalCount / take);
-    const nextPage = pageNumber < totalPages ? pageNumber + 1 : undefined;
+    const nextPage = payload.pageNumber < totalPages ? payload.pageNumber + 1 : undefined;
 
     return {
       nextPage,
@@ -155,34 +110,31 @@ export class MyBookService {
     };
   }
 
-  async updateMyBook({ id, myBookStatus, rating, userId }: UpdateMyBookDTO) {
-    await this.validateMyBook({ id, userId });
-    const updatedMyBook = await this.prismaService.myBook.update({
+  async updateMyBook(payload: UpdateMyBookPayload) {
+    const myBook = await this.validateMyBook({ id: payload.id, userId: payload.userId });
+    return await this.prismaService.myBook.update({
       where: {
-        id,
-        userId,
+        id: myBook.id,
       },
       data: {
-        myBookStatus,
-        rating,
+        myBookStatus: payload.myBookStatus,
+        rating: payload.rating,
       },
     });
-
-    return updatedMyBook;
   }
 
-  async deleteMyBook({ id: myBookId, userId }: DeleteMyBookDTO) {
-    await this.validateMyBook({ id: myBookId, userId });
+  async deleteMyBook(payload: DeleteMyBookPayload) {
+    const myBook = await this.validateMyBook({ id: payload.id, userId: payload.userId });
 
     await this.prismaService.$transaction(async (prisma) => {
       await prisma.myBookHistory.deleteMany({
         where: {
-          myBookId,
+          myBookId: myBook.id,
         },
       });
 
       const comments = await prisma.myBookComment.findMany({
-        where: { myBookId },
+        where: { myBookId: myBook.id },
         select: { id: true },
       });
 
@@ -201,48 +153,60 @@ export class MyBookService {
       });
 
       await prisma.myBookComment.deleteMany({
-        where: { myBookId },
+        where: { myBookId: myBook.id },
       });
 
       await prisma.myBookTag.deleteMany({
-        where: { myBookId },
+        where: { myBookId: myBook.id },
       });
 
       await prisma.myBook.delete({
-        where: { id: myBookId },
+        where: { id: myBook.id },
       });
     });
 
     return {
-      message: `해당 ID : ${myBookId}를 가진 MyBook을 삭제하는데 성공했습니다.`,
+      message: `해당 ID : ${myBook.id}를 가진 MyBook을 삭제하는데 성공했습니다.`,
     };
   }
 
-  async findMyBook({ id }: FindMyBookDTO) {
+  async getMyBook(payload: GetMyBookPayload) {
     const myBook = await this.prismaService.myBook.findUnique({
       where: {
-        id,
+        id: payload.id,
       },
     });
 
     if (!myBook) {
-      throw new NotFoundException(`해당 ID : ${id}를 가진 myBook을 찾을 수 없습니다.`);
+      throw new NotFoundException(`해당 ID : ${payload.id}를 가진 myBook을 찾을 수 없습니다.`);
     }
 
     return myBook;
   }
 
-  private async validateCreateMyBook({ bookId: id }: VAlidateCreateMyBookDTO) {
-    await this.bookService.findBook({ id });
-  }
+  async validateMyBook(payload: ValidateMyBookPayload) {
+    const myBook = await this.getMyBook({ id: payload.id });
 
-  async validateMyBook({ id, userId }: ValidateMyBookDTO) {
-    const myBook = await this.findMyBook({ id });
-
-    if (myBook.userId !== userId) {
+    if (myBook.userId !== payload.userId) {
       throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
     }
 
     return myBook;
+  }
+
+  private async duplicateMyBook(payload: DuplicateMyBookPayload) {
+    const book = await this.bookService.findBook({ id: payload.bookId });
+    const existMyBook = await this.prismaService.myBook.findFirst({
+      where: {
+        bookId: book.id,
+        userId: payload.userId,
+      },
+    });
+
+    if (!existMyBook) {
+      throw new BadRequestException('해당 책은 이미 myBook에 등록되어있습니다.');
+    }
+
+    return book;
   }
 }

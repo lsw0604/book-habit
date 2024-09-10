@@ -1,42 +1,30 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { MyBook, MyBookComment } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-type CreateMyBookCommentDTO = Pick<MyBookComment, 'comment' | 'isPublic' | 'myBookId'> &
-  Pick<MyBook, 'userId'>;
-type GetPublicMyBookCommentDetailDTO = Pick<MyBookComment, 'id'>;
-type UpdateMyBookCommentDTO = Partial<Pick<MyBookComment, 'comment' | 'isPublic'>> &
-  Pick<MyBookComment, 'id'> &
-  Pick<MyBook, 'userId'>;
-type DeleteMyBookCommentDTO = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
-type ValidateCreateMyBookCommentDTO = Pick<MyBookComment, 'myBookId'> & Pick<MyBook, 'userId'>;
-type ValidateMyBookCommentDTO = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
-type FIndMyBookCommentDTO = Pick<MyBookComment, 'id'>;
 
 @Injectable()
 export class MyBookCommentService {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly myBookService: MyBookService,
   ) {}
 
-  async createMyBookComment({ comment, isPublic, myBookId, userId }: CreateMyBookCommentDTO) {
-    await this.validateCreateMyBookComment({ userId, myBookId });
-
-    const newComment = await this.prismaService.myBookComment.create({
+  async createMyBookComment(payload: CreateMyBookCommentPayload) {
+    const myBook = await this.myBookService.validateMyBook({
+      id: payload.myBookId,
+      userId: payload.userId,
+    });
+    return await this.prismaService.myBookComment.create({
       data: {
-        comment,
-        isPublic,
-        myBookId,
+        myBookId: myBook.id,
+        comment: payload.comment,
+        isPublic: payload.isPublic,
       },
     });
-
-    return newComment;
   }
 
   async getPublicMyBookCommentList() {
-    const comment = await this.prismaService.myBookComment.findMany({
+    return await this.prismaService.myBookComment.findMany({
       where: {
         isPublic: true,
       },
@@ -67,12 +55,10 @@ export class MyBookCommentService {
         },
       },
     });
-
-    return comment;
   }
 
-  async getPublicMyBookCommentDetail({ id }: GetPublicMyBookCommentDetailDTO) {
-    const myBookComment = await this.findMyBookComment({ id });
+  async getPublicMyBookCommentDetail({ id }: GetPublicMyBookCommentDetailPayload) {
+    const myBookComment = await this.getMyBookComment({ id });
 
     return await this.prismaService.myBookComment.findUnique({
       where: {
@@ -96,82 +82,70 @@ export class MyBookCommentService {
             },
           },
         },
-        commentLike: {
-          select: {
-            userId: true,
-          },
-        },
+        commentLike: true,
         commentReply: true,
       },
     });
   }
 
-  async updateMyBookComment({ isPublic, userId, comment, id }: UpdateMyBookCommentDTO) {
-    await this.validateMyBookComment({ userId, id });
-
-    return await this.prismaService.myBookComment.update({
-      where: {
-        id,
-      },
-      data: {
-        isPublic,
-        comment,
-      },
-    });
-  }
-
-  async deleteMyBookComment({ id, userId }: DeleteMyBookCommentDTO) {
-    await this.validateMyBookComment({ id, userId });
-    await this.prismaService.$transaction(async (prisma) => {
-      await prisma.commentLike.deleteMany({
-        where: {
-          myBookCommentId: id,
-        },
-      });
-
-      await prisma.commentReply.deleteMany({
-        where: {
-          myBookCommentId: id,
-        },
-      });
-
-      await prisma.myBookComment.delete({
-        where: {
-          id,
-        },
-      });
-    });
-  }
-
-  async findMyBookComment({ id }: FIndMyBookCommentDTO) {
+  async getMyBookComment(payload: GetMyBookCommentPayload) {
     const myBookComment = await this.prismaService.myBookComment.findUnique({
       where: {
-        id,
+        id: payload.id,
       },
     });
 
     if (!myBookComment) {
-      throw new NotFoundException(`해당 ID : ${id}를 가진 MyBookComment를 찾을 수 없습니다.`);
+      throw new NotFoundException(
+        `해당 ID : ${payload.id}를 가진 MyBookComment를 찾을 수 없습니다.`,
+      );
     }
 
     return myBookComment;
   }
 
-  private async validateCreateMyBookComment({ myBookId, userId }: ValidateCreateMyBookCommentDTO) {
-    const myBook = await this.myBookService.findMyBook({ id: myBookId });
+  async updateMyBookComment(payload: UpdateMyBookCommentPayload) {
+    const myBookComment = await this.getMyBookComment({ id: payload.id });
+    await this.myBookService.validateMyBook({
+      id: myBookComment.myBookId,
+      userId: payload.userId,
+    });
 
-    if (myBook.userId !== userId) {
-      throw new UnauthorizedException(`해당 myBookComment에 대한 권한이 없습니다.`);
-    }
+    return await this.prismaService.myBookComment.update({
+      where: {
+        id: myBookComment.id,
+      },
+      data: {
+        isPublic: payload.isPublic,
+        comment: payload.comment,
+      },
+    });
   }
 
-  private async validateMyBookComment({ id, userId }: ValidateMyBookCommentDTO) {
-    const myBookComment = await this.findMyBookComment({ id });
+  async deleteMyBookComment(payload: DeleteMyBookCommentPayload) {
+    const myBookComment = await this.getMyBookComment({ id: payload.id });
+    await this.myBookService.validateMyBook({
+      id: myBookComment.myBookId,
+      userId: payload.userId,
+    });
+    await this.prismaService.$transaction(async (prisma) => {
+      await prisma.commentLike.deleteMany({
+        where: {
+          myBookCommentId: myBookComment.id,
+        },
+      });
 
-    const myBook = await this.myBookService.findMyBook({ id: myBookComment.id });
+      await prisma.commentReply.deleteMany({
+        where: {
+          myBookCommentId: myBookComment.id,
+        },
+      });
 
-    if (myBook.userId !== userId) {
-      throw new UnauthorizedException(`해당 myBookComment에 대한 권한이 없습니다.`);
-    }
+      await prisma.myBookComment.delete({
+        where: {
+          id: myBookComment.id,
+        },
+      });
+    });
   }
 }

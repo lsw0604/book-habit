@@ -5,6 +5,9 @@ import { Book, Prisma } from '@prisma/client';
 
 type FindBookDTO = Pick<Book, 'id'>;
 
+/**
+ * TODO MyBookComment 와 Validation에 대해 다시 생각해보기, 서비스 코드 다시 작성하기
+ */
 @Injectable()
 export class BookService {
   constructor(private prismaService: PrismaService) {}

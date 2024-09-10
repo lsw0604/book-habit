@@ -4,20 +4,16 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CommentLike } from '@prisma/client';
 import { MyBookCommentService } from 'src/my-book-comment/my-book-comment.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-type CreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
-type DeleteCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
-type FindCommentLikeDTO = Pick<CommentLike, 'id'>;
-type ValidateCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
-type ValidateCreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
-
+/**
+ * TODO MyBookComment 와 Validation에 대해 다시 생각해보기
+ */
 @Injectable()
 export class CommentLikeService {
   constructor(
-    private prismaService: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly myBookCommentService: MyBookCommentService,
   ) {}
 
@@ -65,7 +61,7 @@ export class CommentLikeService {
     myBookCommentId,
     userId,
   }: ValidateCreateCommentLikeDTO) {
-    const myBookComment = await this.myBookCommentService.findMyBookComment({
+    const myBookComment = await this.myBookCommentService.getMyBookComment({
       id: myBookCommentId,
     });
 
