@@ -242,5 +242,7 @@ export class MyBookService {
     if (myBook.userId !== userId) {
       throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
     }
+
+    return myBook;
   }
 }
