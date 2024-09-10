@@ -7,17 +7,13 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { MyBookTagService } from './my-book-tag.service';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { UserDecorator } from 'src/decorator/user.decorator';
 import { CreateMyBookTagDto } from './dto/create.my.book.tag.dto';
-import { PickPropertyInterceptor } from 'src/interceptors/pick-property.interceptor';
 
 @UseGuards(AccessGuard)
-@UseInterceptors(new PickPropertyInterceptor<User, 'id'>(['id']))
 @Controller('/api/my-book-tag')
 export class MyBookTagController {
   constructor(private myBookTagService: MyBookTagService) {}

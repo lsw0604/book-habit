@@ -17,7 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new PrismaExceptionFilter(), new AllExceptionFilter());
   app.useGlobalInterceptors(
-    new OmitPropertyInterceptor<User, 'password'>('password'),
+    new OmitPropertyInterceptor<User, 'password'>(['password']),
     new CookieInterceptor<User & RefreshTokenType, 'refreshToken'>('refreshToken'),
     new SetBearerHeaderInterceptor<User & AccessTokenType>('accessToken', 'Authorization'),
   );

@@ -1,12 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MyBook, MyBookTag, Tag } from '@prisma/client';
 import { TagService } from './tag.service';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-type CreateMyBookTagPayload = Pick<Tag, 'tag'> & Pick<MyBook, 'id' | 'userId'>;
-type GetMyBookTagPayload = Pick<MyBookTag, 'id'>;
-type DeleteMyBookTagPayload = Pick<MyBookTag, 'id'> & Pick<MyBook, 'userId'>;
+import { CreateMyBookTagPayload, DeleteMyBookTagPayload, GetMyBookTagPayload } from './interface';
 
 @Injectable()
 export class MyBookTagService {
@@ -16,12 +12,15 @@ export class MyBookTagService {
     private readonly tagService: TagService,
   ) {}
 
-  async createMyBookTag({ tag, id, userId }: CreateMyBookTagPayload) {
-    const myBook = await this.myBookService.validateMyBook({ id, userId });
-    const newTag = await this.tagService.createTag({ tag });
+  async createMyBookTag(payload: CreateMyBookTagPayload) {
+    const myBook = await this.myBookService.validateMyBook({
+      id: payload.id,
+      userId: payload.userId,
+    });
+    const tag = await this.tagService.createTag({ tag: payload.tag });
     const myBookTag = await this.prismaService.myBookTag.create({
       data: {
-        tagId: newTag.id,
+        tagId: tag.id,
         myBookId: myBook.id,
       },
     });
@@ -29,10 +28,10 @@ export class MyBookTagService {
     return myBookTag;
   }
 
-  private async getMyBookTag({ id }: GetMyBookTagPayload) {
+  private async getMyBookTag(payload: GetMyBookTagPayload) {
     const existMyBookTag = await this.prismaService.myBookTag.findUnique({
       where: {
-        id,
+        id: payload.id,
       },
     });
 
@@ -41,9 +40,9 @@ export class MyBookTagService {
     return existMyBookTag;
   }
 
-  async deleteMyBookTag({ id, userId }: DeleteMyBookTagPayload) {
-    const myBookTag = await this.getMyBookTag({ id });
-    await this.myBookService.validateMyBook({ id: myBookTag.myBookId, userId });
+  async deleteMyBookTag(payload: DeleteMyBookTagPayload) {
+    const myBookTag = await this.getMyBookTag({ id: payload.id });
+    await this.myBookService.validateMyBook({ id: myBookTag.myBookId, userId: payload.userId });
 
     const deleteMyBookTag = await this.prismaService.myBookTag.delete({
       where: {
