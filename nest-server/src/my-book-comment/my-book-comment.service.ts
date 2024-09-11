@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateMyBookCommentDto } from './dto/create.my.book.comment.dto';
+import { UpdateMyBookCommentDto } from './dto/update.my.book.comment.dto';
+import { DeleteMyBookCommentDto } from './dto/delete.my.book.comment.dto';
 
 @Injectable()
 export class MyBookCommentService {
@@ -9,16 +12,16 @@ export class MyBookCommentService {
     private readonly myBookService: MyBookService,
   ) {}
 
-  async createMyBookComment(payload: CreateMyBookCommentPayload) {
+  async createMyBookComment(dto: CreateMyBookCommentDto) {
     const myBook = await this.myBookService.validateMyBook({
-      id: payload.myBookId,
-      userId: payload.userId,
+      id: dto.myBookId,
+      userId: dto.userId,
     });
     return await this.prismaService.myBookComment.create({
       data: {
         myBookId: myBook.id,
-        comment: payload.comment,
-        isPublic: payload.isPublic,
+        comment: dto.comment,
+        isPublic: dto.isPublic,
       },
     });
   }
@@ -104,11 +107,11 @@ export class MyBookCommentService {
     return myBookComment;
   }
 
-  async updateMyBookComment(payload: UpdateMyBookCommentPayload) {
-    const myBookComment = await this.getMyBookComment({ id: payload.id });
+  async updateMyBookComment(dto: UpdateMyBookCommentDto) {
+    const myBookComment = await this.getMyBookComment({ id: dto.myBookCommentId });
     await this.myBookService.validateMyBook({
       id: myBookComment.myBookId,
-      userId: payload.userId,
+      userId: dto.userId,
     });
 
     return await this.prismaService.myBookComment.update({
@@ -116,17 +119,17 @@ export class MyBookCommentService {
         id: myBookComment.id,
       },
       data: {
-        isPublic: payload.isPublic,
-        comment: payload.comment,
+        isPublic: dto.isPublic,
+        comment: dto.comment,
       },
     });
   }
 
-  async deleteMyBookComment(payload: DeleteMyBookCommentPayload) {
-    const myBookComment = await this.getMyBookComment({ id: payload.id });
+  async deleteMyBookComment(dto: DeleteMyBookCommentDto) {
+    const myBookComment = await this.getMyBookComment({ id: dto.myBookCommentId });
     await this.myBookService.validateMyBook({
       id: myBookComment.myBookId,
-      userId: payload.userId,
+      userId: dto.userId,
     });
     await this.prismaService.$transaction(async (prisma) => {
       await prisma.commentLike.deleteMany({

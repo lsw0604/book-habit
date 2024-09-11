@@ -1,6 +1,14 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMyBookCommentDto {
+  @IsInt()
+  @IsNotEmpty()
+  myBookId: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+
   @IsString()
   @IsNotEmpty()
   comment: string;
