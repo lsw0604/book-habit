@@ -1,5 +1,3 @@
-type CreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
-type DeleteCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
-type FindCommentLikeDTO = Pick<CommentLike, 'id'>;
-type ValidateCommentLikeDTO = Pick<CommentLike, 'id' | 'userId'>;
-type ValidateCreateCommentLikeDTO = Pick<CommentLike, 'myBookCommentId' | 'userId'>;
+type getCommentLikePayload = Pick<CommentLike, 'id'>;
+type DuplicateCommentLikePayload = Pick<MyBookComment, 'id'> & Pick<MyBook, 'userId'>;
+type ValidateCommentLikePayload = Pick<CommentLike, 'id'> & Pick<MyBook, 'userId'>;

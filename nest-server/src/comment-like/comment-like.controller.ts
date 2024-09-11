@@ -1,29 +1,31 @@
-import { Body, Controller, Delete, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
-import { AccessGuard } from 'src/auth/guard/access.guard';
+import { Controller, Delete, HttpCode, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { CommentLikeService } from './comment-like.service';
-import { CreateCommentLikeDto } from './dto/create.comment.like.dto';
+import { AccessGuard } from 'src/auth/guard/access.guard';
+import { UserDecorator } from 'src/decorator/user.decorator';
 
 @UseGuards(AccessGuard)
 @Controller('/api/comment-like')
 export class CommentLikeController {
   constructor(private commentLikeService: CommentLikeService) {}
 
-  @Post()
-  async createCommentLike(@Body() dto: CreateCommentLikeDto, @Req() req: Request) {
-    const userId = req.user.id;
-
+  @Post('/:myBookCommentId')
+  @HttpCode(201)
+  async createCommentLike(
+    @UserDecorator('id') userId: number,
+    @Param('myBookCommentId', ParseIntPipe) myBookCommentId: number,
+  ) {
     return await this.commentLikeService.createCommentLike({
+      myBookCommentId,
       userId,
-      ...dto,
     });
   }
 
   @Delete('/:commentLikeId')
-  async deleteCommentLike(@Param('commentLikeId') commentLikeId: string, @Req() req: Request) {
-    const id = parseInt(commentLikeId, 10);
-    const userId = req.user.id;
-
-    return await this.commentLikeService.deleteCommentLike({ id, userId });
+  @HttpCode(204)
+  async deleteCommentLike(
+    @Param('commentLikeId', ParseIntPipe) commentLikeId: number,
+    @UserDecorator('id') userId: number,
+  ) {
+    return await this.commentLikeService.deleteCommentLike({ commentLikeId, userId });
   }
 }
