@@ -14,7 +14,7 @@ export const UserDecorator = createParamDecorator(
     }
 
     if (data) {
-      if (user[data] !== undefined) {
+      if (user[data] === undefined) {
         throw new UnauthorizedException(`user객체에서 속성 ${data} 을(를) 찾을 수 없습니다.`);
       }
       return user[data];

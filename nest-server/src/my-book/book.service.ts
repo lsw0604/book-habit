@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateBookDto } from './dto/create.book.dto';
+import { CreateMyBookDto } from './dto/create.my.book.dto';
 
 @Injectable()
 export class BookService {
@@ -17,15 +17,23 @@ export class BookService {
     return book;
   }
 
-  async registerBook(dto: CreateBookDto) {
+  async registerBook(dto: CreateMyBookDto) {
+    const book = await this.prismaService.book.findFirst({
+      where: {
+        isbns: {
+          some: {
+            isbn: {
+              in: dto.isbn,
+            },
+          },
+        },
+      },
+    });
+
+    if (!!book) return book;
+
     return this.prismaService.$transaction(async (prisma) => {
       this.validateBookData(dto);
-
-      for (const isbn of dto.isbn) {
-        if (await this.existISBN(prisma, isbn)) {
-          throw new BadRequestException(`이미 등록된 책입니다. (${isbn})`);
-        }
-      }
 
       const book = await this.createBook(prisma, dto);
 
@@ -37,23 +45,16 @@ export class BookService {
     });
   }
 
-  private validateBookData(dto: CreateBookDto) {
+  private validateBookData(dto: CreateMyBookDto) {
     if (dto.isbn.length === 0) {
       throw new BadRequestException('ISBN은 반드시 한개 이상 필요합니다.');
     }
   }
 
-  private async existISBN(prisma: Prisma.TransactionClient, isbn: string) {
-    const existISBN = await prisma.iSBN.findFirst({
-      where: { isbn },
-    });
-    return !!existISBN;
-  }
-
   private async createBook(
     prisma: Prisma.TransactionClient,
     dto: Pick<
-      CreateBookDto,
+      CreateMyBookDto,
       | 'title'
       | 'url'
       | 'thumbnail'
@@ -83,7 +84,7 @@ export class BookService {
 
   private async createISBN(
     prisma: Prisma.TransactionClient,
-    dto: Pick<CreateBookDto, 'isbn'>,
+    dto: Pick<CreateMyBookDto, 'isbn'>,
     bookId: number,
   ) {
     const isbnPromise = dto.isbn.map((isbn) =>
@@ -110,7 +111,7 @@ export class BookService {
 
   private async processAuthor(
     prisma: Prisma.TransactionClient,
-    dto: Pick<CreateBookDto, 'authors'>,
+    dto: Pick<CreateMyBookDto, 'authors'>,
     bookId: number,
   ) {
     for (const name of dto.authors) {
@@ -141,7 +142,7 @@ export class BookService {
 
   private async processTranslator(
     prisma: Prisma.TransactionClient,
-    dto: Pick<CreateBookDto, 'translators'>,
+    dto: Pick<CreateMyBookDto, 'translators'>,
     bookId: number,
   ) {
     for (const name of dto.translators) {

@@ -1,9 +1,22 @@
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
-export class CreateBookDto {
-  @IsOptional()
+export class CreateMyBookDto {
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsNotEmpty()
   @IsString()
-  title?: string;
+  title: string;
 
   @IsOptional()
   @IsString()

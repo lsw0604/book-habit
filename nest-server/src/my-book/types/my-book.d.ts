@@ -1,15 +1,11 @@
-type BookIdAndUserIdType = Pick<MyBook, 'bookId' | 'userId'>;
-type IdAndUserIdType = Pick<MyBook, 'id' | 'userId'>;
 type MyBookStatusAndPageNumberType = {
   myBookStatus: MyBookStatus | 'ALL';
   pageNumber: number;
+  orderBy: 'desc' | 'asc';
 };
 
-type CreateMyBookPayload = BookIdAndUserIdType;
 type GetMyBookListPayload = Pick<MyBook, 'userId'> & MyBookStatusAndPageNumberType;
-type GetMyBookDetailPayload = IdAndUserIdType;
+type GetMyBookDetailPayload = Pick<MyBook, 'id' | 'userId'>;
 type GetMyBookPayload = Pick<MyBook, 'id'>;
-type UpdateMyBookPayload = IdAndUserIdType & Partial<Pick<MyBook, 'rating' | 'myBookStatus'>>;
-type DeleteMyBookPayload = IdAndUserIdType;
-type ValidateMyBookPayload = IdAndUserIdType;
-type DuplicateMyBookPayload = BookIdAndUserIdType;
+type ValidateMyBookPayload = Pick<MyBook, 'id' | 'userId'>;
+type DuplicateMyBookPayload = Pick<MyBook, 'bookId' | 'userId'>;
