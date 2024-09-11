@@ -195,7 +195,7 @@ export class MyBookService {
   }
 
   private async duplicateMyBook(payload: DuplicateMyBookPayload) {
-    const book = await this.bookService.findBook({ id: payload.bookId });
+    const book = await this.bookService.getBook({ id: payload.bookId });
     const existMyBook = await this.prismaService.myBook.findFirst({
       where: {
         bookId: book.id,
