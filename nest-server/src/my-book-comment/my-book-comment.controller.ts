@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -27,16 +26,6 @@ export class MyBookCommentController {
     @Param('myBookId', ParseIntPipe) myBookId: number,
   ) {
     return this.myBookCommentService.createMyBookComment({ userId, myBookId, ...dto });
-  }
-
-  @Get()
-  async getPublicMyBookCommentList() {
-    return await this.myBookCommentService.getPublicMyBookCommentList();
-  }
-
-  @Get('/:myBookCommentId')
-  async getPublicMyBookCommentDetail(@Param('myBookCommentId', ParseIntPipe) id: number) {
-    return this.myBookCommentService.getPublicMyBookCommentDetail({ id });
   }
 
   @Put('/:myBookCommentId')

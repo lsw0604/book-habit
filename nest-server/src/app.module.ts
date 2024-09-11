@@ -12,6 +12,7 @@ import { CommentLikeModule } from './comment-like/comment-like.module';
 import { CommentReplyModule } from './comment-reply/comment-reply.module';
 import { MyBookHistoryModule } from './my-book-history/my-book-history.module';
 import { MyBookTagModule } from './my-book-tag/my-book-tag.module';
+import { PublicCommentModule } from './public-comment/public-comment.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MyBookTagModule } from './my-book-tag/my-book-tag.module';
     CommentReplyModule,
     MyBookHistoryModule,
     MyBookTagModule,
+    PublicCommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
