@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { MyBookCommentService } from 'src/my-book-comment/my-book-comment.service';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MyBookCommentService } from 'src/my-book-comment/my-book-comment.service';
+import { CreateCommentReplyDto } from './dto/create.comment.reply.dto';
+import { UpdateCommentReplyDto } from './dto/update.comment.reply.dto';
+import { DeleteCommentReplyDto } from './dto/delete.comment.reply.dto';
 
-/**
- * TODO MyBookComment 와 Validation에 대해 다시 생각해보기, type.d.ts.다시 작성
- */
 @Injectable()
 export class CommentReplyService {
   constructor(
@@ -12,15 +12,15 @@ export class CommentReplyService {
     private readonly myBookCommentService: MyBookCommentService,
   ) {}
 
-  async createCommentReply(payload: CreateCommentReplyPayload) {
+  async createCommentReply(dto: CreateCommentReplyDto) {
     const myBookComment = await this.myBookCommentService.getMyBookComment({
-      id: payload.myBookCommentId,
+      id: dto.myBookCommentId,
     });
     const commentReply = await this.prismaService.commentReply.create({
       data: {
         myBookCommentId: myBookComment.id,
-        reply: payload.reply,
-        userId: payload.userId,
+        reply: dto.reply,
+        userId: dto.userId,
       },
     });
 
@@ -41,28 +41,43 @@ export class CommentReplyService {
     return commentReply;
   }
 
-  async updateCommentReply(payload: UpdateCommentReplyPayload) {
-    const myBookComment = await this.myBookCommentService.getMyBookComment({ id: payload.id });
-    const commentReply = await this.prismaService.commentReply.update({
+  async updateCommentReply(dto: UpdateCommentReplyDto) {
+    const commentReply = await this.validateCommentReply({
+      id: dto.commentReplyId,
+      userId: dto.userId,
+    });
+
+    return await this.prismaService.commentReply.update({
       where: {
-        id: myBookComment.id,
-        userId: payload.userId,
+        id: commentReply.id,
+        userId: commentReply.userId,
       },
       data: {
-        reply: payload.reply,
+        reply: dto.reply,
       },
     });
-
-    return commentReply;
   }
 
-  async deleteCommentReply({ id, userId }: DeleteCommentReplyPayload) {
-    const commentReply = await this.prismaService.commentReply.delete({
+  async deleteCommentReply(dto: DeleteCommentReplyDto) {
+    const commentReply = await this.validateCommentReply({
+      id: dto.commentReplyId,
+      userId: dto.userId,
+    });
+
+    return await this.prismaService.commentReply.delete({
       where: {
-        id,
-        userId,
+        id: commentReply.id,
+        userId: commentReply.userId,
       },
     });
+  }
+
+  private async validateCommentReply(payload: ValidateCommentReplyPayload) {
+    const commentReply = await this.getCommentReply({ id: payload.id });
+
+    if (commentReply.userId !== payload.userId) {
+      throw new UnauthorizedException('해당 commentReply를 수정/삭제할 권한이 없습니다.');
+    }
 
     return commentReply;
   }
