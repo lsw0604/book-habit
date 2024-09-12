@@ -5,11 +5,33 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PublicCommentService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getPublicCommentList() {
-    const comments = await this.prismaService.myBookComment.findMany({
-      where: {
-        isPublic: true,
+  private async commentCount(payload: Pick<GetPublicCommentListPayload, 'startDate' | 'endDate'>) {
+    const { startDate, endDate } = payload;
+    return await this.prismaService.myBookComment.count({
+      where: this.getCommentWhereClause({ startDate, endDate }),
+    });
+  }
+
+  private getCommentWhereClause(
+    payload: Pick<GetPublicCommentListPayload, 'startDate' | 'endDate'>,
+  ) {
+    return {
+      isPublic: true,
+      createdAt: {
+        gte: payload.startDate,
+        lt: payload.endDate,
       },
+    };
+  }
+
+  async getPublicCommentList(payload: GetPublicCommentListPayload) {
+    const { endDate, page, pageSize, startDate } = payload;
+    const skip = (page - 1) * 10;
+
+    const count = await this.commentCount({ endDate, startDate });
+
+    const comments = await this.prismaService.myBookComment.findMany({
+      where: this.getCommentWhereClause({ startDate, endDate }),
       select: {
         id: true,
         comment: true,
@@ -36,9 +58,17 @@ export class PublicCommentService {
           },
         },
       },
+      skip,
+      take: pageSize,
     });
 
-    return comments;
+    const totalPages = Math.ceil(count / pageSize);
+    const nextPage = page < totalPages ? page + 1 : undefined;
+
+    return {
+      nextPage,
+      comments,
+    };
   }
 
   async getPublicCommentDetail(payload: GetPublicCommentDetailPayload) {
