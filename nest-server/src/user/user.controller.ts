@@ -1,20 +1,19 @@
-import { Request } from 'express';
-import { Body, Controller, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AccessGuard } from 'src/auth/guard/access.guard';
+import { UserDecorator } from 'src/decorator/user.decorator';
 import { UpdateUserDto } from './dto/update.user.dto';
 
+@UseGuards(AccessGuard)
 @Controller('/api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Put()
-  @UseGuards(AccessGuard)
-  async updateUserDto(@Req() req: Request, @Body() dto: UpdateUserDto) {
-    const { id } = req.user;
-
-    const user = await this.userService.updateUser({ id, dto });
-
-    return user;
+  async updateUser(
+    @UserDecorator('id') userId: number,
+    @Body() dto: Omit<UpdateUserDto, 'userId'>,
+  ) {
+    return await this.userService.updateUser({ userId, ...dto });
   }
 }

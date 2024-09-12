@@ -1,13 +1,13 @@
-export type TokenType = {
+type TokenType = {
   id: number;
   iat: number;
   exp: number;
 };
 
-export type AccessTokenType = {
+type AccessTokenType = {
   accessToken: string;
 };
 
-export type RefreshTokenType = {
+type RefreshTokenType = {
   refreshToken: string;
 };
