@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
@@ -44,7 +45,7 @@ export class MyBookController {
   @Get()
   async getMyBookList(
     @UserDecorator('id') userId: number,
-    @Query('page', ParseIntPipe) pageNumber: number = 1,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) pageNumber: number = 1,
     @Query('status') myBookStatus: MyBookStatus | 'ALL' = 'ALL',
     @Query('order') orderBy: 'desc' | 'asc' = 'desc',
   ) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { PublicCommentService } from './public-comment.service';
 import { calculateDateRange } from 'src/utils/date-util';
 
@@ -8,10 +8,10 @@ export class PublicCommentController {
 
   @Get()
   async getPublicCommentList(
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('page_size', ParseIntPipe) pageSize: number = 10,
-    @Query('start_date') start?: string,
     @Query('end_date') end?: string,
+    @Query('start_date') start?: string,
+    @Query('page_size', new DefaultValuePipe(10), ParseIntPipe) pageSize: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
   ) {
     const { endDate, startDate } = calculateDateRange({ end, start });
 
