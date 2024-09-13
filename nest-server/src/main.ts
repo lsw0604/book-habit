@@ -13,6 +13,7 @@ import { SetBearerHeaderInterceptor } from './interceptors/set-bearer-header.int
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const allowOrigins = process.env.CORS_ORIGINS.split(',');
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new PrismaExceptionFilter(), new AllExceptionFilter());
   app.useGlobalInterceptors(
@@ -21,6 +22,17 @@ async function bootstrap() {
     new SetBearerHeaderInterceptor<User & AccessTokenType>('accessToken', 'Authorization'),
   );
   app.use(cookieParser());
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (allowOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not Allowed by CORS'));
+      }
+    },
+    methods: '*',
+    credentials: true,
+  });
   await app.listen(3000);
 }
 bootstrap();
