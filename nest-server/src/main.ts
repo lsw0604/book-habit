@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 
@@ -24,10 +24,13 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     origin: (origin, callback) => {
-      if (allowOrigins.includes(origin)) {
+      if (
+        allowOrigins.includes(origin) ||
+        (process.env.NODE_ENV !== 'production' && origin === undefined)
+      ) {
         callback(null, true);
       } else {
-        callback(new Error('Not Allowed by CORS'));
+        callback(new BadRequestException(`CORS Error : ${origin} is not allowed`));
       }
     },
     methods: '*',
