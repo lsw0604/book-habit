@@ -8,8 +8,8 @@ import { PrismaExceptionFilter } from './filters/prisma-exception.filter';
 import { AllExceptionFilter } from './filters/all-exception.filter';
 
 import { OmitPropertyInterceptor } from './interceptors/omit-property.interceptor';
-import { CookieInterceptor } from './interceptors/cookie.interceptor';
 import { SetBearerHeaderInterceptor } from './interceptors/set-bearer-header.interceptor';
+import { CookieInterceptor } from './interceptors/cookie.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +18,7 @@ async function bootstrap() {
   app.useGlobalFilters(new PrismaExceptionFilter(), new AllExceptionFilter());
   app.useGlobalInterceptors(
     new OmitPropertyInterceptor<User, 'password'>(['password']),
-    new CookieInterceptor<User & RefreshTokenType, 'refreshToken'>('refreshToken'),
+    new CookieInterceptor<RefreshTokenType, 'refreshToken'>('refreshToken'),
     new SetBearerHeaderInterceptor<User & AccessTokenType>('accessToken', 'Authorization'),
   );
   app.use(cookieParser());
