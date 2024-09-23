@@ -41,11 +41,13 @@ export class AuthService {
       provider: 'LOCAL',
     });
 
+    const { password: _, ...rest } = user;
+
     const { accessToken } = this.generateAccessToken(user.id);
     const { refreshToken } = this.generateRefreshToken(user.id);
 
     return {
-      ...user,
+      ...rest,
       accessToken,
       refreshToken,
     };
