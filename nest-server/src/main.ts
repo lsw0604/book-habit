@@ -35,6 +35,7 @@ async function bootstrap() {
     },
     methods: '*',
     credentials: true,
+    exposedHeaders: ['Authorization'],
   });
   await app.listen(3000);
 }
