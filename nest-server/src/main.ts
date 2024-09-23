@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 
@@ -8,8 +8,8 @@ import { PrismaExceptionFilter } from './filters/prisma-exception.filter';
 import { AllExceptionFilter } from './filters/all-exception.filter';
 
 import { OmitPropertyInterceptor } from './interceptors/omit-property.interceptor';
-import { CookieInterceptor } from './interceptors/cookie.interceptor';
 import { SetBearerHeaderInterceptor } from './interceptors/set-bearer-header.interceptor';
+import { CookieInterceptor } from './interceptors/cookie.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,20 +18,24 @@ async function bootstrap() {
   app.useGlobalFilters(new PrismaExceptionFilter(), new AllExceptionFilter());
   app.useGlobalInterceptors(
     new OmitPropertyInterceptor<User, 'password'>(['password']),
-    new CookieInterceptor<User & RefreshTokenType, 'refreshToken'>('refreshToken'),
+    new CookieInterceptor<RefreshTokenType, 'refreshToken'>('refreshToken'),
     new SetBearerHeaderInterceptor<User & AccessTokenType>('accessToken', 'Authorization'),
   );
   app.use(cookieParser());
   app.enableCors({
     origin: (origin, callback) => {
-      if (allowOrigins.includes(origin)) {
+      if (
+        allowOrigins.includes(origin) ||
+        (process.env.NODE_ENV !== 'production' && origin === undefined)
+      ) {
         callback(null, true);
       } else {
-        callback(new Error('Not Allowed by CORS'));
+        callback(new BadRequestException(`CORS Error : ${origin} is not allowed`));
       }
     },
     methods: '*',
     credentials: true,
+    exposedHeaders: ['Authorization'],
   });
   await app.listen(3000);
 }

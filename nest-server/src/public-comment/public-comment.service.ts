@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { flattenObject } from '../utils/flatten-object';
 
 @Injectable()
 export class PublicCommentService {
@@ -37,12 +38,20 @@ export class PublicCommentService {
         comment: true,
         createdAt: true,
         updatedAt: true,
-        isPublic: true,
         myBook: {
           select: {
             book: {
               select: {
                 title: true,
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                birthday: true,
+                gender: true,
               },
             },
           },
@@ -67,7 +76,7 @@ export class PublicCommentService {
 
     return {
       nextPage,
-      comments,
+      comments: comments.map((comment) => flattenObject(comment)),
     };
   }
 
@@ -82,10 +91,9 @@ export class PublicCommentService {
         comment: true,
         createdAt: true,
         updatedAt: true,
-        isPublic: true,
         myBook: {
           select: {
-            id: true,
+            rating: true,
             book: {
               select: {
                 thumbnail: true,
@@ -94,11 +102,14 @@ export class PublicCommentService {
             },
           },
         },
-        commentLike: true,
+        commentLike: {
+          select: {
+            userId: true,
+          },
+        },
         commentReply: true,
       },
     });
-
-    return comment;
+    return flattenObject(comment);
   }
 }
