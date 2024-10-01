@@ -43,8 +43,8 @@ export class AuthService {
 
     const { password: _, ...rest } = user;
 
-    const { accessToken } = this.generateAccessToken(user.id);
-    const { refreshToken } = this.generateRefreshToken(user.id);
+    const { accessToken } = this.generateAccessToken(rest.id);
+    const { refreshToken } = this.generateRefreshToken(rest.id);
 
     return {
       ...rest,

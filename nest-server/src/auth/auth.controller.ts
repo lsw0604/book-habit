@@ -7,6 +7,9 @@ import { LocalGuard } from './guard/local.guard';
 import { KakaoGuard } from './guard/kakao.guard';
 import { AuthRegisterDto } from './dto/auth.register.dto';
 
+/**
+ * TODO KAKAO REST API 수정하기 REDIRECT잘 생각해보기
+ */
 @Controller('/api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -53,7 +56,7 @@ export class AuthController {
   }
 
   @UseGuards(KakaoGuard)
-  @Get('kakao')
+  @Get('kakao/callback')
   async kakaoCallback(@Req() req: Request) {
     return req.user;
   }

@@ -68,6 +68,12 @@ export class MyBookService {
       select: {
         id: true,
         myBookStatus: true,
+        tag: {
+          select: {
+            tag: true,
+          },
+        },
+        rating: true,
         book: {
           select: {
             title: true,
@@ -102,6 +108,8 @@ export class MyBookService {
         thumbnail: book.book.thumbnail,
         date: book.history[0]?.date,
         status: book.myBookStatus,
+        rating: book.rating,
+        hashtag: book.tag.map((t) => t.tag),
       })),
     };
   }

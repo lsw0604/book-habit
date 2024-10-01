@@ -21,9 +21,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const { refreshToken } = this.authService.generateRefreshToken(user.id);
 
     return {
+      ...user,
       accessToken,
       refreshToken,
-      ...user,
     };
   }
 }

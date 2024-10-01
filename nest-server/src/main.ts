@@ -15,7 +15,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const allowOrigins = process.env.CORS_ORIGINS.split(',');
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new PrismaExceptionFilter(), new AllExceptionFilter());
+  app.useGlobalFilters(new AllExceptionFilter(new PrismaExceptionFilter()));
   app.useGlobalInterceptors(
     new OmitPropertyInterceptor<User, 'password'>(['password']),
     new CookieInterceptor<RefreshTokenType, 'refreshToken'>('refreshToken'),

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as qs from 'qs';
 import { AuthService } from './auth.service';
@@ -6,18 +6,20 @@ import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthKakaoService {
+  private readonly logger = new Logger(AuthKakaoService.name);
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
   ) {}
 
-  async kakao(code: string) {
+  async kakaoCallback(code: string) {
     const body = this.kakaoQsStringify(code);
     const { access_token } = await this.getKakaoAccessToken(body);
     const { kakao_account, id } = await this.getKakaoId(access_token);
 
-    const email: string = await this.kakaoEmailTransfer(id);
+    const email: string = this.kakaoEmailTransfer(id);
+    const name: string = this.kakaoNameTransfer(id);
     const profile: string = kakao_account.profile.thumbnail_image_url;
 
     const existKakaoId = await this.userService.getUser({ email });
@@ -33,6 +35,7 @@ export class AuthKakaoService {
 
     const user = await this.userService.createUser({
       email,
+      name,
       provider: 'KAKAO',
       profile,
     });
@@ -96,6 +99,7 @@ export class AuthKakaoService {
         token_type,
       };
     } catch (err) {
+      this.logger.error(JSON.stringify(err));
       throw new UnauthorizedException('oauth/token 카카오 API 호출 중에 오류가 발생했습니다.');
     }
   }
@@ -111,16 +115,23 @@ export class AuthKakaoService {
   }
 
   private kakaoQsStringify(code: string) {
-    return qs.stringify({
+    const body = qs.stringify({
       grant_type: 'authorization_code',
       client_id: this.configService.getOrThrow<string>('KAKAO_CLIENT_ID'),
-      redirect_uri: `${this.configService.getOrThrow<string>('KAKAO_CALLBACK_URL')}/api/auth/kakao`,
+      redirect_uri: this.configService.getOrThrow<string>('KAKAO_CALLBACK_URL'),
       code,
     });
+
+    this.logger.debug(`KAKAO_QS_STRINGIFY : ${body}`);
+    return body;
   }
 
   private kakaoEmailTransfer(id: number) {
     const emailAddress = '@oauth.kakao.com';
     return `${id}${emailAddress}`;
+  }
+
+  private kakaoNameTransfer(id: number) {
+    return `kakao_${id}`;
   }
 }

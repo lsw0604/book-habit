@@ -35,7 +35,7 @@ model Book {
   sale_price            Int?
   thumbnail             String?
   contents              String?        @db.Text
-  url                   String?
+  url                   String?        @db.Text
   datetime              DateTime       @db.DateTime()
   status                String?
   myBook                MyBook[]
