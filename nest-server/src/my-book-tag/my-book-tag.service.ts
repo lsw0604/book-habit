@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -35,17 +35,14 @@ export class MyBookTagService {
     });
     // Tag 조회하고 생성함
     const existTag = await this.tagService.createTag({ tag: payload.tag });
-
+    // 해당 태그와의 연결이 있는지 확인
     const existMyBookTag = await this.existingMyBookTag({
       myBookId: myBook.id,
       tagId: existTag.id,
     });
 
     if (existMyBookTag) {
-      return {
-        myBookId: existMyBookTag.myBookId,
-        tag: existTag.tag,
-      };
+      throw new ConflictException('이미 MyBook에 존재하는 태그입니다.');
     }
 
     // MyBookTag 생성
@@ -62,7 +59,8 @@ export class MyBookTagService {
     });
 
     return {
-      myBookId: myBookTag.myBookId,
+      myBookId: myBook.id,
+      myBookTagId: myBookTag.id,
       tag: existTag.tag,
     };
   }
@@ -115,9 +113,20 @@ export class MyBookTagService {
       await this.tagService.deleteTag({ id: deleteMyBookTag.tagId });
     }
 
-    return deleteMyBookTag;
+    return {
+      myBookId: deleteMyBookTag.myBookId,
+      myBookTagId: deleteMyBookTag.id,
+    };
   }
 
+  /**
+   * * MyBookTag가 이미 존재하는지 확인합니다.
+   * @param {ExistingMyBookTagPayload} payload - 조회할 MyBookTag 정보
+   * @param {number} payload.myBookId - MyBook ID
+   * @param {number} payload.tagId - Tag ID
+   * @returns {Promise<MyBookTag>} 조회된 MyBookTag
+   * @throws {NotFoundException} MyBookTag을 찾을 수 없는 경우
+   */
   private async existingMyBookTag(payload: ExistingMyBookTagPayload) {
     const existMyBookTag = await this.prismaService.myBookTag.findFirst({
       where: {

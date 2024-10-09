@@ -29,7 +29,6 @@ export class MyBookTagController {
   }
 
   @Delete('/:myBookTagId')
-  @HttpCode(204)
   async deleteMyBookTag(
     @UserDecorator('id') userId: number,
     @Param('myBookTagId', ParseIntPipe) myBookTagId: number,
