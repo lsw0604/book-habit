@@ -36,20 +36,76 @@ export class MyBookService {
   async getMyBookDetail(payload: GetMyBookDetailPayload) {
     const myBook = await this.validateMyBook({ id: payload.id, userId: payload.userId });
 
-    return await this.prismaService.myBook.findUnique({
+    const myBookDetail = await this.prismaService.myBook.findUnique({
       where: {
         id: myBook.id,
         userId: myBook.userId,
       },
       select: {
+        id: true,
+        book: {
+          select: {
+            isbns: {
+              select: {
+                isbn: true,
+              },
+            },
+            thumbnail: true,
+            title: true,
+            url: true,
+            contents: true,
+            authors: {
+              select: {
+                author: true,
+              },
+            },
+            publisher: true,
+            translators: {
+              select: {
+                translator: true,
+              },
+            },
+            datetime: true,
+          },
+        },
         rating: true,
         myBookStatus: true,
-        bookId: true,
-        tag: true,
+        tag: {
+          select: {
+            tagId: true,
+            id: true,
+            tag: {
+              select: {
+                tag: true,
+              },
+            },
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },
     });
+
+    return {
+      id: myBookDetail.id,
+      book: {
+        ...myBookDetail.book,
+        translators: myBookDetail.book.translators.map((item) => item.translator.name),
+        authors: myBookDetail.book.authors.map((item) => item.author.name),
+        isbn: myBookDetail.book.isbns.map((item) => item.isbn),
+      },
+      rating: myBookDetail.rating,
+      status: myBookDetail.myBookStatus,
+      tag: myBookDetail.tag.map((item) => {
+        return {
+          myBookId: myBook.id,
+          myBookTagId: item.id,
+          tag: item.tag.tag,
+        };
+      }),
+      createdAt: myBookDetail.createdAt,
+      updatedAt: myBookDetail.updatedAt,
+    };
   }
 
   async getMyBookList(payload: GetMyBookListPayload) {
@@ -93,7 +149,7 @@ export class MyBookService {
       skip,
       take,
       orderBy: {
-        updatedAt: orderBy,
+        createdAt: orderBy,
       },
     });
 
@@ -116,7 +172,7 @@ export class MyBookService {
 
   async updateMyBook(dto: UpdateMyBookDto) {
     const myBook = await this.validateMyBook({ id: dto.myBookId, userId: dto.userId });
-    return await this.prismaService.myBook.update({
+    const myBookDetail = await this.prismaService.myBook.update({
       where: {
         id: myBook.id,
       },
@@ -124,7 +180,71 @@ export class MyBookService {
         myBookStatus: dto.myBookStatus,
         rating: dto.rating,
       },
+      select: {
+        id: true,
+        book: {
+          select: {
+            isbns: {
+              select: {
+                isbn: true,
+              },
+            },
+            thumbnail: true,
+            title: true,
+            url: true,
+            contents: true,
+            authors: {
+              select: {
+                author: true,
+              },
+            },
+            publisher: true,
+            translators: {
+              select: {
+                translator: true,
+              },
+            },
+            datetime: true,
+          },
+        },
+        rating: true,
+        myBookStatus: true,
+        tag: {
+          select: {
+            tagId: true,
+            id: true,
+            tag: {
+              select: {
+                tag: true,
+              },
+            },
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
     });
+
+    return {
+      id: myBookDetail.id,
+      book: {
+        ...myBookDetail.book,
+        translators: myBookDetail.book.translators.map((item) => item.translator.name),
+        authors: myBookDetail.book.authors.map((item) => item.author.name),
+        isbn: myBookDetail.book.isbns.map((item) => item.isbn),
+      },
+      rating: myBookDetail.rating,
+      status: myBookDetail.myBookStatus,
+      tag: myBookDetail.tag.map((item) => {
+        return {
+          myBookId: myBook.id,
+          myBookTagId: item.id,
+          tag: item.tag.tag,
+        };
+      }),
+      createdAt: myBookDetail.createdAt,
+      updatedAt: myBookDetail.updatedAt,
+    };
   }
 
   async deleteMyBook(dto: DeleteMyBookDto) {
