@@ -33,7 +33,7 @@ async function bootstrap() {
         callback(new BadRequestException(`CORS Error : ${origin} is not allowed`));
       }
     },
-    methods: '*',
+    methods: 'GET, POST, PUT, DELETE',
     credentials: true,
     exposedHeaders: ['Authorization'],
   });
