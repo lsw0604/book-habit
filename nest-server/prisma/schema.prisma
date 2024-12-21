@@ -159,6 +159,7 @@ model MyBookHistory {
   id                    Int            @id @default(autoincrement())
   page                  Int?
   date                  DateTime?
+  memo                  String?
   myBookId              Int
   myBook                MyBook         @relation(fields: [myBookId], references: [id])
   createdAt             DateTime       @default(now())
