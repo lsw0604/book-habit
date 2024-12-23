@@ -1,32 +1,25 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserService } from 'src/user/user.service';
+import { TokenService } from './token.service';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { AuthRegisterDto } from './dto/auth.register.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly configService: ConfigService,
+    private readonly tokenService: TokenService,
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
   ) {}
 
   async login(dto: AuthLoginDto) {
-    const { email, password } = dto;
-    const user = await this.userService.getUser({
-      email,
-    });
+    const user = await this.validateUser(dto);
+    const token = await this.tokenService.generateToken(user.id);
 
-    if (!user) throw new UnauthorizedException('해당 이메일을 가진 사용자를 찾을 수 없습니다.');
-
-    const comparePassword = await bcrypt.compare(password, user.password);
-
-    if (!comparePassword) throw new UnauthorizedException('올바른 비밀번호를 입력해주세요.');
-
-    return user;
+    return {
+      ...user,
+      ...token,
+    };
   }
 
   async register(dto: AuthRegisterDto) {
@@ -41,33 +34,15 @@ export class AuthService {
       provider: 'LOCAL',
     });
 
-    const { password: _, ...rest } = user;
-
-    const { accessToken } = this.generateAccessToken(rest.id);
-    const { refreshToken } = this.generateRefreshToken(rest.id);
-
-    return {
-      ...rest,
-      accessToken,
-      refreshToken,
-    };
+    return await this.login(user);
   }
 
-  generateRefreshToken(id: number) {
-    const refreshToken = this.jwtService.sign(
-      { id },
-      { expiresIn: '7d', secret: this.configService.getOrThrow<string>('SECRET_REFRESH_KEY') },
-    );
-    return {
-      refreshToken,
-    };
-  }
-
-  generateAccessToken(id: number) {
-    const accessToken = this.jwtService.sign({ id });
-    return {
-      accessToken,
-    };
+  private async validateUser(dto: AuthLoginDto) {
+    const user = await this.userService.getUser({ email: dto.email });
+    if (!user) throw new UnauthorizedException('해당 이메일을 가진 사용자를 찾을 수 없습니다.');
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    if (!isPasswordValid) throw new UnauthorizedException('올바른 비밀번호를 입력해주세요.');
+    return user;
   }
 
   private async hashPassword(password: string) {

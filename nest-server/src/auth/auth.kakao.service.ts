@@ -3,12 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import * as qs from 'qs';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthKakaoService {
   private readonly logger = new Logger(AuthKakaoService.name);
   constructor(
     private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
   ) {}
@@ -25,7 +27,7 @@ export class AuthKakaoService {
     const existKakaoId = await this.userService.getUser({ email });
 
     if (!!existKakaoId) {
-      const tokens = this.tokenGenerate(existKakaoId.id);
+      const tokens = this.tokenService.generateToken(existKakaoId.id);
 
       return {
         ...tokens,
@@ -40,7 +42,7 @@ export class AuthKakaoService {
       profile,
     });
 
-    const tokens = this.tokenGenerate(user.id);
+    const tokens = this.tokenService.generateToken(user.id);
 
     return {
       ...tokens,
@@ -102,16 +104,6 @@ export class AuthKakaoService {
       this.logger.error(JSON.stringify(err));
       throw new UnauthorizedException('oauth/token 카카오 API 호출 중에 오류가 발생했습니다.');
     }
-  }
-
-  private tokenGenerate(id: number) {
-    const { accessToken } = this.authService.generateAccessToken(id);
-    const { refreshToken } = this.authService.generateRefreshToken(id);
-
-    return {
-      accessToken,
-      refreshToken,
-    };
   }
 
   private kakaoQsStringify(code: string) {

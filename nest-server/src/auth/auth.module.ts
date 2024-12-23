@@ -11,6 +11,7 @@ import { AuthKakaoService } from './auth.kakao.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
+import { TokenService } from './token.service';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthService } from './auth.service';
     PrismaService,
     UserService,
     AuthKakaoService,
+    TokenService,
   ],
   exports: [AuthService],
 })

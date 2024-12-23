@@ -4,13 +4,13 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserService } from 'src/user/user.service';
-import { AuthService } from '../auth.service';
+import { TokenService } from '../token.service';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(
     private readonly userService: UserService,
-    private authService: AuthService,
+    private tokenService: TokenService,
     readonly configService: ConfigService,
   ) {
     super({
@@ -28,9 +28,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
 
   async validate(payload: TokenType) {
     const user = await this.userService.getUser({ id: payload.id });
-
-    const { id } = user;
-    const { accessToken } = this.authService.generateAccessToken(id);
+    const { accessToken } = await this.tokenService.generateToken(user.id);
 
     return {
       accessToken,
