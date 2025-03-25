@@ -4,7 +4,6 @@ import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './filters/global-exception.filter';
 
 import { OmitPropertyInterceptor } from './interceptors/omit-property.interceptor';
 import { SetBearerHeaderInterceptor } from './interceptors/set-bearer-header.interceptor';
@@ -15,7 +14,6 @@ import { VALIDATION_PIPE_CONFIG } from './constant/main-codes.constant';
 async function setUpMiddleware(app: INestApplication) {
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe(VALIDATION_PIPE_CONFIG));
-  app.useGlobalFilters(new GlobalExceptionFilter());
 }
 
 async function setUpInterceptor(app: INestApplication) {
