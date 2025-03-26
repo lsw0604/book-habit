@@ -21,6 +21,7 @@ import { SearchModule } from './search/search.module';
 import { PrismaExceptionFilter } from './filters/prisma-exception.filter';
 import { AllExceptionFilter } from './filters/all-exception.filter';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { MyBookReviewModule } from './my-book-review/my-book-review.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
     MyBookTagModule,
     PublicCommentModule,
     SearchModule,
+    MyBookReviewModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,9 +1,9 @@
 import { IsInt, IsNotEmpty } from 'class-validator';
 
-export class DeleteMyBookCommentDto {
+export class DeleteMyBookReviewDto {
   @IsInt()
   @IsNotEmpty()
-  myBookCommentId: number;
+  myBookReviewId: number;
 
   @IsInt()
   @IsNotEmpty()
