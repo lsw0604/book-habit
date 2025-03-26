@@ -24,10 +24,8 @@ export class MyBookController {
   constructor(private myBookService: MyBookService) {}
 
   @Post()
-  async createMyBook(
-    @UserDecorator('id') userId: number,
-    @Body() dto: Omit<CreateMyBookDto, 'userId'>,
-  ) {
+  async createMyBook(@UserDecorator('id') userId: number, @Body() dto: CreateMyBookDto) {
+    const {} = dto;
     return await this.myBookService.createMyBook({
       userId,
       ...dto,
@@ -46,17 +44,17 @@ export class MyBookController {
   async getMyBookList(
     @UserDecorator('id') userId: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) pageNumber: number = 1,
-    @Query('status') myBookStatus: MyBookStatus | 'ALL' = 'ALL',
+    @Query('status') status: MyBookStatus | 'ALL' = 'ALL',
     @Query('order') orderBy: 'desc' | 'asc' = 'desc',
   ) {
-    return await this.myBookService.getMyBookList({ orderBy, userId, pageNumber, myBookStatus });
+    return await this.myBookService.getMyBookList({ orderBy, userId, pageNumber, status });
   }
 
   @Put('/:myBookId')
   async updateMyBook(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
-    @Body() dto: Pick<UpdateMyBookDto, 'rating' | 'myBookStatus'>,
+    @Body() dto: UpdateMyBookDto,
   ) {
     return await this.myBookService.updateMyBook({
       myBookId,
