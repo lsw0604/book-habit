@@ -10,7 +10,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MyBookModule } from './my-book/my-book.module';
-import { MyBookCommentModule } from './my-book-comment/my-book-comment.module';
 import { CommentLikeModule } from './comment-like/comment-like.module';
 import { CommentReplyModule } from './comment-reply/comment-reply.module';
 import { MyBookHistoryModule } from './my-book-history/my-book-history.module';
@@ -33,7 +32,6 @@ import { MyBookReviewModule } from './my-book-review/my-book-review.module';
     UserModule,
     AuthModule,
     MyBookModule,
-    MyBookCommentModule,
     CommentLikeModule,
     CommentReplyModule,
     MyBookHistoryModule,

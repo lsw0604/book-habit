@@ -1,7 +1,7 @@
+import type { KakaoAccessTokenResponse, KakaoUserInfoResponse } from './interface/kakao.interface';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as qs from 'qs';
-import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { TokenService } from './token.service';
 
@@ -9,7 +9,6 @@ import { TokenService } from './token.service';
 export class AuthKakaoService {
   private readonly logger = new Logger(AuthKakaoService.name);
   constructor(
-    private readonly authService: AuthService,
     private readonly tokenService: TokenService,
     private readonly userService: UserService,
     private readonly configService: ConfigService,
@@ -27,7 +26,7 @@ export class AuthKakaoService {
     const existKakaoId = await this.userService.getUser({ email });
 
     if (!!existKakaoId) {
-      const tokens = this.tokenService.generateToken(existKakaoId.id);
+      const tokens = await this.tokenService.generateToken(existKakaoId.id);
 
       return {
         ...tokens,
@@ -42,11 +41,11 @@ export class AuthKakaoService {
       profile,
     });
 
-    const tokens = this.tokenService.generateToken(user.id);
+    const tokens = await this.tokenService.generateToken(user.id);
 
     return {
       ...tokens,
-      ...existKakaoId,
+      ...user,
     };
   }
 

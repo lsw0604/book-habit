@@ -1,5 +1,9 @@
-type KakaoAccessTokenResponse = { access_token: string; token_type: string };
-type KakaoUserInfoResponse = {
+export interface KakaoAccessTokenResponse {
+  access_token: string;
+  token_type: string;
+}
+
+export interface KakaoUserInfoResponse {
   id: number;
   connected_at: Date;
   properties: {
@@ -14,4 +18,4 @@ type KakaoUserInfoResponse = {
       is_default_image: boolean;
     };
   };
-};
+}
