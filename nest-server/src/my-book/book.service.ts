@@ -2,13 +2,29 @@ import { Prisma } from '@prisma/client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMyBookDto } from './dto/create.my.book.dto';
+import { GetBookByIdPayload } from './interface/book.interface';
 
 @Injectable()
 export class BookService {
   constructor(private prismaService: PrismaService) {}
 
-  async getBook(payload: GetBookPayload) {
-    const book = await this.prismaService.book.findUnique({ where: { id: payload.id } });
+  async getBookById(payload: GetBookByIdPayload) {
+    const book = await this.prismaService.book.findUnique({
+      where: { id: payload.id },
+      include: {
+        isbns: true,
+        authors: {
+          include: {
+            author: true,
+          },
+        },
+        translators: {
+          include: {
+            translator: true,
+          },
+        },
+      },
+    });
 
     if (!book) {
       throw new NotFoundException('해당 book을 찾을 수 없습니다.');
@@ -18,19 +34,32 @@ export class BookService {
   }
 
   async registerBook(dto: CreateMyBookDto) {
-    const book = await this.prismaService.book.findFirst({
+    const existBook = await this.prismaService.book.findFirst({
       where: {
         isbns: {
           some: {
-            isbn: {
+            code: {
               in: dto.isbn,
             },
           },
         },
       },
+      include: {
+        isbns: true,
+        authors: {
+          include: {
+            author: true,
+          },
+        },
+        translators: {
+          include: {
+            translator: true,
+          },
+        },
+      },
     });
 
-    if (!!book) return book;
+    if (!!existBook) return existBook;
 
     return this.prismaService.$transaction(async (prisma) => {
       this.validateBookData(dto);
@@ -46,26 +75,16 @@ export class BookService {
   }
 
   private validateBookData(dto: CreateMyBookDto) {
+    if (!dto.title || dto.title.trim() === '') {
+      throw new BadRequestException('책 제목은 필수입니다.');
+    }
+
     if (dto.isbn.length === 0) {
       throw new BadRequestException('ISBN은 반드시 한개 이상 필요합니다.');
     }
   }
 
-  private async createBook(
-    prisma: Prisma.TransactionClient,
-    dto: Pick<
-      CreateMyBookDto,
-      | 'title'
-      | 'url'
-      | 'thumbnail'
-      | 'contents'
-      | 'datetime'
-      | 'price'
-      | 'sale_price'
-      | 'publisher'
-      | 'status'
-    >,
-  ) {
+  private async createBook(prisma: Prisma.TransactionClient, dto: CreateMyBookDto) {
     const { title, url, thumbnail, contents, datetime, price, sale_price, publisher, status } = dto;
     return prisma.book.create({
       data: {
@@ -87,16 +106,14 @@ export class BookService {
     dto: Pick<CreateMyBookDto, 'isbn'>,
     bookId: number,
   ) {
-    const isbnPromise = dto.isbn.map((isbn) =>
-      prisma.iSBN.create({
-        data: {
-          isbn,
-          bookId,
-        },
-      }),
-    );
+    const isbnData = dto.isbn.map((isbn) => ({
+      code: isbn,
+      bookId,
+    }));
 
-    await Promise.all(isbnPromise);
+    return prisma.iSBN.createMany({
+      data: isbnData,
+    });
   }
 
   private createAuthor(prisma: Prisma.TransactionClient, name: string) {
