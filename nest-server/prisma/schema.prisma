@@ -21,10 +21,24 @@ enum Gender {
 }
 
 enum MyBookStatus {
-  TO_READ
-  START_READ
-  READING
-  READ
+  WANT_TO_READ         // 읽고 싶은 책
+  CURRENTLY_READING    // 읽는 중
+  READ                 // 읽음
+}
+
+enum ReadingMood {
+  INSPIRED             // 영감을 받음
+  EXCITED              // 흥미로움, 설렘
+  INTRIGUED            // 호기심이 생김
+  SATISFIED            // 만족스러움
+  NEUTRAL              // 중립적
+  CONFUSED             // 혼란스러움
+  DISAPPOINTED         // 실망스러움
+  BORED                // 지루함
+  EMOTIONAL            // 감정적으로 움직임
+  THOUGHTFUL           // 생각에 잠김
+  CHALLENGED           // 도전적인 느낌
+  ENLIGHTENED          // 깨달음을 얻음
 }
 
 model Book {
@@ -35,7 +49,7 @@ model Book {
   sale_price            Int?
   thumbnail             String?
   contents              String?        @db.Text
-  url                   String?
+  url                   String?        @db.Text
   datetime              DateTime       @db.DateTime()
   status                String?
   myBook                MyBook[]
@@ -46,7 +60,7 @@ model Book {
 
 model ISBN {
   id                    Int            @id @default(autoincrement())
-  isbn                  String         @unique
+  code                  String         @unique
   bookId                Int
   book                  Book           @relation(fields: [bookId], references: [id])
 }
@@ -87,22 +101,22 @@ model User {
   password              String?
   name                  String?
   birthday              DateTime?
-  gender                Gender?
-  provider              Provider?
-  profile               String?        @default("https://pic.lsw0604.store/20231123_1205SS_e16f2d7c-ae50-4558-9b5a-e44f9be0bf2e.jpg")
+  gender                Gender         @default(MALE)
+  provider              Provider       @default(LOCAL)
+  profile               String?
   myBook                MyBook[]
-  commentLike           CommentLike[]
-  commentReply          CommentReply[]
+  reviewLike            ReviewLike[]
+  reviewComment         ReviewComment[]
 }
 
 model MyBook {
   id                    Int            @id @default(autoincrement())
   userId                Int
   bookId                Int
-  rating                Int?
-  myBookStatus          MyBookStatus
+  rating                Int            @default(0)
+  status                MyBookStatus   @default(WANT_TO_READ)
   history               MyBookHistory[]
-  comment               MyBookComment[]
+  review                MyBookReview[]
   tag                   MyBookTag[]
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
@@ -110,40 +124,40 @@ model MyBook {
   book                  Book           @relation(fields: [bookId], references: [id])
 }
 
-model MyBookComment {
+model MyBookReview {
   id                    Int            @id @default(autoincrement())
   myBookId              Int
-  commentLike           CommentLike[]
-  commentReply          CommentReply[]
-  comment               String
+  reviewLike            ReviewLike[]
+  reviewComment         ReviewComment[]
+  review                String
   isPublic              Boolean
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
   myBook                MyBook         @relation(fields: [myBookId], references: [id])
 }
 
-model CommentLike {
+model ReviewLike {
   id                    Int            @id @default(autoincrement())
   userId                Int
-  myBookCommentId       Int
+  myBookReviewId        Int
   user                  User           @relation(fields: [userId], references: [id])
-  myBookComment         MyBookComment  @relation(fields: [myBookCommentId], references: [id])
+  myBookReview          MyBookReview   @relation(fields: [myBookReviewId], references: [id])
 }
 
-model CommentReply {
+model ReviewComment {
   id                    Int            @id @default(autoincrement())
-  reply                 String
-  myBookCommentId       Int
+  comment               String
+  myBookReviewId        Int
   userId                Int
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
   user                  User           @relation(fields: [userId], references: [id])
-  myBookComment         MyBookComment  @relation(fields: [myBookCommentId], references: [id])
+  myBookReview          MyBookReview   @relation(fields: [myBookReviewId], references: [id])
 }
 
 model Tag {
   id                    Int            @id @default(autoincrement())
-  tag                   String         @unique
+  value                 String         @unique
   myBookTag             MyBookTag[]
 }
 
@@ -157,9 +171,12 @@ model MyBookTag {
 
 model MyBookHistory {
   id                    Int            @id @default(autoincrement())
-  page                  Int?
-  date                  DateTime?
   myBookId              Int
+  startPage             Int?
+  endPage               Int?
+  date                  DateTime
+  memo                  String?
+  readingMood           ReadingMood
   myBook                MyBook         @relation(fields: [myBookId], references: [id])
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt

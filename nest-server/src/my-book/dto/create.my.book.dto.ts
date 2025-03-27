@@ -1,7 +1,6 @@
 import {
   IsArray,
   IsDateString,
-  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -10,10 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateMyBookDto {
-  @IsInt()
-  @IsNotEmpty()
-  userId: number;
-
   @IsNotEmpty()
   @IsString()
   title: string;
