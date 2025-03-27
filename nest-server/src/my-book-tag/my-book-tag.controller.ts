@@ -25,14 +25,14 @@ export class MyBookTagController {
     @Param('myBookId', ParseIntPipe) myBookId: number,
     @Body() dto: CreateMyBookTagDto,
   ) {
-    return this.myBookTagService.createMyBookTag({ userId, id: myBookId, ...dto });
+    return this.myBookTagService.createMyBookTag({ userId, myBookId, ...dto });
   }
 
   @Delete('/:myBookTagId')
   async deleteMyBookTag(
     @UserDecorator('id') userId: number,
-    @Param('myBookTagId', ParseIntPipe) myBookTagId: number,
+    @Param('myBookTagId', ParseIntPipe) id: number,
   ) {
-    return this.myBookTagService.deleteMyBookTag({ id: myBookTagId, userId });
+    return this.myBookTagService.deleteMyBookTag({ id, userId });
   }
 }

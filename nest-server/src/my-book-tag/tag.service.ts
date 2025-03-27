@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import type {
+  CreateTagPayload,
+  FindTagPayload,
+  DeleteTagPayload,
+  ResponseTag,
+} from './interface/tag.interface';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTagPayload, FindTagPayload, DeleteTagPayload } from './types/tag';
 
 @Injectable()
 export class TagService {
@@ -9,13 +15,15 @@ export class TagService {
   /**
    * * 태그를 생성합니다. 이미 존재하는 태그인 경우 기본 태그를 반환합니다.
    * @param {CreateTagPayload} payload - 생성할 태그 정보
-   * @param {string} payload.tag - 생성할 태그 이름
-   * @returns {Promise<Tag>} - 생성된 태그 정보 또는 기본 태그 정보
+   * @param {string} payload.value - 생성할 태그 값값
+   * @returns {Promise<ResponseTag>} - 생성된 태그 정보 또는 기본 태그 정보
    */
-  async createTag(payload: CreateTagPayload) {
-    const existTag = await this.prismaService.tag.findUnique({ where: { tag: payload.tag } });
+  public async createTag(payload: CreateTagPayload): Promise<ResponseTag> {
+    const existTag: ResponseTag = await this.prismaService.tag.findUnique({
+      where: { value: payload.value },
+    });
 
-    if (!existTag) return await this.prismaService.tag.create({ data: { tag: payload.tag } });
+    if (!existTag) return await this.prismaService.tag.create({ data: { value: payload.value } });
 
     return existTag;
   }
@@ -24,16 +32,22 @@ export class TagService {
    * * 태그를 조회합니다. 태그의 ID 또는 태그 명으로 조회할 수 있습니다.
    * @param {FindTagPayload} payload - 조회할 태그 정보
    * @param {number} [payload.id] - 태그 ID
-   * @param {string} [payload.tag] - 태그 명
-   * @returns {Promise<Tag>} 조회된 태그
+   * @param {string} [payload.value] - 태그 값값
+   * @returns {Promise<ResponseTag>} 조회된 태그
    * @throws {NotFoundException} 태그를 찾을 수 없는 경우
+   * @throws {BadRequestException} 태그 ID, VALUE값이 없는 경우
    */
-  async findTag(payload: FindTagPayload) {
-    const existTag = await this.prismaService.tag.findUnique({
-      where: {
-        id: payload.id,
-        tag: payload.tag,
-      },
+  public async findTag(payload: FindTagPayload): Promise<ResponseTag> {
+    if (!payload.id && !payload.value) {
+      throw new BadRequestException('태그 ID 또는 태그 VALUE가 필요합니다.');
+    }
+
+    const whereCondition: Prisma.TagWhereInput = {};
+    if (payload.id) whereCondition.id = payload.id;
+    if (payload.value) whereCondition.value = payload.value;
+
+    const existTag: ResponseTag = await this.prismaService.tag.findFirst({
+      where: whereCondition,
     });
 
     if (!existTag) throw new NotFoundException('해당 태그를 찾을 수 없습니다.');
@@ -45,16 +59,18 @@ export class TagService {
    * * 태그를 삭제합니다. 태그의 ID로 삭제합니다.
    * @param {DeleteTagPayload} payload - 삭제할 태그 정보
    * @param {number} payload.id - 삭제할 태그의 ID
-   * @returns {Promise<Tag>} 삭제된 태그
+   * @returns {Promise<ResponseTag>} 삭제된 태그
    * @throws {NotFoundException} 태그를 찾을 수 없는 경우
    */
-  async deleteTag(payload: DeleteTagPayload) {
-    const existTag = await this.findTag({ id: payload.id });
+  public async deleteTag(payload: DeleteTagPayload): Promise<ResponseTag> {
+    const existTag: ResponseTag = await this.findTag({ id: payload.id });
 
-    return await this.prismaService.tag.delete({
+    const deletedTag: ResponseTag = await this.prismaService.tag.delete({
       where: {
         id: existTag.id,
       },
     });
+
+    return deletedTag;
   }
 }
