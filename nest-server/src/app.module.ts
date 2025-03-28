@@ -11,10 +11,10 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MyBookModule } from './my-book/my-book.module';
 import { CommentLikeModule } from './comment-like/comment-like.module';
-import { CommentReplyModule } from './comment-reply/comment-reply.module';
 import { MyBookHistoryModule } from './my-book-history/my-book-history.module';
 import { MyBookTagModule } from './my-book-tag/my-book-tag.module';
 import { PublicCommentModule } from './public-comment/public-comment.module';
+import { ReviewCommentModule } from './review-comment/review-comment.module';
 import { SearchModule } from './search/search.module';
 
 import { PrismaExceptionFilter } from './filters/prisma-exception.filter';
@@ -33,12 +33,12 @@ import { MyBookReviewModule } from './my-book-review/my-book-review.module';
     AuthModule,
     MyBookModule,
     CommentLikeModule,
-    CommentReplyModule,
     MyBookHistoryModule,
     MyBookTagModule,
     PublicCommentModule,
     SearchModule,
     MyBookReviewModule,
+    ReviewCommentModule,
   ],
   controllers: [AppController],
   providers: [

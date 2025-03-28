@@ -1,7 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: 'tsconfig.json',
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
@@ -12,7 +12,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', 'dist', 'node_module'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -23,7 +23,17 @@ module.exports = {
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
-    'max-len': ['error', { code: 100 }],
+    'max-len': [
+      'error',
+      {
+        code: 100,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+        ignoreRegExpLiterals: true,
+        ignoreComments: true,
+      },
+    ],
     'no-console': 'warn',
     'no-unused-expressions': 'error',
     eqeqeq: ['error', 'always'],
