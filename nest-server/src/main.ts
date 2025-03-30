@@ -5,9 +5,9 @@ import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 
-import { OmitPropertyInterceptor } from './interceptors/omit-property.interceptor';
-import { SetBearerHeaderInterceptor } from './interceptors/set-bearer-header.interceptor';
-import { CookieInterceptor } from './interceptors/cookie.interceptor';
+import { OmitPropertyInterceptor } from './common/interceptors/omit-property.interceptor';
+import { SetBearerHeaderInterceptor } from './common/interceptors/set-bearer-header.interceptor';
+import { CookieInterceptor } from './common/interceptors/cookie.interceptor';
 
 import { VALIDATION_PIPE_CONFIG } from './constant/main-codes.constant';
 

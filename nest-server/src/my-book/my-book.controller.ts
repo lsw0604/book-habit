@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { MyBookStatus } from '@prisma/client';
 import { MyBookService } from './my-book.service';
-import { UserDecorator } from 'src/decorator/user.decorator';
+import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { CreateMyBookDto } from './dto/create.my.book.dto';
 import { UpdateMyBookDto } from './dto/update.my.book.dto';

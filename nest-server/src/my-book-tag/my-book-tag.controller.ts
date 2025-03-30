@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { MyBookTagService } from './my-book-tag.service';
 import { AccessGuard } from 'src/auth/guard/access.guard';
-import { UserDecorator } from 'src/decorator/user.decorator';
+import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { CreateMyBookTagDto } from './dto/create.my.book.tag.dto';
 
 @UseGuards(AccessGuard)

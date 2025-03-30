@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { ReviewCommentService } from './review-comment.service';
-import { UserDecorator } from 'src/decorator/user.decorator';
+import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { CreateReviewCommentDto } from './dto/create.review.comment.dto';
 import { UpdateReviewCommentDto } from './dto/update.review.comment.dto';
 
