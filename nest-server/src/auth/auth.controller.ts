@@ -1,4 +1,4 @@
-import { Get, Req, Res, Body, Post, UseGuards, Controller, Logger } from '@nestjs/common';
+import { Get, Req, Res, Body, Post, UseGuards, Controller, Query } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as dayjs from 'dayjs';
 import { AuthService } from './auth.service';
@@ -6,14 +6,17 @@ import { RefreshGuard } from './guard/refresh.guard';
 import { LocalGuard } from './guard/local.guard';
 import { KakaoGuard } from './guard/kakao.guard';
 import { AuthRegisterDto } from './dto/auth.register.dto';
+import { LoggerService } from 'src/common/logger/logger.service';
+import { ResponseDto } from 'src/common/dto/response.dto';
 
-/**
- * TODO KAKAO REST API 수정하기 REDIRECT잘 생각해보기
- */
 @Controller('/api/auth')
 export class AuthController {
-  private logger = new Logger(AuthController.name);
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly logger: LoggerService,
+  ) {
+    this.logger.setContext(AuthController.name);
+  }
 
   @UseGuards(LocalGuard)
   @Post('signin')
@@ -59,7 +62,16 @@ export class AuthController {
   @UseGuards(KakaoGuard)
   @Get('kakao/callback')
   async kakaoCallback(@Req() req: Request) {
-    this.logger.debug(req.user);
     return req.user;
+  }
+
+  @Get('/check-email')
+  async isExistEmail(@Query('email') email: string) {
+    const exist = await this.authService.isEmailRegistered({ email });
+
+    return ResponseDto.success({
+      exist,
+      message: exist ? '이미 존재하는 이메일입니다.' : '사용 가능한 이메일입니다.',
+    });
   }
 }

@@ -1,9 +1,14 @@
+import type {
+  IsExistEmailPayload,
+  LoginPayload,
+  RegisterPayload,
+  ValidateUserPayload,
+} from './interface';
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserService } from 'src/user/user.service';
 import { TokenService } from './token.service';
-import { AuthLoginDto } from './dto/auth.login.dto';
-import { AuthRegisterDto } from './dto/auth.register.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,8 +17,8 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async login(dto: AuthLoginDto) {
-    const user = await this.validateUser(dto);
+  public async login(payload: LoginPayload) {
+    const user = await this.validateUser(payload);
     const token = await this.tokenService.generateToken(user.id);
 
     return {
@@ -22,25 +27,35 @@ export class AuthService {
     };
   }
 
-  async register(dto: AuthRegisterDto) {
-    const existEmail = await this.userService.getUser({ email: dto.email });
+  public async register(payload: RegisterPayload) {
+    const { password } = payload;
 
-    if (!!existEmail) throw new UnauthorizedException('해당 이메일이 존재합니다.');
-
-    const hashedPassword = await this.hashPassword(dto.password);
+    const hashedPassword = await this.hashPassword(password);
     const user = await this.userService.createUser({
-      ...dto,
+      ...payload,
       password: hashedPassword,
       provider: 'LOCAL',
     });
 
-    return await this.login(user);
+    const token = this.tokenService.generateToken(user.id);
+
+    return {
+      ...user,
+      ...token,
+    };
   }
 
-  private async validateUser(dto: AuthLoginDto) {
-    const user = await this.userService.getUser({ email: dto.email });
+  public async isEmailRegistered(payload: IsExistEmailPayload): Promise<boolean> {
+    const { email } = payload;
+    const user = await this.userService.getUser({ email });
+    return !!user;
+  }
+
+  private async validateUser(payload: ValidateUserPayload) {
+    const { email, password } = payload;
+    const user = await this.userService.getUser({ email });
     if (!user) throw new UnauthorizedException('해당 이메일을 가진 사용자를 찾을 수 없습니다.');
-    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) throw new UnauthorizedException('올바른 비밀번호를 입력해주세요.');
     return user;
   }
