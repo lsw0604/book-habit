@@ -10,13 +10,13 @@ import { UpdateReviewCommentDto } from './dto/update.review.comment.dto';
 export class ReviewCommentController {
   constructor(private reviewCommentService: ReviewCommentService) {}
 
-  @Post('/:myReviewCommentId')
+  @Post('/:myBookReviewId')
   async createReviewComment(
-    @Param('myReviewCommentId', ParseIntPipe) id: number,
+    @Param('myReviewCommentId', ParseIntPipe) myBookReviewId: number,
     @UserDecorator('id') userId: number,
     @Body() dto: CreateReviewCommentDto,
   ) {
-    return await this.reviewCommentService.createReviewComment({ id, userId, ...dto });
+    return await this.reviewCommentService.createReviewComment({ myBookReviewId, userId, ...dto });
   }
 
   @Post('/:reviewCommentId')
