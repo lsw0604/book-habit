@@ -1,20 +1,29 @@
 import type {
+  PublicTag,
+  MyBookTag,
   CreateMyBookTagPayload,
   FindMyBookTagPayload,
-  DeleteMyBookTagPayload,
   GetMyBookTagPayload,
-  MyBookTag,
+  GetPopularTagsPayload,
+  GetSearchTagPayload,
+  DeleteMyBookTagPayload,
+  ResponseMyBookTag,
+  ResponseDeleteMyBookTag,
 } from './interface/my.book.tag.interface';
+import { ResponseTag } from './interface/tag.interface';
+
 import {
   BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import * as Hangul from 'hangul-js';
+
 import { TagService } from './tag.service';
 import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class MyBookTagService {
@@ -34,7 +43,7 @@ export class MyBookTagService {
    * @throws {NotFoundException}             - MyBook을을 찾을 수 없는 경우
    * @throws {ConflictException}             - 이미 존재하는 태그인 경우
    */
-  public async createMyBookTag(payload: CreateMyBookTagPayload) {
+  public async createMyBookTag(payload: CreateMyBookTagPayload): Promise<ResponseMyBookTag> {
     if (!payload.myBookId || !payload.userId || !payload.value) {
       throw new BadRequestException('MyBook ID, 사용자 ID, 태그 값이 필요합니다.');
     }
@@ -44,8 +53,10 @@ export class MyBookTagService {
       userId: payload.userId,
     });
 
-    const tag = await this.tagService.createTag({ value: payload.value });
+    // 태그가 이미 존재하는지 확인 후 존재하면 기존의 태그값을 반환 아니면 생성함
+    const tag: ResponseTag = await this.tagService.createTag({ value: payload.value });
 
+    // MyBook에 해당 태그가 이미 존재하는지 확인
     const existMyBookTag = await this.findMyBookTag({
       myBookId: myBook.id,
       tagId: tag.id,
@@ -84,6 +95,93 @@ export class MyBookTagService {
   }
 
   /**
+   * * 태그를 검색합니다.
+   *
+   * @param {GetSearchTagPayload} payload - 검색할 태그 정보
+   * @param {string} payload.query        - 검색어
+   * @param {number} payload.limit        - 검색 결과 제한 개수
+   * @returns {Promise<PublicTag[]>}      - 검색된 태그 목록
+   */
+  public async getSearchTags(payload: GetSearchTagPayload): Promise<PublicTag[]> {
+    const { query, limit } = payload;
+
+    if (!query || query.trim() === '') {
+      return [];
+    }
+
+    const allTags = await this.prismaService.tag.findMany({
+      select: {
+        id: true,
+        value: true,
+        _count: {
+          select: {
+            myBookTag: true,
+          },
+        },
+      },
+    });
+
+    // 초성 검색 여부 확인
+    const isInitialSearch = /^[ㄱ-ㅎ]+$/.test(query);
+
+    // 태그 필터링
+    let filteredTags: typeof allTags;
+
+    if (isInitialSearch) {
+      // 초성 검색
+      filteredTags = allTags.filter((tag) => Hangul.search(tag.value, query));
+    } else {
+      // 일반 검색 (대소문자 구분 없이)
+      filteredTags = allTags.filter((tag) => tag.value.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    // 태그 정렬 (사용 빈도 순)
+    const sortedTags = filteredTags.sort(
+      (a, b) => b._count.myBookTag - a._count.myBookTag || a.value.localeCompare(b.value),
+    );
+
+    // 결과 제한
+    const limitedTags = sortedTags.slice(0, limit);
+
+    return limitedTags.map((tag) => ({
+      id: tag.id,
+      value: tag.value,
+      count: tag._count.myBookTag,
+    }));
+  }
+
+  /**
+   * * 가장많이 사용된 태그를 조회합니다.
+   * @param {GetPopularTagsPayload} payload - 조회할 태그 정보
+   * @returns {Promise<PublicTag[]>} - 조회된 PublicTag
+   */
+  public async getPopularTags(payload: GetPopularTagsPayload): Promise<PublicTag[]> {
+    const tags = await this.prismaService.tag.findMany({
+      select: {
+        id: true,
+        value: true,
+        _count: {
+          select: {
+            myBookTag: true,
+          },
+        },
+      },
+      orderBy: {
+        myBookTag: {
+          _count: 'desc',
+        },
+      },
+      take: payload.limit,
+    });
+
+    return tags.map((tag) => ({
+      id: tag.id,
+      value: tag.value,
+      count: tag._count.myBookTag,
+    }));
+  }
+
+  /**
    * * MyBookTag ID로 MyBookTag를 조회합니다.
    * @param {GetMyBookTagPayload} payload - 조회할 MyBookTag 정보
    * @param {number} payload.id           - MyBookTag ID
@@ -110,11 +208,11 @@ export class MyBookTagService {
    * @param {DeleteMyBookTagPayload} payload      - 삭제할 MyBookTag 정보
    * @param {number} payload.id                   - MyBookTagID
    * @param {number} payload.userId               - 사용자ID
-   * @returns {Promise<Omit<MyBookTag, 'tagId'>>} - 삭제된 MyBookTag
+   * @returns {Promise<ResponseDeleteMyBookTag>}  - 삭제된 MyBookTag
    * @throws {BadRequestException}                - MyBookTag ID와 User ID가 없는 경우
    * @throws {NotFoundException}                  - MyBook을 찾을 수 없는 경우
    */
-  public async deleteMyBookTag(payload: DeleteMyBookTagPayload): Promise<Omit<MyBookTag, 'tagId'>> {
+  public async deleteMyBookTag(payload: DeleteMyBookTagPayload): Promise<ResponseDeleteMyBookTag> {
     if (!payload.id || !payload.userId) {
       throw new BadRequestException('MyBookTag ID와 사용자 ID가 필요합니다.');
     }
@@ -141,7 +239,7 @@ export class MyBookTagService {
 
         return {
           myBookId: deleteMyBookTag.myBookId,
-          id: deleteMyBookTag.id,
+          myBookTagId: deleteMyBookTag.id,
         };
       });
     } catch (error) {
