@@ -7,15 +7,17 @@ export class KakaoGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const { code } = request.query;
+    const { code, redirect_uri } = request.query;
 
     if (!code) throw new UnauthorizedException('인증 코드를 찾을 수 없습니다.');
 
-    const user = await this.authKakaoService.kakaoCallback(code);
+    try {
+      const user = await this.authKakaoService.kakaoCallback(code, redirect_uri);
 
-    if (!user) throw new UnauthorizedException('kakao token 인증에 실패했습니다.');
-
-    request.user = user;
-    return true;
+      request.user = user;
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 }

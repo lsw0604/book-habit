@@ -1,25 +1,9 @@
-export interface CreateReviewCommentPayload {
-  id: number;
-  userId: number;
-  comment: string;
-}
+import { ReviewComment } from '@prisma/client';
 
-export interface GetReviewCommentByIdPayload {
-  id: number;
-}
-
-export interface UpdateReviewCommentPayload {
-  id: number;
-  userId: number;
-  comment: string;
-}
-
-export interface DeleteReviewCommentPayload {
-  id: number;
-  userId: number;
-}
-
-export interface ValidateReviewCommentPayload {
-  id: number;
-  userId: number;
-}
+export interface CreateReviewCommentPayload
+  extends Pick<ReviewComment, 'comment' | 'userId' | 'myBookReviewId'> {}
+export interface GetReviewCommentByIdPayload extends Pick<ReviewComment, 'id'> {}
+export interface UpdateReviewCommentPayload
+  extends Pick<ReviewComment, 'id' | 'userId' | 'comment'> {}
+export interface DeleteReviewCommentPayload extends Pick<ReviewComment, 'id' | 'userId'> {}
+export interface ValidateReviewCommentPayload extends Pick<ReviewComment, 'id' | 'userId'> {}

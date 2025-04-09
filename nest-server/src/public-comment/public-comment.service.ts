@@ -8,7 +8,7 @@ export class PublicCommentService {
 
   private async commentCount(payload: Pick<GetPublicCommentListPayload, 'startDate' | 'endDate'>) {
     const { startDate, endDate } = payload;
-    return await this.prismaService.myBookComment.count({
+    return await this.prismaService.myBookReview.count({
       where: this.getCommentWhereClause({ startDate, endDate }),
     });
   }
@@ -31,11 +31,11 @@ export class PublicCommentService {
 
     const count = await this.commentCount({ endDate, startDate });
 
-    const comments = await this.prismaService.myBookComment.findMany({
+    const comments = await this.prismaService.myBookReview.findMany({
       where: this.getCommentWhereClause({ startDate, endDate }),
       select: {
         id: true,
-        comment: true,
+        review: true,
         createdAt: true,
         updatedAt: true,
         myBook: {
@@ -56,14 +56,14 @@ export class PublicCommentService {
             },
           },
         },
-        commentLike: {
+        reviewLike: {
           select: {
             userId: true,
           },
         },
         _count: {
           select: {
-            commentReply: true,
+            reviewComment: true,
           },
         },
       },
@@ -81,14 +81,14 @@ export class PublicCommentService {
   }
 
   async getPublicCommentDetail(payload: GetPublicCommentDetailPayload) {
-    const comment = await this.prismaService.myBookComment.findFirst({
+    const comment = await this.prismaService.myBookReview.findFirst({
       where: {
         id: payload.id,
         isPublic: true,
       },
       select: {
         id: true,
-        comment: true,
+        review: true,
         createdAt: true,
         updatedAt: true,
         myBook: {
@@ -102,12 +102,12 @@ export class PublicCommentService {
             },
           },
         },
-        commentLike: {
+        reviewLike: {
           select: {
             userId: true,
           },
         },
-        commentReply: true,
+        reviewComment: true,
       },
     });
     return flattenObject(comment);

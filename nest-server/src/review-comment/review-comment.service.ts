@@ -8,6 +8,7 @@ import {
   UpdateReviewCommentPayload,
   ValidateReviewCommentPayload,
 } from './interface';
+import { ReviewComment } from '@prisma/client';
 
 @Injectable()
 export class ReviewCommentService {
@@ -18,21 +19,21 @@ export class ReviewCommentService {
 
   /**
    * * Review에 Comment를 생성합니다.
+   *
    * @param {CreateReviewCommentPayload} payload - 생성할 Comment 정보
-   * @param {number} payload.id                  - MyBookReview ID
-   * @param {number} payload.userId              - User ID
-   * @param {string} payload.comment             - Comment
+   * @returns {ReviewComment}
    */
-  public async createReviewComment(payload: CreateReviewCommentPayload) {
+  public async createReviewComment(payload: CreateReviewCommentPayload): Promise<ReviewComment> {
+    const { myBookReviewId: id, userId, comment } = payload;
     const myBookReview = await this.myBookReviewService.getMyBookReviewById({
-      id: payload.id,
+      id,
     });
 
     const createComment = await this.prismaService.reviewComment.create({
       data: {
         myBookReviewId: myBookReview.id,
-        userId: payload.userId,
-        comment: payload.comment,
+        userId,
+        comment,
       },
     });
 

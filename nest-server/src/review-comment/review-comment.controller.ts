@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { ReviewCommentService } from './review-comment.service';
-import { UserDecorator } from 'src/decorator/user.decorator';
+import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { CreateReviewCommentDto } from './dto/create.review.comment.dto';
 import { UpdateReviewCommentDto } from './dto/update.review.comment.dto';
 
@@ -10,13 +10,13 @@ import { UpdateReviewCommentDto } from './dto/update.review.comment.dto';
 export class ReviewCommentController {
   constructor(private reviewCommentService: ReviewCommentService) {}
 
-  @Post('/:myReviewCommentId')
+  @Post('/:myBookReviewId')
   async createReviewComment(
-    @Param('myReviewCommentId', ParseIntPipe) id: number,
+    @Param('myReviewCommentId', ParseIntPipe) myBookReviewId: number,
     @UserDecorator('id') userId: number,
     @Body() dto: CreateReviewCommentDto,
   ) {
-    return await this.reviewCommentService.createReviewComment({ id, userId, ...dto });
+    return await this.reviewCommentService.createReviewComment({ myBookReviewId, userId, ...dto });
   }
 
   @Post('/:reviewCommentId')

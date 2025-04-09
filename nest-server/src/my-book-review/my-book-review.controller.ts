@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AccessGuard } from 'src/auth/guard/access.guard';
-import { UserDecorator } from 'src/decorator/user.decorator';
+import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { MyBookReviewService } from './my-book-review.service';
 import { CreateMyBookReviewDto } from './dto/create.my.book.review.dto';
 import { UpdateMyBookReviewDto } from './dto/update.my.book.review.dto';
