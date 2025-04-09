@@ -174,8 +174,11 @@ model MyBookTag {
 model MyBookHistory {
   id                    Int            @id @default(autoincrement())
   myBookId              Int
-  startPage             Int?
-  endPage               Int?
+  startPage             Int
+  endPage               Int
+  startTime             DateTime
+  endTime               DateTime
+  readingMinutes        Int
   date                  DateTime
   memo                  String?
   readingMood           ReadingMood

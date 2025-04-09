@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-// import { MyBookHistoryService } from './my-book-history.service';
-// import { MyBookHistoryController } from './my-book-history.controller';
-// import { MyBookModule } from 'src/my-book/my-book.module';
-// import { PrismaService } from 'src/prisma/prisma.service';
+import { MyBookModule } from 'src/my-book/my-book.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { MyBookHistoryService } from './my-book-history.service';
+import { MyBookHistoryController } from './my-book-history.controller';
 
 @Module({
-  // imports: [MyBookModule],
-  // providers: [MyBookHistoryService, PrismaService],
-  // controllers: [MyBookHistoryController],
+  imports: [MyBookModule, PrismaModule],
+  providers: [MyBookHistoryService],
+  controllers: [MyBookHistoryController],
 })
 export class MyBookHistoryModule {}
