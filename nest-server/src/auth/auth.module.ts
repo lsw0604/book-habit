@@ -12,10 +12,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
+import { LoggerService } from 'src/common/logger/logger.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     PassportModule,
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -38,6 +44,7 @@ import { TokenService } from './token.service';
     UserService,
     AuthKakaoService,
     TokenService,
+    LoggerService,
   ],
   exports: [AuthService],
 })
