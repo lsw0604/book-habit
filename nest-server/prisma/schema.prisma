@@ -127,7 +127,7 @@ model MyBook {
 
 model MyBookReview {
   id                    Int            @id @default(autoincrement())
-  myBookId              Int
+  myBookId              Int            @unique
   reviewLike            ReviewLike[]
   reviewComment         ReviewComment[]
   review                String

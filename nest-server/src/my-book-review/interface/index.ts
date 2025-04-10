@@ -1,26 +1,32 @@
+import { MyBookReview } from '@prisma/client';
+
 export interface CreateMyBookReviewPayload {
-  myBookId: number;
+  id: number;
   userId: number;
   review: string;
   isPublic: boolean;
 }
 
-export interface GetMyBookReviewListPayload {
-  myBookId: number;
-}
-
-export interface GetMyBookReviewByIdPayload {
+export interface GetMyBookReviewPayload {
   id: number;
+  userId: number;
 }
 
 export interface UpdateMyBookReviewPayload {
-  myBookReviewId: number;
+  id: number;
   userId: number;
   isPublic?: boolean;
   review?: string;
 }
 
 export interface DeleteMyBookReviewPayload {
-  myBookReviewId: number;
+  id: number;
   userId: number;
+}
+
+export interface ResponseMyBookReview extends MyBookReview {
+  _count: {
+    reviewLike: number;
+    reviewComment: number;
+  };
 }
