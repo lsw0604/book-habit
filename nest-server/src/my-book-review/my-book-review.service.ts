@@ -1,4 +1,3 @@
-import type { MyBookReview, Prisma } from '@prisma/client';
 import type {
   UpdateMyBookReviewPayload,
   CreateMyBookReviewPayload,
@@ -6,6 +5,8 @@ import type {
   GetMyBookReviewPayload,
   ResponseMyBookReview,
 } from './interface';
+
+import { MyBookReview, Prisma } from '@prisma/client';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { MyBookService } from 'src/my-book/my-book.service';
@@ -54,7 +55,7 @@ export class MyBookReviewService {
       throw new ConflictException('이미 이 책에 대한 리뷰가 존재합니다.');
     }
 
-    const myBookReview = await this.prismaService.myBookReview.create({
+    const myBookReview: ResponseMyBookReview = await this.prismaService.myBookReview.create({
       data: {
         myBookId: myBook.id,
         review,
@@ -94,8 +95,8 @@ export class MyBookReviewService {
   /**
    * MyBookID 로 리뷰를 조회합니다.
    *
-   * @param {GetMyBookReviewPayload} payload - 조회할 리뷰 ID
-   * @param {number} payload.id - 리뷰 ID
+   * @param {GetMyBookReviewPayload} payload - 조회할 리뷰에 대한 정보보
+   * @param {number} payload.id - 조회할 MyBook ID
    * @param {number} payload.userId - 리뷰 작성자 사용자 ID
    * @returns {Promise<ResponseMyBookReview>} 조회된 리뷰 객체
    * @throws {NotFoundException} 리뷰를 찾을 수 없는 경우
@@ -103,32 +104,34 @@ export class MyBookReviewService {
   public async getMyBookReview(payload: GetMyBookReviewPayload): Promise<ResponseMyBookReview> {
     const { id, userId } = payload;
 
-    const myBook = await this.myBookService.validateMyBook({ id, userId });
+    // 사용자 권한 확인
+    await this.myBookService.validateMyBook({ id, userId });
 
-    const myBookReview = await this.prismaService.myBookReview.findUnique({
-      where: { myBookId: myBook.id },
-      select: {
-        id: true,
-        myBookId: true,
-        review: true,
-        isPublic: true,
-        createdAt: true,
-        updatedAt: true,
-        _count: {
-          select: {
-            reviewComment: true,
-            reviewLike: true,
+    const myBookReview: ResponseMyBookReview | null =
+      await this.prismaService.myBookReview.findUnique({
+        where: { myBookId: id },
+        select: {
+          id: true,
+          myBookId: true,
+          review: true,
+          isPublic: true,
+          createdAt: true,
+          updatedAt: true,
+          _count: {
+            select: {
+              reviewComment: true,
+              reviewLike: true,
+            },
           },
         },
-      },
-    });
+      });
 
     if (!myBookReview) {
-      this.logger.warn(`MyBook ID ${myBook.id}에 대한 리뷰가 존재하지 않습니다.`);
+      this.logger.warn(`MyBook ID : ${id}에 대한 리뷰가 존재하지 않습니다.`);
       throw new NotFoundException('리뷰를 찾을 수 없습니다.');
     }
 
-    this.logger.log(`리뷰 조회 완료: ID ${myBookReview.id}`);
+    this.logger.log(`리뷰 조회 완료 : ID ${myBookReview.id}`);
     return {
       id: myBookReview.id,
       myBookId: myBookReview.myBookId,
@@ -151,28 +154,34 @@ export class MyBookReviewService {
    * @param {number} payload.userId - 리뷰 소유자 ID
    * @param {string} [payload.review] - 변경할 리뷰 내용 (선택적)
    * @param {boolean} [payload.isPublic] - 변경할 공개 여부 (선택적)
-   * @returns {Promise<Object>} 업데이트된 리뷰 객체
+   * @returns {Promise<ResponseMyBookReview>} 업데이트된 리뷰 객체
    * @throws {NotFoundException} 리뷰를 찾을 수 없는 경우
+   * @throws {ConflictException} 업데이트할 필드가 없는 경우
+   * @throws {UnauthorizedException} 사용자가 리뷰 소유자가 아닌 경우
    */
-  public async updateMyBookReview(payload: UpdateMyBookReviewPayload) {
+  public async updateMyBookReview(
+    payload: UpdateMyBookReviewPayload,
+  ): Promise<ResponseMyBookReview> {
     const { id, userId, isPublic, review } = payload;
-    this.logger.log(`리뷰 수정 시작: ID ${id}, 사용자 ID ${userId}`);
+    this.logger.log(`리뷰 수정 시작 : ID ${id}, 사용자 ID ${userId}`);
 
-    const myBook = await this.myBookService.validateMyBook({
-      id,
-      userId,
-    });
-
-    const myBookReview = await this.prismaService.myBookReview.findUnique({
-      where: { myBookId: myBook.id },
+    const myBookReview: MyBookReview | null = await this.prismaService.myBookReview.findUnique({
+      where: { id },
     });
 
     if (!myBookReview) {
-      this.logger.warn(`MyBook ID ${id}에 대한 리뷰가 존재하지 않습니다.`);
-      throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+      this.logger.warn(`해당 리뷰가 존재하지 않습니다.`);
+      throw new NotFoundException('해당 리뷰를 찾을 수 없습니다.');
     }
 
+    // 사용자 권한 확인
+    await this.myBookService.validateMyBook({
+      id: myBookReview.myBookId,
+      userId,
+    });
+
     const updateData: Prisma.MyBookReviewUpdateInput = {};
+
     if (isPublic !== undefined) updateData.isPublic = isPublic;
     if (review !== undefined) updateData.review = review;
     if (Object.keys(updateData).length === 0) {
@@ -180,8 +189,8 @@ export class MyBookReviewService {
       throw new ConflictException('업데이트할 필드가 없습니다.');
     }
 
-    const updatedReview = await this.prismaService.myBookReview.update({
-      where: { id: myBookReview.id },
+    const updatedReview: ResponseMyBookReview = await this.prismaService.myBookReview.update({
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -199,7 +208,7 @@ export class MyBookReviewService {
       },
     });
 
-    this.logger.log(`리뷰 수정 완료: ID ${updatedReview.id}`);
+    this.logger.log(`리뷰 수정 완료`);
     return {
       id: updatedReview.id,
       myBookId: updatedReview.myBookId,
@@ -214,33 +223,62 @@ export class MyBookReviewService {
     };
   }
 
-  public async deleteMyBookReview(payload: DeleteMyBookReviewPayload) {
-    const myBookReview = await this.getMyBookReviewById({
-      id: payload.myBookReviewId,
+  /**
+   * 리뷰를 삭제합니다.
+   *
+   * @param {UpdateMyBookReviewPayload} payload - 삭제할 리뷰 정보
+   * @param {number} payload.id - 삭제할 리뷰 ID
+   * @param {number} payload.userId - 리뷰 소유자 ID
+   * @returns {Promise<{ id: number }>} 삭제된 리뷰 ID
+   * @throws {NotFoundException} 리뷰를 찾을 수 없는 경우
+   * @throws {UnauthorizedException} 사용자가 리뷰 소유자가 아닌 경우
+   */
+  public async deleteMyBookReview(payload: DeleteMyBookReviewPayload): Promise<{ id: number }> {
+    const { id, userId } = payload;
+    this.logger.log(`리뷰 삭제 시작 : ID ${id}, 사용자 ID ${userId}`);
+
+    const myBookReview: MyBookReview | null = await this.prismaService.myBookReview.findUnique({
+      where: { id },
     });
-    await this.myBookService.validateMyBook({
-      id: myBookReview.myBookId,
-      userId: payload.userId,
-    });
+
+    if (!myBookReview) {
+      this.logger.warn(`해당 리뷰가 존재하지 않습니다.`);
+      throw new NotFoundException('해당 리뷰를 찾을 수 없습니다.');
+    }
+
+    // 리뷰가 속한 MyBook을 확인하여 사용자 권한을 검증합니다.
+    // 사용자가 리뷰를 작성한 MyBook의 ID를 가져옵니다.
+    const myBookId: number = myBookReview.myBookId;
+
+    // 사용자 권한 확인
+    await this.myBookService.validateMyBook({ id: myBookId, userId });
+
     await this.prismaService.$transaction(async (prisma) => {
+      // 리뷰에 대한 좋아요와 댓글을 삭제합니다.
       await prisma.reviewLike.deleteMany({
         where: {
           myBookReviewId: myBookReview.id,
         },
       });
 
+      // 리뷰에 대한 댓글을 삭제합니다.
       await prisma.reviewComment.deleteMany({
         where: {
           myBookReviewId: myBookReview.id,
         },
       });
 
+      // 리뷰를 삭제합니다.
       await prisma.myBookReview.delete({
         where: {
-          id: myBookReview.id,
+          id,
         },
       });
     });
-    return myBookReview;
+
+    this.logger.log('리뷰 삭제 완료');
+    return {
+      id: myBookReview.id,
+    };
   }
 }
