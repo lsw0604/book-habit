@@ -1,16 +1,34 @@
+import type { FindBookByIdPayload, FindUniqueBook } from './interface/book.interface';
+
 import { Prisma } from '@prisma/client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { LoggerService } from 'src/common/logger/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMyBookDto } from './dto/create.my.book.dto';
-import { GetBookByIdPayload } from './interface/book.interface';
 
 @Injectable()
 export class BookService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly logger: LoggerService,
+  ) {
+    this.logger.setContext(BookService.name);
+  }
 
-  async getBookById(payload: GetBookByIdPayload) {
+  /**
+   * ID로 책을 찾습니다.
+   *
+   * @param {FindBookByIdPayload} payload - 찾을 책 정보
+   * @param {number} payload.id - 찾을 책 ID
+   * @returns {Promise<FindUniqueBook>} 조회한 책 객체
+   * @throws {NotFoundException} 책을 찾을 수 없는 경우
+   */
+  public async findBookById(payload: FindBookByIdPayload): Promise<FindUniqueBook> {
+    const { id } = payload;
+    this.logger.debug(`Book ID : ${id}, 조회를 시작합니다.`);
+
     const book = await this.prismaService.book.findUnique({
-      where: { id: payload.id },
+      where: { id },
       include: {
         isbns: true,
         authors: {
@@ -27,52 +45,26 @@ export class BookService {
     });
 
     if (!book) {
-      throw new NotFoundException('해당 book을 찾을 수 없습니다.');
+      this.logger.warn(`Book ID : ${id}를 찾을 수 없습니다.`);
+      throw new NotFoundException(`Book ID : ${id}를 찾을 수 없습니다.`);
     }
 
-    return book;
+    this.logger.debug('책 조회에 성공했습니다.');
+    return {
+      ...book,
+      isbns: book.isbns.map((isbn) => isbn.code),
+      authors: book.authors.map(({ author }) => author.name),
+      translators: book.translators.map(({ translator }) => translator.name),
+    };
   }
 
-  async registerBook(dto: CreateMyBookDto) {
-    const existBook = await this.prismaService.book.findFirst({
-      where: {
-        isbns: {
-          some: {
-            code: {
-              in: dto.isbn,
-            },
-          },
-        },
-      },
-      include: {
-        isbns: true,
-        authors: {
-          include: {
-            author: true,
-          },
-        },
-        translators: {
-          include: {
-            translator: true,
-          },
-        },
-      },
-    });
-
-    if (!!existBook) return existBook;
-
-    return this.prismaService.$transaction(async (prisma) => {
-      this.validateBookData(dto);
-
-      const book = await this.createBook(prisma, dto);
-
-      await this.createISBN(prisma, dto, book.id);
-      await this.processAuthor(prisma, dto, book.id);
-      await this.processTranslator(prisma, dto, book.id);
-
-      return this.getBookWithRelations(prisma, book.id);
-    });
-  }
+  /**
+   * TODO : registerBook 개선하기
+   * * 1. payload로 받은 title, isbn으로 해당 책이 존재하는지 확인하기
+   * * 2. 없다면 Book 등록하기
+   * * 3. 있다면 해당 책 정보를 반환하기 ? [boolean]
+   */
+  public async registerBook(payload: RegisterBookPayload) {}
 
   private validateBookData(dto: CreateMyBookDto) {
     if (!dto.title || dto.title.trim() === '') {
