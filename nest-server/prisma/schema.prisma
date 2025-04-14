@@ -67,13 +67,13 @@ model ISBN {
 
 model Author {
   id                    Int            @id @default(autoincrement())
-  name                  String
+  name                  String         @unique
   books                 BookAuthor[]
 }
 
 model Translator {
   id                    Int            @id @default(autoincrement())
-  name                  String
+  name                  String         @unique
   books                 BookTranslator[]
 }
 
