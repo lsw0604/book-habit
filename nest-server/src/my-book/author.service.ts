@@ -20,10 +20,9 @@ export class AuthorService {
    * @returns {Promise<Author>} 찾거나 생성된 저자 객체
    */
   public async findOrCreateAuthor(prisma: Prisma.TransactionClient, name: string): Promise<Author> {
-    const prismaClient = prisma || this.prismaService;
     this.logger.debug(`[Upsert] 저자 검색 또는 생성 시도: ${name}`);
 
-    const author = await prismaClient.author.upsert({
+    const author = await prisma.author.upsert({
       where: { name }, // name이 @unique이므로 where 조건으로 사용 가능
       create: { name }, // 저자가 없을 경우 생성될 데이터
       update: {}, // 저자가 이미 있을 경우 업데이트할 데이터 (필요시 수정)

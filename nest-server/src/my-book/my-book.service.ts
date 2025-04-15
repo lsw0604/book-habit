@@ -4,40 +4,55 @@ import type {
   GetMyBookListPayload,
   UpdateMyBookPayload,
   DeleteMyBookPayload,
-  DuplicateMyBookPayload,
   ValidateMyBookPayload,
   CreateMyBookPayload,
 } from './interface/my.book.interface';
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { BookService } from './book.service';
+import { AuthorService } from './author.service';
+import { TranslatorService } from './translator.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { LoggerService } from 'src/common/logger/logger.service';
 
 @Injectable()
 export class MyBookService {
-  private readonly logger = new Logger(MyBookService.name);
   private readonly PAGE_SIZE = 10;
 
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly authorService: AuthorService,
+    private readonly translatorService: TranslatorService,
     private readonly bookService: BookService,
-  ) {}
+    private readonly logger: LoggerService,
+  ) {
+    this.logger.setContext(MyBookService.name);
+  }
 
   /**
-   * @description myBook 등록
-   * @param dto
-   * @returns
+   * TODO 멱등성 유지를 고려해보기
    */
-  async createMyBook(dto: CreateMyBookPayload) {
-    const book = await this.bookService.registerBook(dto);
+  async createMyBook(payload: CreateMyBookPayload) {
+    const { isbn, userId } = payload;
 
-    await this.duplicateMyBook({ bookId: book.id, userId: dto.userId });
+    // isbn을 갖고 있는 책이 DB에 있는지 검색
+    const existBook = await this.bookService.existBookISBN({ isbn });
+
+    // 해당 책이 존재한다면
+    if (existBook) {
+      const bookId = existBook.id;
+
+      const myBook = await this.prismaService.myBook.create({
+        data: {
+          bookId,
+          userId,
+        },
+      });
+
+      return {};
+    }
+
+    const book = await this.bookService.registerBook(payload);
 
     return await this.prismaService.myBook.create({
       data: {
@@ -312,18 +327,5 @@ export class MyBookService {
     }
 
     return myBook;
-  }
-
-  private async duplicateMyBook(payload: DuplicateMyBookPayload) {
-    const myBook = await this.prismaService.myBook.findFirst({
-      where: {
-        bookId: payload.bookId,
-        userId: payload.userId,
-      },
-    });
-
-    if (!!myBook) {
-      throw new BadRequestException('해당 책은 이미 myBook에 등록되어있습니다.');
-    }
   }
 }
