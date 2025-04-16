@@ -1,19 +1,8 @@
 import { MyBookStatus } from '@prisma/client';
+import { RegisterBookPayload } from './book.interface';
 
-export interface CreateMyBookPayload {
+export interface CreateMyBookPayload extends RegisterBookPayload {
   userId: number;
-  title: string;
-  publisher?: string;
-  price?: number;
-  sale_price?: number;
-  thumbnail?: string;
-  contents?: string;
-  url?: string;
-  datetime: string;
-  status?: string;
-  authors: string[];
-  isbn: string[];
-  translators?: string[];
 }
 
 export interface GetMyBookDetailPayload {
@@ -46,10 +35,5 @@ export interface DeleteMyBookPayload {
 
 export interface ValidateMyBookPayload {
   id: number;
-  userId: number;
-}
-
-export interface DuplicateMyBookPayload {
-  bookId: number;
   userId: number;
 }

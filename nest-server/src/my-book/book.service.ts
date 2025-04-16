@@ -1,55 +1,46 @@
 import type {
-  CreateISBNPayload,
-  CreateBookPayload,
+  ExistBookISBNPayload,
   FindBookByIdPayload,
-  FindUniqueBook,
   ProcessAuthorPayload,
-  ProcessTranslatorPayload,
   RegisterBookPayload,
+  ProcessTranslatorPayload,
+  FormattedBook,
+  BookWithRelations,
 } from './interface/book.interface';
 
 import { Prisma } from '@prisma/client';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { ISBNService } from './isbn.service';
+import { AuthorService } from './author.service';
+import { TranslatorService } from './translator.service';
 
 @Injectable()
 export class BookService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: LoggerService,
+    private readonly isbnService: ISBNService,
+    private readonly authorService: AuthorService,
+    private readonly translatorService: TranslatorService,
   ) {
     this.logger.setContext(BookService.name);
   }
 
   /**
-   * ID로 책을 찾습니다.
+   * * ID로 책을 찾습니다. (관계 정보 포함)
    *
-   * @param {FindBookByIdPayload} payload - 찾을 책 정보
-   * @param {number} payload.id - 찾을 책 ID
-   * @returns {Promise<FindUniqueBook>} 조회한 책 객체
+   * @param {FindBookByIdPayload} payload - 찾을 책 정보 (id)
+   * @returns {Promise<FormattedBook>} 조회한 책 객체 (포맷팅됨)
    * @throws {NotFoundException} 책을 찾을 수 없는 경우
    */
-  public async findBookById(payload: FindBookByIdPayload): Promise<FindUniqueBook> {
+  public async findBookById(payload: FindBookByIdPayload): Promise<FormattedBook> {
     const { id } = payload;
     this.logger.debug(`Book ID : ${id}, 조회를 시작합니다.`);
 
-    const book = await this.prismaService.book.findUnique({
-      where: { id },
-      include: {
-        isbns: true,
-        authors: {
-          include: {
-            author: true,
-          },
-        },
-        translators: {
-          include: {
-            translator: true,
-          },
-        },
-      },
-    });
+    // getBookWithRelations 메서드 재사용
+    const book = await this.getBookWithRelations(this.prismaService, id);
 
     if (!book) {
       this.logger.warn(`Book ID : ${id}를 찾을 수 없습니다.`);
@@ -61,274 +52,117 @@ export class BookService {
   }
 
   /**
-   * 새 책을 등록하거나 이미 존재하는 책을 반환합니다.
-   * ISBN을 기준으로 이미 존재하는 책인지 확인 후 처리합니다.
+   * * 새 책을 등록하거나 이미 존재하는 책을 반환합니다.
+   * @description ISBN을 기준으로 이미 존재하는 책인지 확인 후 처리합니다.
    *
    * @param {RegisterBookPayload} payload - 등록할 책 정보
-   * @param {string[]} payload.isbn - 책의 ISBN 목록
-   * @param {string[]} payload.authors - 책의 저자 목록
-   * @param {string[]} payload.translators - 책의 번역자 목록
-   * @returns {Promise<FindUniqueBook>} 등록되거나 조회된 책 정보
+   * @returns {Promise<FormattedBook>} 등록되거나 조회된 책 정보 (포맷팅됨)
    */
-  public async registerBook(payload: RegisterBookPayload): Promise<FindUniqueBook> {
-    const { isbn, authors, translators } = payload;
+  public async registerBook(payload: RegisterBookPayload): Promise<FormattedBook> {
+    const { isbn, authors, translators, ...bookData } = payload;
     this.logger.debug(`책 등록 시작. ISBN: ${isbn.join(', ')}`);
 
-    try {
-      // ISBN으로 이미 존재하는 책인지 확인
-      const existBook = await this.prismaService.book.findFirst({
-        where: {
-          isbns: {
-            some: {
-              code: {
-                in: isbn,
-              },
-            },
-          },
-        },
-        include: {
-          isbns: true,
-          translators: {
-            select: {
-              translator: true,
-            },
-          },
-          authors: {
-            select: {
-              author: true,
-            },
-          },
-        },
-      });
-
-      // 이미 존재하는 책이면 해당 책 정보 반환
-      if (existBook) {
-        this.logger.debug(`이미 존재하는 책을 찾았습니다. Book ID: ${existBook.id}`);
-        return this.formatBookRelations(existBook);
-      }
-
-      // 새 책 등록
-      this.logger.debug('기존 책이 존재하지 않아 새로 등록합니다.');
-      return this.prismaService.$transaction(async (prisma) => {
-        const createBook = await this.createBook(prisma, payload);
-        const bookId = createBook.id;
-
-        await this.createISBN(prisma, { bookId, isbn });
-        await this.processAuthor(prisma, { bookId, authors });
-        await this.processTranslator(prisma, { bookId, translators });
-
-        const createdBook = await this.getBookWithRelations(prisma, bookId);
-        this.logger.debug(`새 책 등록 완료. Book ID: ${bookId}`);
-
-        return this.formatBookRelations(createdBook);
-      });
-    } catch (error) {
-      this.logger.error(`책 등록 중 오류 발생: ${error.message}`, error.stack);
-      throw error;
+    // ISBN으로 이미 존재하는 책인지 확인
+    const existBook = await this.existBookISBN({ isbn });
+    if (existBook) {
+      this.logger.debug(`이미 존재하는 책을 찾았습니다. Book ID: ${existBook.id}`);
+      return existBook; // existBook은 이미 FormattedBook 타입이어야 함
     }
-  }
 
-  /**
-   * 책 객체의 관계 데이터(ISBN, 저자, 번역자)를 포맷팅합니다.
-   *
-   * @param {any} book - 포맷팅할 책 객체
-   * @returns {FindUniqueBook} 포맷팅된 책 객체
-   * @private
-   */
-  private formatBookRelations(book: any): FindUniqueBook {
-    return {
-      ...book,
-      isbns: book.isbns.map(({ code }) => code),
-      translators: book.translators.map(({ translator: { name } }) => name),
-      authors: book.authors.map(({ author: { name } }) => name),
-    };
-  }
-
-  /**
-   * 새 책을 데이터베이스에 생성합니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {CreateBookPayload} payload - 생성할 책 정보
-   * @returns {Promise<any>} 생성된 책 객체
-   * @private
-   */
-  private async createBook(prisma: Prisma.TransactionClient, payload: CreateBookPayload) {
-    this.logger.debug('책 생성 시작');
-    const createBook = await prisma.book.create({
-      data: {
-        ...payload,
-      },
-    });
-    this.logger.debug(`책 생성 완료 ID : ${createBook.id}`);
-
-    return createBook;
-  }
-
-  /**
-   * 책에 대한 ISBN 정보를 데이터베이스에 생성합니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {CreateISBNPayload} payload - 생성할 ISBN 정보
-   * @param {number} payload.bookId - 책 ID
-   * @param {string[]} payload.isbn - ISBN 코드 배열
-   * @returns {Promise<any>} 생성 결과
-   * @private
-   */
-  private async createISBN(prisma: Prisma.TransactionClient, payload: CreateISBNPayload) {
-    const { bookId, isbn } = payload;
-
-    this.logger.debug(`ISBN 생성 시작. 책 ID: ${bookId}, ISBN 개수: ${isbn.length}`);
-    const ISBNInputData = isbn.map((code) => ({
-      code,
-      bookId,
-    }));
-
-    const createISBN = await prisma.iSBN.createMany({
-      data: ISBNInputData,
-    });
-
-    this.logger.debug(`ISBN ${createISBN.count}개 생성하는데 성공했습니다.`);
-    return createISBN;
-  }
-
-  /**
-   * 저자 정보를 생성합니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {string} name - 저자 이름
-   * @returns {Promise<any>} 생성된 저자 정보
-   * @private
-   */
-  private createAuthor(prisma: Prisma.TransactionClient, name: string) {
-    this.logger.debug(`저자 생성: ${name}`);
-    return prisma.author.create({
-      data: { name },
-    });
-  }
-
-  /**
-   * 저자 이름으로 저자 정보를 찾습니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {string} name - 저자 이름
-   * @returns {Promise<any>} 찾은 저자 정보
-   * @private
-   */
-  private findAuthor(prisma: Prisma.TransactionClient, name: string) {
-    return prisma.author.findFirst({ where: { name } });
-  }
-
-  /**
-   * 책에 저자 정보를 연결합니다. 존재하지 않는 저자는 새로 생성합니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {ProcessAuthorPayload} payload - 저자 처리에 필요한 정보
-   * @param {number} payload.bookId - 책 ID
-   * @param {string[]} payload.authors - 저자 이름 배열
-   * @returns {Promise<void>}
-   * @private
-   */
-  private async processAuthor(prisma: Prisma.TransactionClient, payload: ProcessAuthorPayload) {
-    const { authors, bookId } = payload;
-    this.logger.debug(`저자 처리 시작. 책 ID: ${bookId}, 저자 수: ${authors.length}`);
-
-    for (const name of authors) {
-      let author = await this.findAuthor(prisma, name);
-
-      if (!author) {
-        this.logger.debug(`새 저자 생성: ${name}`);
-        author = await this.createAuthor(prisma, name);
-      } else {
-        this.logger.debug(`기존 저자 사용: ${name}`);
-      }
-
-      await prisma.bookAuthor.create({
+    // 새 책 등록 (트랜잭션 사용)
+    this.logger.debug('찾고자 하는 책이 존재하지 않아 새로 등록합니다.');
+    return this.prismaService.$transaction(async (prisma) => {
+      // 1. Book 엔티티 생성 (관계 제외)
+      const createdBook = await prisma.book.create({
         data: {
-          bookId,
-          authorId: author.id,
+          ...bookData,
         },
       });
-    }
+      const bookId = createdBook.id;
+      this.logger.debug(`책 엔티티 생성 완료. Book ID: ${bookId}`);
 
-    this.logger.debug(`저자 처리 완료. 책 ID: ${bookId}`);
-  }
+      // 2. ISBN 연결 (ISBNService 사용)
+      await this.isbnService.createISBNs(prisma, isbn, bookId);
+      this.logger.debug(`ISBN 연결 완료. Book ID: ${bookId}`);
 
-  /**
-   * 번역자 정보를 생성합니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {string} name - 번역자 이름
-   * @returns {Promise<any>} 생성된 번역자 정보
-   * @private
-   */
-  private createTranslator(prisma: Prisma.TransactionClient, name: string) {
-    this.logger.debug(`번역자 생성: ${name}`);
-    return prisma.translator.create({
-      data: { name },
+      // 3. 저자 연결 (AuthorService 사용 및 조인 테이블 생성)
+      await this.processAuthors(prisma, { bookId, authors });
+      this.logger.debug(`저자 연결 완료. Book ID: ${bookId}`);
+
+      // 4. 번역가 연결 (TranslatorService 사용 및 조인 테이블 생성)
+      // translators가 undefined 또는 빈 배열일 수 있음을 고려
+      await this.processTranslators(prisma, { bookId, translators: translators || [] });
+      this.logger.debug(`번역가 연결 완료. Book ID: ${bookId}`);
+
+      // 5. 최종적으로 생성/연결된 모든 정보를 포함하여 책 조회
+      const fullBookData = await this.getBookWithRelations(prisma, bookId);
+      if (!fullBookData) {
+        // 이론적으로 여기까지 오면 안되지만 방어 코드
+        throw new Error(`Book ID ${bookId} 생성 후 조회를 실패했습니다.`);
+      }
+      this.logger.debug(`새 책 등록 및 관계 연결 완료. Book ID: ${bookId}`);
+
+      // 6. 결과 포맷팅 후 반환
+      return this.formatBookRelations(fullBookData);
     });
   }
 
   /**
-   * 번역자 이름으로 번역자 정보를 찾습니다.
+   * ISBN 목록을 기반으로 이미 존재하는 책인지 확인하고, 존재하면 포맷팅된 정보를 반환합니다.
+   * (ISBNService.findBookByISBN 활용하도록 리팩토링됨)
    *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {string} name - 번역자 이름
-   * @returns {Promise<any>} 찾은 번역자 정보
-   * @private
+   * @param {ExistBookISBNPayload} payload - 확인할 ISBN 목록 정보
+   * @returns {Promise<FormattedBook | null>} 존재하는 경우 포맷팅된 책 정보, 없으면 null
+   * @throws {NotFoundException} ISBN으로 찾은 책 ID가 존재하지만, 해당 ID로 상세 정보 조회 시 찾을 수 없는 경우 (데이터 불일치 등 예외적 상황). 이 예외는 전역 필터에서 처리됩니다.
+   * @throws {Error} findBookById 또는 findBookByISBN에서 예상치 못한 다른 오류 발생 시. 이 예외는 전역 필터에서 처리됩니다.
    */
-  private findTranslator(prisma: Prisma.TransactionClient, name: string) {
-    return prisma.translator.findFirst({ where: { name } });
-  }
+  public async existBookISBN(payload: ExistBookISBNPayload): Promise<FormattedBook | null> {
+    const { isbn } = payload;
+    this.logger.debug(`ISBN ${isbn.join(', ')}으로 기존 책 확인 시작`);
 
-  /**
-   * 책에 번역자 정보를 연결합니다. 존재하지 않는 번역자는 새로 생성합니다.
-   *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
-   * @param {ProcessTranslatorPayload} payload - 번역자 처리에 필요한 정보
-   * @param {number} payload.bookId - 책 ID
-   * @param {string[]} payload.translators - 번역자 이름 배열
-   * @returns {Promise<void>}
-   * @private
-   */
-  private async processTranslator(
-    prisma: Prisma.TransactionClient,
-    payload: ProcessTranslatorPayload,
-  ) {
-    const { translators, bookId } = payload;
-    this.logger.debug(`번역자 처리 시작. 책 ID: ${bookId}, 번역자 수: ${translators.length}`);
+    // 1. ISBNService를 통해 해당 ISBN을 가진 책이 있는지 확인
+    // findBookByISBN 내부에서 발생하는 오류는 전역 필터에서 처리됨
+    const existingBookMinimal = await this.isbnService.findBookByISBN(isbn);
 
-    for (const name of translators) {
-      let translator = await this.findTranslator(prisma, name);
-
-      if (!translator) {
-        this.logger.debug(`새 번역자 생성: ${name}`);
-        translator = await this.createTranslator(prisma, name);
-      } else {
-        this.logger.debug(`기존 번역자 사용: ${name}`);
-      }
-
-      await prisma.bookTranslator.create({
-        data: {
-          bookId,
-          translatorId: translator.id,
-        },
-      });
+    // 2. 책이 존재하지 않으면 null 반환
+    if (!existingBookMinimal) {
+      this.logger.debug(`ISBN ${isbn.join(', ')}에 해당하는 책 없음`);
+      return null;
     }
 
-    this.logger.debug(`번역자 처리 완료. 책 ID: ${bookId}`);
+    this.logger.debug(
+      `ISBN으로 기존 책 확인됨. Book ID: ${existingBookMinimal.id}. 전체 정보 조회 시작.`,
+    );
+
+    // 3. 책이 존재하면, 해당 ID로 전체 정보(관계 포함)를 다시 조회하여 포맷팅 후 반환
+    // findBookById는 내부적으로 NotFoundException을 던질 수 있으며, 이는 전역 필터에서 처리됨.
+    // 여기서 발생하는 다른 오류들도 전역 필터에서 처리됨.
+    const fullFormattedBook = await this.findBookById({ id: existingBookMinimal.id });
+
+    // findBookById가 성공적으로 완료되면 fullFormattedBook은 null이 될 수 없음
+    // (findBookById 내부에서 null이면 NotFoundException을 던지기 때문)
+    return fullFormattedBook;
   }
 
   /**
-   * 책과 관련된 모든 정보를 함께 조회합니다.
+   * 책과 관련된 모든 정보(ISBN, 저자, 번역가)를 함께 조회합니다.
+   * @description - 이 메서드는 트랜잭션 내부 또는 외부에서 호출될 수 있습니다.
+   * - 트랜잭션의 일부로 실행되어야 하는 경우(예: 책 등록 후 최종 데이터 조회 시)에는
+   * 반드시 해당 트랜잭션 클라이언트(`Prisma.TransactionClient`)를 `prisma` 인자로 전달해야 합니다.
+   * - 이렇게 함으로써 조회 작업이 진행 중인 트랜잭션의 컨텍스트 내에서 이루어져 데이터의 일관성과 원자성을 보장받을 수 있습니다.
+   * - 트랜잭션 외부에서 단순 조회를 위해 호출될 경우에는 일반 `PrismaService` 인스턴스를 전달할 수 있습니다.
    *
-   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
+   * @param {Prisma.TransactionClient | PrismaService} prisma - Prisma 클라이언트
    * @param {number} bookId - 책 ID
-   * @returns {Promise<any>} 관계 정보가 포함된 책 객체
+   * @returns {Promise<BookWithRelations | null>} 관계 정보가 포함된 책 객체 또는 null
    * @private
    */
-  private getBookWithRelations(prisma: Prisma.TransactionClient, bookId: number) {
-    this.logger.debug(`관계 정보 포함하여 책 조회. 책 ID: ${bookId}`);
-    return prisma.book.findUnique({
+  private async getBookWithRelations(
+    prisma: Prisma.TransactionClient | PrismaService,
+    bookId: number,
+  ): Promise<BookWithRelations | null> {
+    this.logger.debug(`관계 정보 포함하여 책 조회 시작. 책 ID: ${bookId}`);
+    const book = await prisma.book.findUnique({
       where: { id: bookId },
       include: {
         isbns: true,
@@ -344,5 +178,105 @@ export class BookService {
         },
       },
     });
+    this.logger.debug(
+      `관계 정보 포함 책 조회 완료. 책 ID: ${bookId}, 결과: ${book ? '성공' : '실패'}`,
+    );
+    return book as BookWithRelations | null;
+  }
+
+  /**
+   * 책 객체의 관계 데이터(ISBN, 저자, 번역자)를 API 응답에 적합한 형태로 포맷팅합니다.
+   *
+   * @param {BookWithRelations} book - 포맷팅할 책 객체 (Prisma include 결과)
+   * @returns {FormattedBook} 포맷팅된 책 객체
+   * @private
+   */
+  private formatBookRelations(book: BookWithRelations): FormattedBook {
+    return {
+      ...book, // Book의 기본 속성들 복사
+      isbns: book.isbns?.map(({ code }) => code) || [], // isbns가 null/undefined일 수 있음
+      authors: book.authors?.map(({ author }) => author.name) || [], // authors가 null/undefined일 수 있음
+      translators: book.translators?.map(({ translator }) => translator.name) || [], // translators가 null/undefined일 수 있음
+    };
+  }
+
+  /**
+   * 책에 저자 정보를 연결합니다. (AuthorService 사용 및 createMany 적용)
+   *
+   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
+   * @param {ProcessAuthorPayload} payload - 저자 처리에 필요한 정보 (bookId, authors)
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async processAuthors(
+    prisma: Prisma.TransactionClient,
+    payload: ProcessAuthorPayload,
+  ): Promise<void> {
+    const { authors, bookId } = payload;
+    this.logger.debug(`저자 연결 처리 시작. 책 ID: ${bookId}, 저자 수: ${authors?.length || 0}`);
+
+    if (!authors || authors.length === 0) {
+      this.logger.debug(`연결할 저자 없음. 책 ID: ${bookId}`);
+      return; // 저자 목록이 없으면 종료
+    }
+
+    const authorLinkData: Prisma.BookAuthorCreateManyInput[] = [];
+
+    for (const name of authors) {
+      // AuthorService의 findOrCreateAuthor 메서드 사용
+      const author = await this.authorService.findOrCreateAuthor(prisma, name);
+      this.logger.debug(`저자 확인/생성: ${name} (ID: ${author.id})`);
+      authorLinkData.push({ bookId, authorId: author.id });
+    }
+
+    // BookAuthor 조인 테이블에 createMany를 사용하여 벌크 삽입
+    if (authorLinkData.length > 0) {
+      await prisma.bookAuthor.createMany({
+        data: authorLinkData,
+        skipDuplicates: true, // 혹시 모를 중복 연결 시도 시 에러 방지
+      });
+      this.logger.debug(`${authorLinkData.length}개의 저자 연결 생성 완료. 책 ID: ${bookId}`);
+    }
+  }
+
+  /**
+   * 책에 번역자 정보를 연결합니다. (TranslatorService 사용 및 createMany 적용)
+   *
+   * @param {Prisma.TransactionClient} prisma - 트랜잭션 클라이언트
+   * @param {ProcessTranslatorPayload} payload - 번역자 처리에 필요한 정보 (bookId, translators)
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async processTranslators(
+    prisma: Prisma.TransactionClient,
+    payload: ProcessTranslatorPayload,
+  ): Promise<void> {
+    const { translators, bookId } = payload; // translators는 optional일 수 있음
+    this.logger.debug(
+      `번역가 연결 처리 시작. 책 ID: ${bookId}, 번역가 수: ${translators?.length || 0}`,
+    );
+
+    if (!translators || translators.length === 0) {
+      this.logger.debug(`연결할 번역가 없음. 책 ID: ${bookId}`);
+      return; // 번역가 목록이 없으면 종료
+    }
+
+    const translatorLinkData: Prisma.BookTranslatorCreateManyInput[] = [];
+
+    for (const name of translators) {
+      // TranslatorService의 findOrCreateTranslator 메서드 사용
+      const translator = await this.translatorService.findOrCreateTranslator(prisma, name);
+      this.logger.debug(`번역가 확인/생성: ${name} (ID: ${translator.id})`);
+      translatorLinkData.push({ bookId, translatorId: translator.id });
+    }
+
+    // BookTranslator 조인 테이블에 createMany를 사용하여 벌크 삽입
+    if (translatorLinkData.length > 0) {
+      await prisma.bookTranslator.createMany({
+        data: translatorLinkData,
+        skipDuplicates: true, // 중복 연결 시도 시 에러 방지
+      });
+      this.logger.debug(`${translatorLinkData.length}개의 번역가 연결 생성 완료. 책 ID: ${bookId}`);
+    }
   }
 }
