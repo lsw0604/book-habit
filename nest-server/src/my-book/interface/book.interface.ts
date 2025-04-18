@@ -1,20 +1,6 @@
 import { Author, Book, BookAuthor, BookTranslator, ISBN, Translator } from '@prisma/client';
 
 /**
- * * ID로 책을 찾기 위한 Payload 인터페이스
- */
-export interface FindBookByIdPayload {
-  id: number;
-}
-
-/**
- * * ISBN 목록으로 책 존재 여부를 확인하기 위한 Payload 인터페이스
- */
-export interface ExistBookISBNPayload {
-  isbn: string[];
-}
-
-/**
  * * Book 엔티티 생성 시 필요한 핵심 필드를 정의하는 인터페이스
  */
 export interface CreateBookPayload extends Omit<Book, 'id' | 'createdAt' | 'updatedAt'> {}
@@ -24,7 +10,7 @@ export interface CreateBookPayload extends Omit<Book, 'id' | 'createdAt' | 'upda
  */
 export interface RegisterBookPayload extends CreateBookPayload {
   authors: string[];
-  isbn: string[];
+  isbns: string[];
   translators?: string[];
 }
 
