@@ -10,10 +10,9 @@ import type {
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { BookService } from './book.service';
-import { AuthorService } from './author.service';
-import { TranslatorService } from './translator.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { FormattedBook } from './interface/book.interface';
 
 @Injectable()
 export class MyBookService {
@@ -21,45 +20,52 @@ export class MyBookService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly authorService: AuthorService,
-    private readonly translatorService: TranslatorService,
     private readonly bookService: BookService,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext(MyBookService.name);
   }
 
-  /**
-   * TODO 멱등성 유지를 고려해보기
-   */
-  async createMyBook(payload: CreateMyBookPayload) {
-    const { isbn, userId } = payload;
+  public async createMyBook(payload: CreateMyBookPayload) {
+    const { isbns, userId } = payload;
 
     // isbn을 갖고 있는 책이 DB에 있는지 검색
-    const existBook = await this.bookService.existBookISBN({ isbn });
+    let bookId: number;
+    const existBook: FormattedBook | null = await this.bookService.findBookByISBN(isbns);
 
     // 해당 책이 존재한다면
     if (existBook) {
-      const bookId = existBook.id;
-
-      const myBook = await this.prismaService.myBook.create({
-        data: {
-          bookId,
-          userId,
-        },
-      });
-
-      return {};
+      bookId = existBook.id;
+    } else {
+      const registeredBook = await this.bookService.registerBook(payload);
+      bookId = registeredBook.id;
     }
 
-    const book = await this.bookService.registerBook(payload);
-
-    return await this.prismaService.myBook.create({
+    const myBook = await this.prismaService.myBook.create({
       data: {
-        userId: dto.userId,
-        bookId: book.id,
+        userId,
+        bookId,
+      },
+      include: {
+        book: {
+          select: {
+            title: true,
+            thumbnail: true,
+          },
+        },
       },
     });
+
+    const { id: myBookId, book, rating, status } = myBook;
+    const { title, thumbnail } = book;
+
+    return {
+      myBookId,
+      title,
+      thumbnail,
+      rating,
+      status,
+    };
   }
 
   async getMyBookDetail(payload: GetMyBookDetailPayload) {
@@ -70,8 +76,7 @@ export class MyBookService {
         id: myBook.id,
         userId: myBook.userId,
       },
-      select: {
-        id: true,
+      include: {
         book: {
           select: {
             thumbnail: true,
@@ -83,50 +88,38 @@ export class MyBookService {
                 author: true,
               },
             },
+            translators: {
+              select: {
+                translator: true,
+              },
+            },
             publisher: true,
             datetime: true,
           },
         },
-        rating: true,
-        status: true,
-        tag: {
-          select: {
-            tagId: true,
-            id: true,
-            tag: {
-              select: {
-                value: true,
-              },
-            },
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
+    const { id, userId, status, rating, createdAt, updatedAt, book } = myBookDetail;
+    const { thumbnail, title, url, contents, authors, publisher, datetime, translators } = book;
+
     return {
-      id: myBookDetail.id,
+      id,
+      userId,
+      rating,
+      status,
+      createdAt,
+      updatedAt,
       book: {
-        thumbnail: myBookDetail.book.thumbnail,
-        title: myBookDetail.book.title,
-        url: myBookDetail.book.url,
-        contents: myBookDetail.book.contents,
-        authors: myBookDetail.book.authors.map((item) => item.author.name),
-        publisher: myBookDetail.book.publisher,
-        datetime: myBookDetail.book.datetime,
+        thumbnail,
+        title,
+        url,
+        contents,
+        publisher,
+        datetime,
+        translators: translators.map(({ translator: { name } }) => name),
+        authors: authors.map(({ author: { name } }) => name),
       },
-      rating: myBookDetail.rating,
-      status: myBookDetail.status,
-      tag: myBookDetail.tag.map((item) => {
-        return {
-          myBookId: myBook.id,
-          myBookTagId: item.id,
-          tag: item.tag.value,
-        };
-      }),
-      createdAt: myBookDetail.createdAt,
-      updatedAt: myBookDetail.updatedAt,
     };
   }
 
