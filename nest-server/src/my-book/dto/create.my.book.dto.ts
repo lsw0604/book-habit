@@ -50,7 +50,7 @@ export class CreateMyBookDto {
 
   @IsArray()
   @IsString({ each: true })
-  isbn: string[];
+  isbns: string[];
 
   @IsOptional()
   @IsArray()
