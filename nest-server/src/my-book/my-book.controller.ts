@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   DefaultValuePipe,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -15,6 +17,9 @@ import { MyBookStatus } from '@prisma/client';
 import { MyBookService } from './my-book.service';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { AccessGuard } from 'src/auth/guard/access.guard';
+import { ResponseDto } from 'src/common/dto/response.dto';
+import { InvalidDatetimeException } from 'src/common/exceptions/time';
+import { DatetimeValidator } from 'src/common/utils/time/datetime-validator';
 import { CreateMyBookDto } from './dto/create.my.book.dto';
 import { UpdateMyBookDto } from './dto/update.my.book.dto';
 
@@ -24,12 +29,24 @@ export class MyBookController {
   constructor(private myBookService: MyBookService) {}
 
   @Post()
+  @HttpCode(201)
   async createMyBook(@UserDecorator('id') userId: number, @Body() dto: CreateMyBookDto) {
-    const {} = dto;
-    return await this.myBookService.createMyBook({
-      userId,
-      ...dto,
-    });
+    const datetime = DatetimeValidator.parse(dto.datetime);
+
+    try {
+      const response = await this.myBookService.createMyBook({
+        userId,
+        ...dto,
+        datetime,
+      });
+      return ResponseDto.created(response, '책 등록 성공');
+    } catch (error) {
+      if (error instanceof InvalidDatetimeException) {
+        throw error;
+      }
+
+      throw new BadRequestException('책 생성중에 오류가 발생했습니다.');
+    }
   }
 
   @Get('/:myBookId')
