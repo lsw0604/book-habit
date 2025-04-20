@@ -1,6 +1,14 @@
 import { MyBookStatus } from '@prisma/client';
 import { RegisterBookPayload } from './book.interface';
 
+export interface FormattedMyBook {
+  myBookId: number;
+  title: string;
+  thumbnail: string;
+  rating: number;
+  status: MyBookStatus;
+}
+
 export interface CreateMyBookPayload extends RegisterBookPayload {
   userId: number;
 }

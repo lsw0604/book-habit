@@ -3,7 +3,17 @@ import { Author, Book, BookAuthor, BookTranslator, ISBN, Translator } from '@pri
 /**
  * * Book 엔티티 생성 시 필요한 핵심 필드를 정의하는 인터페이스
  */
-export interface CreateBookPayload extends Omit<Book, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface CreateBookPayload {
+  title: string;
+  publisher?: string | null;
+  price?: number | null;
+  sale_price?: number | null;
+  thumbnail?: string | null;
+  contents?: string | null;
+  url?: string | null;
+  datetime: Date; // Date에서 string으로 변경
+  status?: string | null;
+}
 
 /**
  * * 책 등록 시 Service 계층에서 사용하는 전체 Payload 인터페이스

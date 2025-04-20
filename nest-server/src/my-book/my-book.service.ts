@@ -6,13 +6,15 @@ import type {
   DeleteMyBookPayload,
   ValidateMyBookPayload,
   CreateMyBookPayload,
+  FormattedMyBook,
 } from './interface/my.book.interface';
+import type { FormattedBook } from './interface/book.interface';
+
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { BookService } from './book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerService } from 'src/common/logger/logger.service';
-import { FormattedBook } from './interface/book.interface';
 
 @Injectable()
 export class MyBookService {
@@ -26,7 +28,7 @@ export class MyBookService {
     this.logger.setContext(MyBookService.name);
   }
 
-  public async createMyBook(payload: CreateMyBookPayload) {
+  public async createMyBook(payload: CreateMyBookPayload): Promise<FormattedMyBook> {
     const { isbns, userId } = payload;
 
     // isbn을 갖고 있는 책이 DB에 있는지 검색
@@ -59,13 +61,15 @@ export class MyBookService {
     const { id: myBookId, book, rating, status } = myBook;
     const { title, thumbnail } = book;
 
-    return {
+    const formattedBook: FormattedMyBook = {
       myBookId,
       title,
       thumbnail,
       rating,
       status,
     };
+
+    return formattedBook;
   }
 
   async getMyBookDetail(payload: GetMyBookDetailPayload) {
