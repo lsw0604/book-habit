@@ -50,11 +50,13 @@ export class MyBookController {
   }
 
   @Get('/:myBookId')
-  async getMyBookDetail(
+  async getMyBook(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) id: number,
   ) {
-    return this.myBookService.getMyBookDetail({ id, userId });
+    const response = await this.myBookService.getMyBook({ id, userId });
+
+    return ResponseDto.success(response, '나의 책 정보 조회 성공');
   }
 
   @Get()

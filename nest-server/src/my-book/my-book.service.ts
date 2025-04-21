@@ -1,6 +1,6 @@
 import type {
+  GetMyBookPayload,
   GetMyBookByIdPayload,
-  GetMyBookDetailPayload,
   GetMyBookListPayload,
   UpdateMyBookPayload,
   DeleteMyBookPayload,
@@ -72,57 +72,69 @@ export class MyBookService {
     return formattedBook;
   }
 
-  async getMyBookDetail(payload: GetMyBookDetailPayload) {
-    const myBook = await this.validateMyBook({ id: payload.id, userId: payload.userId });
+  /**
+   *
+   * @param payload
+   * @returns
+   */
+  async getMyBook(payload: GetMyBookPayload) {
+    const { id, userId } = payload;
+    await this.validateMyBook({ id, userId });
 
-    const myBookDetail = await this.prismaService.myBook.findUnique({
+    const myBook = await this.prismaService.myBook.findUnique({
       where: {
-        id: myBook.id,
-        userId: myBook.userId,
+        id,
+        userId,
       },
       include: {
         book: {
           select: {
-            thumbnail: true,
+            id: true,
             title: true,
-            url: true,
+            thumbnail: true,
             contents: true,
-            authors: {
-              select: {
-                author: true,
-              },
-            },
-            translators: {
-              select: {
-                translator: true,
-              },
-            },
             publisher: true,
             datetime: true,
+            url: true,
+            translators: {
+              select: {
+                translator: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+            authors: {
+              select: {
+                author: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
     });
 
-    const { id, userId, status, rating, createdAt, updatedAt, book } = myBookDetail;
-    const { thumbnail, title, url, contents, authors, publisher, datetime, translators } = book;
-
     return {
-      id,
-      userId,
-      rating,
-      status,
-      createdAt,
-      updatedAt,
+      id: myBook.id,
+      status: myBook.status,
+      rating: myBook.rating,
+      createdAt: myBook.createdAt,
+      updatedAt: myBook.updatedAt,
       book: {
-        thumbnail,
-        title,
-        url,
-        contents,
-        publisher,
-        datetime,
-        translators: translators.map(({ translator: { name } }) => name),
-        authors: authors.map(({ author: { name } }) => name),
+        id: myBook.book.id,
+        url: myBook.book.url,
+        title: myBook.book.title,
+        thumbnail: myBook.book.thumbnail,
+        contents: myBook.book.contents,
+        publisher: myBook.book.publisher,
+        datetime: myBook.book.datetime,
+        authors: myBook.book.authors?.map(({ author: { name } }) => name) || [],
+        translators: myBook.book.translators?.map(({ translator: { name } }) => name) || [],
       },
     };
   }

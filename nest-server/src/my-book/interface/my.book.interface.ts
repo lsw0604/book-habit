@@ -13,7 +13,7 @@ export interface CreateMyBookPayload extends RegisterBookPayload {
   userId: number;
 }
 
-export interface GetMyBookDetailPayload {
+export interface GetMyBookPayload {
   id: number;
   userId: number;
 }
