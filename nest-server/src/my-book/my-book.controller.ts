@@ -31,9 +31,8 @@ export class MyBookController {
   @Post()
   @HttpCode(201)
   async createMyBook(@UserDecorator('id') userId: number, @Body() dto: CreateMyBookDto) {
-    const datetime = DatetimeValidator.parse(dto.datetime);
-
     try {
+      const datetime = DatetimeValidator.parse(dto.datetime);
       const response = await this.myBookService.createMyBook({
         userId,
         ...dto,
