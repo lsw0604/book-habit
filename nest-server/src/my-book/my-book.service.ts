@@ -1,12 +1,14 @@
 import type {
+  FormattedMyBook,
+  FormattedMyBooks,
+  FormattedMyBookDetail,
+  MyBookWithRelations,
   GetMyBookPayload,
-  GetMyBookByIdPayload,
-  GetMyBookListPayload,
+  GetMyBooksPayload,
   UpdateMyBookPayload,
   DeleteMyBookPayload,
   ValidateMyBookPayload,
   CreateMyBookPayload,
-  FormattedMyBook,
 } from './interface/my.book.interface';
 import type { FormattedBook } from './interface/book.interface';
 
@@ -15,10 +17,41 @@ import { Prisma } from '@prisma/client';
 import { BookService } from './book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { PaginationOptions, PaginationUtil } from 'src/common/utils/pagination.util';
 
 @Injectable()
 export class MyBookService {
   private readonly PAGE_SIZE = 10;
+  private readonly MY_BOOK_INCLUDE = {
+    book: {
+      select: {
+        title: true,
+        thumbnail: true,
+        contents: true,
+        publisher: true,
+        datetime: true,
+        url: true,
+        authors: {
+          select: {
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        translators: {
+          select: {
+            translator: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    },
+  } as const;
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -72,77 +105,29 @@ export class MyBookService {
     return formattedBook;
   }
 
-  /**
-   *
-   * @param payload
-   * @returns
-   */
-  async getMyBook(payload: GetMyBookPayload) {
+  public async getMyBook(payload: GetMyBookPayload) {
     const { id, userId } = payload;
     await this.validateMyBook({ id, userId });
 
-    const myBook = await this.prismaService.myBook.findUnique({
+    const myBook = (await this.prismaService.myBook.findUnique({
       where: {
         id,
         userId,
       },
-      include: {
-        book: {
-          select: {
-            id: true,
-            title: true,
-            thumbnail: true,
-            contents: true,
-            publisher: true,
-            datetime: true,
-            url: true,
-            translators: {
-              select: {
-                translator: {
-                  select: {
-                    name: true,
-                  },
-                },
-              },
-            },
-            authors: {
-              select: {
-                author: {
-                  select: {
-                    name: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+      include: this.MY_BOOK_INCLUDE,
+    })) as MyBookWithRelations;
 
-    return {
-      id: myBook.id,
-      status: myBook.status,
-      rating: myBook.rating,
-      createdAt: myBook.createdAt,
-      updatedAt: myBook.updatedAt,
-      book: {
-        id: myBook.book.id,
-        url: myBook.book.url,
-        title: myBook.book.title,
-        thumbnail: myBook.book.thumbnail,
-        contents: myBook.book.contents,
-        publisher: myBook.book.publisher,
-        datetime: myBook.book.datetime,
-        authors: myBook.book.authors?.map(({ author: { name } }) => name) || [],
-        translators: myBook.book.translators?.map(({ translator: { name } }) => name) || [],
-      },
-    };
+    return this.transformToMyBookDetail(myBook);
   }
 
-  async getMyBookList(payload: GetMyBookListPayload) {
-    const { status, orderBy, pageNumber, userId } = payload;
-    const take = this.PAGE_SIZE;
-    const skip = (pageNumber - 1) * take;
+  public async getMyBooks(payload: GetMyBooksPayload): Promise<FormattedMyBooks> {
+    const { userId, status, pageNumber, orderBy } = payload;
+    const paginationOptions: PaginationOptions = {
+      pageNumber,
+      pageSize: this.PAGE_SIZE,
+    };
+
+    const { skip, take } = PaginationUtil.getSkipTake(paginationOptions);
 
     const where: Prisma.MyBookWhereInput = {
       userId,
@@ -172,101 +157,44 @@ export class MyBookService {
       }),
     ]);
 
-    const totalPages = Math.ceil(totalCount / take);
-    const nextPage = pageNumber < totalPages ? pageNumber + 1 : undefined;
+    const paginationMeta = PaginationUtil.getPaginationMeta(totalCount, paginationOptions);
 
-    const formattedBooks = books.map((book) => {
-      // undefined 확인 로직 추가
-      if (!book || !book.book) {
+    const formattedBooks: FormattedMyBook[] = books.map(
+      ({ id, status, rating, book: { title, thumbnail } }) => {
         return {
-          id: book?.id || 'unknown',
-          title: 'Unknown Title',
-          thumbnail: '',
-          status: book?.status || 'UNKNOWN',
-          rating: book?.rating || 0,
+          myBookId: id,
+          title,
+          thumbnail,
+          status,
+          rating,
         };
-      }
-
-      return {
-        id: book.id,
-        title: book.book.title || 'No Title',
-        thumbnail: book.book.thumbnail || '',
-        status: book.status,
-        rating: book.rating || 0,
-      };
-    });
-
-    const result = {
-      nextPage,
-      books: formattedBooks,
-    };
-
-    return result;
-  }
-
-  async updateMyBook(dto: UpdateMyBookPayload) {
-    const myBook = await this.validateMyBook({ id: dto.myBookId, userId: dto.userId });
-    const myBookDetail = await this.prismaService.myBook.update({
-      where: {
-        id: myBook.id,
       },
-      data: {
-        status: dto.status,
-        rating: dto.rating,
-      },
-      select: {
-        id: true,
-        book: {
-          select: {
-            thumbnail: true,
-            title: true,
-            url: true,
-            contents: true,
-            authors: {
-              select: {
-                author: true,
-              },
-            },
-            publisher: true,
-            datetime: true,
-          },
-        },
-        rating: true,
-        status: true,
-        tag: {
-          select: {
-            tagId: true,
-            id: true,
-            tag: {
-              select: {
-                value: true,
-              },
-            },
-          },
-        },
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    );
 
     return {
-      id: myBookDetail.id,
-      book: {
-        ...myBookDetail.book,
-        authors: myBookDetail.book.authors.map((item) => item.author.name),
-      },
-      rating: myBookDetail.rating,
-      status: myBookDetail.status,
-      tag: myBookDetail.tag.map((item) => {
-        return {
-          myBookId: myBook.id,
-          myBookTagId: item.id,
-          tag: item.tag.value,
-        };
-      }),
-      createdAt: myBookDetail.createdAt,
-      updatedAt: myBookDetail.updatedAt,
+      books: formattedBooks,
+      meta: paginationMeta,
     };
+  }
+
+  public async updateMyBook(payload: UpdateMyBookPayload) {
+    const { id, userId, rating, status } = payload;
+    await this.validateMyBook({ id, userId });
+
+    const updateData: Prisma.MyBookUpdateInput = {
+      ...(rating !== undefined && { rating }),
+      ...(status !== undefined && { status }),
+    };
+
+    const updateMyBook = (await this.prismaService.myBook.update({
+      where: {
+        id,
+      },
+      data: updateData,
+      include: this.MY_BOOK_INCLUDE,
+    })) as MyBookWithRelations;
+
+    return this.transformToMyBookDetail(updateMyBook);
   }
 
   async deleteMyBook(dto: DeleteMyBookPayload) {
@@ -314,27 +242,48 @@ export class MyBookService {
     return myBook;
   }
 
-  async getMyBookById(payload: GetMyBookByIdPayload) {
+  async getMyBookById(id: number) {
     const myBook = await this.prismaService.myBook.findUnique({
       where: {
-        id: payload.id,
+        id,
       },
     });
 
     if (!myBook) {
-      throw new NotFoundException(`해당 MyBook을 찾을 수 없습니다. CODE:${payload.id}`);
+      throw new NotFoundException(`해당 MyBook을 찾을 수 없습니다. ID :${id}`);
     }
 
     return myBook;
   }
 
   async validateMyBook(payload: ValidateMyBookPayload) {
-    const myBook = await this.getMyBookById({ id: payload.id });
+    const { id, userId } = payload;
+    const myBook = await this.getMyBookById(id);
 
-    if (myBook.userId !== payload.userId) {
+    if (myBook.userId !== userId) {
       throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
     }
 
     return myBook;
+  }
+
+  private transformToMyBookDetail(myBook: MyBookWithRelations): FormattedMyBookDetail {
+    return {
+      id: myBook.id,
+      status: myBook.status,
+      rating: myBook.rating,
+      createdAt: myBook.createdAt,
+      updatedAt: myBook.updatedAt,
+      book: {
+        url: myBook.book?.url || '',
+        title: myBook.book?.title || '',
+        thumbnail: myBook.book?.thumbnail || '',
+        contents: myBook.book?.contents || '',
+        publisher: myBook.book?.publisher || '',
+        datetime: myBook.book?.datetime,
+        authors: myBook.book?.authors.map((item) => item.author.name) || [],
+        translators: myBook.book?.translators.map((item) => item.translator.name) || [],
+      },
+    };
   }
 }
