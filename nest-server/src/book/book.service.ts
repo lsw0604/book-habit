@@ -4,16 +4,16 @@ import type {
   RegisterBookPayload,
   ProcessAuthorPayload,
   ProcessTranslatorPayload,
-} from './interface/book.interface';
+} from './interface';
 
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { normalizedISBN } from 'src/common/utils/isbn.util';
-import { ISBNService } from './isbn.service';
-import { AuthorService } from './author.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { TranslatorService } from './translator.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ISBNService } from './services/isbn.service';
+import { AuthorService } from './services//author.service';
+import { TranslatorService } from './services//translator.service';
 import { NotFoundBookException } from './exceptions';
 
 @Injectable()

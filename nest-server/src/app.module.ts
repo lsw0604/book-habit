@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { BookModule } from './book/book.module';
 import { MyBookModule } from './my-book/my-book.module';
 // import { MyBookHistoryModule } from './my-book-history/my-book-history.module';
 import { MyBookTagModule } from './my-book-tag/my-book-tag.module';
@@ -34,6 +35,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     AuthModule,
     MyBookModule,
     // MyBookHistoryModule,
+    BookModule,
     MyBookTagModule,
     PublicCommentModule,
     SearchModule,

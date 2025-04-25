@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerService } from 'src/common/logger/logger.service';
-import { CreateISBNPayload } from './interface/isbn.interface';
-import { EmptyIsbnListException, InvalidIsbnFormatException } from './exceptions';
 import { normalizedISBN, validateISBN } from 'src/common/utils/isbn.util';
+import { EmptyIsbnListException, InvalidIsbnFormatException } from '../exceptions';
+import { CreateISBNPayload } from '../interface';
 
 @Injectable()
 export class ISBNService {

@@ -14,15 +14,15 @@ import type {
   DeleteMyBookResponse,
   ValidateMyBookPayload,
 } from './interface/my.book.interface';
-import type { FormattedBook } from './interface/book.interface';
+import type { FormattedBook } from 'src/book/interface';
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { MyBook, Prisma } from '@prisma/client';
-import { BookService } from './book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { BookService } from 'src/book/book.service';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { PaginationOptions, PaginationUtil } from 'src/common/utils/pagination.util';
-import { NotFoundBookException } from './exceptions';
+import { NotFoundMyBookException } from './exceptions';
 
 /**
  * * MyBook 관련 기능을 담당하는 서비스
@@ -363,7 +363,7 @@ export class MyBookService {
 
     if (!myBook) {
       this.logger.warn(`MyBook ${id} 찾을 수 없음`);
-      throw new NotFoundBookException(id);
+      throw new NotFoundMyBookException(id);
     }
 
     return myBook;

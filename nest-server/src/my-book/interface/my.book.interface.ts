@@ -1,6 +1,6 @@
 import { MyBookStatus, Prisma } from '@prisma/client';
 import { PaginationMeta } from 'src/common/utils/pagination.util';
-import { RegisterBookPayload } from './book.interface';
+import { RegisterBookPayload } from 'src/book/interface';
 
 /**
  * * 프론트엔드에 반환하기 위해 가공된 MyBook 정보
