@@ -1,9 +1,23 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Post,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  UseGuards,
+  Controller,
+  HttpStatus,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { ReviewComment } from '@prisma/client';
 import { AccessGuard } from 'src/auth/guard/access.guard';
-import { ReviewCommentService } from './review-comment.service';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
+import { ResponseDto } from 'src/common/dto/response.dto';
+import { ReviewCommentService } from './review-comment.service';
 import { CreateReviewCommentDto } from './dto/create.review.comment.dto';
 import { UpdateReviewCommentDto } from './dto/update.review.comment.dto';
+import { DeleteReviewCommentResponse } from './interface';
 
 @UseGuards(AccessGuard)
 @Controller('/api/review-comment')
@@ -11,28 +25,44 @@ export class ReviewCommentController {
   constructor(private reviewCommentService: ReviewCommentService) {}
 
   @Post('/:myBookReviewId')
+  @HttpCode(HttpStatus.CREATED)
   async createReviewComment(
     @Param('myReviewCommentId', ParseIntPipe) myBookReviewId: number,
     @UserDecorator('id') userId: number,
     @Body() dto: CreateReviewCommentDto,
-  ) {
-    return await this.reviewCommentService.createReviewComment({ myBookReviewId, userId, ...dto });
+  ): Promise<ResponseDto<ReviewComment>> {
+    const response: ReviewComment = await this.reviewCommentService.createReviewComment({
+      myBookReviewId,
+      userId,
+      ...dto,
+    });
+    return ResponseDto.created(response, '리뷰 댓글 생성 성공');
   }
 
-  @Post('/:reviewCommentId')
+  @Patch('/:reviewCommentId')
+  @HttpCode(HttpStatus.OK)
   async updateReviewComment(
     @Param('reviewCommentId', ParseIntPipe) id: number,
     @UserDecorator('id') userId: number,
     @Body() dto: UpdateReviewCommentDto,
-  ) {
-    return await this.reviewCommentService.updateReviewComment({ id, userId, ...dto });
+  ): Promise<ResponseDto<ReviewComment>> {
+    const response: ReviewComment = await this.reviewCommentService.updateReviewComment({
+      id,
+      userId,
+      ...dto,
+    });
+
+    return ResponseDto.success(response, '리뷰 댓글 수정 성공');
   }
 
   @Delete('/:reviewCommentId')
   async deleteReviewComment(
     @Param('reviewCommentId', ParseIntPipe) id: number,
     @UserDecorator('id') userId: number,
-  ) {
-    return await this.reviewCommentService.deleteReviewComment({ id, userId });
+  ): Promise<ResponseDto<DeleteReviewCommentResponse>> {
+    const response: DeleteReviewCommentResponse =
+      await this.reviewCommentService.deleteReviewComment({ id, userId });
+
+    return ResponseDto.success(response, '리뷰 댓글 삭제 성공');
   }
 }
