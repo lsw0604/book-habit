@@ -1,5 +1,12 @@
 import { MyBookReview } from '@prisma/client';
 
+export interface FormattedMyBookReview extends MyBookReview {
+  _count: {
+    reviewLike: number;
+    reviewComment: number;
+  };
+}
+
 export interface CreateMyBookReviewPayload {
   id: number;
   userId: number;
@@ -23,10 +30,6 @@ export interface DeleteMyBookReviewPayload {
   id: number;
   userId: number;
 }
-
-export interface ResponseMyBookReview extends MyBookReview {
-  _count: {
-    reviewLike: number;
-    reviewComment: number;
-  };
+export interface DeleteMyBooKReviewResponse {
+  id: number;
 }
