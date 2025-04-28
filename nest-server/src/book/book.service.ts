@@ -6,7 +6,7 @@ import type {
   ProcessTranslatorPayload,
 } from './interface';
 
-import { Prisma } from '@prisma/client';
+import { Book, Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { normalizedISBN } from 'src/common/utils/isbn.util';
@@ -142,52 +142,36 @@ export class BookService {
    * @param {RegisterBookPayload} payload - 등록할 책 정보
    * @returns {Promise<FormattedBook>} 등록되거나 조회된 책 정보 (포맷팅됨)
    */
-  public async registerBook(payload: RegisterBookPayload): Promise<FormattedBook> {
-    const { isbns, authors, translators, ...bookData } = payload;
-    this.logger.debug(`책 등록 시작. ISBN : ${isbns.join(', ')}`);
+  public async findOrCreateBook(payload: RegisterBookPayload): Promise<FormattedBook> {
+    const { isbns, authors, translators, ...bookPayload } = payload;
 
     // ISBN으로 이미 존재하는 책인지 확인
-    const existBook = await this.findBookByISBN(isbns);
+    const existBook: FormattedBook | null = await this.findBookByISBN(isbns);
 
     if (existBook) {
-      this.logger.debug(`이미 존재하는 책을 찾았습니다. Book ID : ${existBook.id}`);
-      return existBook; // existBook은 이미 FormattedBook 타입이어야 함
-    }
+      // existBook은 이미 FormattedBook 타입이어야 함
+      return existBook;
+    } else {
+      return await this.prismaService.$transaction(async (prisma) => {
+        // Book Entity 생성
+        const { id: bookId }: Pick<Book, 'id'> = await prisma.book.create({
+          data: {
+            ...bookPayload,
+          },
+          select: {
+            id: true,
+          },
+        });
 
-    // 새 책 등록 (트랜잭션 사용)
-    this.logger.debug('찾고자 하는 책이 존재하지 않아 새로 등록합니다.');
-    return this.prismaService.$transaction(async (prisma) => {
-      // 1. Book 엔티티 생성 (관계 제외)
-      const createdBook = await prisma.book.create({
-        data: {
-          ...bookData,
-        },
+        // Book과 ISBN, Author, Translator 연결
+        await this.isbnService.createISBNs(prisma, { bookId, isbns });
+        await this.processTranslators(prisma, { bookId, translators });
+        await this.processAuthors(prisma, { bookId, authors });
+
+        // 연결된 Book을 반환
+        return await this.findBookById(bookId, prisma);
       });
-      const bookId: number = createdBook.id;
-      this.logger.debug(`책 엔티티 생성 완료. Book ID: ${bookId}`);
-
-      // 2. ISBN 연결 (ISBNService 사용)
-      await this.isbnService.createISBNs(prisma, { bookId, isbns });
-      this.logger.debug(`ISBN 연결 완료. Book ID: ${bookId}`);
-
-      // 3. 저자 연결 (AuthorService 사용 및 조인 테이블 생성)
-      await this.processAuthors(prisma, { bookId, authors });
-      this.logger.debug(`저자 연결 완료. Book ID: ${bookId}`);
-
-      // 4. 번역가 연결 (TranslatorService 사용 및 조인 테이블 생성)
-      await this.processTranslators(prisma, { bookId, translators: translators || [] });
-      this.logger.debug(`번역가 연결 완료. Book ID: ${bookId}`);
-
-      // 5. 최종적으로 생성/연결된 모든 정보를 포함하여 책 조회
-      const registeredBook: FormattedBook | null = await this.findBookById(bookId, prisma);
-
-      if (!registeredBook) throw new Error(`Book ID ${bookId} 생성 후 조회를 실패했습니다.`);
-
-      this.logger.debug(`새 책 등록 및 관계 연결 완료. Book ID: ${bookId}`);
-
-      // 6. 결과 포맷팅 후 반환
-      return registeredBook;
-    });
+    }
   }
 
   /**
