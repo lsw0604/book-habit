@@ -1,30 +1,24 @@
 import {
-  Body,
-  Controller,
-  Delete,
   Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
   Put,
+  Body,
+  Post,
+  Param,
+  Delete,
+  HttpCode,
   UseGuards,
+  Controller,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
+import { MyBookHistory } from '@prisma/client';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { ResponseDto } from 'src/common/dto/response.dto';
 import { CreateMyBookHistoryDto } from './dto/create.my.book.history.dto';
 import { UpdateMyBookHistoryDto } from './dto/update.my.book.history.dto';
 import { MyBookHistoryService } from './my-book-history.service';
-import { MyBookHistory } from '@prisma/client';
 
-/**
- * 도서 읽기 기록 관리를 위한 컨트롤러
- * 사용자의 독서 기록을 생성, 조회, 수정, 삭제하는
- * 엔드포인트를 제공합니다.
- * TODO 수정
- */
 @UseGuards(AccessGuard)
 @Controller('/api/my-book-history')
 export class MyBookHistoryController {
@@ -36,7 +30,7 @@ export class MyBookHistoryController {
    * @param userId 사용자 ID
    * @param myBookId MyBook ID
    * @param dto 생성할 도서 읽기 기록 데이터
-   * @returns 생성된 도서 읽기 기록
+   * @returns {MyBookHistory} 생성된 도서 읽기 기록
    */
   @Post('/:myBookId')
   @HttpCode(HttpStatus.CREATED)
@@ -45,7 +39,7 @@ export class MyBookHistoryController {
     @Param('myBookId', ParseIntPipe) myBookId: number,
     @Body() dto: CreateMyBookHistoryDto,
   ): Promise<ResponseDto<MyBookHistory>> {
-    const myBookHistory = await this.myBookHistoryService.createMyBookHistory({
+    const myBookHistory: MyBookHistory = await this.myBookHistoryService.createMyBookHistory({
       userId,
       myBookId,
       ...dto,
@@ -59,7 +53,7 @@ export class MyBookHistoryController {
    *
    * @param userId 사용자 ID
    * @param id MyBook ID
-   * @returns 도서 읽기 기록 목록
+   * @returns {MyBookHistory} 도서 읽기 기록 목록
    */
   @Get('/:myBookId')
   @HttpCode(HttpStatus.OK)
@@ -81,7 +75,7 @@ export class MyBookHistoryController {
    * @param userId 사용자 ID
    * @param id 수정할 MyBookHistory ID
    * @param dto 수정할 도서 읽기 기록 데이터
-   * @returns 수정된 도서 읽기 기록
+   * @returns {MyBookHistory} 수정된 도서 읽기 기록
    */
   @Put('/:myBookHistoryId')
   @HttpCode(HttpStatus.OK)
@@ -90,7 +84,7 @@ export class MyBookHistoryController {
     @Param('myBookHistoryId', ParseIntPipe) id: number,
     @Body() dto: UpdateMyBookHistoryDto,
   ): Promise<ResponseDto<MyBookHistory>> {
-    const updatedHistory = await this.myBookHistoryService.updateMyBookHistory({
+    const updatedHistory: MyBookHistory = await this.myBookHistoryService.updateMyBookHistory({
       id,
       userId,
       ...dto,
@@ -104,7 +98,7 @@ export class MyBookHistoryController {
    *
    * @param userId 사용자 ID
    * @param id 삭제할 MyBookHistory ID
-   * @returns 삭제된 도서 읽기 기록
+   * @returns {MyBookHistory} 삭제된 도서 읽기 기록
    */
   @Delete('/:myBookHistoryId')
   @HttpCode(HttpStatus.OK)
@@ -112,7 +106,7 @@ export class MyBookHistoryController {
     @UserDecorator('id') userId: number,
     @Param('myBookHistoryId', ParseIntPipe) id: number,
   ): Promise<ResponseDto<MyBookHistory>> {
-    const deletedHistory = await this.myBookHistoryService.deleteMyBookHistory({
+    const deletedHistory: MyBookHistory = await this.myBookHistoryService.deleteMyBookHistory({
       id,
       userId,
     });
