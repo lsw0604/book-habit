@@ -169,6 +169,7 @@ model MyBookTag {
   tagId                 Int
   myBook                MyBook         @relation(fields: [myBookId], references: [id])
   tag                   Tag            @relation(fields: [tagId], references: [id])
+  @@unique([myBookId, tagId])
 }
 
 model MyBookHistory {
