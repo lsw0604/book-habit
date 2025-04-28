@@ -1,13 +1,13 @@
-import { MyBookStatus, Prisma } from '@prisma/client';
-import { PaginationMeta } from 'src/common/utils/pagination.util';
-import { RegisterBookPayload } from 'src/book/interface';
+import type { MyBookStatus, Prisma } from '@prisma/client';
+import type { RegisterBookPayload } from 'src/book/interface';
+import type { PaginationMeta } from 'src/common/utils/pagination.util';
 
 /**
  * * 프론트엔드에 반환하기 위해 가공된 MyBook 정보
  * * 목록 조회 등에서 사용됩니다.
  */
 export interface FormattedMyBook {
-  myBookId: number;
+  id: number;
   title: string;
   thumbnail: string;
   rating: number;
@@ -51,17 +51,30 @@ export interface FormattedMyBookDetail {
 export type MyBookWithRelations = Prisma.MyBookGetPayload<{
   include: {
     book: {
-      include: {
-        authors: {
-          include: {
-            author: true;
-          };
-        };
-        translators: {
-          include: {
-            translator: true;
-          };
-        };
+      select: {
+        title: true;
+        thumbnail: true;
+        contents: true;
+        publisher: true;
+        datetime: true;
+        url: true;
+        authors: { select: { author: { select: { name: true } } } };
+        translators: { select: { translator: { select: { name: true } } } };
+      };
+    };
+  };
+}>;
+
+/**
+ * * Prisma에서 관계를 포함한 MyBook 조회 결과 타입
+ * * 복잡한 중첩 관계를 가진 데이터를 타입 안전하게 다루기 위해 사용됩니다.
+ */
+export type MyBooksWithRelations = Prisma.MyBookGetPayload<{
+  include: {
+    book: {
+      select: {
+        title: true;
+        thumbnail: true;
       };
     };
   };
@@ -76,12 +89,6 @@ export interface CreateMyBookPayload extends RegisterBookPayload {
 }
 
 /**
- * * MyBook 생성 API의 응답 타입
- * * FormattedMyBook과 동일한 구조를 갖습니다.
- */
-export interface CreateMyBookResponse extends FormattedMyBook {}
-
-/**
  * * 특정 MyBook 조회 시 사용되는 파라미터 인터페이스
  * * MyBook ID와 권한 확인을 위한 사용자 ID를 포함합니다.
  */
@@ -89,12 +96,6 @@ export interface GetMyBookPayload {
   id: number;
   userId: number;
 }
-
-/**
- * * 특정 MyBook 조회 API의 응답 타입
- * * FormattedMyBookDetail과 동일한 구조를 갖습니다.
- */
-export interface GetMyBookResponse extends FormattedMyBookDetail {}
 
 /**
  * * MyBook 목록 조회 시 필요한 파라미터를 정의하는 인터페이스
@@ -108,12 +109,6 @@ export interface GetMyBooksPayload {
 }
 
 /**
- * * MyBook 목록 조회 API의 응답 타입
- * * FormattedMyBooks와 동일한 구조를 갖습니다.
- */
-export interface GetMyBooksResponse extends FormattedMyBooks {}
-
-/**
  * * MyBook 업데이트 시 필요한 데이터를 정의하는 인터페이스
  * * 업데이트할 필드는 선택적(optional)으로 지정할 수 있습니다.
  */
@@ -123,12 +118,6 @@ export interface UpdateMyBookPayload {
   rating?: number;
   status?: MyBookStatus;
 }
-
-/**
- * * MyBook 업데이트 API의 응답 타입
- * * FormattedMyBookDetail과 동일한 구조를 갖습니다.
- */
-export interface UpdateMyBookResponse extends FormattedMyBookDetail {}
 
 /**
  * * MyBook 삭제 시 필요한 데이터를 정의하는 인터페이스
@@ -146,13 +135,4 @@ export interface DeleteMyBookPayload {
  */
 export interface DeleteMyBookResponse {
   id: number;
-}
-
-/**
- * * MyBook 접근 권한 검증 시 사용되는 파라미터 인터페이스
- * * MyBook ID와 권한 확인을 위한 사용자 ID를 포함합니다.
- */
-export interface ValidateMyBookPayload {
-  id: number;
-  userId: number;
 }

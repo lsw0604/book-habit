@@ -1,10 +1,9 @@
 import type {
-  CreateMyBookResponse,
-  GetMyBooksResponse,
-  GetMyBookResponse,
-  UpdateMyBookResponse,
+  FormattedMyBook,
+  FormattedMyBooks,
   DeleteMyBookResponse,
-} from './interface/my.book.interface';
+  FormattedMyBookDetail,
+} from './interface';
 import {
   Get,
   Body,
@@ -19,14 +18,12 @@ import {
   Controller,
   ParseIntPipe,
   DefaultValuePipe,
-  BadRequestException,
 } from '@nestjs/common';
 import { MyBookStatus } from '@prisma/client';
 import { MyBookService } from './my-book.service';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { ResponseDto } from 'src/common/dto/response.dto';
-import { InvalidDatetimeException } from 'src/common/exceptions/time';
 import { DatetimeValidator } from 'src/common/utils/time/datetime-validator';
 import { CreateMyBookDto } from './dto/create.my.book.dto';
 import { UpdateMyBookDto } from './dto/update.my.book.dto';
@@ -41,29 +38,21 @@ export class MyBookController {
    *
    * @param {number} userId 현재 로그인한 사용자의 ID
    * @param {CreateMyBookDto} dto 책 생성에 필요한 데이터
-   * @returns {Promise<ResponseDto<CreateMyBookResponse>>} 생성된 MyBook 정보
+   * @returns {Promise<ResponseDto<FormattedMyBook>>} 생성된 MyBook 정보
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createMyBook(
     @UserDecorator('id') userId: number,
     @Body() dto: CreateMyBookDto,
-  ): Promise<ResponseDto<CreateMyBookResponse>> {
-    try {
-      const datetime: Date = DatetimeValidator.parse(dto.datetime);
-      const response: CreateMyBookResponse = await this.myBookService.createMyBook({
-        userId,
-        ...dto,
-        datetime,
-      });
-      return ResponseDto.created(response, '책 등록 성공');
-    } catch (error) {
-      if (error instanceof InvalidDatetimeException) {
-        throw error;
-      }
-
-      throw new BadRequestException('책 생성중에 오류가 발생했습니다.');
-    }
+  ): Promise<ResponseDto<FormattedMyBook>> {
+    const datetime: Date = DatetimeValidator.parse(dto.datetime);
+    const response: FormattedMyBook = await this.myBookService.createMyBook({
+      userId,
+      ...dto,
+      datetime,
+    });
+    return ResponseDto.created(response, '책 등록 성공');
   }
 
   /**
@@ -71,15 +60,15 @@ export class MyBookController {
    *
    * @param {number} userId 현재 로그인한 사용자의 ID
    * @param {number} id 조회할 MyBook ID
-   * @returns {Promise<ResponseDto<GetMyBookResponse>>} MyBook 상세 정보
+   * @returns {Promise<ResponseDto<FormattedMyBookDetail>>} MyBook 상세 정보
    */
   @Get('/:myBookId')
   @HttpCode(HttpStatus.OK)
   async getMyBook(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) id: number,
-  ): Promise<ResponseDto<GetMyBookResponse>> {
-    const response: GetMyBookResponse = await this.myBookService.getMyBook({ id, userId });
+  ): Promise<ResponseDto<FormattedMyBookDetail>> {
+    const response: FormattedMyBookDetail = await this.myBookService.getMyBook({ id, userId });
 
     return ResponseDto.success(response, '나의 책 정보 조회 성공');
   }
@@ -91,7 +80,7 @@ export class MyBookController {
    * @param {number} pageNumber 페이지 번호 (기본값: 1)
    * @param {MyBookStatus} status 필터링할 상태 (기본값: 'ALL')
    * @param {'desc' | 'asc'} orderBy 정렬 방식 (기본값: 'desc')
-   * @returns {Promise<ResponseDto<GetMyBooksResponse>>} 페이지네이션된 MyBook 목록
+   * @returns {Promise<ResponseDto<FormattedMyBooks>>} 페이지네이션된 MyBook 목록
    */
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -100,8 +89,8 @@ export class MyBookController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) pageNumber: number = 1,
     @Query('status') status: MyBookStatus | 'ALL' = 'ALL',
     @Query('order') orderBy: 'desc' | 'asc' = 'desc',
-  ): Promise<ResponseDto<GetMyBooksResponse>> {
-    const response: GetMyBooksResponse = await this.myBookService.getMyBooks({
+  ): Promise<ResponseDto<FormattedMyBooks>> {
+    const response: FormattedMyBooks = await this.myBookService.getMyBooks({
       userId,
       pageNumber,
       status,
@@ -117,7 +106,7 @@ export class MyBookController {
    * @param {number} userId 현재 로그인한 사용자의 ID
    * @param {number} id 업데이트할 MyBook ID
    * @param {UpdateMyBokDto} dto 업데이트할 데이터
-   * @returns {Promise<Response<UpdateMyBookResponse>>} 업데이트된 MyBook 정보
+   * @returns {Promise<Response<FormattedMyBookDetail>>} 업데이트된 MyBook 정보
    */
   @Patch('/:myBookId')
   @HttpCode(HttpStatus.OK)
@@ -125,8 +114,8 @@ export class MyBookController {
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) id: number,
     @Body() dto: UpdateMyBookDto,
-  ): Promise<ResponseDto<UpdateMyBookResponse>> {
-    const response: UpdateMyBookResponse = await this.myBookService.updateMyBook({
+  ): Promise<ResponseDto<FormattedMyBookDetail>> {
+    const response: FormattedMyBookDetail = await this.myBookService.updateMyBook({
       id,
       userId,
       ...dto,

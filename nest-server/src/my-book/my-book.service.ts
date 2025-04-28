@@ -1,28 +1,35 @@
 import type {
   FormattedMyBook,
+  FormattedMyBooks,
   FormattedMyBookDetail,
   MyBookWithRelations,
+  MyBooksWithRelations,
   CreateMyBookPayload,
-  CreateMyBookResponse,
   GetMyBookPayload,
-  GetMyBookResponse,
   GetMyBooksPayload,
-  GetMyBooksResponse,
   UpdateMyBookPayload,
-  UpdateMyBookResponse,
   DeleteMyBookPayload,
   DeleteMyBookResponse,
-  ValidateMyBookPayload,
-} from './interface/my.book.interface';
+} from './interface';
 import type { FormattedBook } from 'src/book/interface';
-
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { MyBook, Prisma } from '@prisma/client';
+import type { PaginationOptions } from 'src/common/utils/pagination.util';
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookService } from 'src/book/book.service';
 import { LoggerService } from 'src/common/logger/logger.service';
-import { PaginationOptions, PaginationUtil } from 'src/common/utils/pagination.util';
-import { NotFoundMyBookException } from './exceptions';
+import { NoFieldsToUpdateException } from 'src/common/exceptions';
+import { PaginationUtil } from 'src/common/utils/pagination.util';
+import {
+  NotFoundMyBookException,
+  AlreadyExistMyBookException,
+  MyBookForbiddenAccessException,
+} from './exceptions';
+import {
+  MY_BOOK_PAGE_SIZE,
+  MY_BOOK_INCLUDE_BOOK_BASIC,
+  MY_BOOK_INCLUDE_BOOK_DETAILS,
+} from './constant';
 
 /**
  * * MyBook 관련 기능을 담당하는 서비스
@@ -45,78 +52,58 @@ export class MyBookService {
    * @param {CreateMyBookPayload} payload - 책 생성에 필요한 데이터
    * @returns {Promise<CreateMyBookResponse>} 생성된 MyBook 정보
    */
-  public async createMyBook(payload: CreateMyBookPayload): Promise<CreateMyBookResponse> {
-    const { isbns, userId } = payload;
-    this.logger.log(`사용자 ${userId}가 새 책 등록 시도: ISBNs = ${isbns.join(', ')}`);
+  public async createMyBook(payload: CreateMyBookPayload): Promise<FormattedMyBook> {
+    const { isbns, userId, ...bookPayload } = payload;
 
-    // isbn을 갖고 있는 책이 DB에 있는지 검색
-    let bookId: number;
-    const existBook: FormattedBook | null = await this.bookService.findBookByISBN(isbns);
-
-    // 해당 책이 존재한다면
-    if (existBook) {
-      this.logger.log(`기존 책 발견: ${existBook.title} (ID: ${existBook.id})`);
-      bookId = existBook.id;
-    } else {
-      this.logger.log('기존 책을 찾을 수 없어 새로 등록합니다');
-      const registeredBook = await this.bookService.registerBook(payload);
-      bookId = registeredBook.id;
-    }
-
-    this.logger.log(`사용자 ${userId}의 MyBook 생성 시도: BookID = ${bookId}`);
-    const myBook = await this.prismaService.myBook.create({
-      data: {
-        userId,
-        bookId,
-      },
-      include: {
-        book: {
-          select: {
-            title: true,
-            thumbnail: true,
-          },
-        },
-      },
+    const { id: bookId }: FormattedBook = await this.bookService.findOrCreateBook({
+      isbns,
+      ...bookPayload,
     });
 
-    const { id: myBookId, book, rating, status } = myBook;
-    const { title, thumbnail } = book;
+    const include = MY_BOOK_INCLUDE_BOOK_BASIC;
 
-    this.logger.log(`MyBook 생성 성공: ID = ${myBookId}, 제목 = ${title}`);
+    try {
+      const myBook = await this.prismaService.myBook.create({
+        data: {
+          userId,
+          bookId,
+        },
+        include,
+      });
 
-    const formattedBook: FormattedMyBook = {
-      myBookId,
-      title,
-      thumbnail,
-      rating,
-      status,
-    };
-
-    return formattedBook;
+      return this.transformToFormatMyBook(myBook);
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+        throw new AlreadyExistMyBookException(userId, bookId);
+      }
+      throw err;
+    }
   }
 
   /**
    * * 특정 MyBook의 상세 정보를 조회합니다.
-   *
    * @param {GetMyBookPayload} payload - 조회할 MyBook ID와 사용자 ID
    * @returns {Promise<GetMyBookResponse>} MyBook 상세 정보
    */
-  public async getMyBook(payload: GetMyBookPayload): Promise<GetMyBookResponse> {
+  public async getMyBook(payload: GetMyBookPayload): Promise<FormattedMyBookDetail> {
     const { id, userId } = payload;
-    this.logger.log(`사용자 ${userId}가 MyBook ${id} 조회 시도`);
 
-    await this.validateMyBook({ id, userId });
+    try {
+      const myBook = await this.prismaService.myBook.findUniqueOrThrow({
+        where: {
+          id,
+          userId,
+        },
+        include: MY_BOOK_INCLUDE_BOOK_DETAILS,
+      });
 
-    const myBook = (await this.prismaService.myBook.findUnique({
-      where: {
-        id,
-        userId,
-      },
-      include: this.MY_BOOK_INCLUDE,
-    })) as MyBookWithRelations;
-
-    this.logger.log(`MyBook ${id} 조회 성공: 제목 = ${myBook.book?.title}`);
-    return this.transformToMyBookDetail(myBook);
+      return this.transformToMyBookDetail(myBook);
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+        await this.checkOwnershipAndThrowNotFound({ myBookId: id, userId });
+      }
+      throw err;
+    }
   }
 
   /**
@@ -125,15 +112,12 @@ export class MyBookService {
    * @param {GetMyBooksPayload} payload - 조회 조건 (사용자 ID, 상태, 페이지, 정렬)
    * @returns {Promise<GetMyBooksResponse>} 페이지네이션된 MyBook 목록
    */
-  public async getMyBooks(payload: GetMyBooksPayload): Promise<GetMyBooksResponse> {
-    const { userId, status, pageNumber, orderBy } = payload;
-    this.logger.log(
-      `사용자 ${userId}의 MyBook 목록 조회: 페이지 = ${pageNumber}, 정렬 = ${orderBy}, 상태 = ${status}`,
-    );
+  public async getMyBooks(payload: GetMyBooksPayload): Promise<FormattedMyBooks> {
+    const { userId, status, pageNumber } = payload;
 
     const paginationOptions: PaginationOptions = {
       pageNumber,
-      pageSize: this.PAGE_SIZE,
+      pageSize: MY_BOOK_PAGE_SIZE,
     };
 
     const { skip, take } = PaginationUtil.getSkipTake(paginationOptions);
@@ -142,45 +126,23 @@ export class MyBookService {
       userId,
       ...(status && status !== 'ALL' && { status }),
     };
+    const orderBy: Prisma.MyBookOrderByWithRelationInput = { createdAt: payload.orderBy };
+    const include = MY_BOOK_INCLUDE_BOOK_BASIC;
 
     const [totalCount, books] = await Promise.all([
       this.prismaService.myBook.count({ where }),
       this.prismaService.myBook.findMany({
         where,
-        select: {
-          id: true,
-          status: true,
-          rating: true,
-          book: {
-            select: {
-              title: true,
-              thumbnail: true,
-            },
-          },
-        },
+        include,
         skip,
         take,
-        orderBy: {
-          createdAt: orderBy,
-        },
+        orderBy,
       }),
     ]);
 
     const paginationMeta = PaginationUtil.getPaginationMeta(totalCount, paginationOptions);
 
-    this.logger.log(`MyBook 목록 조회 결과: ${books.length}개 항목, 총 ${totalCount}개 중`);
-
-    const formattedBooks: FormattedMyBook[] = books.map(
-      ({ id, status, rating, book: { title, thumbnail } }) => {
-        return {
-          myBookId: id,
-          title,
-          thumbnail,
-          status,
-          rating,
-        };
-      },
-    );
+    const formattedBooks = this.transformToFormatMyBooks(books);
 
     return {
       books: formattedBooks,
@@ -194,29 +156,34 @@ export class MyBookService {
    * @param {UpdateMyBookPayload} payload - 업데이트할 정보
    * @returns {Promise<UpdateMyBookResponse>} 업데이트된 MyBook 정보
    */
-  public async updateMyBook(payload: UpdateMyBookPayload): Promise<UpdateMyBookResponse> {
+  public async updateMyBook(payload: UpdateMyBookPayload): Promise<FormattedMyBookDetail> {
     const { id, userId, rating, status } = payload;
-    this.logger.log(
-      `사용자 ${userId}의 MyBook ${id} 업데이트 시도: rating=${rating}, status=${status}`,
-    );
 
-    await this.validateMyBook({ id, userId });
-
-    const updateData: Prisma.MyBookUpdateInput = {
+    const include = MY_BOOK_INCLUDE_BOOK_DETAILS;
+    const where: Prisma.MyBookWhereUniqueInput = { id, userId };
+    const data: Prisma.MyBookUpdateInput = {
       ...(rating !== undefined && { rating }),
       ...(status !== undefined && { status }),
     };
 
-    const updateMyBook = (await this.prismaService.myBook.update({
-      where: {
-        id,
-      },
-      data: updateData,
-      include: this.MY_BOOK_INCLUDE,
-    })) as MyBookWithRelations;
+    if (Object.keys(data).length === 0) {
+      throw new NoFieldsToUpdateException();
+    }
 
-    this.logger.log(`MyBook ${id} 업데이트 성공`);
-    return this.transformToMyBookDetail(updateMyBook);
+    try {
+      const updateMyBook = (await this.prismaService.myBook.update({
+        where,
+        data,
+        include,
+      })) as MyBookWithRelations;
+
+      return this.transformToMyBookDetail(updateMyBook);
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+        await this.checkOwnershipAndThrowNotFound({ myBookId: id, userId });
+      }
+      throw err;
+    }
   }
 
   /**
@@ -228,122 +195,46 @@ export class MyBookService {
    */
   public async deleteMyBook(payload: DeleteMyBookPayload): Promise<DeleteMyBookResponse> {
     const { id, userId } = payload;
-    this.logger.log(`사용자 ${userId}의 MyBook ${id} 삭제 시도`);
-
-    const myBook = await this.validateMyBook({ id, userId });
 
     try {
       await this.prismaService.$transaction(async (prisma) => {
-        this.logger.log(`MyBook ${id}의 독서 기록 삭제 시작`);
-        await prisma.myBookHistory.deleteMany({
+        // MY BOOK을 삭제하기전 MY BOOK과 연결된 REVIEW를 찾습니다.
+        const { id: myBookReviewId } = await prisma.myBookReview.findUnique({
           where: {
-            myBookId: myBook.id,
+            myBookId: id,
+          },
+          select: {
+            id: true,
           },
         });
 
-        this.logger.log(`MyBook ${id}의 리뷰 관련 데이터 삭제 시작`);
-        const reviews = await prisma.myBookReview.findMany({
-          where: { myBookId: myBook.id },
-          select: { id: true },
-        });
+        if (myBookReviewId) {
+          // REVIEW와 연결된 COMMENT들을 삭제합니다.
+          await prisma.reviewComment.deleteMany({ where: { myBookReviewId } });
 
-        const reviewIds = reviews.map((review) => review.id);
-        this.logger.log(`삭제할 리뷰 ID: ${reviewIds.join(', ')}`);
-
-        if (reviewIds.length > 0) {
-          await prisma.reviewLike.deleteMany({
-            where: {
-              myBookReviewId: { in: reviewIds },
-            },
-          });
-
-          await prisma.reviewComment.deleteMany({
-            where: {
-              myBookReviewId: { in: reviewIds },
-            },
-          });
+          // REVIEW와 연결된 LIKE들을 삭제합니다.
+          await prisma.reviewLike.deleteMany({ where: { myBookReviewId } });
         }
+        // MY BOOK과 연결된 REVIEW를 삭제합니다.
+        await prisma.myBookReview.delete({ where: { myBookId: id } });
 
-        await prisma.myBookReview.deleteMany({
-          where: { myBookId: myBook.id },
-        });
+        // MY BOOK과 연결된 HISTORY를 삭제합니다.
+        await prisma.myBookHistory.deleteMany({ where: { myBookId: id } });
 
-        this.logger.log(`MyBook ${id}의 태그 삭제 시작`);
-        await prisma.myBookTag.deleteMany({
-          where: { myBookId: myBook.id },
-        });
-
-        this.logger.log(`MyBook ${id} 삭제 시작`);
+        // MY BOOK을 삭제합니다.
         await prisma.myBook.delete({
-          where: { id: myBook.id },
+          where: { id, userId },
         });
       });
-
-      this.logger.log(`MyBook ${id} 삭제 완료`);
-    } catch (error) {
-      this.logger.error(`MyBook ${id} 삭제 중 오류 발생`, error.stack);
-      throw error;
+      return { id };
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
+        await this.checkOwnershipAndThrowNotFound({ myBookId: id, userId });
+      }
+      throw err;
     }
-
-    return { id: myBook.id };
   }
 
-  /**
-   * * 주어진 MyBook이 특정 사용자에게 속해있는지 확인합니다.
-   * * 권한이 없는 경우 UnauthorizedException을 발생시킵니다.
-   *
-   * @param {ValidateMyBookPayload} payload - 확인할 MyBook ID와 사용자 ID
-   * @returns {Promise<MyBook>} 유효한 MyBook 객체
-   * @throws {UnauthorizedException} 권한이 없는 경우
-   */
-  public async validateMyBook(payload: ValidateMyBookPayload): Promise<MyBook> {
-    const { id, userId } = payload;
-    this.logger.log(`MyBook ${id}에 대한 사용자 ${userId}의 권한 확인`);
-
-    const myBook: MyBook = await this.getMyBookById(id);
-
-    if (myBook.userId !== userId) {
-      this.logger.warn(
-        `권한 오류: 사용자 ${userId}는 MyBook ${id}에 접근할 수 없음 (소유자: ${myBook.userId})`,
-      );
-      throw new UnauthorizedException('해당 myBook에 대한 권한이 없습니다.');
-    }
-
-    return myBook;
-  }
-
-  /**
-   * * ID로 MyBook을 조회합니다.
-   *
-   * @param {number} id - 조회할 MyBook ID
-   * @returns {Promise<MyBook>} MyBook 객체
-   * @throws {NotFoundBookException} 해당 ID의 MyBook이 없는 경우
-   * @private
-   */
-  private async getMyBookById(id: number): Promise<MyBook> {
-    this.logger.log(`ID ${id}로 MyBook 조회`);
-
-    const myBook: MyBook = await this.prismaService.myBook.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!myBook) {
-      this.logger.warn(`MyBook ${id} 찾을 수 없음`);
-      throw new NotFoundMyBookException(id);
-    }
-
-    return myBook;
-  }
-
-  /**
-   * * MyBookWithRelations 객체를 FormattedMyBookDetail로 변환합니다.
-   *
-   * @param {MyBookWithRelations} myBook - 변환할 MyBook 객체
-   * @returns {FormattedMyBookDetail} 형식화된 MyBook 상세 정보
-   * @private
-   */
   private transformToMyBookDetail(myBook: MyBookWithRelations): FormattedMyBookDetail {
     return {
       id: myBook.id,
@@ -362,5 +253,68 @@ export class MyBookService {
         translators: myBook.book?.translators.map((item) => item.translator.name) || [],
       },
     };
+  }
+
+  private transformToFormatMyBook(myBook: MyBooksWithRelations): FormattedMyBook {
+    const { id, book, rating, status } = myBook;
+    const { title, thumbnail } = book;
+    return {
+      id,
+      title,
+      thumbnail,
+      rating,
+      status,
+    };
+  }
+
+  private transformToFormatMyBooks(myBooks: MyBooksWithRelations[]): FormattedMyBook[] {
+    return myBooks.map(({ id, status, rating, book: { title, thumbnail } }) => {
+      return {
+        id,
+        title,
+        thumbnail,
+        status,
+        rating,
+      };
+    });
+  }
+
+  /**
+   * * P2025 에러 발생 시, 리소스 존재 여부 및 소유권을 확인하여
+   * * 적절한 예외(NotFound or Forbidden)를 던집니다.
+   *
+   * @param resourceId - 확인하려는 MyBook의 ID
+   * @param requestingUserId - 작업을 요청한 사용자의 ID
+   * @private
+   * @throws {NotFoundMyBookException} 리소스가 존재하지 않을 때
+   * @throws {MyBookForbiddenAccessException} 리소스는 존재하지만 소유권이 없을 때
+   */
+  private async checkOwnershipAndThrowNotFound({
+    userId,
+    myBookId,
+  }: {
+    userId: number;
+    myBookId: number;
+  }): Promise<void> {
+    // userId 조건 없이 ID로만 조회
+    const existingRecord = await this.prismaService.myBook.findUnique({
+      where: { id: myBookId },
+      select: { id: true, userId: true }, // 소유자 ID 확인을 위해 userId 포함
+    });
+
+    if (existingRecord) {
+      // P2025 에러가 발생했지만, ID 조회 결과 레코드가 존재함
+      // -> userId가 맞지 않아 발생한 것 (Forbidden)
+      const ownerId = existingRecord.userId;
+      throw new MyBookForbiddenAccessException({
+        myBookId,
+        userId,
+        ownerId,
+      });
+    } else {
+      // P2025 에러가 발생했고, ID 조회 결과 레코드도 없음
+      // -> 정말로 존재하지 않는 리소스 (NotFound)
+      throw new NotFoundMyBookException(myBookId);
+    }
   }
 }
