@@ -9,7 +9,7 @@ import {
   InvalidDatetimeException,
   FutureDateException,
   DateRangeException,
-} from 'src/common/exceptions/time';
+} from 'src/common/exceptions';
 
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrBefore);
