@@ -30,38 +30,6 @@ import { NotFoundMyBookException } from './exceptions';
  */
 @Injectable()
 export class MyBookService {
-  private readonly PAGE_SIZE = 10;
-  private readonly MY_BOOK_INCLUDE = {
-    book: {
-      select: {
-        title: true,
-        thumbnail: true,
-        contents: true,
-        publisher: true,
-        datetime: true,
-        url: true,
-        authors: {
-          select: {
-            author: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-        translators: {
-          select: {
-            translator: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    },
-  } as const;
-
   constructor(
     private readonly prismaService: PrismaService,
     private readonly bookService: BookService,
