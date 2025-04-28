@@ -65,10 +65,10 @@ export class MyBookHistoryController {
   @HttpCode(HttpStatus.OK)
   async getMyBookHistories(
     @UserDecorator('id') userId: number,
-    @Param('myBookId', ParseIntPipe) id: number,
+    @Param('myBookId', ParseIntPipe) myBookId: number,
   ): Promise<ResponseDto<MyBookHistory[]>> {
-    const myBookHistories = await this.myBookHistoryService.getMyBookHistories({
-      id,
+    const myBookHistories: MyBookHistory[] = await this.myBookHistoryService.getMyBookHistories({
+      myBookId,
       userId,
     });
 

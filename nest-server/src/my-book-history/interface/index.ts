@@ -72,10 +72,11 @@ export interface DeleteMyBookHistoryPayload {
  * 특정 책에 대한 독서 기록 목록을 조회하기 위한 Payload Interface입니다.
  *
  * @interface GetMyBookHistoriesPayload
- * @property {number} id - 조회할 MyBook의 ID
+ * @property {number} myBookId - 조회할 MyBook의 ID (이전 'id'에서 변경됨)
  * @property {number} userId - 사용자 ID (권한 확인용)
  */
 export interface GetMyBookHistoriesPayload {
-  id: number;
+  // 'id' 필드 이름을 'myBookId'로 변경하여 명확성 향상
+  myBookId: number;
   userId: number;
 }

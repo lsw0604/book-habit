@@ -66,13 +66,10 @@ export class MyBookHistoryService {
    * @returns {Promise<MyBookHistory[]>} 도서 읽기 기록 목록
    */
   public async getMyBookHistories(payload: GetMyBookHistoriesPayload): Promise<MyBookHistory[]> {
-    const { id, userId } = payload;
-    this.logger.log(`도서 읽기 기록 목록 조회: 도서 ID ${id}, 사용자 ID ${userId}`);
+    const { myBookId, userId } = payload;
 
-    await this.myBookService.validateMyBook({
-      id,
-      userId,
-    });
+    await this.validateMyBookOwnerShip(myBookId, userId);
+    const where: Prisma.MyBookHistoryWhereInput = { myBookId };
 
     const myBookHistories = await this.findMyBookHistories(id);
 
