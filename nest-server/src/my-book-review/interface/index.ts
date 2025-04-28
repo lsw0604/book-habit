@@ -8,28 +8,28 @@ export interface FormattedMyBookReview extends MyBookReview {
 }
 
 export interface CreateMyBookReviewPayload {
-  id: number;
   userId: number;
+  myBookId: number;
   review: string;
   isPublic: boolean;
 }
 
 export interface GetMyBookReviewPayload {
-  id: number;
   userId: number;
+  myBookId: number;
 }
 
 export interface UpdateMyBookReviewPayload {
-  id: number;
   userId: number;
+  myBookReviewId: number;
   isPublic?: boolean;
   review?: string;
 }
 
 export interface DeleteMyBookReviewPayload {
-  id: number;
   userId: number;
+  myBookReviewId: number;
 }
-export interface DeleteMyBooKReviewResponse {
-  id: number;
-}
+export type DeleteMyBookReviewResponse = {
+  myBookReviewId: number;
+};

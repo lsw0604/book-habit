@@ -40,7 +40,7 @@ export class MyBookHistoryService {
   public async createMyBookHistory(payload: CreateMyBookHistoryPayload): Promise<MyBookHistory> {
     const { userId, myBookId, ...rest } = payload;
 
-    await this.validateMyBookOwnerShip(myBookId, userId);
+    await this.validateMyBookOwnership(myBookId, userId);
 
     const myBookHistory = await this.prismaService.myBookHistory.create({
       data: {
@@ -63,7 +63,7 @@ export class MyBookHistoryService {
   public async getMyBookHistories(payload: GetMyBookHistoriesPayload): Promise<MyBookHistory[]> {
     const { myBookId, userId } = payload;
 
-    await this.validateMyBookOwnerShip(myBookId, userId);
+    await this.validateMyBookOwnership(myBookId, userId);
     const where: Prisma.MyBookHistoryWhereInput = { myBookId };
 
     const myBookHistories: MyBookHistory[] = await this.prismaService.myBookHistory.findMany({
@@ -130,7 +130,7 @@ export class MyBookHistoryService {
   public async deleteMyBookHistory(payload: DeleteMyBookHistoryPayload): Promise<MyBookHistory> {
     const { id, userId } = payload;
 
-    await this.validateMyBookOwnerShip(id, userId);
+    await this.validateMyBookOwnership(id, userId);
     const where: Prisma.MyBookHistoryWhereUniqueInput = { id };
     const deleteMyBookHistory = await this.prismaService.myBookHistory.delete({
       where,
@@ -149,7 +149,7 @@ export class MyBookHistoryService {
    * @throws {NotFoundMyBookException} MyBook 리소스가 존재하지 않을 때
    * @throws {MyBookForbiddenAccessException} MyBook 리소스는 존재하지만 소유권이 없을 때
    */
-  private async validateMyBookOwnerShip(myBookId: number, userId: number) {
+  private async validateMyBookOwnership(myBookId: number, userId: number) {
     try {
       await this.prismaService.myBook.findUniqueOrThrow({
         where: { id: myBookId, userId },

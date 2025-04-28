@@ -1,4 +1,4 @@
-import type { FormattedMyBookReview, DeleteMyBooKReviewResponse } from './interface';
+import type { FormattedMyBookReview, DeleteMyBookReviewResponse } from './interface';
 import {
   Get,
   Body,
@@ -28,11 +28,11 @@ export class MyBookReviewController {
   @HttpCode(HttpStatus.CREATED)
   async createMyBookReview(
     @UserDecorator('id') userId: number,
-    @Param('myBookId', ParseIntPipe) id: number,
+    @Param('myBookId', ParseIntPipe) myBookId: number,
     @Body() dto: CreateMyBookReviewDto,
   ): Promise<ResponseDto<FormattedMyBookReview>> {
     const response: FormattedMyBookReview = await this.myBookReviewService.createMyBookReview({
-      id,
+      myBookId,
       userId,
       ...dto,
     });
@@ -44,10 +44,10 @@ export class MyBookReviewController {
   @HttpCode(HttpStatus.OK)
   async getMyBookReview(
     @UserDecorator('id') userId: number,
-    @Param('myBookId', ParseIntPipe) id: number,
+    @Param('myBookId', ParseIntPipe) myBookId: number,
   ): Promise<ResponseDto<FormattedMyBookReview>> {
     const response: FormattedMyBookReview = await this.myBookReviewService.getMyBookReview({
-      id,
+      myBookId,
       userId,
     });
 
@@ -58,11 +58,11 @@ export class MyBookReviewController {
   @HttpCode(HttpStatus.OK)
   async updateMyBookReview(
     @UserDecorator('id') userId: number,
-    @Param('myBookReviewId', ParseIntPipe) id: number,
+    @Param('myBookReviewId', ParseIntPipe) myBookReviewId: number,
     @Body() dto: UpdateMyBookReviewDto,
   ): Promise<ResponseDto<FormattedMyBookReview>> {
     const response: FormattedMyBookReview = await this.myBookReviewService.updateMyBookReview({
-      id,
+      myBookReviewId,
       userId,
       ...dto,
     });
@@ -74,10 +74,10 @@ export class MyBookReviewController {
   @HttpCode(HttpStatus.OK)
   async deleteMyBookReview(
     @UserDecorator('id') userId: number,
-    @Param('myBookReviewId', ParseIntPipe) id: number,
-  ): Promise<ResponseDto<DeleteMyBooKReviewResponse>> {
-    const response: DeleteMyBooKReviewResponse = await this.myBookReviewService.deleteMyBookReview({
-      id,
+    @Param('myBookReviewId', ParseIntPipe) myBookReviewId: number,
+  ): Promise<ResponseDto<DeleteMyBookReviewResponse>> {
+    const response: DeleteMyBookReviewResponse = await this.myBookReviewService.deleteMyBookReview({
+      myBookReviewId,
       userId,
     });
 
