@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -22,6 +23,7 @@ import { MyBookHistory } from '@prisma/client';
  * 도서 읽기 기록 관리를 위한 컨트롤러
  * 사용자의 독서 기록을 생성, 조회, 수정, 삭제하는
  * 엔드포인트를 제공합니다.
+ * TODO 수정
  */
 @UseGuards(AccessGuard)
 @Controller('/api/my-book-history')
@@ -37,7 +39,7 @@ export class MyBookHistoryController {
    * @returns 생성된 도서 읽기 기록
    */
   @Post('/:myBookId')
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async createMyBookHistory(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
@@ -49,7 +51,7 @@ export class MyBookHistoryController {
       ...dto,
     });
 
-    return ResponseDto.created<MyBookHistory>(myBookHistory, '도서 읽기 기록이 생성되었습니다.');
+    return ResponseDto.created(myBookHistory, '도서 읽기 기록이 생성되었습니다.');
   }
 
   /**
@@ -60,7 +62,7 @@ export class MyBookHistoryController {
    * @returns 도서 읽기 기록 목록
    */
   @Get('/:myBookId')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getMyBookHistories(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) id: number,
@@ -70,10 +72,7 @@ export class MyBookHistoryController {
       userId,
     });
 
-    return ResponseDto.success<MyBookHistory[]>(
-      myBookHistories,
-      '도서 읽기 기록 목록을 조회했습니다.',
-    );
+    return ResponseDto.success(myBookHistories, '도서 읽기 기록 목록을 조회했습니다.');
   }
 
   /**
@@ -85,7 +84,7 @@ export class MyBookHistoryController {
    * @returns 수정된 도서 읽기 기록
    */
   @Put('/:myBookHistoryId')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async updateMyBookHistory(
     @UserDecorator('id') userId: number,
     @Param('myBookHistoryId', ParseIntPipe) id: number,
@@ -97,7 +96,7 @@ export class MyBookHistoryController {
       ...dto,
     });
 
-    return ResponseDto.success<MyBookHistory>(updatedHistory, '도서 읽기 기록이 수정되었습니다.');
+    return ResponseDto.success(updatedHistory, '도서 읽기 기록이 수정되었습니다.');
   }
 
   /**
@@ -108,7 +107,7 @@ export class MyBookHistoryController {
    * @returns 삭제된 도서 읽기 기록
    */
   @Delete('/:myBookHistoryId')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async deleteMyBookHistory(
     @UserDecorator('id') userId: number,
     @Param('myBookHistoryId', ParseIntPipe) id: number,
@@ -118,6 +117,6 @@ export class MyBookHistoryController {
       userId,
     });
 
-    return ResponseDto.success<MyBookHistory>(deletedHistory, '도서 읽기 기록이 삭제되었습니다.');
+    return ResponseDto.success(deletedHistory, '도서 읽기 기록이 삭제되었습니다.');
   }
 }
