@@ -17,6 +17,7 @@ import {
   NoFieldsToUpdateException,
   NotFoundMyBookReviewException,
 } from './exceptions';
+import { MY_BOOK_REVIEW_SELECT_WITH_COUNTS } from './constants';
 
 @Injectable()
 export class MyBookReviewService {
@@ -81,7 +82,7 @@ export class MyBookReviewService {
       );
       throw new AlreadyExistMyBookReviewException(myBookId);
     } else {
-      const select = this.MY_BOOK_REVIEW_COUNT;
+      const select = MY_BOOK_REVIEW_SELECT_WITH_COUNTS;
 
       // 리뷰 생성
       const myBookReview: FormattedMyBookReview = await this.prismaService.myBookReview.create({
@@ -198,7 +199,7 @@ export class MyBookReviewService {
     this.logger.debug(`리뷰 수정 권한 확인 완료`);
 
     const where: Prisma.MyBookReviewWhereUniqueInput = { id };
-    const select = this.MY_BOOK_REVIEW_COUNT;
+    const select = MY_BOOK_REVIEW_SELECT_WITH_COUNTS;
     const data: Prisma.MyBookReviewUpdateInput = {
       ...(isPublic !== undefined && { isPublic }),
       ...(review !== undefined && { review }),
@@ -310,7 +311,7 @@ export class MyBookReviewService {
     if (!myBookId) return null;
     this.logger.debug(`내부 조회(By MyBookID) : ${myBookId} 검색`);
     const where: Prisma.MyBookReviewWhereUniqueInput = { myBookId };
-    const select = this.MY_BOOK_REVIEW_COUNT;
+    const select = MY_BOOK_REVIEW_SELECT_WITH_COUNTS;
 
     const myBookReview: FormattedMyBookReview | null =
       await this.prismaService.myBookReview.findUnique({
@@ -336,7 +337,7 @@ export class MyBookReviewService {
     const where: Prisma.MyBookReviewWhereUniqueInput = {
       id: myBookReviewId,
     };
-    const select = this.MY_BOOK_REVIEW_COUNT;
+    const select = MY_BOOK_REVIEW_SELECT_WITH_COUNTS;
     const myBookReview: FormattedMyBookReview | null =
       await this.prismaService.myBookReview.findUnique({
         where,
