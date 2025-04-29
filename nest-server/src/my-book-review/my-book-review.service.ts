@@ -7,9 +7,10 @@ import type {
   FormattedMyBookReview,
 } from './interface';
 
-import { MyBook, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NoFieldsToUpdateException } from 'src/common/exceptions';
 import {
@@ -17,13 +18,13 @@ import {
   MyBookReviewForbiddenAccessException,
   NotFoundMyBookReviewException,
 } from './exceptions';
-import { MyBookForbiddenAccessException, NotFoundMyBookException } from 'src/my-book/exceptions';
 import { MY_BOOK_REVIEW_SELECT_WITH_COUNTS } from './constants';
 
 @Injectable()
 export class MyBookReviewService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly myBookService: MyBookService,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext(MyBookReviewService.name);
@@ -45,7 +46,7 @@ export class MyBookReviewService {
     payload: CreateMyBookReviewPayload,
   ): Promise<FormattedMyBookReview> {
     const { isPublic, myBookId, review, userId } = payload;
-    await this.validateMyBookOwnership(myBookId, userId);
+    await this.myBookService.validateMyBookOwnership(myBookId, userId);
 
     try {
       const myBookReview: FormattedMyBookReview = await this.prismaService.myBookReview.create({
@@ -77,7 +78,7 @@ export class MyBookReviewService {
   public async getMyBookReview(payload: GetMyBookReviewPayload): Promise<FormattedMyBookReview> {
     const { myBookId, userId } = payload;
 
-    await this.validateMyBookOwnership(myBookId, userId);
+    await this.myBookService.validateMyBookOwnership(myBookId, userId);
     const where: Prisma.MyBookReviewWhereUniqueInput = { id: myBookId };
     const myBookReview = await this.prismaService.myBookReview.findUnique({
       where,
@@ -173,36 +174,6 @@ export class MyBookReviewService {
   }
 
   /**
-   * * 주어진 MyBook ID가 존재하는지, 그리고 해당 사용자의 소유인지 확인합니다.
-   * * 소유권이 없거나 MyBook이 존재하지 않으면 예외를 던집니다.
-   *
-   * @param {number} myBookId - 확인할 MyBook의 ID
-   * @param {number} userId - 작업을 요청한 사용자의 ID
-   * @private
-   * @throws {NotFoundMyBookException} MyBook 리소스가 존재하지 않을 때
-   * @throws {MyBookForbiddenAccessException} MyBook 리소스는 존재하지만 소유권이 없을 때
-   */
-  private async validateMyBookOwnership(myBookId: number, userId: number) {
-    const where: Prisma.MyBookWhereUniqueInput = { id: myBookId };
-
-    const myBook: Pick<MyBook, 'id' | 'userId'> = await this.prismaService.myBook.findUnique({
-      where,
-      select: {
-        id: true,
-        userId: true,
-      },
-    });
-
-    if (!myBook) {
-      throw new NotFoundMyBookException(myBookId);
-    }
-    const ownerId = myBook.userId;
-    if (ownerId !== userId) {
-      throw new MyBookForbiddenAccessException({ myBookId, ownerId, userId });
-    }
-  }
-
-  /**
    * * 주어진 MyBookReview ID가 존재하는지, 그리고 연관된 MyBook이 해당 사용자의 소유인지 확인합니다.
    * * 소유권이 없거나 Review가 존재하지 않으면 예외를 던집니다.
    *
@@ -227,7 +198,7 @@ export class MyBookReviewService {
     });
 
     if (!myBookReview) {
-      throw new NotFoundMyBookReviewException({ myBookReviewId });
+      throw new NotFoundMyBookReviewException(myBookReviewId);
     }
     const ownerId = myBookReview.myBook.userId;
     if (ownerId !== userId) {

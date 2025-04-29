@@ -8,7 +8,7 @@ export class MyBookReviewForbiddenAccessException extends ForbiddenException {
       userId,
       ownerId,
       myBookReviewId,
-      errorCode: 'MY_BOOK_REVIEW_ACCESS_FORBIDDEN',
+      errorCode: 'MY_BOOK_REVIEW_FORBIDDEN_ACCESS',
     };
 
     super({
