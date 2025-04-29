@@ -1,168 +1,91 @@
-import type {
-  ReviewLike,
-  CreateReviewLikePayload,
-  GetReviewLikeByIdPayload,
-  ValidateReviewLikePayload,
-  FindUserReviewLikePayload,
-  DeleteReviewLikePayload,
-  ToggleReviewLIkePayload,
-  ResponseToggleReviewLike,
-} from './interface';
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { MyBookReviewService } from 'src/my-book-review/my-book-review.service';
+import type { ToggleReviewLikePayload, ResponseToggleReviewLike } from './interface';
+import { Injectable } from '@nestjs/common';
+import { ReviewLike } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { NotFoundMyBookReviewException } from 'src/my-book-review/exceptions';
+import { SelfReviewLikeForbiddenAccessException } from './exceptions';
 
 @Injectable()
 export class ReviewLikeService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly myBookReviewService: MyBookReviewService,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext(ReviewLikeService.name);
   }
 
+  /**
+   * * 특정 리뷰에 대한 사용자의 '좋아요' 상태를 토글합니다.
+   * * 이미 좋아요를 눌렀다면 취소하고, 누르지 않았다면 생성합니다.
+   * * 자기 자신의 리뷰에는 '좋아요'를 누를 수 없습니다.
+   *
+   * @param {ToggleReviewLIkePayload} payload - 토글 작업에 필요한 정보
+   * @param {number} payload.userId - '좋아요'를 누르는 사용자의 ID
+   * @param {number} payload.myBookReviewId - '좋아요' 대상 리뷰의 ID
+   * @returns {Promise<ResponseToggleReviewLike>} - 토글 결과
+   * @throws {NotFoundMyBookReviewException} 대상 리뷰를 찾을 수 없을 때 발생
+   * @throws {SelfReviewLikeForbiddenAccessException} 사용자가 자신의 리뷰에 '좋아요'를 시도할 때 발생
+   */
   public async toggleReviewLike(
-    payload: ToggleReviewLIkePayload,
+    payload: ToggleReviewLikePayload,
   ): Promise<ResponseToggleReviewLike> {
     const { userId, myBookReviewId } = payload;
-    const myBookReview = await this.myBookReviewService.getMyBookReviewById({ id: myBookReviewId });
-    const existingLike = await this.findUserReviewLike({
-      userId,
-      myBookReviewId,
-    });
+    const result: ResponseToggleReviewLike = await this.prismaService.$transaction(
+      async (prisma) => {
+        const myBookReview = await prisma.myBookReview.findUnique({
+          where: { id: myBookReviewId },
+          select: {
+            myBook: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+        });
 
-    if (existingLike) {
-      const deletedLike = await this.deleteReviewLike({
-        id: existingLike.id,
-        userId,
-      });
+        if (!myBookReview) {
+          throw new NotFoundMyBookReviewException(myBookReviewId);
+        }
 
-      return { action: 'deleted', reviewLike: deletedLike };
-    } else {
-      const createdLike = await this.createReviewLike({
-        myBookReviewId: myBookReview.id,
-        userId,
-      });
+        if (myBookReview.myBook.userId === userId) {
+          throw new SelfReviewLikeForbiddenAccessException(myBookReviewId, userId);
+        }
 
-      return { action: 'created', reviewLike: createdLike };
-    }
-  }
+        const reviewLike: ReviewLike = await prisma.reviewLike.findUnique({
+          where: {
+            userId_myBookReviewId: {
+              myBookReviewId,
+              userId,
+            },
+          },
+        });
 
-  /**
-   * * ReviewLikeID값으로 ReviewLike를 찾습니다.
-   *
-   * @param payload - 좋아요를 찾기 위해 필요한 페이로드 (ReviewID)
-   * @returns {Promise<ReviewLike>}
-   * @throws {NotFoundException}
-   */
-  public async getReviewLikeById(payload: GetReviewLikeByIdPayload): Promise<ReviewLike> {
-    const { id } = payload;
-    this.logger.log(`리뷰 좋아요 조회 시작: ID ${id}`);
+        if (reviewLike) {
+          const deleteLike: ReviewLike = await prisma.reviewLike.delete({
+            where: { userId_myBookReviewId: { myBookReviewId, userId } },
+          });
 
-    const reviewLike = await this.prismaService.reviewLike.findUnique({
-      where: {
-        id,
+          return {
+            reviewLike: deleteLike,
+            action: 'deleted' as const,
+          };
+        } else {
+          const createLike: ReviewLike = await prisma.reviewLike.create({
+            data: {
+              myBookReviewId,
+              userId,
+            },
+          });
+
+          return {
+            reviewLike: createLike,
+            action: 'created' as const,
+          };
+        }
       },
-    });
-
-    if (!reviewLike) {
-      this.logger.warn(`해당 ReviewLike ID를 가진 좋아요를 찾을 수 없습니다.`);
-      throw new NotFoundException('해당 ReviewLike ID를 가진 좋아요를 찾을 수 없습니다.');
-    }
-
-    return reviewLike;
-  }
-
-  /**
-   * * MyBookReviewID값과 UserID갑으로 좋아요를 생성합니다.
-   *
-   * @param payload - 좋아요를 생성하기 위해 필요한 페이로드 (MyBookReviewID, UserID)
-   * @returns {Promise<ReviewLike>}
-   * @throws {NotFoundException}
-   */
-  private async createReviewLike(payload: CreateReviewLikePayload): Promise<ReviewLike> {
-    const { userId, myBookReviewId } = payload;
-    this.logger.log(`좋아요 생성 시작: 사용자 ID ${userId}, 리뷰 ID ${myBookReviewId}`);
-
-    const reviewLike = await this.prismaService.reviewLike.create({
-      data: {
-        userId,
-        myBookReviewId,
-      },
-    });
-
-    this.logger.log('생성 완료');
-    return reviewLike;
-  }
-
-  /**
-   * * ReviewID값과 UserID값으로 좋아요를 삭제합니다.
-   *
-   * @param payload - 좋아요를를 삭제하기 위해 필요한 페이로드 (ReviewID, UserID)
-   * @returns {Promise<ReviewLike>}
-   * @throws {UnauthorizedException}
-   */
-  private async deleteReviewLike(payload: DeleteReviewLikePayload): Promise<ReviewLike> {
-    const { id, userId } = payload;
-    this.logger.log(`좋아요 삭제 시작 : 사용자 ID ${userId}, 리뷰 ID ${id}`);
-    const reviewLike = await this.validateReviewLike({
-      id,
-      userId,
-    });
-
-    const deletedReviewLike = await this.prismaService.reviewLike.delete({
-      where: {
-        userId: reviewLike.userId,
-        id: reviewLike.id,
-      },
-    });
-    this.logger.log('삭제 완료');
-    return deletedReviewLike;
-  }
-
-  /**
-   * * 특정 사용자가 해당 도서 리뷰에 등록한 좋아요를 찾습니다.
-   *
-   * @param payload - 좋아요 확인에 필요한 페이로드 (MyBookReviewID, UserID)
-   * @returns {Promise<ReviewLike | null>} - 좋아요 객체 또는 없을 경우 null
-   */
-  private async findUserReviewLike(payload: FindUserReviewLikePayload): Promise<ReviewLike | null> {
-    const { myBookReviewId, userId } = payload;
-    this.logger.log(`사용자 ${userId}의 리뷰 ${myBookReviewId} 좋아요 조회 시작`);
-
-    const reviewLike = await this.prismaService.reviewLike.findFirst({
-      where: {
-        userId,
-        myBookReviewId,
-      },
-    });
-
-    this.logger.log(
-      `사용자 ${userId}의 리뷰 ${myBookReviewId} 좋아요 조회 결과: ${reviewLike ? '있음' : '없음'}`,
     );
 
-    return reviewLike;
-  }
-
-  /**
-   * * 해당 좋아요에 대한 수정/삭제 권한을 가진 유저인지 확인합니다.
-   *
-   * @param payload - 좋아요에 대한 권한을 확인을 위한 페이로드 (ReviewLikeID, UserID)
-   * @returns {Promise<ReviewLike>}
-   * @throws {UnauthorizedException}
-   */
-  private async validateReviewLike(payload: ValidateReviewLikePayload): Promise<ReviewLike> {
-    const { userId, id } = payload;
-    this.logger.log('권한 검증을 시작합니다.');
-    const reviewLike = await this.getReviewLikeById({ id });
-
-    if (reviewLike.userId !== userId) {
-      this.logger.warn('해당 좋아요에 대한 권한이 없습니다.');
-      throw new UnauthorizedException('해당 좋아요에 대한 권한이 없습니다.');
-    }
-
-    return reviewLike;
+    return result;
   }
 }
