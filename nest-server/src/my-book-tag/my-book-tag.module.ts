@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TagService } from './tag.service';
 import { MyBookTagService } from './my-book-tag.service';
 import { MyBookTagController } from './my-book-tag.controller';
+import { LoggerService } from 'src/common/logger/logger.service';
+import { TagModule } from 'src/tag/tag.module';
 import { MyBookModule } from 'src/my-book/my-book.module';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
-  imports: [MyBookModule],
-  providers: [MyBookTagService, TagService, PrismaService],
+  imports: [TagModule, MyBookModule],
+  providers: [MyBookTagService, LoggerService],
   controllers: [MyBookTagController],
 })
 export class MyBookTagModule {}

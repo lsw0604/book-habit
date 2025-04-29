@@ -1,20 +1,19 @@
 import type {
-  PublicTag,
+  ResponseCreateMyBookTag,
   ResponseDeleteMyBookTag,
-  ResponseMyBookTag,
-} from './interface/my.book.tag.interface';
+  ResponseGetMyBookTag,
+} from './interface';
 import {
+  Get,
   Body,
-  Controller,
+  Post,
+  Param,
   Delete,
   HttpCode,
-  Param,
-  ParseIntPipe,
-  Post,
-  Get,
   UseGuards,
-  Query,
-  DefaultValuePipe,
+  Controller,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { MyBookTagService } from './my-book-tag.service';
 import { AccessGuard } from 'src/auth/guard/access.guard';
@@ -22,57 +21,52 @@ import { ResponseDto } from 'src/common/dto/response.dto';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { CreateMyBookTagDto } from './dto/create.my.book.tag.dto';
 
+@UseGuards(AccessGuard)
 @Controller('/api/my-book-tag')
 export class MyBookTagController {
   constructor(private myBookTagService: MyBookTagService) {}
 
-  @Get('/popular')
-  @HttpCode(200)
-  async getPopularTags(
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number = 20,
-  ): Promise<ResponseDto<PublicTag[]>> {
-    const response: PublicTag[] = await this.myBookTagService.getPopularTags({ limit });
-    return ResponseDto.success<PublicTag[]>(response, '인기 태그 조회 성공');
+  @Get('/:myBookId')
+  @HttpCode(HttpStatus.OK)
+  async getMyBookTag(
+    @UserDecorator('id') userId: number,
+    @Param('myBookId', ParseIntPipe) myBookId: number,
+  ): Promise<ResponseDto<ResponseGetMyBookTag>> {
+    const response: ResponseGetMyBookTag = await this.myBookTagService.getMyBookTag({
+      myBookId,
+      userId,
+    });
+
+    return ResponseDto.success(response, 'MyBookTag 조회 성공');
   }
 
-  @Get('/search')
-  @HttpCode(200)
-  async getSearchTags(
-    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number = 5,
-    @Query('query') query: string,
-  ): Promise<ResponseDto<PublicTag[]>> {
-    const response: PublicTag[] = await this.myBookTagService.getSearchTags({ limit, query });
-    return ResponseDto.success<PublicTag[]>(response, '태그 검색 성공');
-  }
-
-  @UseGuards(AccessGuard)
   @Post('/:myBookId')
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async createMyBookTag(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
     @Body() dto: CreateMyBookTagDto,
-  ): Promise<ResponseDto<ResponseMyBookTag>> {
-    const response: ResponseMyBookTag = await this.myBookTagService.createMyBookTag({
+  ): Promise<ResponseDto<ResponseCreateMyBookTag>> {
+    const response: ResponseCreateMyBookTag = await this.myBookTagService.createMyBookTag({
       userId,
       myBookId,
       ...dto,
     });
 
-    return ResponseDto.created<ResponseMyBookTag>(response, 'MyBookTag 생성 성공');
+    return ResponseDto.created(response, 'MyBookTag 생성 성공');
   }
 
-  @UseGuards(AccessGuard)
   @Delete('/:myBookTagId')
+  @HttpCode(HttpStatus.OK)
   async deleteMyBookTag(
     @UserDecorator('id') userId: number,
-    @Param('myBookTagId', ParseIntPipe) id: number,
+    @Param('myBookTagId', ParseIntPipe) myBookTagId: number,
   ): Promise<ResponseDto<ResponseDeleteMyBookTag>> {
     const response: ResponseDeleteMyBookTag = await this.myBookTagService.deleteMyBookTag({
-      id,
       userId,
+      myBookTagId,
     });
 
-    return ResponseDto.success<ResponseDeleteMyBookTag>(response, 'MyBookTag 삭제 성공');
+    return ResponseDto.success(response, 'MyBookTag 삭제 성공');
   }
 }
