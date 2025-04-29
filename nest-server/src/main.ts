@@ -9,11 +9,11 @@ import { OmitPropertyInterceptor } from './common/interceptors/omit-property.int
 import { SetBearerHeaderInterceptor } from './common/interceptors/set-bearer-header.interceptor';
 import { CookieInterceptor } from './common/interceptors/cookie.interceptor';
 
-import { VALIDATION_PIPE_CONFIG } from './constant/main-codes.constant';
-
 async function setUpMiddleware(app: INestApplication) {
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe(VALIDATION_PIPE_CONFIG));
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }),
+  );
 }
 
 async function setUpInterceptor(app: INestApplication) {
