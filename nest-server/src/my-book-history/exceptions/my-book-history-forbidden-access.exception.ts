@@ -8,7 +8,7 @@ export class MyBookHistoryForbiddenAccessException extends ForbiddenException {
       userId,
       ownerId,
       myBookHistoryId,
-      errorCode: 'MY_BOOK_HISTORY_ACCESS_FORBIDDEN',
+      errorCode: 'MY_BOOK_HISTORY_FORBIDDEN_ACCESS',
     };
 
     super({

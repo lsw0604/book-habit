@@ -7,18 +7,19 @@ import type {
 import { MyBookHistory, Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { MyBookService } from 'src/my-book/my-book.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NoFieldsToUpdateException } from 'src/common/exceptions';
 import {
   MyBookHistoryForbiddenAccessException,
   NotFoundMyBookHistoryException,
 } from './exceptions';
-import { MyBookForbiddenAccessException, NotFoundMyBookException } from 'src/my-book/exceptions';
 
 @Injectable()
 export class MyBookHistoryService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly myBookService: MyBookService,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext(MyBookHistoryService.name);
@@ -40,7 +41,7 @@ export class MyBookHistoryService {
   public async createMyBookHistory(payload: CreateMyBookHistoryPayload): Promise<MyBookHistory> {
     const { userId, myBookId, ...rest } = payload;
 
-    await this.validateMyBookOwnership(myBookId, userId);
+    await this.myBookService.validateMyBookOwnership(myBookId, userId);
 
     const myBookHistory = await this.prismaService.myBookHistory.create({
       data: {
@@ -63,7 +64,7 @@ export class MyBookHistoryService {
   public async getMyBookHistories(payload: GetMyBookHistoriesPayload): Promise<MyBookHistory[]> {
     const { myBookId, userId } = payload;
 
-    await this.validateMyBookOwnership(myBookId, userId);
+    await this.myBookService.validateMyBookOwnership(myBookId, userId);
     const where: Prisma.MyBookHistoryWhereInput = { myBookId };
 
     const myBookHistories: MyBookHistory[] = await this.prismaService.myBookHistory.findMany({
@@ -130,46 +131,13 @@ export class MyBookHistoryService {
   public async deleteMyBookHistory(payload: DeleteMyBookHistoryPayload): Promise<MyBookHistory> {
     const { id, userId } = payload;
 
-    await this.validateMyBookOwnership(id, userId);
+    await this.validateHistoryOwnership(id, userId);
     const where: Prisma.MyBookHistoryWhereUniqueInput = { id };
     const deleteMyBookHistory = await this.prismaService.myBookHistory.delete({
       where,
     });
 
     return deleteMyBookHistory;
-  }
-
-  /**
-   * * 주어진 MyBook ID가 존재하는지, 그리고 해당 사용자의 소유인지 확인합니다.
-   * * 소유권이 없거나 MyBook이 존재하지 않으면 예외를 던집니다.
-   *
-   * @param {number} myBookId - 확인할 MyBook의 ID
-   * @param {number} userId - 작업을 요청한 사용자의 ID
-   * @private
-   * @throws {NotFoundMyBookException} MyBook 리소스가 존재하지 않을 때
-   * @throws {MyBookForbiddenAccessException} MyBook 리소스는 존재하지만 소유권이 없을 때
-   */
-  private async validateMyBookOwnership(myBookId: number, userId: number) {
-    try {
-      await this.prismaService.myBook.findUniqueOrThrow({
-        where: { id: myBookId, userId },
-        select: { id: true },
-      });
-    } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
-        const existMyBook = await this.prismaService.myBook.findUnique({
-          where: { id: myBookId },
-          select: { id: true, userId: true },
-        });
-
-        if (existMyBook) {
-          const ownerId = existMyBook.userId;
-          throw new MyBookForbiddenAccessException({ myBookId, ownerId, userId });
-        } else {
-          throw new NotFoundMyBookException(myBookId);
-        }
-      }
-    }
   }
 
   /**
