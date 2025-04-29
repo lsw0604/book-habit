@@ -60,15 +60,13 @@ export class MyBookService {
       ...bookPayload,
     });
 
-    const include = MY_BOOK_INCLUDE_BOOK_BASIC;
-
     try {
-      const myBook = await this.prismaService.myBook.create({
+      const myBook: MyBooksWithRelations = await this.prismaService.myBook.create({
         data: {
           userId,
           bookId,
         },
-        include,
+        include: MY_BOOK_INCLUDE_BOOK_BASIC,
       });
 
       return this.transformToFormatMyBook(myBook);
@@ -87,23 +85,17 @@ export class MyBookService {
    */
   public async getMyBook(payload: GetMyBookPayload): Promise<FormattedMyBookDetail> {
     const { id, userId } = payload;
+    await this.validateMyBookOwnership(id, userId);
 
-    try {
-      const myBook = await this.prismaService.myBook.findUniqueOrThrow({
-        where: {
-          id,
-          userId,
-        },
-        include: MY_BOOK_INCLUDE_BOOK_DETAILS,
-      });
+    const myBook: MyBookWithRelations = await this.prismaService.myBook.findUnique({
+      where: {
+        id,
+        userId,
+      },
+      include: MY_BOOK_INCLUDE_BOOK_DETAILS,
+    });
 
-      return this.transformToMyBookDetail(myBook);
-    } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
-        await this.checkOwnershipAndThrowNotFound({ myBookId: id, userId });
-      }
-      throw err;
-    }
+    return this.transformToMyBookDetail(myBook);
   }
 
   /**
@@ -127,13 +119,12 @@ export class MyBookService {
       ...(status && status !== 'ALL' && { status }),
     };
     const orderBy: Prisma.MyBookOrderByWithRelationInput = { createdAt: payload.orderBy };
-    const include = MY_BOOK_INCLUDE_BOOK_BASIC;
 
     const [totalCount, books] = await Promise.all([
       this.prismaService.myBook.count({ where }),
       this.prismaService.myBook.findMany({
         where,
-        include,
+        include: MY_BOOK_INCLUDE_BOOK_BASIC,
         skip,
         take,
         orderBy,
@@ -142,7 +133,7 @@ export class MyBookService {
 
     const paginationMeta = PaginationUtil.getPaginationMeta(totalCount, paginationOptions);
 
-    const formattedBooks = this.transformToFormatMyBooks(books);
+    const formattedBooks: FormattedMyBook[] = this.transformToFormatMyBooks(books);
 
     return {
       books: formattedBooks,
@@ -159,7 +150,8 @@ export class MyBookService {
   public async updateMyBook(payload: UpdateMyBookPayload): Promise<FormattedMyBookDetail> {
     const { id, userId, rating, status } = payload;
 
-    const include = MY_BOOK_INCLUDE_BOOK_DETAILS;
+    await this.validateMyBookOwnership(id, userId);
+
     const where: Prisma.MyBookWhereUniqueInput = { id, userId };
     const data: Prisma.MyBookUpdateInput = {
       ...(rating !== undefined && { rating }),
@@ -170,20 +162,13 @@ export class MyBookService {
       throw new NoFieldsToUpdateException();
     }
 
-    try {
-      const updateMyBook = (await this.prismaService.myBook.update({
-        where,
-        data,
-        include,
-      })) as MyBookWithRelations;
+    const updateMyBook: MyBookWithRelations = await this.prismaService.myBook.update({
+      where,
+      data,
+      include: MY_BOOK_INCLUDE_BOOK_DETAILS,
+    });
 
-      return this.transformToMyBookDetail(updateMyBook);
-    } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
-        await this.checkOwnershipAndThrowNotFound({ myBookId: id, userId });
-      }
-      throw err;
-    }
+    return this.transformToMyBookDetail(updateMyBook);
   }
 
   /**
@@ -196,43 +181,39 @@ export class MyBookService {
   public async deleteMyBook(payload: DeleteMyBookPayload): Promise<DeleteMyBookResponse> {
     const { id, userId } = payload;
 
-    try {
-      await this.prismaService.$transaction(async (prisma) => {
-        // MY BOOK을 삭제하기전 MY BOOK과 연결된 REVIEW를 찾습니다.
-        const { id: myBookReviewId } = await prisma.myBookReview.findUnique({
-          where: {
-            myBookId: id,
-          },
-          select: {
-            id: true,
-          },
-        });
+    await this.validateMyBookOwnership(id, userId);
 
-        if (myBookReviewId) {
-          // REVIEW와 연결된 COMMENT들을 삭제합니다.
-          await prisma.reviewComment.deleteMany({ where: { myBookReviewId } });
+    await this.prismaService.$transaction(async (prisma) => {
+      // MY BOOK을 삭제하기전 MY BOOK과 연결된 REVIEW를 찾습니다.
+      const { id: myBookReviewId } = await prisma.myBookReview.findUnique({
+        where: {
+          myBookId: id,
+        },
+        select: {
+          id: true,
+        },
+      });
 
-          // REVIEW와 연결된 LIKE들을 삭제합니다.
-          await prisma.reviewLike.deleteMany({ where: { myBookReviewId } });
-        }
+      if (myBookReviewId) {
+        // REVIEW와 연결된 COMMENT들을 삭제합니다.
+        await prisma.reviewComment.deleteMany({ where: { myBookReviewId } });
+
+        // REVIEW와 연결된 LIKE들을 삭제합니다.
+        await prisma.reviewLike.deleteMany({ where: { myBookReviewId } });
+
         // MY BOOK과 연결된 REVIEW를 삭제합니다.
         await prisma.myBookReview.delete({ where: { myBookId: id } });
-
-        // MY BOOK과 연결된 HISTORY를 삭제합니다.
-        await prisma.myBookHistory.deleteMany({ where: { myBookId: id } });
-
-        // MY BOOK을 삭제합니다.
-        await prisma.myBook.delete({
-          where: { id, userId },
-        });
-      });
-      return { id };
-    } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
-        await this.checkOwnershipAndThrowNotFound({ myBookId: id, userId });
       }
-      throw err;
-    }
+
+      // MY BOOK과 연결된 HISTORY를 삭제합니다.
+      await prisma.myBookHistory.deleteMany({ where: { myBookId: id } });
+
+      // MY BOOK을 삭제합니다.
+      await prisma.myBook.delete({
+        where: { id, userId },
+      });
+    });
+    return { id };
   }
 
   private transformToMyBookDetail(myBook: MyBookWithRelations): FormattedMyBookDetail {
@@ -280,41 +261,22 @@ export class MyBookService {
   }
 
   /**
-   * * P2025 에러 발생 시, 리소스 존재 여부 및 소유권을 확인하여
-   * * 적절한 예외(NotFound or Forbidden)를 던집니다.
+   * * MyBook의 존재 여부와 소유권을 검증합니다.
    *
-   * @param resourceId - 확인하려는 MyBook의 ID
-   * @param requestingUserId - 작업을 요청한 사용자의 ID
-   * @private
-   * @throws {NotFoundMyBookException} 리소스가 존재하지 않을 때
-   * @throws {MyBookForbiddenAccessException} 리소스는 존재하지만 소유권이 없을 때
+   * @param myBookId - 검증할 MyBook ID
+   * @param userId - 검증할 사용자 ID
+   * @throws {NotFoundMyBookException} MyBook이 존재하지 않을 경우
+   * @throws {MyBookForbiddenAccessException} 사용자가 MyBook의 소유자가 아닌 경우
    */
-  private async checkOwnershipAndThrowNotFound({
-    userId,
-    myBookId,
-  }: {
-    userId: number;
-    myBookId: number;
-  }): Promise<void> {
-    // userId 조건 없이 ID로만 조회
-    const existingRecord = await this.prismaService.myBook.findUnique({
-      where: { id: myBookId },
-      select: { id: true, userId: true }, // 소유자 ID 확인을 위해 userId 포함
+  public async validateMyBookOwnership(myBookId: number, userId: number): Promise<void> {
+    const where: Prisma.MyBookWhereUniqueInput = { id: myBookId };
+    const existMyBook = await this.prismaService.myBook.findUnique({
+      where,
+      select: { userId: true },
     });
 
-    if (existingRecord) {
-      // P2025 에러가 발생했지만, ID 조회 결과 레코드가 존재함
-      // -> userId가 맞지 않아 발생한 것 (Forbidden)
-      const ownerId = existingRecord.userId;
-      throw new MyBookForbiddenAccessException({
-        myBookId,
-        userId,
-        ownerId,
-      });
-    } else {
-      // P2025 에러가 발생했고, ID 조회 결과 레코드도 없음
-      // -> 정말로 존재하지 않는 리소스 (NotFound)
-      throw new NotFoundMyBookException(myBookId);
-    }
+    if (!existMyBook) throw new NotFoundMyBookException(myBookId);
+    const ownerId = existMyBook.userId;
+    if (ownerId !== userId) throw new MyBookForbiddenAccessException({ myBookId, ownerId, userId });
   }
 }
