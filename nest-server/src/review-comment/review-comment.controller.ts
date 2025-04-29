@@ -17,7 +17,7 @@ import { ResponseDto } from 'src/common/dto/response.dto';
 import { ReviewCommentService } from './review-comment.service';
 import { CreateReviewCommentDto } from './dto/create.review.comment.dto';
 import { UpdateReviewCommentDto } from './dto/update.review.comment.dto';
-import { DeleteReviewCommentResponse } from './interface';
+import { ResponseDeleteReviewComment } from './interface';
 
 @UseGuards(AccessGuard)
 @Controller('/api/review-comment')
@@ -42,12 +42,12 @@ export class ReviewCommentController {
   @Patch('/:reviewCommentId')
   @HttpCode(HttpStatus.OK)
   async updateReviewComment(
-    @Param('reviewCommentId', ParseIntPipe) id: number,
+    @Param('reviewCommentId', ParseIntPipe) reviewCommentId: number,
     @UserDecorator('id') userId: number,
     @Body() dto: UpdateReviewCommentDto,
   ): Promise<ResponseDto<ReviewComment>> {
     const response: ReviewComment = await this.reviewCommentService.updateReviewComment({
-      id,
+      reviewCommentId,
       userId,
       ...dto,
     });
@@ -57,11 +57,11 @@ export class ReviewCommentController {
 
   @Delete('/:reviewCommentId')
   async deleteReviewComment(
-    @Param('reviewCommentId', ParseIntPipe) id: number,
+    @Param('reviewCommentId', ParseIntPipe) reviewCommentId: number,
     @UserDecorator('id') userId: number,
-  ): Promise<ResponseDto<DeleteReviewCommentResponse>> {
-    const response: DeleteReviewCommentResponse =
-      await this.reviewCommentService.deleteReviewComment({ id, userId });
+  ): Promise<ResponseDto<ResponseDeleteReviewComment>> {
+    const response: ResponseDeleteReviewComment =
+      await this.reviewCommentService.deleteReviewComment({ reviewCommentId, userId });
 
     return ResponseDto.success(response, '리뷰 댓글 삭제 성공');
   }
