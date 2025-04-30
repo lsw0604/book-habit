@@ -1,25 +1,22 @@
-import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { UserService } from './user.service';
 import { AccessGuard } from 'src/auth/guard/access.guard';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
+import { ResponseDto } from 'src/common/dto/response.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
+import { UserService } from './user.service';
 
 @UseGuards(AccessGuard)
 @Controller('/api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  async getUser(@UserDecorator() user: User) {
-    return user;
-  }
-
-  @Put()
+  @Patch()
   async updateUser(
     @UserDecorator('id') userId: number,
     @Body() dto: Omit<UpdateUserDto, 'userId'>,
-  ) {
-    return await this.userService.updateUser({ userId, ...dto });
+  ): Promise<ResponseDto<User>> {
+    const response: User = await this.userService.updateUser({ userId, ...dto });
+    return ResponseDto.success(response, '사용자 정보 수정 성공');
   }
 }
