@@ -116,7 +116,7 @@ model MyBook {
   rating                Int            @default(0)
   status                MyBookStatus   @default(WANT_TO_READ)
   history               MyBookHistory[]
-  review                MyBookReview[]
+  review                MyBookReview?
   tag                   MyBookTag[]
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
