@@ -1,4 +1,8 @@
-import { Gender } from '@prisma/client';
+import { User } from '@prisma/client';
+import { ResponseTokens } from './token.interface';
+
+export * from './token.interface';
+export * from './auth.interface';
 
 export interface KakaoAccessTokenResponse {
   access_token: string;
@@ -22,24 +26,4 @@ export interface KakaoUserInfoResponse {
   };
 }
 
-export interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-export interface RegisterPayload {
-  email: string;
-  password: string;
-  gender: Gender;
-  birthday: Date;
-  name: string;
-}
-
-export interface ValidateUserPayload {
-  email: string;
-  password: string;
-}
-
-export interface IsExistEmailPayload {
-  email: string;
-}
+export type ResponseKakaoCallback = User & ResponseTokens;
