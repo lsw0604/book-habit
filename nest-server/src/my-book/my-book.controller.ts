@@ -27,11 +27,17 @@ import { ResponseDto } from 'src/common/dto/response.dto';
 import { DatetimeValidator } from 'src/common/utils/time/datetime-validator';
 import { CreateMyBookDto } from './dto/create.my.book.dto';
 import { UpdateMyBookDto } from './dto/update.my.book.dto';
+import { LoggerService } from 'src/common/logger/logger.service';
 
 @UseGuards(AccessGuard)
 @Controller('/api/my-book')
 export class MyBookController {
-  constructor(private myBookService: MyBookService) {}
+  constructor(
+    private myBookService: MyBookService,
+    private readonly logger: LoggerService,
+  ) {
+    this.logger.setContext(MyBookController.name);
+  }
 
   /**
    * * 새로운 책을 사용자의 컬렉션에 추가합니다.
@@ -90,14 +96,19 @@ export class MyBookController {
     @Query('status') status: MyBookStatus | 'ALL' = 'ALL',
     @Query('order') orderBy: 'desc' | 'asc' = 'desc',
   ): Promise<ResponseDto<FormattedMyBooks>> {
-    const response: FormattedMyBooks = await this.myBookService.getMyBooks({
-      userId,
-      pageNumber,
-      status,
-      orderBy,
-    });
+    try {
+      const response: FormattedMyBooks = await this.myBookService.getMyBooks({
+        userId,
+        pageNumber,
+        status,
+        orderBy,
+      });
 
-    return ResponseDto.success(response, '나의 책 목록 조회 성공');
+      return ResponseDto.success(response, '나의 책 목록 조회 성공');
+    } catch (err) {
+      this.logger.error('err', err.stack);
+      throw err;
+    }
   }
 
   /**

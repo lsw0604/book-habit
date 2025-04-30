@@ -14,7 +14,7 @@ import type {
 import type { FormattedBook } from 'src/book/interface';
 import type { PaginationOptions } from 'src/common/utils/pagination.util';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { MyBookStatus, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BookService } from 'src/book/book.service';
 import { LoggerService } from 'src/common/logger/logger.service';
@@ -114,10 +114,30 @@ export class MyBookService {
 
     const { skip, take } = PaginationUtil.getSkipTake(paginationOptions);
 
+    let statusCondition: { status?: MyBookStatus } = {};
+
+    if (status && status !== 'ALL') {
+      switch (status) {
+        case 'WANT_TO_READ':
+          statusCondition = { status: MyBookStatus.WANT_TO_READ };
+          break;
+        case 'CURRENTLY_READING':
+          statusCondition = { status: MyBookStatus.CURRENTLY_READING };
+          break;
+        case 'READ':
+          statusCondition = { status: MyBookStatus.READ };
+          break;
+        default:
+          statusCondition = { status: undefined };
+          break;
+      }
+    }
+
     const where: Prisma.MyBookWhereInput = {
       userId,
-      ...(status && status !== 'ALL' && { status }),
+      ...statusCondition,
     };
+
     const orderBy: Prisma.MyBookOrderByWithRelationInput = { createdAt: payload.orderBy };
 
     const [totalCount, books] = await Promise.all([
