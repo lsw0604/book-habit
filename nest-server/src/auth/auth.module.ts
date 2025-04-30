@@ -2,6 +2,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -12,8 +13,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
-import { LoggerService } from 'src/common/logger/logger.service';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -44,7 +43,6 @@ import { HttpModule } from '@nestjs/axios';
     UserService,
     AuthKakaoService,
     TokenService,
-    LoggerService,
   ],
   exports: [AuthService],
 })
