@@ -1,9 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { BaseJwtGuard } from './base.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { handleJwtErrors } from 'src/common/utils/auth/jwt.util';
+import { UnknownTokenException } from 'src/common/exceptions/jwt';
 
-@Injectable()
-export class RefreshGuard extends BaseJwtGuard {
+export class RefreshGuard extends AuthGuard('refresh') {
   constructor() {
-    super('refresh', RefreshGuard.name);
+    super();
+  }
+
+  handleRequest<T = any>(err, user, info, context, status): T {
+    handleJwtErrors(err, user, info);
+
+    try {
+      return super.handleRequest(err, user, info, context, status);
+    } catch (error) {
+      throw new UnknownTokenException(error.message);
+    }
   }
 }
