@@ -1,3 +1,4 @@
+import type { ResponseTokens, ReturnAccessToken, ReturnRefreshToken } from './interface';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -9,27 +10,25 @@ export class TokenService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateToken(userId: number) {
-    const [accessToken, refreshToken] = await Promise.all([
-      this.generateAccessToken(userId),
-      this.generateRefreshToken(userId),
-    ]);
+  public generateToken(userId: number): ResponseTokens {
+    const { accessToken } = this.generateAccessToken(userId);
+    const { refreshToken } = this.generateRefreshToken(userId);
 
     return {
-      ...accessToken,
-      ...refreshToken,
+      accessToken,
+      refreshToken,
     };
   }
 
-  private generateAccessToken(id: number) {
-    const accessToken = this.jwtService.sign({ id });
+  private generateAccessToken(id: number): ReturnAccessToken {
+    const accessToken: string = this.jwtService.sign({ id });
     return {
       accessToken,
     };
   }
 
-  private generateRefreshToken(id: number) {
-    const refreshToken = this.jwtService.sign(
+  private generateRefreshToken(id: number): ReturnRefreshToken {
+    const refreshToken: string = this.jwtService.sign(
       { id },
       { expiresIn: '7d', secret: this.configService.getOrThrow<string>('SECRET_REFRESH_KEY') },
     );
