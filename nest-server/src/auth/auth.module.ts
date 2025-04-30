@@ -41,8 +41,8 @@ import { TokenService } from './token.service';
     RefreshStrategy,
     PrismaService,
     UserService,
-    AuthKakaoService,
     TokenService,
+    AuthKakaoService,
   ],
   exports: [AuthService],
 })

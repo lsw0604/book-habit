@@ -61,17 +61,9 @@ export class AuthController {
 
   @UseGuards(KakaoGuard)
   @Get('kakao/callback')
-  async kakaoCallback(@Req() req: Request) {
-    return req.user;
-  }
-
-  @Get('/check-email')
-  async isExistEmail(@Query('email') email: string) {
-    const exist = await this.authService.isEmailRegistered({ email });
-
-    return ResponseDto.success({
-      exist,
-      message: exist ? '이미 존재하는 이메일입니다.' : '사용 가능한 이메일입니다.',
-    });
+  @HttpCode(HttpStatus.OK)
+  async kakaoCallback(@Req() req: Request): Promise<ResponseDto<User>> {
+    const response: User = req.user;
+    return ResponseDto.success(response, 'KAKAO 로그인에 성공했습니다.');
   }
 }

@@ -1,21 +1,28 @@
-import type { KakaoAccessTokenResponse, KakaoUserInfoResponse } from './interface';
+import type {
+  KakaoAccessTokenResponse,
+  KakaoUserInfoResponse,
+  ResponseKakaoCallback,
+  ResponseTokens,
+} from './interface';
 import type { AxiosError } from 'axios';
-
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import * as qs from 'qs';
+import { User } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom } from 'rxjs';
-import * as qs from 'qs';
 import { UserService } from 'src/user/user.service';
 import { TokenService } from './token.service';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { KAKAO_API_ME_URL, KAKAO_AUTH_TOKEN_URL } from './constant';
+import {
+  KakaoUserInfoFetchFailedException,
+  KakaoApiResponseDataInvalidException,
+  KakaoAccessTokenNotIssuedException,
+} from './exceptions';
 
 @Injectable()
 export class AuthKakaoService {
-  private readonly KAKAO_API_ME_URL = 'https://kapi.kakao.com/v2/user/me';
-  private readonly KAKAO_AUTH_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
-  private readonly KAKAO_CLIENT_ID_KEY = 'KAKAO_CLIENT_ID';
-
   constructor(
     private readonly tokenService: TokenService,
     private readonly userService: UserService,
@@ -26,36 +33,30 @@ export class AuthKakaoService {
     this.logger.setContext(AuthKakaoService.name);
   }
 
-  public async kakaoCallback(code: string, redirectUri?: string) {
-    const actualRedirectUri =
-      redirectUri || this.configService.getOrThrow<string>('KAKAO_REDIRECT_URI');
-    const body = this.kakaoQsStringify(code, actualRedirectUri);
+  public async kakaoCallback(code: string, redirectUri?: string): Promise<ResponseKakaoCallback> {
+    const actualRedirectUri: string =
+      redirectUri || this.configService.getOrThrow<string>('KAKAO_CALLBACK_URL');
+    const body: string = this.kakaoQsStringify(code, actualRedirectUri);
     const { access_token } = await this.getKakaoAccessToken(body);
     const { kakao_account, id } = await this.getKakaoId(access_token);
 
-    const email = this.kakaoEmailTransfer(id);
-    const name = this.kakaoNameTransfer(id);
-    const profile = kakao_account.profile.thumbnail_image_url;
+    const email: string = this.kakaoEmailTransfer(id);
+    const name: string = this.kakaoNameTransfer(id);
+    const profile: string = kakao_account.profile.thumbnail_image_url;
 
-    const existKakaoId = await this.userService.getUser({ email });
+    const existKakaoUser: User = await this.userService.getUserByEmail(email);
+    let user: User = existKakaoUser;
 
-    if (!!existKakaoId) {
-      const token = await this.tokenService.generateToken(existKakaoId.id);
-
-      return {
-        ...token,
-        existKakaoId,
-      };
+    if (!existKakaoUser) {
+      user = await this.userService.createKakaoUser({
+        email,
+        name,
+        provider: 'KAKAO',
+        profile,
+      });
     }
 
-    const user = await this.userService.createUser({
-      email,
-      name,
-      provider: 'KAKAO',
-      profile,
-    });
-
-    const token = await this.tokenService.generateToken(user.id);
+    const token: ResponseTokens = this.tokenService.generateToken(user.id);
 
     return {
       ...token,
@@ -63,87 +64,100 @@ export class AuthKakaoService {
     };
   }
 
-  private async getKakaoId(token: string) {
+  private async getKakaoId(token: string): Promise<KakaoUserInfoResponse> {
     try {
       const { data } = await firstValueFrom(
         this.httpService
-          .get<KakaoUserInfoResponse>(this.KAKAO_API_ME_URL, {
+          .get<KakaoUserInfoResponse>(KAKAO_API_ME_URL, {
             headers: {
               'Content-Type': 'application/x-www-urlencoded;',
               Authorization: `Bearer ${token}`,
             },
           })
           .pipe(
-            catchError((error: AxiosError) => {
-              if (error.response.data) {
-                this.logger.error(error.response.data as string);
-              }
-              throw new UnauthorizedException('v2/user/me 카카오 API 호출에 실패했습니다.');
+            catchError((error: AxiosError): never => {
+              this.logger.error(
+                `카카오 API (v2/user/me) 호출 실패: ${JSON.stringify(error.response?.data)}`,
+              );
+              throw new KakaoUserInfoFetchFailedException(
+                '카카오 사용자 정보 API 호출에 실패했습니다.',
+              );
             }),
           ),
       );
 
       if (!data.id || !data.kakao_account || !data.properties) {
-        throw new UnauthorizedException('kakao User 정보를 받아오는데 실패했습니다.');
+        this.logger.error(`카카오 사용자 정보 누락: ${JSON.stringify(data)}`);
+        throw new KakaoApiResponseDataInvalidException(
+          '카카오 사용자 정보를 받아오는데 실패했습니다.',
+        );
       }
 
       return data;
     } catch (error) {
-      this.logger.error(error);
-      throw new UnauthorizedException('v2/user/me 카카오 API 호출 중에 오류가 발생했습니다.');
+      this.logger.error(`카카오 API (v2/user/me) 호출 중 오류 발생: ${error}`);
+      if (
+        error instanceof KakaoUserInfoFetchFailedException ||
+        error instanceof KakaoApiResponseDataInvalidException
+      ) {
+        throw error;
+      }
+      throw new KakaoUserInfoFetchFailedException(
+        '카카오 사용자 정보 API 호출 중 오류가 발생했습니다.',
+      );
     }
   }
 
-  private async getKakaoAccessToken(body: string) {
+  private async getKakaoAccessToken(body: string): Promise<KakaoAccessTokenResponse> {
     try {
       const { data } = await firstValueFrom(
         this.httpService
-          .post<KakaoAccessTokenResponse>(this.KAKAO_AUTH_TOKEN_URL, body, {
+          .post<KakaoAccessTokenResponse>(KAKAO_AUTH_TOKEN_URL, body, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
           })
           .pipe(
-            catchError((error: AxiosError) => {
-              if (error.response.data) {
-                this.logger.error(error.response.data as string);
-              }
-              throw new UnauthorizedException('oauth/token 카카오 API 호출에 실패했습니다.');
+            catchError((error: AxiosError): never => {
+              this.logger.error(
+                `카카오 API (oauth/token) 호출 실패: ${JSON.stringify(error.response?.data)}`,
+              );
+              throw new KakaoAccessTokenNotIssuedException();
             }),
           ),
       );
 
-      if (!data.access_token) {
-        throw new UnauthorizedException('kakao_access_token이 존재하지 않습니다.');
+      if (!data?.access_token) {
+        this.logger.error('카카오 Access Token이 응답에 없습니다.');
+        throw new KakaoAccessTokenNotIssuedException();
       }
 
-      return {
-        access_token: data.access_token,
-        token_type: data.token_type,
-      };
+      return data;
     } catch (error) {
-      this.logger.error(error);
-      throw new UnauthorizedException('oauth/token 카카오 API 호출 중에 오류가 발생했습니다.');
+      this.logger.error(`카카오 API (oauth/token) 호출 중 오류 발생: ${error}`);
+      if (error instanceof KakaoAccessTokenNotIssuedException) {
+        throw error;
+      }
+      throw new KakaoAccessTokenNotIssuedException();
     }
   }
 
-  private kakaoQsStringify(code: string, redirectUri: string) {
-    const body = qs.stringify({
+  private kakaoQsStringify(code: string, redirectUri: string): string {
+    const body: string = qs.stringify({
       grant_type: 'authorization_code',
-      client_id: this.configService.getOrThrow<string>(this.KAKAO_CLIENT_ID_KEY),
+      client_id: this.configService.getOrThrow<string>('KAKAO_CLIENT_ID'),
       redirect_uri: redirectUri,
       code,
     });
-    this.logger.debug(`KAKAO_QS_STRINGIFY : ${body}`);
     return body;
   }
 
-  private kakaoEmailTransfer(id: number) {
+  private kakaoEmailTransfer(id: number): string {
     const emailAddress = '@oauth.kakao.com';
     return `${id}${emailAddress}`;
   }
 
-  private kakaoNameTransfer(id: number) {
+  private kakaoNameTransfer(id: number): string {
     return `kakao_${id}`;
   }
 }

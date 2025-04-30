@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthKakaoService } from '../auth.kakao.service';
+import { ResponseKakaoCallback } from '../interface';
 
 @Injectable()
 export class KakaoGuard implements CanActivate {
@@ -12,7 +13,10 @@ export class KakaoGuard implements CanActivate {
     if (!code) throw new UnauthorizedException('인증 코드를 찾을 수 없습니다.');
 
     try {
-      const user = await this.authKakaoService.kakaoCallback(code, redirect_uri);
+      const user: ResponseKakaoCallback = await this.authKakaoService.kakaoCallback(
+        code,
+        redirect_uri,
+      );
 
       request.user = user;
       return true;
