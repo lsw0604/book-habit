@@ -9,7 +9,7 @@ import {
   DefaultValuePipe,
 } from '@nestjs/common';
 import { TagService } from './tag.service';
-import { ResponseDto } from 'src/common/dto/response.dto';
+import { ResponseMessageDecorator } from 'src/common/decorator';
 
 @Controller('/api/tag')
 export class TagController {
@@ -17,30 +17,29 @@ export class TagController {
 
   @Get('/search')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('태그 검색 성공')
   async searchTag(
     @Query('query') query: string,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number = 5,
-  ): Promise<ResponseDto<FormattedTag[]>> {
-    const response: FormattedTag[] = await this.tagService.searchTag({ limit, query });
-    return ResponseDto.success(response, '태그 검색 성공');
+  ): Promise<FormattedTag[]> {
+    return await this.tagService.searchTag({ limit, query });
   }
 
   @Get('/public-popular')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('인기 태그(공개) 검색 성공')
   async publicPopularTag(
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number = 7,
-  ): Promise<ResponseDto<FormattedTag[]>> {
-    const response: FormattedTag[] = await this.tagService.getPublicPopularTag(limit);
-    return ResponseDto.success(response, '인기 태그(공개) 검색 성공');
+  ): Promise<FormattedTag[]> {
+    return await this.tagService.getPublicPopularTag(limit);
   }
 
   @Get('/popular')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('인기 태그 검색 성공')
   async popularTag(
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number = 20,
-  ): Promise<ResponseDto<FormattedTag[]>> {
-    const response: FormattedTag[] = await this.tagService.getPopularTag(limit);
-
-    return ResponseDto.success(response, '인기 태그 검색 성공');
+  ): Promise<FormattedTag[]> {
+    return await this.tagService.getPopularTag(limit);
   }
 }

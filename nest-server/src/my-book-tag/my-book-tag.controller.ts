@@ -17,8 +17,7 @@ import {
 } from '@nestjs/common';
 import { MyBookTagService } from './my-book-tag.service';
 import { AccessGuard } from 'src/auth/guard/access.guard';
-import { ResponseDto } from 'src/common/dto/response.dto';
-import { UserDecorator } from 'src/common/decorator/user.decorator';
+import { ResponseMessageDecorator, UserDecorator } from 'src/common/decorator';
 import { CreateMyBookTagDto } from './dto/create.my.book.tag.dto';
 
 @UseGuards(AccessGuard)
@@ -28,45 +27,42 @@ export class MyBookTagController {
 
   @Get('/:myBookId')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('MY BOOK TAG 조회 성공')
   async getMyBookTag(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
-  ): Promise<ResponseDto<ResponseGetMyBookTag>> {
-    const response: ResponseGetMyBookTag = await this.myBookTagService.getMyBookTag({
+  ): Promise<ResponseGetMyBookTag> {
+    return await this.myBookTagService.getMyBookTag({
       myBookId,
       userId,
     });
-
-    return ResponseDto.success(response, 'MyBookTag 조회 성공');
   }
 
   @Post('/:myBookId')
   @HttpCode(HttpStatus.CREATED)
+  @ResponseMessageDecorator('MY BOOK TAG 생성 성공')
   async createMyBookTag(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
     @Body() dto: CreateMyBookTagDto,
-  ): Promise<ResponseDto<ResponseCreateMyBookTag>> {
-    const response: ResponseCreateMyBookTag = await this.myBookTagService.createMyBookTag({
+  ): Promise<ResponseCreateMyBookTag> {
+    return await this.myBookTagService.createMyBookTag({
       userId,
       myBookId,
       ...dto,
     });
-
-    return ResponseDto.created(response, 'MyBookTag 생성 성공');
   }
 
   @Delete('/:myBookTagId')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('MY BOOK TAG 삭제 성공')
   async deleteMyBookTag(
     @UserDecorator('id') userId: number,
     @Param('myBookTagId', ParseIntPipe) myBookTagId: number,
-  ): Promise<ResponseDto<ResponseDeleteMyBookTag>> {
-    const response: ResponseDeleteMyBookTag = await this.myBookTagService.deleteMyBookTag({
+  ): Promise<ResponseDeleteMyBookTag> {
+    return await this.myBookTagService.deleteMyBookTag({
       userId,
       myBookTagId,
     });
-
-    return ResponseDto.success(response, 'MyBookTag 삭제 성공');
   }
 }
