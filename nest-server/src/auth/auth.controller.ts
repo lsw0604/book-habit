@@ -18,7 +18,7 @@ import { LocalGuard } from './guard/local.guard';
 import { KakaoGuard } from './guard/kakao.guard';
 import { AccessGuard } from './guard/access.guard';
 import { AuthRegisterDto } from './dto/auth.register.dto';
-import { ResponseDto } from 'src/common/dto/response.dto';
+import { ResponseMessageDecorator } from 'src/common/decorator/response-message.decorator';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -27,14 +27,16 @@ export class AuthController {
   @UseGuards(LocalGuard)
   @Post('signin')
   @HttpCode(HttpStatus.CREATED)
-  async signIn(@Req() req: Request): Promise<ResponseDto<User>> {
+  @ResponseMessageDecorator('로그인에 성공했습니다.')
+  async signIn(@Req() req: Request): Promise<User> {
     const response: User = req.user;
-    return ResponseDto.created(response, '로그인에 성공했습니다.');
+    return response;
   }
 
   @Post('signup')
   @HttpCode(HttpStatus.OK)
-  async signUp(@Body() dto: AuthRegisterDto, @Res() res: Response): Promise<ResponseDto<User>> {
+  @ResponseMessageDecorator('회원가입에 성공했습니다.')
+  async signUp(@Body() dto: AuthRegisterDto, @Res() res: Response): Promise<User> {
     const { accessToken, refreshToken, ...user } = await this.authService.register(dto);
 
     const response: User = user;
@@ -45,42 +47,44 @@ export class AuthController {
       expires: dayjs().add(7, 'days').toDate(),
     });
 
-    return ResponseDto.success(response, '회원가입에 성공했습니다.');
+    return response;
   }
 
   @UseGuards(RefreshGuard)
   @Get('refresh')
   @HttpCode(HttpStatus.OK)
-  refreshToken(@Req() req: Request): ResponseDto<User> {
+  @ResponseMessageDecorator('REFRESH TOKEN 인증에 성공했습니다.')
+  refreshToken(@Req() req: Request): User {
     const response: User = req.user;
-    return ResponseDto.success(response, 'REFRESH TOKEN 인증에 성공했습니다.');
+    return response;
   }
 
   @UseGuards(AccessGuard)
   @Get('access')
   @HttpCode(HttpStatus.OK)
-  accessToken(@Req() req: Request): ResponseDto<User> {
+  @ResponseMessageDecorator('ACCESS TOKEN 인증에 성공했습니다.')
+  accessToken(@Req() req: Request): User {
     const response: User = req.user;
-    return ResponseDto.success<User>(response, 'ACCESS TOKEN 인증에 성공했습니다.');
+    return response;
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.CREATED)
-  logout(@Res() res: Response): ResponseDto<null> {
+  @ResponseMessageDecorator('로그아웃에 성공했습니다.')
+  logout(@Res() res: Response): void {
     res.cookie('refreshToken', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: dayjs().toDate(),
     });
-
-    return ResponseDto.noContent('로그아웃에 성공했습니다.');
   }
 
   @UseGuards(KakaoGuard)
   @Get('kakao/callback')
   @HttpCode(HttpStatus.OK)
-  async kakaoCallback(@Req() req: Request): Promise<ResponseDto<User>> {
+  @ResponseMessageDecorator('KAKAO 로그인에 성공했습니다.')
+  async kakaoCallback(@Req() req: Request): Promise<User> {
     const response: User = req.user;
-    return ResponseDto.success(response, 'KAKAO 로그인에 성공했습니다.');
+    return response;
   }
 }

@@ -1,10 +1,12 @@
-import { Controller, Get, HttpException, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Logger, Query } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchBookDto } from './dto/search.dto';
 import { AxiosError } from 'axios';
 
 @Controller('api/search')
 export class SearchController {
+  private readonly logger = new Logger(SearchController.name);
+
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
@@ -12,6 +14,8 @@ export class SearchController {
     try {
       return await this.searchService.searchBook(queryParams);
     } catch (error) {
+      this.logger.error(`도서 검색 오류: ${error.message}`);
+
       if (error instanceof HttpException) {
         throw error;
       }
