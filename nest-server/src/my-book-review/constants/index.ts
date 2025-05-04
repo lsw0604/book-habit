@@ -12,3 +12,11 @@ export const MY_BOOK_REVIEW_SELECT_WITH_COUNTS = {
     },
   },
 } as const;
+
+export const MY_BOOK_REVIEW_SELECT_WITH_USER_ID = {
+  myBook: {
+    select: {
+      userId: true,
+    },
+  },
+} as const;

@@ -1,4 +1,5 @@
-import { MyBookReview } from '@prisma/client';
+import { MyBookReview, Prisma } from '@prisma/client';
+import { MY_BOOK_REVIEW_SELECT_WITH_USER_ID } from '../constants';
 
 export interface FormattedMyBookReview extends MyBookReview {
   _count: {
@@ -33,3 +34,7 @@ export interface DeleteMyBookReviewPayload {
 export type DeleteMyBookReviewResponse = {
   myBookReviewId: number;
 };
+
+export type MyBookReviewWithUserId = Prisma.MyBookReviewGetPayload<{
+  select: typeof MY_BOOK_REVIEW_SELECT_WITH_USER_ID;
+}>;
