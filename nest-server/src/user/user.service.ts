@@ -4,11 +4,7 @@ import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { NoFieldsToUpdateException } from 'src/common/exceptions';
-import {
-  AlreadyExistEmailException,
-  NotFoundUserException,
-  UserForbiddenAccessException,
-} from './exceptions';
+import { AlreadyExistEmailException } from './exceptions';
 
 @Injectable()
 export class UserService {
@@ -59,7 +55,6 @@ export class UserService {
   public async updateUser(payload: UpdateUserPayload): Promise<User> {
     const { name, gender, birthday, profile, userId } = payload;
 
-    await this.validateUserOwnership(userId);
     const where: Prisma.UserWhereUniqueInput = { id: userId };
     const data: Prisma.UserUpdateInput = {
       ...(name !== undefined && { name }),
@@ -86,16 +81,5 @@ export class UserService {
 
   public async getUserByEmail(email: string): Promise<User> {
     return await this.prismaService.user.findUnique({ where: { email } });
-  }
-
-  private async validateUserOwnership(userId: number): Promise<void> {
-    const where: Prisma.UserWhereUniqueInput = { id: userId };
-    const user: User = await this.prismaService.user.findUnique({
-      where,
-    });
-
-    if (!user) throw new NotFoundUserException(userId);
-    const ownerId: number = user.id;
-    if (ownerId !== userId) throw new UserForbiddenAccessException({ userId, ownerId });
   }
 }
