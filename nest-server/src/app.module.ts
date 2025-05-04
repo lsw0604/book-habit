@@ -1,11 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-
 import { AppController } from './app.controller';
-
 import { AppService } from './app.service';
-
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -18,7 +15,6 @@ import { PublicReviewModule } from './public-review/public-review.module';
 import { ReviewCommentModule } from './review-comment/review-comment.module';
 import { ReviewLikeModule } from './review-like/review-like.module';
 import { SearchModule } from './search/search.module';
-
 import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
@@ -29,7 +25,7 @@ import { LoggerModule } from './common/logger/logger.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../.env',
+      envFilePath: '.env',
     }),
     PrismaModule,
     LoggerModule,
