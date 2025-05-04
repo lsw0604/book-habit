@@ -1,11 +1,16 @@
 import { ReviewLike } from '@prisma/client';
 
-export interface ToggleReviewLikePayload {
+interface ReviewLikePayload {
   userId: number;
   myBookReviewId: number;
 }
 
-export type ResponseToggleReviewLike = {
+type ResponseReviewLike = {
   reviewLike: ReviewLike;
-  action: 'deleted' | 'created';
 };
+
+export interface CreateReviewLikePayload extends ReviewLikePayload {}
+export interface DeleteReviewLikePayload extends ReviewLikePayload {}
+
+export type ResponseCreateReviewLike = ResponseReviewLike;
+export type ResponseDeleteReviewLike = ResponseReviewLike;
