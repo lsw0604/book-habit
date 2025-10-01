@@ -17,8 +17,8 @@ import { ReviewLikeModule } from './review-like/review-like.module';
 import { SearchModule } from './search/search.module';
 import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { LoggerMiddleware } from './common/middleware';
+import { LoggingInterceptor } from './common/interceptors';
 import { LoggerModule } from './common/logger/logger.module';
 
 @Module({
