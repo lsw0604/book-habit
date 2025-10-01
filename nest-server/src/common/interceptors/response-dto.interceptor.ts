@@ -12,10 +12,6 @@ export class ResponseDtoInterceptor<T> implements NestInterceptor<T, ResponseDto
 
     return next.handle().pipe(
       map((data) => {
-        if (data instanceof ResponseDto) {
-          return data;
-        }
-
         const customMessage = apiResponse?.message;
         const statusCode = context.switchToHttp().getResponse().statusCode;
 

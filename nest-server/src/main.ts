@@ -1,14 +1,10 @@
-import { User } from '@prisma/client';
 import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 
-import { OmitPropertyInterceptor } from './common/interceptors/omit-property.interceptor';
-import { SetBearerHeaderInterceptor } from './common/interceptors/set-bearer-header.interceptor';
-import { CookieInterceptor } from './common/interceptors/cookie.interceptor';
-import { ResponseDtoInterceptor } from './common/interceptors/response-dto.interceptor';
+import { ResponseDtoInterceptor } from './common/interceptors';
 
 async function setUpMiddleware(app: INestApplication) {
   app.use(cookieParser());
@@ -18,12 +14,7 @@ async function setUpMiddleware(app: INestApplication) {
 }
 
 async function setUpInterceptor(app: INestApplication) {
-  app.useGlobalInterceptors(
-    new ResponseDtoInterceptor(),
-    new SetBearerHeaderInterceptor<User & AccessTokenType>('accessToken', 'Authorization'),
-    new CookieInterceptor<RefreshTokenType, 'refreshToken'>('refreshToken'),
-    new OmitPropertyInterceptor<User, 'password'>(['password']),
-  );
+  app.useGlobalInterceptors(new ResponseDtoInterceptor());
 }
 
 async function bootstrap() {
