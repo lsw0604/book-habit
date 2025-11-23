@@ -1,4 +1,4 @@
-type ResponseSearchBook = {
+export type ResponseKakaoSearchBook = {
   meta: {
     total_count: number;
     pageable_count: number;
@@ -7,7 +7,7 @@ type ResponseSearchBook = {
   documents: KakaoDocument[];
 };
 
-type KakaoDocument = {
+export type KakaoDocument = {
   title: string; //	도서 제목
   contents: string; //	도서 소개
   url: string; //	도서 상세 URL

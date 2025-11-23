@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { SearchService } from './search.service';
 import { SearchController } from './search.controller';
+import { KakaoSearchService } from './kakao-search.service';
+import { AladinSearchService } from './aladin-search.service';
 
 @Module({
   imports: [
@@ -10,8 +11,8 @@ import { SearchController } from './search.controller';
       maxRedirects: 5,
     }),
   ],
-  providers: [SearchService],
+  providers: [KakaoSearchService, AladinSearchService],
   controllers: [SearchController],
-  exports: [SearchService],
+  exports: [KakaoSearchService, AladinSearchService],
 })
 export class SearchModule {}
