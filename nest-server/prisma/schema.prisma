@@ -103,7 +103,7 @@ model MyBookReview {
   isPublic              Boolean
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
-  myBook                MyBook         @relation(fields: [myBookId], references: [id])
+  myBook                MyBook         @relation(fields: [myBookId], references: [id], onDelete: Cascade)
 }
 
 model ReviewLike {
@@ -111,7 +111,7 @@ model ReviewLike {
   userId                Int
   myBookReviewId        Int
   user                  User           @relation(fields: [userId], references: [id])
-  myBookReview          MyBookReview   @relation(fields: [myBookReviewId], references: [id])
+  myBookReview          MyBookReview   @relation(fields: [myBookReviewId], references: [id], onDelete: Cascade)
   @@unique([userId, myBookReviewId])
 }
 
@@ -123,7 +123,7 @@ model ReviewComment {
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
   user                  User           @relation(fields: [userId], references: [id])
-  myBookReview          MyBookReview   @relation(fields: [myBookReviewId], references: [id])
+  myBookReview          MyBookReview   @relation(fields: [myBookReviewId], references: [id], onDelete: Cascade)
 }
 
 model Tag {
@@ -136,7 +136,7 @@ model MyBookTag {
   id                    Int            @id @default(autoincrement())
   myBookId              Int
   tagId                 Int
-  myBook                MyBook         @relation(fields: [myBookId], references: [id])
+  myBook                MyBook         @relation(fields: [myBookId], references: [id], onDelete: Cascade)
   tag                   Tag            @relation(fields: [tagId], references: [id])
   @@unique([myBookId, tagId])
 }
@@ -152,7 +152,7 @@ model MyBookHistory {
   date                  DateTime
   memo                  String?        @db.VarChar(500)
   readingMood           ReadingMood
-  myBook                MyBook         @relation(fields: [myBookId], references: [id])
+  myBook                MyBook         @relation(fields: [myBookId], references: [id], onDelete: Cascade)
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
 }
