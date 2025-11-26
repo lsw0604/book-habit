@@ -1,19 +1,26 @@
-export interface PaginationOptions {
+export type PaginationOptions = {
   pageNumber: number;
   pageSize: number;
-}
+};
 
-export interface PaginationMeta {
+export type PaginationMeta = {
   totalCount: number;
   totalPages: number;
+  currentPage: number;
   nextPage?: number;
   prevPage?: number;
-}
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
 
-export interface SkipMeta {
+export type PrismaSkipTake = {
   skip: number;
   take: number;
-}
+};
+
+export type PaginationResponse<T, K extends string = 'data'> = {
+  meta: PaginationMeta;
+} & Record<K, T[]>;
 
 export class PaginationUtil {
   static getPaginationMeta(totalCount: number, options: PaginationOptions): PaginationMeta {
@@ -23,12 +30,15 @@ export class PaginationUtil {
     return {
       totalCount,
       totalPages,
+      currentPage: pageNumber,
+      hasNextPage: pageNumber < totalPages,
+      hasPrevPage: pageNumber > 1,
       nextPage: pageNumber < totalPages ? pageNumber + 1 : undefined,
       prevPage: pageNumber > 1 ? pageNumber - 1 : undefined,
     };
   }
 
-  static getSkipTake(options: PaginationOptions): SkipMeta {
+  static getSkipTake(options: PaginationOptions): PrismaSkipTake {
     return {
       skip: (options.pageNumber - 1) * options.pageSize,
       take: options.pageSize,

@@ -1,4 +1,3 @@
-// /src/common/util/time/datetime-validator.ts
 import * as dayjs from 'dayjs';
 import * as isBetween from 'dayjs/plugin/isBetween';
 import * as isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
