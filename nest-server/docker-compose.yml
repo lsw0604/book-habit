@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: my-book-db # 컨테이너 이름 (터미널에서 이 이름으로 보임)
+    ports:
+      - '3306:3306' # 내 맥북 포트 : 컨테이너 포트
+    environment:
+      MYSQL_ROOT_PASSWORD: root # 루트 비밀번호 (개발용이니 간단하게)
+      MYSQL_DATABASE: my_book_dev # 시작할 때 자동 생성할 DB 이름
+    volumes:
+      # [중요] DB 데이터를 내 프로젝트 폴더 안의 mysql-data 폴더에 저장
+      # 이렇게 해야 Docker를 꺼도 데이터가 날아가지 않습니다.
+      - ./mysql-data:/var/lib/mysql
+    command:
+      # 한글 깨짐 방지 설정 (utf8mb4)
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    restart: always
