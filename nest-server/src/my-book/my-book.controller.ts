@@ -33,7 +33,7 @@ export class MyBookController {
   @HttpCode(HttpStatus.CREATED)
   @ResponseMessageDecorator('나의 서재로 책 등록 성공')
   async addToMyLibrary(@UserDecorator('id') userId: number, @Body() dto: CreateMyBookReqDto) {
-    return await this.myBookService.create({ userId, ...dto });
+    return await this.myBookService.upsertMyBook({ userId, ...dto });
   }
 
   @Get(':myBookId')

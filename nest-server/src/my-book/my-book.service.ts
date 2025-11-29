@@ -22,7 +22,7 @@ export class MyBookService {
     this.logger.setContext(MyBookService.name);
   }
 
-  public async create(payload: CreateMyBookReqDto & { userId: number }) {
+  public async upsertMyBook(payload: CreateMyBookReqDto & { userId: number }) {
     const { isbn, status, userId } = payload;
     const { id: bookId } = await this.bookService.findOrCreate(isbn);
 
@@ -62,10 +62,12 @@ export class MyBookService {
   }
 
   public async getMyBooks(payload: GetMyBooksReqDto & { userId: number }) {
-    const { orderBy, pageNumber, status, userId } = payload;
+    const { order, page, status, userId } = payload;
     const pageSize = 10;
 
-    const { skip, take } = PaginationUtil.getSkipTake({ pageNumber, pageSize });
+    this.logger.debug(JSON.stringify(payload));
+
+    const { skip, take } = PaginationUtil.getSkipTake({ pageNumber: page, pageSize });
 
     const whereCondition: Prisma.MyBookWhereInput = {
       userId,
@@ -79,11 +81,11 @@ export class MyBookService {
         select: myBookListSelect,
         skip,
         take,
-        orderBy: { createdAt: orderBy },
+        orderBy: { createdAt: order },
       }),
     ]);
 
-    const meta = PaginationUtil.getPaginationMeta(totalCount, { pageNumber, pageSize });
+    const meta = PaginationUtil.getPaginationMeta(totalCount, { pageNumber: page, pageSize });
 
     return {
       meta,
