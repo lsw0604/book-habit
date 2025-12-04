@@ -46,7 +46,8 @@ model Book {
   title                 String
   subTitle              String?
   isbn                  String         @unique @db.VarChar(13)
-  author                String?
+  authors               Json?
+  translators           Json?
   publisher             String?
   thumbnail             String?
   coverImage            String?
