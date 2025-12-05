@@ -1,6 +1,8 @@
-import type { KakaoSearchReqDto } from './dto/kakao/kakao-search-req.dto';
 import { Controller, Get, HttpException, HttpStatus, Logger, Param, Query } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { AxiosError } from 'axios';
+import { PaginatedDto } from 'src/common/dto/paginated.dto';
+import { KakaoBookItemDto, KakaoSearchReqDto } from './dto/kakao';
 import { KakaoSearchService } from './kakao-search.service';
 import { AladinSearchService } from './aladin-search.service';
 
@@ -14,6 +16,10 @@ export class SearchController {
   ) {}
 
   @Get()
+  @ApiOkResponse({
+    type: PaginatedDto(KakaoBookItemDto),
+    description: '카카오 도서 검색 결과',
+  })
   async searchBooks(@Query() queryParams: KakaoSearchReqDto) {
     try {
       return await this.kakaoBookService.searchKakaoBook(queryParams);

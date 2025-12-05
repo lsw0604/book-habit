@@ -12,9 +12,13 @@ export class AladinLookupResDto {
   @Expose()
   title: string;
 
-  @ApiProperty({ description: '저자', nullable: true, example: '기시미 이치로' })
+  @ApiProperty({ description: '저자 목록', example: ['기시미 이치로', '고가 후미타케'] })
   @Expose()
-  author: string | null;
+  authors: string[];
+
+  @ApiProperty({ description: '번역자 목록', example: ['전경아'] })
+  @Expose()
+  translators: string[];
 
   @ApiProperty({ description: '출판사', nullable: true, example: '인플루엔셜' })
   @Expose()
@@ -67,6 +71,30 @@ export class AladinLookupResDto {
       publisher,
     } = doc;
 
+    const authors: string[] = [];
+    const translators: string[] = [];
+
+    if (author) {
+      // 번역자 역할을 나타내는 키워드 목록
+      const translatorKeywords = ['옮긴이', '역자', '번역', '편역'];
+      const authorParts = author.split(',').map((s) => s.trim());
+
+      authorParts.forEach((part) => {
+        // part 문자열에 번역자 키워드가 포함되어 있는지 확인
+        const isTranslator = translatorKeywords.some((keyword) => part.includes(`(${keyword})`));
+
+        if (isTranslator) {
+          // 번역자 키워드를 포함한 괄호를 제거하고 이름만 추출
+          const translatorName = part.replace(/\s*\([^)]+\)/, '').trim();
+          if (translatorName) translators.push(translatorName);
+        } else {
+          // 번역자가 아닌 경우, 저자로 간주하고 괄호 안의 역할 설명을 제거
+          const authorName = part.replace(/\s*\([^)]+\)/, '').trim();
+          if (authorName) authors.push(authorName);
+        }
+      });
+    }
+
     // 안전장치: subInfo가 없을 경우 대비
     const { itemPage, subTitle } = subInfo || {};
 
@@ -76,7 +104,8 @@ export class AladinLookupResDto {
     return {
       isbn: isbn13,
       title,
-      author: author || null,
+      authors,
+      translators,
       publisher: publisher || null,
       pubDate,
       description: description || null,

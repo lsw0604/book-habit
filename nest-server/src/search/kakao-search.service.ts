@@ -4,7 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom } from 'rxjs';
-import { KakaoSearchResDto, KakaoSearchReqDto } from './dto/kakao';
+import { KakaoBookItemDto, KakaoSearchReqDto } from './dto/kakao';
+import { PaginationUtil } from 'src/common/utils';
 
 @Injectable()
 export class KakaoSearchService {
@@ -16,7 +17,7 @@ export class KakaoSearchService {
     private readonly configService: ConfigService,
   ) {}
 
-  public async searchKakaoBook(params: KakaoSearchReqDto): Promise<KakaoSearchResDto> {
+  public async searchKakaoBook(params: KakaoSearchReqDto) {
     const { query, sort = 'accuracy', page = 1, size = 10, target = 'title' } = params;
 
     const queryParams = new URLSearchParams();
@@ -45,6 +46,16 @@ export class KakaoSearchService {
         ),
     );
 
-    return KakaoSearchResDto.from(data);
+    const meta = PaginationUtil.getPaginationMeta(data.meta.total_count, {
+      pageNumber: page,
+      pageSize: size,
+    });
+
+    const items = data.documents.map((doc) => KakaoBookItemDto.from(doc));
+
+    return {
+      meta,
+      items,
+    };
   }
 }

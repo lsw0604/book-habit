@@ -1,115 +1,55 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
-import { KakaoDocument, ResponseKakaoSearchBook } from '../../types/kakao-search-res.type';
+import { Expose } from 'class-transformer';
+import { KakaoDocument } from '../../types/kakao-search-res.type';
 
-// 1. 개별 도서 아이템 (CamelCase 적용)
 export class KakaoBookItemDto {
-  @ApiProperty({ description: '도서 제목' })
-  @Expose()
-  title: string;
-
-  @ApiProperty({ description: '도서 소개' })
-  @Expose()
-  contents: string;
-
-  @ApiProperty({ description: '도서 상세 URL' })
-  @Expose()
-  url: string;
-
   @ApiProperty({ description: 'ISBN' })
   @Expose()
   isbn: string;
 
-  @ApiProperty({ description: '출판일', type: Date })
+  @ApiProperty({ description: '책 제목', example: '미움받을 용기' })
   @Expose()
-  pubDate: Date; // datetime -> pubDate (알라딘과 통일)
+  title: string;
 
-  @ApiProperty({ description: '저자 리스트' })
+  @ApiProperty({ description: '저자 리스트', nullable: true, type: [String] })
   @Expose()
-  authors: string[];
+  authors: string[] | null;
 
-  @ApiProperty({ description: '출판사' })
+  @ApiProperty({ description: '번역자 리스트', nullable: true, type: [String] })
   @Expose()
-  publisher: string;
+  translators: string[] | null;
 
-  @ApiProperty({ description: '번역자 리스트' })
+  @ApiProperty({ description: '도서 소개', nullable: true })
   @Expose()
-  translators: string[];
+  description: string | null;
 
-  @ApiProperty({ description: '정가' })
+  @ApiProperty({ description: '출판일', nullable: true })
   @Expose()
-  price: number;
+  pubDate: string | null;
 
-  @ApiProperty({ description: '판매가' })
+  @ApiProperty({ description: '출판사', nullable: true })
   @Expose()
-  salePrice: number; // sale_price -> salePrice
+  publisher: string | null;
 
-  @ApiProperty({ description: '썸네일 URL' })
+  @ApiProperty({ description: '썸네일 URL', nullable: true })
   @Expose()
-  thumbnail: string;
+  thumbnail: string | null;
 
-  @ApiProperty({ description: '판매 상태' })
+  @ApiProperty({ description: '판매 상태', nullable: true })
   @Expose()
-  status: string;
+  status: string | null;
 
-  // 🏭 변환 로직: 여기서 이름을 바꿔줍니다!
   static from(raw: KakaoDocument): KakaoBookItemDto {
     return {
       title: raw.title,
-      contents: raw.contents,
-      url: raw.url,
+      description: raw.contents || null,
       isbn: raw.isbn,
-      pubDate: new Date(raw.datetime), // 이름 변경
+      pubDate: raw.datetime || null,
       authors: raw.authors,
-      publisher: raw.publisher,
+      publisher: raw.publisher || null,
       translators: raw.translators,
-      price: raw.price,
-      salePrice: raw.sale_price, // 이름 변경
-      thumbnail: raw.thumbnail,
+      thumbnail: raw.thumbnail || null,
       status: raw.status,
-    };
-  }
-}
-
-// 2. 메타 정보 (CamelCase 적용)
-export class KakaoPageInfoDto {
-  @ApiProperty({ description: '검색된 총 문서 수' })
-  @Expose()
-  totalCount: number; // total_count -> totalCount
-
-  @ApiProperty({ description: '노출 가능 문서 수' })
-  @Expose()
-  pageableCount: number; // pageable_count -> pageableCount
-
-  @ApiProperty({ description: '마지막 페이지 여부' })
-  @Expose()
-  isEnd: boolean; // is_end -> isEnd
-
-  static from(raw: ResponseKakaoSearchBook['meta']): KakaoPageInfoDto {
-    return {
-      totalCount: raw.total_count,
-      pageableCount: raw.pageable_count,
-      isEnd: raw.is_end,
-    };
-  }
-}
-
-// 3. 전체 응답
-export class KakaoSearchResDto {
-  @ApiProperty({ type: KakaoPageInfoDto })
-  @Expose()
-  @Type(() => KakaoPageInfoDto)
-  meta: KakaoPageInfoDto;
-
-  @ApiProperty({ type: [KakaoBookItemDto] })
-  @Expose()
-  @Type(() => KakaoBookItemDto)
-  items: KakaoBookItemDto[]; // documents -> items (더 보편적인 이름)
-
-  static from(raw: ResponseKakaoSearchBook): KakaoSearchResDto {
-    return {
-      meta: KakaoPageInfoDto.from(raw.meta),
-      items: raw.documents.map((doc) => KakaoBookItemDto.from(doc)),
     };
   }
 }

@@ -1,16 +1,8 @@
+import { PaginationMeta } from './index';
+
 export type PaginationOptions = {
   pageNumber: number;
   pageSize: number;
-};
-
-export type PaginationMeta = {
-  totalCount: number;
-  totalPages: number;
-  currentPage: number;
-  nextPage?: number;
-  prevPage?: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
 };
 
 export type PrismaSkipTake = {
