@@ -1,18 +1,13 @@
-import { NotFoundException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class NotFoundTagException extends NotFoundException {
+export class NotFoundTagException extends BusinessException {
   constructor(tagId: number) {
-    const message = `TAG (ID : ${tagId})을 찾을 수 없습니다.`;
-    const errorMetadata = {
-      tagId,
-      errorCode: 'TAG_NOT_FOUND',
-    };
-
-    super({
-      message,
-      error: 'Not Found',
-      statusCode: 404,
-      ...errorMetadata,
-    });
+    super(
+      `TAG (ID : ${tagId})을 찾을 수 없습니다.`,
+      'TAG_NOT_FOUND',
+      HttpStatus.NOT_FOUND,
+      'Not Found',
+    );
   }
 }

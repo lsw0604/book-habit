@@ -1,18 +1,13 @@
-import { NotFoundException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class NotFoundMyBookTagException extends NotFoundException {
+export class NotFoundMyBookTagException extends BusinessException {
   constructor(myBookTagId: number) {
-    const message = `MY BOOK TAG (ID : ${myBookTagId})을 찾을 수 없습니다.`;
-    const errorMetadata = {
-      myBookTagId,
-      errorCode: 'MY_BOOK_TAG_NOT_FOUND',
-    };
-
-    super({
-      message,
-      error: 'Not Found',
-      statusCode: 404,
-      ...errorMetadata,
-    });
+    super(
+      `MY BOOK TAG (ID : ${myBookTagId})을 찾을 수 없습니다.`,
+      'MY_BOOK_TAG_NOT_FOUND',
+      HttpStatus.NOT_FOUND,
+      'Not Found',
+    );
   }
 }

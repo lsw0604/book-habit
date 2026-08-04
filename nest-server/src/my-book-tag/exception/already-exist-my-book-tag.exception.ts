@@ -1,19 +1,13 @@
-import { ConflictException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class AlreadyExistMyBookTagException extends ConflictException {
+export class AlreadyExistMyBookTagException extends BusinessException {
   constructor(myBookId: number, value: string) {
-    const message = `MY BOOK (ID: ${myBookId})에 해당 TAG (${value})가 이미 존재합니다.`;
-    const errorMetadata = {
-      value,
-      myBookId,
-      errorCode: 'MY_BOOK_TAG_ALREADY_EXISTS',
-    };
-
-    super({
-      message,
-      error: 'Conflict',
-      statusCode: 409,
-      ...errorMetadata,
-    });
+    super(
+      `MY BOOK (ID: ${myBookId})에 해당 TAG (${value})가 이미 존재합니다.`,
+      'MY_BOOK_TAG_ALREADY_EXISTS',
+      HttpStatus.CONFLICT,
+      'Conflict',
+    );
   }
 }

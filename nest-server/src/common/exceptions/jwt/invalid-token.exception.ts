@@ -1,18 +1,13 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from '../business.exception';
 
-export class InvalidTokenException extends UnauthorizedException {
+export class InvalidTokenException extends BusinessException {
   constructor(details?: string) {
-    const message = `유효하지 않은 JWT 토큰입니다.`;
-    const errorMetadata = {
-      errorCode: 'JWT_INVALID_TOKEN',
-      details,
-    };
-
-    super({
-      message,
-      error: 'Unauthorized',
-      statusCode: 401,
-      ...errorMetadata,
-    });
+    super(
+      details ? `유효하지 않은 JWT 토큰입니다. (${details})` : '유효하지 않은 JWT 토큰입니다.',
+      'JWT_INVALID_TOKEN',
+      HttpStatus.UNAUTHORIZED,
+      'Unauthorized',
+    );
   }
 }

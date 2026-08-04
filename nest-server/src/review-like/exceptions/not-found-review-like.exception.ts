@@ -1,18 +1,13 @@
-import { NotFoundException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class NotFoundReviewLikeException extends NotFoundException {
+export class NotFoundReviewLikeException extends BusinessException {
   constructor(reviewLikeId: number) {
-    const message = `REVIEW LIKE (ID: ${reviewLikeId})를 찾을 수 없습니다.`;
-    const errorMetadata = {
-      reviewLikeId,
-      errorCode: 'REVIEW_LIKE_NOT_FOUND',
-    };
-
-    super({
-      message,
-      error: 'NOT_FOUND',
-      statusCode: 404,
-      ...errorMetadata,
-    });
+    super(
+      `REVIEW LIKE (ID: ${reviewLikeId})를 찾을 수 없습니다.`,
+      'REVIEW_LIKE_NOT_FOUND',
+      HttpStatus.NOT_FOUND,
+      'Not Found',
+    );
   }
 }

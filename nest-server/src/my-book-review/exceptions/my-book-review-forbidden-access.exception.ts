@@ -1,21 +1,14 @@
-import { ForbiddenException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class MyBookReviewForbiddenAccessException extends ForbiddenException {
+export class MyBookReviewForbiddenAccessException extends BusinessException {
   constructor(params: { myBookReviewId: number; ownerId: number; userId: number }) {
     const { myBookReviewId, ownerId, userId } = params;
-    const message = `USER(ID: ${userId})는 REVIEW(ID: ${myBookReviewId})에 접근할 권한이 없습니다. 소유자(ID: ${ownerId})`;
-    const errorMetadata = {
-      userId,
-      ownerId,
-      myBookReviewId,
-      errorCode: 'MY_BOOK_REVIEW_FORBIDDEN_ACCESS',
-    };
-
-    super({
-      message,
-      error: 'Forbidden',
-      statusCode: 403,
-      ...errorMetadata,
-    });
+    super(
+      `USER(ID: ${userId})는 REVIEW(ID: ${myBookReviewId})에 접근할 권한이 없습니다. 소유자(ID: ${ownerId})`,
+      'MY_BOOK_REVIEW_FORBIDDEN_ACCESS',
+      HttpStatus.FORBIDDEN,
+      'Forbidden',
+    );
   }
 }

@@ -1,18 +1,13 @@
-import { NotFoundException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class NotFoundMyBookHistoryException extends NotFoundException {
+export class NotFoundMyBookHistoryException extends BusinessException {
   constructor(myBookHistoryId: number) {
-    const message = `MY BOOK History (ID : ${myBookHistoryId})을 찾을 수 없습니다.`;
-    const errorMetadata = {
-      myBookHistoryId,
-      errorCode: 'MY_BOOK_HISTORY_NOT_FOUND',
-    };
-
-    super({
-      message,
-      error: 'Not Found',
-      statusCode: 404,
-      ...errorMetadata,
-    });
+    super(
+      `MY BOOK History (ID : ${myBookHistoryId})을 찾을 수 없습니다.`,
+      'MY_BOOK_HISTORY_NOT_FOUND',
+      HttpStatus.NOT_FOUND,
+      'Not Found',
+    );
   }
 }

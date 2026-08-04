@@ -1,9 +1,17 @@
 import { HttpStatus } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseDto<T> {
+  @ApiProperty({ description: '성공 여부', example: true })
   success: boolean;
+
+  @ApiProperty({ description: 'HTTP 상태 코드', example: 200 })
   statusCode: number;
+
+  @ApiProperty({ description: '응답 메시지', example: '성공적으로 처리되었습니다' })
   message: string;
+
+  @ApiProperty({ description: '응답 데이터 Payload', required: false })
   data?: T;
 
   constructor(options: { success: boolean; statusCode: number; message: string; data?: T }) {

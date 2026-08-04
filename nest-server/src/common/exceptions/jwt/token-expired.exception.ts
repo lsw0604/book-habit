@@ -1,17 +1,13 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from '../business.exception';
 
-export class TokenExpiredException extends UnauthorizedException {
+export class TokenExpiredException extends BusinessException {
   constructor() {
-    const message = `JWT 토큰이 만료되었습니다.`;
-    const errorMetadata = {
-      errorCode: 'JWT_TOKEN_EXPIRED',
-    };
-
-    super({
-      message,
-      error: 'Unauthorized',
-      statusCode: 401,
-      ...errorMetadata,
-    });
+    super(
+      'JWT 토큰이 만료되었습니다.',
+      'JWT_TOKEN_EXPIRED',
+      HttpStatus.UNAUTHORIZED,
+      'Unauthorized',
+    );
   }
 }

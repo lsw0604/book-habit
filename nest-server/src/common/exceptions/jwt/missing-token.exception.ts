@@ -1,11 +1,11 @@
 import { HttpStatus } from '@nestjs/common';
 import { BusinessException } from '../business.exception';
 
-export class MalformedTokenException extends BusinessException {
+export class MissingTokenException extends BusinessException {
   constructor() {
     super(
-      '유효하지 않은 JWT 토큰 형식입니다.',
-      'JWT_MALFORMED_TOKEN',
+      'JWT 토큰이 제공되지 않았습니다.',
+      'JWT_MISSING_TOKEN',
       HttpStatus.UNAUTHORIZED,
       'Unauthorized',
     );

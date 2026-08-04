@@ -1,17 +1,13 @@
-import { ConflictException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class AlreadyExistEmailException extends ConflictException {
+export class AlreadyExistEmailException extends BusinessException {
   constructor() {
-    const message = `이미 사용중인 이메일 입니다.`;
-    const errorMetadata = {
-      errorCode: 'EMAIL_ALREADY_EXISTS',
-    };
-
-    super({
-      message,
-      error: 'Conflict',
-      statusCode: 409,
-      ...errorMetadata,
-    });
+    super(
+      '이미 사용중인 이메일 입니다.',
+      'EMAIL_ALREADY_EXISTS',
+      HttpStatus.CONFLICT,
+      'Conflict',
+    );
   }
 }

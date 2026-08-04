@@ -1,18 +1,13 @@
-import { ConflictException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
+import { BusinessException } from 'src/common/exceptions';
 
-export class AlreadyExistMyBookReviewException extends ConflictException {
+export class AlreadyExistMyBookReviewException extends BusinessException {
   constructor(myBookId: number) {
-    const message = `MyBook ID: ${myBookId}에 이미 리뷰가 존재합니다.`;
-    const errorMetadata = {
-      myBookId,
-      errorCode: 'REVIEW_ALREADY_EXISTS',
-    };
-
-    super({
-      message,
-      error: 'Conflict',
-      statusCode: 409,
-      ...errorMetadata,
-    });
+    super(
+      `MyBook ID: ${myBookId}에 이미 리뷰가 존재합니다.`,
+      'REVIEW_ALREADY_EXISTS',
+      HttpStatus.CONFLICT,
+      'Conflict',
+    );
   }
 }
