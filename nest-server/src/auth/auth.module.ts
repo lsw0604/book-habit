@@ -9,8 +9,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { AccessStrategy } from './strategies/access.strategy';
 import { RefreshStrategy } from './strategies/refresh.strategy';
 import { AuthKakaoService } from './auth.kakao.service';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
 
@@ -26,7 +24,7 @@ import { TokenService } from './token.service';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('SECRET_ACCESS_KEY'),
         signOptions: {
-          expiresIn: configService.getOrThrow<string>('SECRET_ACCESS_EXPIRATION'),
+          expiresIn: configService.getOrThrow<string>('SECRET_ACCESS_EXPIRATION') as any,
         },
       }),
     }),
@@ -39,8 +37,6 @@ import { TokenService } from './token.service';
     LocalStrategy,
     AccessStrategy,
     RefreshStrategy,
-    PrismaService,
-    UserService,
     TokenService,
     AuthKakaoService,
   ],

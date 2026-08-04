@@ -12,7 +12,7 @@ export class RefreshGuard extends AuthGuard('refresh') {
 
     try {
       return super.handleRequest(err, user, info, context, status);
-    } catch (error) {
+    } catch (error: any) {
       throw new UnknownTokenException(error.message);
     }
   }

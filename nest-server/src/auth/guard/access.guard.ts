@@ -1,7 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { handleJwtErrors } from 'src/common/utils/auth/jwt.util';
 import { UnknownTokenException } from 'src/common/exceptions/jwt';
 
+@Injectable()
 export class AccessGuard extends AuthGuard('access') {
   constructor() {
     super();

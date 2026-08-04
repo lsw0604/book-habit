@@ -1,9 +1,9 @@
 import type {
+  AuthTokens,
   KakaoAccessTokenResponse,
+  KakaoAuthUser,
   KakaoUserInfoResponse,
-  ResponseKakaoCallback,
-  ResponseTokens,
-} from './interface';
+} from './types';
 import type { AxiosError } from 'axios';
 import * as qs from 'qs';
 import { User } from '@prisma/client';
@@ -33,7 +33,7 @@ export class AuthKakaoService {
     this.logger.setContext(AuthKakaoService.name);
   }
 
-  public async kakaoCallback(code: string, redirectUri?: string): Promise<ResponseKakaoCallback> {
+  public async kakaoCallback(code: string, redirectUri?: string): Promise<KakaoAuthUser> {
     const actualRedirectUri: string =
       redirectUri || this.configService.getOrThrow<string>('KAKAO_CALLBACK_URL');
     const body: string = this.kakaoQsStringify(code, actualRedirectUri);
@@ -56,7 +56,7 @@ export class AuthKakaoService {
       });
     }
 
-    const token: ResponseTokens = this.tokenService.generateToken(user.id);
+    const token: AuthTokens = this.tokenService.generateToken(user.id);
 
     return {
       ...token,
