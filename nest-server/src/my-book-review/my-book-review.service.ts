@@ -2,7 +2,6 @@ import type {
   CreateMyBookReviewPayload,
   GetMyBookReviewPayload,
   UpdateMyBookReviewPayload,
-  DeleteMyBookReviewResponse,
   DeleteMyBookReviewPayload,
   FormattedMyBookReview,
 } from './interface';
@@ -35,21 +34,23 @@ export class MyBookReviewService {
    * * 하나의 MyBook당 하나의 리뷰만 존재할 수 있습니다. (1:1 관계)
    *
    * @param {CreateMyBookReviewPayload} payload - 생성할 리뷰 정보
-   * @param {number} payload.myBookId - 리뷰를 작성할 MyBook의 ID
-   * @param {number} payload.userId - 리뷰 작성자(사용자) ID
-   * @param {string} payload.review - 리뷰 내용
-   * @param {boolean} payload.isPublic - 리뷰 공개 여부
-   * @returns {Promise<ResponseMyBookReview>} 생성된 리뷰 정보 (댓글/좋아요 수 포함)
+   * @param {Prisma.TransactionClient} [tx] - 선택적 트랜잭션 클라이언트
+   * @returns {Promise<FormattedMyBookReview>} 생성된 리뷰 정보 (댓글/좋아요 수 포함)
    * @throws {AlreadyExistMyBookReviewException} 이미 해당 책에 리뷰가 존재할 경우
    */
   public async createMyBookReview(
     payload: CreateMyBookReviewPayload,
+    tx?: Prisma.TransactionClient,
   ): Promise<FormattedMyBookReview> {
-    const { isPublic, myBookId, review, userId } = payload;
-    await this.myBookService.validateMyBookOwnership(myBookId, userId);
+    const { isPublic, review, userId, myBookId } = payload;
+    const prisma = tx || this.prismaService;
+
+    if (!tx) {
+      await this.myBookService.validateMyBookOwnership(myBookId, userId);
+    }
 
     try {
-      const myBookReview: FormattedMyBookReview = await this.prismaService.myBookReview.create({
+      return await prisma.myBookReview.create({
         data: {
           myBookId,
           review,
@@ -57,7 +58,6 @@ export class MyBookReviewService {
         },
         select: MY_BOOK_REVIEW_SELECT_WITH_COUNTS,
       });
-      return myBookReview;
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
         throw new AlreadyExistMyBookReviewException(myBookId);
@@ -71,31 +71,24 @@ export class MyBookReviewService {
    * * 리뷰가 존재하지 않으면 예외를 발생시킵니다.
    *
    * @param {GetMyBookReviewPayload} payload - 조회할 리뷰에 대한 정보
-   * @param {number} payload.myBookId - 조회할 MyBook ID
-   * @param {number} payload.userId - 리뷰 작성자 사용자 ID
-   * @returns {Promise<ResponseMyBookReview>} 조회된 리뷰 객체
+   * @returns {Promise<FormattedMyBookReview>} 조회된 리뷰 객체
    */
   public async getMyBookReview(payload: GetMyBookReviewPayload): Promise<FormattedMyBookReview> {
     const { myBookId, userId } = payload;
 
     await this.myBookService.validateMyBookOwnership(myBookId, userId);
-    const where: Prisma.MyBookReviewWhereUniqueInput = { id: myBookId };
-    const myBookReview = await this.prismaService.myBookReview.findUnique({
-      where,
+
+    return await this.prismaService.myBookReview.findUnique({
+      where: { myBookId },
       select: MY_BOOK_REVIEW_SELECT_WITH_COUNTS,
     });
-    return myBookReview;
   }
 
   /**
    * * 특정 리뷰의 내용을 수정합니다. (리뷰 내용 또는 공개 여부)
    *
    * @param {UpdateMyBookReviewPayload} payload - 업데이트할 리뷰 정보
-   * @param {number} payload.myBookReviewId - 업데이트할 리뷰 ID
-   * @param {number} payload.userId - 리뷰 소유자 ID
-   * @param {string} [payload.review] - 변경할 리뷰 내용 (선택적)
-   * @param {boolean} [payload.isPublic] - 변경할 공개 여부 (선택적)
-   * @returns {Promise<ResponseMyBookReview>} 업데이트된 리뷰 객체
+   * @returns {Promise<FormattedMyBookReview>} 업데이트된 리뷰 객체
    * @throws {NoFieldsToUpdateException} 업데이트할 필드가 없는 경우
    */
   public async updateMyBookReview(
@@ -105,7 +98,6 @@ export class MyBookReviewService {
 
     await this.validateMyBookReviewOwnership(myBookReviewId, userId);
 
-    const where: Prisma.MyBookReviewWhereUniqueInput = { id: myBookReviewId };
     const data: Prisma.MyBookReviewUpdateInput = {
       ...(isPublic !== undefined && { isPublic }),
       ...(review !== undefined && { review }),
@@ -114,63 +106,30 @@ export class MyBookReviewService {
     if (Object.keys(data).length === 0) {
       throw new NoFieldsToUpdateException();
     }
-    const updatedReview: FormattedMyBookReview = await this.prismaService.myBookReview.update({
-      where,
+
+    return await this.prismaService.myBookReview.update({
+      where: { id: myBookReviewId },
       data,
       select: MY_BOOK_REVIEW_SELECT_WITH_COUNTS,
     });
-
-    return updatedReview;
   }
 
   /**
-   * * 특정 리뷰와 관련된 모든 데이터 (좋아요, 댓글 포람)을 삭제합니다.
+   * * 특정 리뷰를 삭제합니다. (Cascade Delete로 연관된 좋아요, 댓글 자동 삭제)
    *
-   * @param {UpdateMyBookReviewPayload} payload - 삭제할 리뷰 정보
-   * @param {number} payload.myBookReviewId - 삭제할 리뷰 ID
-   * @param {number} payload.userId - 리뷰 소유자 ID
-   * @returns {Promise<DeleteMyBookReviewResponse>} 삭제된 리뷰 ID
+   * @param {DeleteMyBookReviewPayload} payload - 삭제할 리뷰 정보
+   * @returns {Promise<void>}
    */
-  public async deleteMyBookReview(
-    payload: DeleteMyBookReviewPayload,
-  ): Promise<DeleteMyBookReviewResponse> {
+  public async deleteMyBookReview(payload: DeleteMyBookReviewPayload): Promise<void> {
     const { myBookReviewId, userId } = payload;
+
+    // 1. 소유권 검증 (존재 여부 및 본인 리뷰 확인)
     await this.validateMyBookReviewOwnership(myBookReviewId, userId);
-    await this.prismaService.$transaction(async (prisma) => {
-      await prisma.reviewComment.deleteMany({
-        where: {
-          myBookReviewId,
-          myBookReview: {
-            myBook: {
-              userId,
-            },
-          },
-        },
-      });
 
-      await prisma.reviewLike.deleteMany({
-        where: {
-          myBookReviewId,
-          myBookReview: {
-            myBook: {
-              userId,
-            },
-          },
-        },
-      });
-      await prisma.myBookReview.delete({
-        where: {
-          id: myBookReviewId,
-          myBook: {
-            userId,
-          },
-        },
-      });
+    // 2. Cascade Delete에 의해 연관된 댓글/좋아요 DB에서 자동 삭제됨
+    await this.prismaService.myBookReview.delete({
+      where: { id: myBookReviewId },
     });
-
-    return {
-      myBookReviewId,
-    };
   }
 
   /**
@@ -184,10 +143,8 @@ export class MyBookReviewService {
    * @throws {MyBookReviewForbiddenAccessException} Review는 존재하지만 소유권이 없을 때
    */
   private async validateMyBookReviewOwnership(myBookReviewId: number, userId: number) {
-    const where: Prisma.MyBookReviewWhereUniqueInput = { id: myBookReviewId };
-
     const myBookReview = await this.prismaService.myBookReview.findUnique({
-      where,
+      where: { id: myBookReviewId },
       select: {
         myBook: {
           select: {

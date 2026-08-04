@@ -1,5 +1,6 @@
-import { MyBookReview, Prisma } from '@prisma/client';
+import { MyBook, MyBookReview, Prisma } from '@prisma/client';
 import { MY_BOOK_REVIEW_SELECT_WITH_USER_ID } from '../constants';
+import { CreateMyBookReviewDto } from '../dto';
 
 export interface FormattedMyBookReview extends MyBookReview {
   _count: {
@@ -8,12 +9,15 @@ export interface FormattedMyBookReview extends MyBookReview {
   };
 }
 
-export interface CreateMyBookReviewPayload {
+export interface CreateReviewWithMyBookResponse {
+  myBook: MyBook;
+  review: FormattedMyBookReview;
+}
+
+export type CreateMyBookReviewPayload = CreateMyBookReviewDto & {
   userId: number;
   myBookId: number;
-  review: string;
-  isPublic: boolean;
-}
+};
 
 export interface GetMyBookReviewPayload {
   userId: number;
@@ -31,9 +35,6 @@ export interface DeleteMyBookReviewPayload {
   userId: number;
   myBookReviewId: number;
 }
-export type DeleteMyBookReviewResponse = {
-  myBookReviewId: number;
-};
 
 export type MyBookReviewWithUserId = Prisma.MyBookReviewGetPayload<{
   select: typeof MY_BOOK_REVIEW_SELECT_WITH_USER_ID;

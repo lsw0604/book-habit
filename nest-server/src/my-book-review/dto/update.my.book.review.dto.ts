@@ -7,5 +7,5 @@ export class UpdateMyBookReviewDto {
 
   @IsString()
   @IsOptional()
-  comment?: string;
+  review?: string;
 }

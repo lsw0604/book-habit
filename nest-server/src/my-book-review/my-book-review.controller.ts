@@ -1,4 +1,4 @@
-import type { FormattedMyBookReview, DeleteMyBookReviewResponse } from './interface';
+import type { FormattedMyBookReview, CreateReviewWithMyBookResponse } from './interface';
 import {
   Get,
   Body,
@@ -13,74 +13,83 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { AccessGuard } from 'src/auth/guard/access.guard';
-import { ResponseDto } from 'src/common/dto/response.dto';
 import { UserDecorator } from 'src/common/decorator/user.decorator';
 import { MyBookReviewService } from './my-book-review.service';
-import { CreateMyBookReviewDto } from './dto/create.my.book.review.dto';
-import { UpdateMyBookReviewDto } from './dto/update.my.book.review.dto';
+import { CreateMyBookReviewDto, CreateReviewWithMyBookDto, UpdateMyBookReviewDto } from './dto';
+import { ResponseMessageDecorator } from 'src/common/decorator';
+import { CreateReviewWithMyBookUseCase } from './cases';
 
 @UseGuards(AccessGuard)
 @Controller('/api/my-book-review')
 export class MyBookReviewController {
-  constructor(private myBookReviewService: MyBookReviewService) {}
+  constructor(
+    private readonly myBookReviewService: MyBookReviewService,
+    private readonly createReviewWithMyBookUseCase: CreateReviewWithMyBookUseCase,
+  ) {}
+
+  @Post('/with-my-book')
+  @HttpCode(HttpStatus.CREATED)
+  @ResponseMessageDecorator('서재 및 리뷰 생성 성공')
+  async createReviewWithMyBook(
+    @UserDecorator('id') userId: number,
+    @Body() dto: CreateReviewWithMyBookDto,
+  ): Promise<CreateReviewWithMyBookResponse> {
+    return await this.createReviewWithMyBookUseCase.execute(userId, dto);
+  }
 
   @Post('/:myBookId')
   @HttpCode(HttpStatus.CREATED)
+  @ResponseMessageDecorator('리뷰 생성 성공')
   async createMyBookReview(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
     @Body() dto: CreateMyBookReviewDto,
-  ): Promise<ResponseDto<FormattedMyBookReview>> {
-    const response: FormattedMyBookReview = await this.myBookReviewService.createMyBookReview({
-      myBookId,
+  ): Promise<FormattedMyBookReview> {
+    return await this.myBookReviewService.createMyBookReview({
       userId,
+      myBookId,
       ...dto,
     });
-
-    return ResponseDto.created(response, '리뷰 생성 성공');
   }
 
   @Get('/:myBookId')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('리뷰 불러오기 성공')
   async getMyBookReview(
     @UserDecorator('id') userId: number,
     @Param('myBookId', ParseIntPipe) myBookId: number,
-  ): Promise<ResponseDto<FormattedMyBookReview>> {
-    const response: FormattedMyBookReview = await this.myBookReviewService.getMyBookReview({
+  ): Promise<FormattedMyBookReview> {
+    return await this.myBookReviewService.getMyBookReview({
       myBookId,
       userId,
     });
-
-    return ResponseDto.success(response, '리뷰 불러오기 성공');
   }
 
   @Patch('/:myBookReviewId')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('리뷰 수정 성공')
   async updateMyBookReview(
     @UserDecorator('id') userId: number,
     @Param('myBookReviewId', ParseIntPipe) myBookReviewId: number,
     @Body() dto: UpdateMyBookReviewDto,
-  ): Promise<ResponseDto<FormattedMyBookReview>> {
-    const response: FormattedMyBookReview = await this.myBookReviewService.updateMyBookReview({
+  ): Promise<FormattedMyBookReview> {
+    return await this.myBookReviewService.updateMyBookReview({
       myBookReviewId,
       userId,
       ...dto,
     });
-
-    return ResponseDto.success(response, '리뷰 수정 성공');
   }
 
   @Delete('/:myBookReviewId')
   @HttpCode(HttpStatus.OK)
+  @ResponseMessageDecorator('리뷰 삭제 성공')
   async deleteMyBookReview(
     @UserDecorator('id') userId: number,
     @Param('myBookReviewId', ParseIntPipe) myBookReviewId: number,
-  ): Promise<ResponseDto<DeleteMyBookReviewResponse>> {
-    const response: DeleteMyBookReviewResponse = await this.myBookReviewService.deleteMyBookReview({
+  ): Promise<void> {
+    await this.myBookReviewService.deleteMyBookReview({
       myBookReviewId,
       userId,
     });
-
-    return ResponseDto.success(response, '리뷰 삭제 성공');
   }
 }
